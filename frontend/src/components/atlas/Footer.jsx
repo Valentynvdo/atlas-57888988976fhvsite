@@ -24,14 +24,14 @@ export default function Footer() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span
+          <img
+            src="/atlas-icon.png"
+            alt="Atlas AI"
             style={{
-              width: 24,
-              height: 24,
-              borderRadius: 6,
-              background:
-                "conic-gradient(from 180deg, #007AFF, #9D4CDD, #00E5FF, #007AFF)",
-              boxShadow: "0 0 18px rgba(0,229,255,0.4)",
+              width: 28,
+              height: 28,
+              borderRadius: 7,
+              boxShadow: "0 0 18px rgba(0,229,255,0.35)",
             }}
           />
           <span style={{ fontWeight: 600, letterSpacing: "-0.02em" }}>

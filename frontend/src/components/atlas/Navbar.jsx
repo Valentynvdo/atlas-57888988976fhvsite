@@ -50,14 +50,14 @@ export default function Navbar({ onCta }) {
             color: "#fff",
           }}
         >
-          <span
+          <img
+            src="/atlas-icon.png"
+            alt="Atlas AI"
             style={{
-              width: 28,
-              height: 28,
+              width: 32,
+              height: 32,
               borderRadius: 8,
-              background:
-                "conic-gradient(from 180deg, #007AFF, #9D4CDD, #00E5FF, #007AFF)",
-              boxShadow: "0 0 24px rgba(0,229,255,0.4)",
+              boxShadow: "0 0 24px rgba(0,229,255,0.35)",
             }}
           />
           <span
