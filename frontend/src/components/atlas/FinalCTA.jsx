@@ -1,0 +1,95 @@
+import { ArrowRight } from "lucide-react";
+
+export default function FinalCTA({ onCta }) {
+  return (
+    <section
+      id="final-cta"
+      data-testid="final-cta-section"
+      className="section-container"
+      style={{ paddingTop: 40, paddingBottom: 40 }}
+    >
+      <div
+        className="glass reveal"
+        style={{
+          borderRadius: 36,
+          padding: "clamp(40px, 8vw, 96px) clamp(24px, 6vw, 64px)",
+          position: "relative",
+          overflow: "hidden",
+          textAlign: "center",
+        }}
+        data-testid="final-cta-card"
+      >
+        {/* Background gradients */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse at 20% 0%, rgba(0,122,255,0.3), transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(157,76,221,0.3), transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(0,229,255,0.15), transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div
+            className="section-eyebrow"
+            style={{ justifyContent: "center", display: "inline-block" }}
+          >
+            Скоро
+          </div>
+          <h2
+            style={{
+              marginTop: 16,
+              fontSize: "clamp(2rem, 5.5vw, 4.5rem)",
+              lineHeight: 1.05,
+              letterSpacing: "-0.04em",
+              fontWeight: 600,
+              maxWidth: 900,
+              margin: "16px auto 0",
+              background:
+                "linear-gradient(120deg, #ffffff 0%, #d4dcff 50%, #00e5ff 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Готові зустріти свого Атласа?
+          </h2>
+          <p
+            style={{
+              marginTop: 20,
+              color: "rgba(255,255,255,0.7)",
+              fontSize: "clamp(1rem, 1.4vw, 1.2rem)",
+              maxWidth: 620,
+              margin: "20px auto 0",
+              lineHeight: 1.6,
+            }}
+          >
+            Приєднуйтесь до списку очікування першими — і будьте серед тих,
+            хто змінить спосіб взаємодії з macOS.
+          </p>
+
+          <div
+            style={{
+              marginTop: 40,
+              display: "flex",
+              gap: 16,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              data-testid="final-cta-btn"
+              onClick={onCta}
+              className="cta-btn"
+            >
+              Зустрічайте Атлас
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
