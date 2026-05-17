@@ -185,7 +185,11 @@ def compile_with_pyinstaller(version: str):
 
     if not shutil.which("pyinstaller"):
         log("PyInstaller не знайдено. Встановлення...", "yellow")
-        subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
+        except Exception:
+            log("Системне оточення захищене (PEP 668). Пробуємо з прапором --break-system-packages...", "yellow")
+            subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller", "--break-system-packages"], check=True)
 
     # Clean previous build
     shutil.rmtree(DIST_DIR, ignore_errors=True)
