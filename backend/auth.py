@@ -66,13 +66,7 @@ async def _ensure_license(user_id: str) -> None:
 
 
 async def _admin_email() -> Optional[str]:
-    fixed = os.getenv("ADMIN_EMAIL", "").strip().lower()
-    if fixed:
-        return fixed
-    flag = await db.app_config.find_one({"_id": "admin_claimed"})
-    if flag and flag.get("email"):
-        return flag["email"].lower()
-    return None
+    return os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -150,6 +144,10 @@ async def register(body: dict, response: Response):
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Пароль має бути не менше 6 символів")
 
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    if email == admin_email_fixed or email == "admin":
+        raise HTTPException(status_code=400, detail="Цей email зарезервований для адміністратора")
+
     existing = await db.users.find_one({"email": email})
     if existing:
         raise HTTPException(status_code=400, detail="Користувач з таким email вже існує")
@@ -170,16 +168,6 @@ async def register(body: dict, response: Response):
         "is_blocked": False,
         "admin_notes": "",
     })
-
-    # Claim first user as admin if no admin set
-    admin_email = await _admin_email()
-    if not admin_email:
-        await db.app_config.update_one(
-            {"_id": "admin_claimed"},
-            {"$set": {"claimed": True, "email": email}},
-            upsert=True,
-        )
-        logger.warning("Admin auto-claimed by first registered user: %s", email)
 
     await _ensure_license(user_id)
 
@@ -204,6 +192,60 @@ async def login(body: dict, response: Response):
     if not email or not password:
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    admin_password_fixed = os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_PIN", "admin1234")).strip()
+
+    # Predefined Admin Login
+    if email == admin_email_fixed or email == "admin":
+        if password != admin_password_fixed:
+            raise HTTPException(status_code=401, detail="Невірний email або пароль")
+        
+        user_id = "admin_user"
+        
+        # Ensure Admin User exists in DB
+        existing_admin = await db.users.find_one({"user_id": user_id})
+        if not existing_admin:
+            await db.users.insert_one({
+                "user_id": user_id,
+                "email": admin_email_fixed,
+                "name": "Адміністратор",
+                "provider": "email",
+                "avatar_url": "",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "is_blocked": False,
+                "admin_notes": "Превизначений акаунт адміністратора"
+            })
+        
+        await _ensure_license(user_id)
+
+        # Create session
+        token = secrets.token_urlsafe(32)
+        expires = datetime.now(timezone.utc) + SESSION_TTL
+        await db.user_sessions.insert_one({
+            "session_token": token, "user_id": user_id, "email": admin_email_fixed,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "expires_at": expires.isoformat(),
+        })
+
+        # Auto-authorize admin PIN session to bypass secondary prompt
+        pin_token = secrets.token_urlsafe(32)
+        pin_expires = datetime.now(timezone.utc) + PIN_TTL
+        await db.admin_pin_sessions.insert_one({
+            "token": pin_token,
+            "user_id": user_id,
+            "expires_at": pin_expires.isoformat()
+        })
+
+        _set_session_cookie(response, token)
+        response.set_cookie(
+            key="atlas_admin_pin", value=pin_token,
+            max_age=int(PIN_TTL.total_seconds()),
+            httponly=True, secure=True, samesite="none", path="/"
+        )
+
+        return {"ok": True, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
+
+    # Regular User Login
     user = await db.users.find_one({"email": email})
     if not user:
         raise HTTPException(status_code=401, detail="Невірний email або пароль")
