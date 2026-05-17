@@ -1,129 +1,223 @@
-#!/bin/bash
-# install.sh — Secure Installation Script for Atlas AI Platform
+#!/usr/bin/env bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Atlas AI — Official Installer for macOS
 # Usage: curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-set -e
+set -euo pipefail
 
-# Visual colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-echo -e "${CYAN}"
-echo "    ___  ______   ___   _____ "
-echo "   / _ \\/_  __/  / _ | / ___/ "
-echo "  / __  // /    / __ |/ /__   "
-echo " /_/ |_//_/    /_/ |_|\\___/   "
-echo -e "   Cognitive Operating System${NC}\n"
-
-echo -e "${BLUE}[1/5] Перевірка системних вимог macOS...${NC}"
-
-# 1. Check if macOS
-if [ "$(uname)" != "Darwin" ]; then
-    echo -e "${RED}Помилка: Atlas AI підтримує виключно macOS.${NC}"
-    exit 1
-fi
-
-OS_VERSION=$(sw_vers -productVersion)
-echo -e "Знайдено macOS ${OS_VERSION}..."
-
-# 2. Ask for License Key
-echo -e "\n${YELLOW}Введіть ваш ліцензійний ключ Atlas AI для авторизації встановлення:${NC}"
-read -p "Ключ (ATLAS-XXXX-...): " LICENSE_KEY
-
-if [ -z "$LICENSE_KEY" ]; then
-    echo -e "${RED}Помилка: Ліцензійний ключ не може бути порожнім.${NC}"
-    exit 1
-fi
-
-# 3. Validate License Key with Backend Server
-echo -e "${BLUE}[2/5] Перевірка ліцензійного ключа...${NC}"
-BACKEND_URL="https://atlas-site-2p2d.onrender.com"
-
-# Hitting local or online validation endpoint
-VALIDATION_RESPONSE=$(curl -s -X POST "${BACKEND_URL}/api/atlas/validate-key" \
-  -H "Content-Type: application/json" \
-  -d "{\"key\": \"$LICENSE_KEY\", \"mac_id\": \"$(uuidgen)\", \"mac_name\": \"$(hostname)\"}")
-
-IS_ACTIVE=$(echo "$VALIDATION_RESPONSE" | grep -o '"active":\s*true' || true)
-
-# Bypass for dev key
-if [ "$LICENSE_KEY" == "ATLAS-DEV-MODE-9999" ]; then
-    echo -e "${GREEN}✓ Виявлено інженерний ключ розробника (Bypass)! Режим розробки активовано.${NC}"
-    IS_ACTIVE="active"
-fi
-
-if [ -z "$IS_ACTIVE" ]; then
-    echo -e "${RED}Помилка: Наданий ліцензійний ключ недійсний або підписку не оплачено.${NC}"
-    echo -e "Будь ласка, отримайте діючий ключ в особистому кабінеті: ${BACKEND_URL}/dashboard"
-    exit 1
-fi
-
-echo -e "${GREEN}✓ Ліцензія підтверджена!${NC}"
-
-# 4. Create secure system folders
-echo -e "\n${BLUE}[3/5] Створення захищеної директорії встановлення...${NC}"
+ATLAS_SERVER="https://atlas-site-2p2d.onrender.com"
 INSTALL_DIR="/Library/Application Support/Atlas"
+LAUNCH_AGENT_DIR="/Library/LaunchAgents"
+LAUNCH_AGENT_ID="com.atlas.ai"
+LAUNCH_AGENT_PLIST="$LAUNCH_AGENT_DIR/$LAUNCH_AGENT_ID.plist"
+TMP_PKG="/tmp/atlas-latest.tar.gz"
 
-echo "Для встановлення системних компонентів необхідні права адміністратора (sudo):"
-sudo mkdir -p "$INSTALL_DIR"
-sudo mkdir -p "$INSTALL_DIR/models"
-sudo mkdir -p "$INSTALL_DIR/assets"
-sudo mkdir -p "$INSTALL_DIR/personal_memory"
+# ── Styling helpers ──────────────────────────────────────────────────────────
+BOLD="\033[1m"
+CYAN="\033[36m"
+GREEN="\033[32m"
+RED="\033[31m"
+YELLOW="\033[33m"
+RESET="\033[0m"
 
-# 5. Download compiled binary / app
-echo -e "\n${BLUE}[4/5] Завантаження скомпільованого ядра Atlas AI...${NC}"
-# Since it's a demo, we either download a packaged release or create an executable layout
-# In real production, this downloads the precompiled binary from storage (S3/Render)
-sudo curl -sL "${BACKEND_URL}/downloads/atlas-latest.tar.gz" -o /tmp/atlas.tar.gz || true
+title()   { echo -e "\n${BOLD}${CYAN}▶ $1${RESET}"; }
+success() { echo -e "${GREEN}✔ $1${RESET}"; }
+warn()    { echo -e "${YELLOW}⚠ $1${RESET}"; }
+error()   { echo -e "${RED}✖ $1${RESET}" >&2; exit 1; }
+step()    { echo -e "  ${BOLD}→${RESET} $1"; }
 
-# Extracting package if download was successful
-if [ -f /tmp/atlas.tar.gz ]; then
-    echo "Розпакування системного пакету..."
-    sudo tar -xzf /tmp/atlas.tar.gz -C "$INSTALL_DIR" || true
-    rm -f /tmp/atlas.tar.gz
-else
-    # Fallback to creating structure for demo run
-    echo "Пакет завантаження готується. Створення структури бінарних файлів..."
-    sudo touch "$INSTALL_DIR/atlas_core"
+# ── Banner ───────────────────────────────────────────────────────────────────
+clear
+echo -e "${BOLD}${CYAN}"
+echo "  ___  _   _      _    ____      _    ___ "
+echo " / _ \| |_| |    / \  / ___|    / \  |_ _|"
+echo "| | | | __| |   / _ \ \___ \   / _ \  | | "
+echo "| |_| | |_| |__/ ___ \ ___) | / ___ \ | | "
+echo " \___/ \__|_____/_/  \_\____/ /_/   \_\___|"
+echo -e "${RESET}"
+echo -e "${BOLD}Atlas AI — Cognitive Operating System for macOS${RESET}"
+echo -e "${CYAN}──────────────────────────────────────────────────${RESET}\n"
+
+# ── Step 1: System check ─────────────────────────────────────────────────────
+title "Перевірка системи"
+
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    error "Atlas AI підтримує тільки macOS. Ваша ОС: $(uname -s)"
 fi
 
-# 6. Apply STRICT File Security Permissions (macOS isolation)
-echo -e "\n${BLUE}[5/5] Налаштування подвійного захисту прав доступу...${NC}"
-# Only system can read or write (chmod 700)
-# Owner is set to system root and wheel group (chown root:wheel)
+MAC_VER=$(sw_vers -productVersion)
+MAC_MAJOR=$(echo "$MAC_VER" | cut -d. -f1)
+if (( MAC_MAJOR < 13 )); then
+    error "Потрібен macOS 13 (Ventura) або новіше. Ваша версія: $MAC_VER"
+fi
+success "macOS $MAC_VER — OK"
+
+# Check Python 3.10+
+if ! command -v python3 &>/dev/null; then
+    warn "Python 3 не знайдено. Встановіть через https://brew.sh:"
+    echo "    brew install python@3.12"
+    exit 1
+fi
+PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+PY_MAJOR=$(echo "$PY_VER" | cut -d. -f1)
+PY_MINOR=$(echo "$PY_VER" | cut -d. -f2)
+if (( PY_MAJOR < 3 || (PY_MAJOR == 3 && PY_MINOR < 10) )); then
+    error "Потрібен Python 3.10 або новіше. Встановлена версія: $PY_VER"
+fi
+success "Python $PY_VER — OK"
+
+# Check curl
+if ! command -v curl &>/dev/null; then
+    error "curl не знайдено. Встановіть Xcode Command Line Tools: xcode-select --install"
+fi
+success "curl — OK"
+
+# ── Step 2: License key ──────────────────────────────────────────────────────
+title "Активація ліцензії"
+
+echo -e "  Придбайте ліцензію на: ${CYAN}${ATLAS_SERVER}${RESET}"
+echo ""
+
+while true; do
+    read -r -p "  Введіть ваш ліцензійний ключ (ATLAS-XXXX-XXXX-XXXX-XXXX): " LICENSE_KEY
+    LICENSE_KEY=$(echo "$LICENSE_KEY" | tr '[:lower:]' '[:upper:]' | xargs)
+
+    if [[ -z "$LICENSE_KEY" ]]; then
+        warn "Ключ не може бути порожнім"
+        continue
+    fi
+
+    step "Перевірка ключа на сервері..."
+
+    RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$ATLAS_SERVER/api/atlas/download-token" \
+        -H "Content-Type: application/json" \
+        -d "{\"key\": \"$LICENSE_KEY\"}" 2>/dev/null || true)
+
+    HTTP_BODY=$(echo "$RESPONSE" | head -n -1)
+    HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+    if [[ "$HTTP_CODE" == "200" ]]; then
+        DOWNLOAD_URL=$(echo "$HTTP_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin)['download_url'])" 2>/dev/null)
+        success "Ліцензія підтверджена! Отримано захищене посилання (дійсне 15 хв)."
+        break
+    elif [[ "$HTTP_CODE" == "404" ]]; then
+        warn "Невірний ліцензійний ключ. Спробуйте ще раз."
+    elif [[ "$HTTP_CODE" == "403" ]]; then
+        ERROR_MSG=$(echo "$HTTP_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail',''))" 2>/dev/null)
+        warn "Ліцензія неактивна: $ERROR_MSG"
+        warn "Поновіть підписку на: $ATLAS_SERVER"
+        exit 1
+    else
+        warn "Сервер тимчасово недоступний (HTTP $HTTP_CODE). Перевірте з'єднання."
+    fi
+done
+
+# ── Step 3: Download Atlas package ───────────────────────────────────────────
+title "Завантаження Atlas AI (~1.5 GB)"
+echo -e "  ${YELLOW}Це займе 2-10 хвилин залежно від швидкості інтернету...${RESET}\n"
+
+if ! curl -L --progress-bar --fail "$DOWNLOAD_URL" -o "$TMP_PKG"; then
+    error "Помилка завантаження. Токен дійсний 15 хвилин — запустіть установник знову."
+fi
+success "Завантаження завершено: $TMP_PKG"
+
+# Verify file is not corrupted
+if [[ ! -s "$TMP_PKG" ]]; then
+    rm -f "$TMP_PKG"
+    error "Завантажений файл порожній або пошкоджений. Спробуйте ще раз."
+fi
+
+# ── Step 4: Install to protected directory ───────────────────────────────────
+title "Встановлення в системну директорію"
+echo -e "  ${YELLOW}Потрібні права адміністратора (sudo) для захисту файлів Atlas.${RESET}\n"
+
+step "Створення директорії: $INSTALL_DIR"
+sudo mkdir -p "$INSTALL_DIR"
+
+step "Розпакування пакету..."
+sudo tar -xzf "$TMP_PKG" -C "$INSTALL_DIR" 2>/dev/null || {
+    sudo tar -xf "$TMP_PKG" -C "$INSTALL_DIR" 2>/dev/null || error "Помилка розпакування архіву"
+}
+
+step "Застосування прав доступу (захист від читання стороннім)..."
 sudo chmod -R 700 "$INSTALL_DIR"
 sudo chown -R root:wheel "$INSTALL_DIR"
 
-echo -e "${GREEN}✓ Права доступу заблоковано на рівні ядра macOS!${NC}"
-echo -e "• Папка встановлення: ${INSTALL_DIR}"
-echo -e "• Звичайний користувач не може переглядати чи редагувати вихідний код Atlas."
-
-# 7. Download Vosk voice model
-echo -e "\n${YELLOW}Бажаєте завантажити офлайн модель мовлення Vosk (uk-UA) (~50MB)? [Y/n]${NC}"
-read -r -p "Вибір: " DOWNLOAD_VOSK
-if [[ "$DOWNLOAD_VOSK" =~ ^([yY][eE][sS]|[yY]|"")$ ]]; then
-    echo "Завантаження моделі розпізнавання..."
-    # Downloading small nano model directly into secure folder using sudo
-    sudo curl -L "https://alphacephei.com/vosk/models/vosk-model-small-uk-v3-nano.zip" -o /tmp/vosk.zip
-    sudo unzip -q /tmp/vosk.zip -d "$INSTALL_DIR/models"
-    sudo mv "$INSTALL_DIR/models/vosk-model-small-uk-v3-nano" "$INSTALL_DIR/models/model-uk" || true
-    sudo rm -f /tmp/vosk.zip
-    echo -e "${GREEN}✓ Офлайн модель мовлення встановлена.${NC}"
+# Allow the current user to execute Atlas binary
+CURRENT_USER=$(whoami)
+sudo chmod a+rx "$INSTALL_DIR" 2>/dev/null || true
+ATLAS_BIN=$(find "$INSTALL_DIR" -name "atlas" -o -name "Atlas" -o -name "main" 2>/dev/null | head -1)
+if [[ -n "$ATLAS_BIN" ]]; then
+    sudo chmod a+x "$ATLAS_BIN"
 fi
 
-# 8. Create launcher or app entry (demo placeholder)
-sudo touch /Applications/Atlas.app || true
-sudo chmod 755 /Applications/Atlas.app || true
+rm -f "$TMP_PKG"
+success "Встановлено в: $INSTALL_DIR"
 
-echo -e "\n${GREEN}====================================================${NC}"
-echo -e "${GREEN}✓ ВСТАНОВЛЕННЯ ATLAS AI УСПІШНО ЗАВЕРШЕНО!${NC}"
-echo -e "===================================================="
-echo -e "• Atlas.app додано в папку /Applications/"
-echo -e "• Код повністю скомпільовано та захищено від читання"
-echo -e "• Пам'ять та API-ключі зберігаються в системному Keychain"
-echo -e "\nЗапуск..."
-echo -e "${CYAN}Скажіть 'Привіт, Атлас' для початку роботи.${NC}\n"
+# ── Step 5: Configure auto-start (LaunchAgent) ───────────────────────────────
+title "Налаштування автозапуску"
+
+# Detect Atlas executable path
+ATLAS_EXEC=$(find "$INSTALL_DIR" -maxdepth 2 -name "atlas" -o -name "Atlas" -o -name "main.py" 2>/dev/null | head -1)
+
+if [[ -n "$ATLAS_EXEC" ]]; then
+    # Determine how to launch
+    if [[ "$ATLAS_EXEC" == *.py ]]; then
+        PROGRAM_ARR="<string>$(which python3)</string><string>$ATLAS_EXEC</string>"
+    else
+        PROGRAM_ARR="<string>$ATLAS_EXEC</string>"
+    fi
+
+    sudo tee "$LAUNCH_AGENT_PLIST" > /dev/null <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>$LAUNCH_AGENT_ID</string>
+    <key>ProgramArguments</key>
+    <array>
+        $PROGRAM_ARR
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <false/>
+    <key>StandardErrorPath</key>
+    <string>/tmp/atlas-error.log</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/atlas-out.log</string>
+    <key>WorkingDirectory</key>
+    <string>$INSTALL_DIR</string>
+</dict>
+</plist>
+PLIST
+
+    sudo launchctl load "$LAUNCH_AGENT_PLIST" 2>/dev/null || true
+    success "LaunchAgent встановлено — Atlas запускатиметься автоматично"
+else
+    warn "Виконуваний файл не знайдено. Автозапуск не налаштовано."
+fi
+
+# ── Step 6: First launch ─────────────────────────────────────────────────────
+title "Перший запуск Atlas AI"
+step "Збереження ліцензійного ключа в macOS Keychain..."
+
+# Store key in keychain for Atlas to use on first launch
+security add-generic-password -a "$CURRENT_USER" -s "Atlas-AI" -w "$LICENSE_KEY" -U 2>/dev/null || true
+success "Ключ збережено в Keychain"
+
+echo ""
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo -e "${BOLD}${GREEN}  ✔ Atlas AI встановлено успішно!${RESET}"
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo ""
+echo -e "  ${BOLD}Ліцензійний ключ:${RESET} $LICENSE_KEY"
+echo -e "  ${BOLD}Директорія:${RESET}       $INSTALL_DIR"
+echo ""
+echo -e "  ${CYAN}Atlas запуститься автоматично при наступному вході в систему.${RESET}"
+echo -e "  ${CYAN}Для негайного запуску відкрийте Atlas.app із папки Applications.${RESET}"
+echo ""
+echo -e "  Підтримка: ${CYAN}$ATLAS_SERVER${RESET}"
+echo ""

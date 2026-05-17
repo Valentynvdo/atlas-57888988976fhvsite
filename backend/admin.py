@@ -339,15 +339,33 @@ async def upload_version(
     if not version.strip():
         raise HTTPException(400, "version required")
     safe = version.strip().replace("/", "_")
-    dest = UPLOAD_DIR / f"atlas-{safe}.dmg"
+
+    # Support both .tar.gz and .dmg
+    is_tar = file.filename.endswith(".tar.gz") or file.filename.endswith(".tgz")
+    ext = ".tar.gz" if is_tar else ".dmg"
+
+    # Always save as atlas-latest.tar.gz (for secure download endpoint)
+    dest_latest = UPLOAD_DIR / "atlas-latest.tar.gz"
+    dest_versioned = UPLOAD_DIR / f"atlas-{safe}{ext}"
+
     size = 0
-    with dest.open("wb") as f:
+    # Write both the versioned archive and the "latest" symlink
+    with dest_versioned.open("wb") as f:
         while chunk := await file.read(1 << 20):  # 1 MB chunks
             size += len(chunk)
             f.write(chunk)
-    size_mb = round(size / (1024 * 1024), 1)
 
-    url = f"/downloads/atlas-{safe}.dmg"
+    # Copy to atlas-latest.tar.gz for the secure download system
+    import shutil as _shutil
+    if ext == ".tar.gz":
+        _shutil.copy2(dest_versioned, dest_latest)
+    else:
+        # DMG upload: keep as versioned, latest remains tar.gz
+        pass
+
+    size_mb = round(size / (1024 * 1024), 1)
+    url = f"/downloads/atlas-{safe}{ext}"
+
     await db.app_config.update_one(
         {"_id": "atlas_version"},
         {"$set": {
@@ -362,9 +380,10 @@ async def upload_version(
         "action": "upload_version",
         "performed_by": admin["email"],
         "performed_at": datetime.now(timezone.utc).isoformat(),
-        "details": {"version": safe, "size_mb": size_mb},
+        "details": {"version": safe, "size_mb": size_mb, "type": ext},
     })
     return {"version": safe, "url": url, "size_mb": size_mb}
+
 
 
 @router.get("/api-logs")

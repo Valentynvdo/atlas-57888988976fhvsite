@@ -1,12 +1,18 @@
-"""Endpoints called by the Atlas Mac app: license validation + stats reporting."""
-from datetime import datetime, timezone
+"""Endpoints called by the Atlas Mac app: license validation + stats reporting + secure download."""
+from datetime import datetime, timezone, timedelta
 from typing import Optional
+import uuid
+import os
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import FileResponse
 
 from db import db
 
 router = APIRouter(prefix="/api/atlas", tags=["atlas"])
+
+UPLOAD_DIR = Path(__file__).parent / "uploads"
 
 
 def _parse_dt(v) -> Optional[datetime]:
@@ -175,3 +181,93 @@ async def get_live_thought():
         "ts": latest.get("ts"),
         "category": latest.get("category", "learning")
     }
+
+
+# ── Secure Download System ────────────────────────────────────────────────────
+
+@router.post("/download-token")
+async def request_download_token(body: dict, request: Request):
+    """install.sh calls this: validates license key → returns a single-use 15-min download token.
+
+    Body: {"key": "ATLAS-..."}
+    Returns: {"token": "...", "download_url": "...", "expires_in": 900}
+    """
+    key = (body.get("key") or "").strip().upper()
+    if not key:
+        raise HTTPException(status_code=400, detail="Ключ не надано")
+
+    # Validate the license key exists and is active
+    lic = await db.licenses.find_one({"key": key}, {"_id": 0})
+    if not lic:
+        raise HTTPException(status_code=404, detail="Невірний ключ активації")
+
+    exp = _parse_dt(lic.get("expires_at"))
+    now = datetime.now(timezone.utc)
+    if not lic.get("active") or not exp or exp < now:
+        raise HTTPException(status_code=403, detail="Ліцензія неактивна або закінчилась")
+
+    # Check user is not blocked
+    user = await db.users.find_one({"user_id": lic["user_id"]}, {"_id": 0})
+    if user and user.get("is_blocked"):
+        raise HTTPException(status_code=403, detail="Акаунт заблоковано")
+
+    # Generate single-use token (15 minutes TTL)
+    token = uuid.uuid4().hex
+    token_expires = (now + timedelta(minutes=15)).isoformat()
+
+    await db.download_tokens.insert_one({
+        "token": token,
+        "key": key,
+        "license_id": lic["license_id"],
+        "created_at": now.isoformat(),
+        "expires_at": token_expires,
+        "used": False,
+        "ip": request.client.host if request.client else "unknown",
+    })
+
+    # Cleanup old tokens older than 30 minutes
+    cutoff = (now - timedelta(minutes=30)).isoformat()
+    await db.download_tokens.delete_many({"created_at": {"$lt": cutoff}})
+
+    server_base = os.getenv("BACKEND_URL", "https://atlas-site-2p2d.onrender.com")
+    return {
+        "token": token,
+        "download_url": f"{server_base}/api/atlas/download/{token}",
+        "expires_in": 900,  # 15 minutes in seconds
+    }
+
+
+@router.get("/download/{token}")
+async def download_atlas(token: str, request: Request):
+    """Single-use download endpoint. Token is immediately invalidated after first access."""
+    token_doc = await db.download_tokens.find_one({"token": token}, {"_id": 0})
+
+    if not token_doc:
+        raise HTTPException(status_code=404, detail="Токен не знайдено або вже використано")
+
+    if token_doc.get("used"):
+        raise HTTPException(status_code=403, detail="Токен вже використано. Запросіть новий.")
+
+    now = datetime.now(timezone.utc)
+    token_exp = _parse_dt(token_doc.get("expires_at"))
+    if not token_exp or token_exp < now:
+        await db.download_tokens.delete_one({"token": token})
+        raise HTTPException(status_code=403, detail="Токен прострочено (15 хв). Запросіть новий.")
+
+    # Immediately invalidate token (single-use)
+    await db.download_tokens.update_one(
+        {"token": token},
+        {"$set": {"used": True, "used_at": now.isoformat(), "used_ip": request.client.host if request.client else "unknown"}}
+    )
+
+    # Find the atlas package file
+    pkg_path = UPLOAD_DIR / "atlas-latest.tar.gz"
+    if not pkg_path.exists():
+        raise HTTPException(status_code=503, detail="Файл пакету ще не завантажено адміністратором")
+
+    return FileResponse(
+        path=str(pkg_path),
+        media_type="application/gzip",
+        filename="atlas-latest.tar.gz",
+        headers={"Content-Disposition": "attachment; filename=atlas-latest.tar.gz"}
+    )

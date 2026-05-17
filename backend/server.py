@@ -45,28 +45,6 @@ async def health():
     return {"ok": True}
 
 
-from fastapi.responses import PlainTextResponse
-
-@app.get("/install")
-@app.get("/api/install")
-async def serve_install_script():
-    """Serve secure terminal installer script directly for curl -fsSL | bash execution."""
-    script_path = ROOT_DIR / "static_scripts" / "install.sh"
-    if script_path.exists():
-        return PlainTextResponse(script_path.read_text(), media_type="text/plain")
-    return PlainTextResponse("Error: Install script not found.", status_code=404)
-
-
-@app.get("/uninstall")
-@app.get("/api/uninstall")
-async def serve_uninstall_script():
-    """Serve terminal uninstaller script."""
-    script_path = ROOT_DIR / "static_scripts" / "uninstall.sh"
-    if script_path.exists():
-        return PlainTextResponse(script_path.read_text(), media_type="text/plain")
-    return PlainTextResponse("Error: Uninstall script not found.", status_code=404)
-
-
 # ── CORS middleware ─────────────────────────────────────────────────────────
 @app.middleware("http")
 async def cors_middleware(request: Request, call_next):
@@ -95,6 +73,31 @@ app.include_router(billing_router)
 app.include_router(webhook_router)
 app.include_router(atlas_router)
 app.include_router(admin_router)
+
+
+# ── Shell script distribution routes ────────────────────────────────────────
+SCRIPTS_DIR = ROOT_DIR / "static_scripts"
+SCRIPTS_DIR.mkdir(exist_ok=True)
+
+@app.get("/install", include_in_schema=False)
+async def serve_install_script():
+    """Serves the install.sh script as plain text for 'curl -fsSL .../install | bash'."""
+    script_path = SCRIPTS_DIR / "install.sh"
+    if not script_path.exists():
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse("echo 'Atlas installer not yet deployed'", media_type="text/plain")
+    from fastapi.responses import FileResponse as FR
+    return FR(str(script_path), media_type="text/plain", filename="install.sh")
+
+@app.get("/uninstall", include_in_schema=False)
+async def serve_uninstall_script():
+    """Serves the uninstall.sh script as plain text."""
+    script_path = SCRIPTS_DIR / "uninstall.sh"
+    if not script_path.exists():
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse("echo 'Uninstaller not yet deployed'", media_type="text/plain")
+    from fastapi.responses import FileResponse as FR
+    return FR(str(script_path), media_type="text/plain", filename="uninstall.sh")
 
 
 # ── File uploads / downloads ────────────────────────────────────────────────
