@@ -66,8 +66,7 @@ async def _ensure_license(user_id: str) -> None:
 
 
 async def _admin_email() -> Optional[str]:
-    email = os.getenv("ADMIN_EMAIL", "").strip().lower()
-    return email if email else "admin@atlas.com"
+    return os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -145,9 +144,7 @@ async def register(body: dict, response: Response):
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Пароль має бути не менше 6 символів")
 
-    admin_email_fixed = os.getenv("ADMIN_EMAIL", "").strip().lower()
-    if not admin_email_fixed:
-        admin_email_fixed = "admin@atlas.com"
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
     if email == admin_email_fixed or email == "admin":
         raise HTTPException(status_code=400, detail="Цей email зарезервований для адміністратора")
 
@@ -187,23 +184,6 @@ async def register(body: dict, response: Response):
     return {"ok": True, "user": {"user_id": user_id, "email": email, "name": name or email.split("@")[0]}}
 
 
-def _get_fallback_admin_password() -> str:
-    # 1. Check ADMIN_PASSWORD environment variable
-    pwd = os.getenv("ADMIN_PASSWORD", "").strip()
-    if pwd:
-        return pwd
-    # 2. Check ADMIN_PIN environment variable
-    pwd = os.getenv("ADMIN_PIN", "").strip()
-    if pwd:
-        return pwd
-    # 3. Check RENDER_SERVICE_ID environment variable
-    pwd = os.getenv("RENDER_SERVICE_ID", "").strip()
-    if pwd:
-        return pwd
-    # 4. Ultimate default fallback (Render Service ID)
-    return "srv-d84mtqjtqb8s73fgcjog"
-
-
 @router.post("/login")
 async def login(body: dict, response: Response):
     email = (body.get("email") or "").strip().lower()
@@ -212,10 +192,8 @@ async def login(body: dict, response: Response):
     if not email or not password:
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
-    admin_email_fixed = os.getenv("ADMIN_EMAIL", "").strip().lower()
-    if not admin_email_fixed:
-        admin_email_fixed = "admin@atlas.com"
-    admin_password_fixed = _get_fallback_admin_password()
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    admin_password_fixed = os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_PIN", "")).strip()
 
     # Predefined Admin Login
     if email == admin_email_fixed or email == "admin":
@@ -413,7 +391,7 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
         if until and until > datetime.now(timezone.utc):
             raise HTTPException(status_code=429, detail="IP locked. Try later.")
     pin = (body.get("pin") or "").strip()
-    expected = _get_fallback_admin_password()
+    expected = os.getenv("ADMIN_PIN", "").strip()
     
     pin_verified = False
     if expected and pin == expected:
