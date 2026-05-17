@@ -193,22 +193,58 @@ async def login(body: dict, response: Response):
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
     admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
-    admin_password_fixed = os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_PIN", "admin1234")).strip()
+    admin_password_fixed = os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_PIN", "")).strip()
 
     # Predefined Admin Login
     if email == admin_email_fixed or email == "admin":
-        if password != admin_password_fixed:
+        user_id = "admin_user"
+        admin_verified = False
+        
+        # 1. Check environment variables
+        if admin_password_fixed and password == admin_password_fixed:
+            admin_verified = True
+            
+            # Upsert/save hashed password to DB to ensure it works even if env variable is cleared
+            salt = secrets.token_hex(16)
+            hashed = _hash_password(password, salt)
+            await db.users.update_one(
+                {"user_id": user_id},
+                {"$set": {
+                    "email": admin_email_fixed,
+                    "name": "Адміністратор",
+                    "password_hash": hashed,
+                    "password_salt": salt,
+                    "provider": "email",
+                    "avatar_url": "",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "is_blocked": False,
+                    "admin_notes": "Превизначений акаунт адміністратора"
+                }},
+                upsert=True
+            )
+        else:
+            # 2. Check secure hash in DB
+            existing_admin = await db.users.find_one({"user_id": user_id})
+            if existing_admin:
+                salt = existing_admin.get("password_salt")
+                stored_hash = existing_admin.get("password_hash")
+                if salt and stored_hash and _hash_password(password, salt) == stored_hash:
+                    admin_verified = True
+        
+        if not admin_verified:
             raise HTTPException(status_code=401, detail="Невірний email або пароль")
         
-        user_id = "admin_user"
-        
-        # Ensure Admin User exists in DB
+        # Ensure Admin User exists in DB if logged in via env without DB record
         existing_admin = await db.users.find_one({"user_id": user_id})
         if not existing_admin:
+            salt = secrets.token_hex(16)
+            hashed = _hash_password(password, salt)
             await db.users.insert_one({
                 "user_id": user_id,
                 "email": admin_email_fixed,
                 "name": "Адміністратор",
+                "password_hash": hashed,
+                "password_salt": salt,
                 "provider": "email",
                 "avatar_url": "",
                 "created_at": datetime.now(timezone.utc).isoformat(),
@@ -355,8 +391,21 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
         if until and until > datetime.now(timezone.utc):
             raise HTTPException(status_code=429, detail="IP locked. Try later.")
     pin = (body.get("pin") or "").strip()
-    expected = os.getenv("ADMIN_PIN", "")
-    if pin != expected or not expected:
+    expected = os.getenv("ADMIN_PIN", "").strip()
+    
+    pin_verified = False
+    if expected and pin == expected:
+        pin_verified = True
+    else:
+        # Fallback to checking against database admin_user hash
+        admin = await db.users.find_one({"user_id": "admin_user"})
+        if admin:
+            salt = admin.get("password_salt")
+            stored_hash = admin.get("password_hash")
+            if salt and stored_hash and _hash_password(pin, salt) == stored_hash:
+                pin_verified = True
+                
+    if not pin_verified:
         new_attempts = (lock.get("attempts", 0) if lock else 0) + 1
         update = {"attempts": new_attempts, "last_attempt": datetime.now(timezone.utc).isoformat()}
         if new_attempts >= MAX_ATTEMPTS:
