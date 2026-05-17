@@ -16,6 +16,7 @@ export default function Login() {
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setFormLoading(true);
 
     try {
@@ -34,6 +36,8 @@ export default function Login() {
         await api.post("/api/auth/login", { email, password });
       } else {
         await api.post("/api/auth/register", { email, password, name });
+        setSuccess("🎉 Ви успішно зареєстровані! Налаштування особистого кабінету...");
+        await new Promise((resolve) => setTimeout(resolve, 1500));
       }
       // Refresh Auth State
       await refresh();
@@ -114,7 +118,7 @@ export default function Login() {
           border: "1px solid rgba(255,255,255,0.05)"
         }}>
           <button
-            onClick={() => { setTab("login"); setError(""); }}
+            onClick={() => { setTab("login"); setError(""); setSuccess(""); }}
             style={{
               flex: 1,
               padding: "10px 0",
@@ -131,7 +135,7 @@ export default function Login() {
             Увійти
           </button>
           <button
-            onClick={() => { setTab("register"); setError(""); }}
+            onClick={() => { setTab("register"); setError(""); setSuccess(""); }}
             style={{
               flex: 1,
               padding: "10px 0",
@@ -163,6 +167,23 @@ export default function Login() {
             lineHeight: 1.4
           }}>
             ⚠️ {error}
+          </div>
+        )}
+
+        {/* Success message */}
+        {success && (
+          <div style={{
+            background: "rgba(40,200,64,0.15)",
+            border: "1px solid rgba(40,200,64,0.3)",
+            color: "#30d158",
+            padding: "12px 16px",
+            borderRadius: 10,
+            marginBottom: 20,
+            fontSize: 13,
+            textAlign: "left",
+            lineHeight: 1.4
+          }}>
+            ✅ {success}
           </div>
         )}
 

@@ -128,7 +128,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 OPENAI_API_KEY=your_openai_api_key_here
 
 # Ліцензійний сервер
-LICENSE_SERVER=https://atlas-57888988976fhvsite.onrender.com
+LICENSE_SERVER=https://atlas-site-2p2d.onrender.com
 
 # Telegram (опційно)
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
@@ -147,7 +147,7 @@ EOF`,
 # ATLAS-XXXX-XXXX-XXXX-XXXX
 
 # Отримати ключ можна в особистому кабінеті:
-# https://atlas-57888988976fhvsite.onrender.com/dashboard`,
+# https://atlas-site-2p2d.onrender.com/dashboard`,
   },
 ];
 
@@ -191,7 +191,7 @@ const TROUBLESHOOT = [
       <div>
         <p>Для розробки використовуй майстер-ключ обходу:</p>
         <CodeBlock code={`# Введи цей ключ при активації (офлайн режим, 10 років):\nATLAS-DEV-MODE-9999`} />
-        <p>Для продакшн — перевір інтернет-з'єднання та статус сервера: <a href="https://atlas-57888988976fhvsite.onrender.com/api/health" target="_blank" rel="noreferrer" style={{ color: "#00E5FF" }}>atlas-site/api/health</a></p>
+        <p>Для продакшн — перевір інтернет-з'єднання та статус сервера: <a href="/api/health" target="_blank" rel="noreferrer" style={{ color: "#00E5FF" }}>atlas-site/api/health</a></p>
       </div>
     ),
   },
@@ -250,7 +250,7 @@ export default function Docs() {
 
         <div data-reveal style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <a
-            href="https://atlas-57888988976fhvsite.onrender.com/dashboard"
+            href="/dashboard"
             style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 12, background: "linear-gradient(135deg, #007AFF, #00E5FF)", color: "#fff", fontWeight: 600, fontSize: 14, textDecoration: "none" }}
           >
             <Download size={15} /> Отримати ліцензію
@@ -368,7 +368,7 @@ export default function Docs() {
           <h2 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 12px", letterSpacing: "-0.02em" }}>Готовий до роботи?</h2>
           <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 15, marginBottom: 28 }}>Отримай ліцензійний ключ і запускай Atlas AI вже зараз</p>
           <a
-            href="https://atlas-57888988976fhvsite.onrender.com/login"
+            href="/login"
             style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 32px", borderRadius: 14, background: "linear-gradient(135deg, #007AFF, #00E5FF)", color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none", boxShadow: "0 0 30px rgba(0,122,255,0.3)" }}
           >
             <Zap size={16} /> Отримати доступ

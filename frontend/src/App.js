@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
 import Navbar from "./components/atlas/Navbar";
@@ -11,7 +11,6 @@ import SmartConcierge from "./components/atlas/SmartConcierge";
 import AbsoluteAwareness from "./components/atlas/AbsoluteAwareness";
 import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
-import ComingSoonModal from "./components/atlas/ComingSoonModal";
 import useScrollReveal from "./components/atlas/useScrollReveal";
 
 import { AuthProvider } from "./lib/auth";
@@ -21,24 +20,26 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Docs from "./pages/Docs";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Contacts from "./pages/Contacts";
 
 const MANIFEST_URL = `${window.location.origin}/tonconnect-manifest.json`;
 
 function Landing() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const rootRef = useScrollReveal();
 
   return (
     <div className="App" ref={rootRef} data-testid="atlas-landing">
-      <Navbar onCta={() => setModalOpen(true)} />
-      <Hero onCta={() => setModalOpen(true)} />
+      <Navbar onCta={() => navigate("/login")} />
+      <Hero onCta={() => navigate("/login")} />
       <LivingIntelligence />
       <MacOSControl />
       <SmartConcierge />
       <AbsoluteAwareness />
-      <FinalCTA onCta={() => setModalOpen(true)} />
+      <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
-      <ComingSoonModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
@@ -53,6 +54,9 @@ function AppRouter() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/docs" element={<Docs />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/contacts" element={<Contacts />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route
         path="/dashboard"

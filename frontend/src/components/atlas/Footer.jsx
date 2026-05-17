@@ -1,4 +1,12 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
+  const links = [
+    { label: "Приватність", path: "/privacy" },
+    { label: "Умови", path: "/terms" },
+    { label: "Контакти", path: "/contacts" }
+  ];
+
   return (
     <footer
       data-testid="footer"
@@ -13,7 +21,7 @@ export default function Footer() {
     >
       <div
         style={{
-          maxWidth: 1280,
+          maxWidth: 1440,
           margin: "0 auto",
           padding: "0 1.5rem",
           display: "flex",
@@ -49,11 +57,11 @@ export default function Footer() {
         </div>
 
         <div style={{ display: "flex", gap: 24 }}>
-          {["Приватність", "Умови", "Контакти"].map((l) => (
-            <a
-              key={l}
-              href="#"
-              data-testid={`footer-link-${l}`}
+          {links.map((link) => (
+            <Link
+              key={link.label}
+              to={link.path}
+              data-testid={`footer-link-${link.label}`}
               style={{
                 fontSize: 13,
                 color: "rgba(255,255,255,0.6)",
@@ -65,8 +73,8 @@ export default function Footer() {
                 (e.currentTarget.style.color = "rgba(255,255,255,0.6)")
               }
             >
-              {l}
-            </a>
+              {link.label}
+            </Link>
           ))}
         </div>
       </div>
