@@ -16,6 +16,7 @@ import {
   Check,
   Wallet,
   Zap,
+  MessageSquare,
 } from "lucide-react";
 import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
@@ -663,6 +664,69 @@ export default function Dashboard() {
             <li>Введи свій ліцензійний ключ зверху.</li>
             <li>Дозволь доступ до мікрофона і Accessibility — і Atlas готовий.</li>
           </ol>
+        </section>
+
+        {/* ----- Block 3.5: Telegram Bot ----- */}
+        <section data-testid="telegram-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0, 136, 204, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%)", border: "1px solid rgba(0, 136, 204, 0.25)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+            <SectionHeader title="Підключити Telegram-бота Atlas" eyebrow="Мобільне керування" />
+            <div style={{ width: 42, height: 42, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", display: "grid", placeItems: "center", color: "#0088cc", border: "1px solid rgba(0, 136, 204, 0.3)" }}>
+              <MessageSquare size={20} />
+            </div>
+          </div>
+          
+          <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
+            Ви можете керувати своїм Atlas AI віддалено зі свого смартфона через наш офіційний Telegram бот. 
+            Отримуйте миттєві сповіщення, переглядайте звіти автономних досліджень, відправляйте команди та спілкуйтеся з Atlas будь-де та будь-коли.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>1</div>
+              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
+                Натисніть кнопку <strong>«Підключити бота»</strong> нижче. Вас буде перенаправлено до нашого офіційного Telegram-бота <span style={{ color: "#00E5FF", fontWeight: 500 }}>@Atlas_aimac_bot</span>.
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>2</div>
+              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
+                Натисніть кнопку <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації з лінк-параметру.
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>3</div>
+              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
+                Якщо бот попросить код вручну — просто надішліть йому ваш ліцензійний ключ: <code style={{ background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 4, fontFamily: "monospace", fontSize: 12, color: "#00E5FF", fontWeight: 600 }}>{license.key}</code>
+              </div>
+            </div>
+          </div>
+
+          <a
+            href={`https://t.me/Atlas_aimac_bot?start=ACT_${license.key}`}
+            target="_blank"
+            rel="noreferrer"
+            className="cta-btn"
+            style={{
+              textDecoration: "none",
+              background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
+              border: "none",
+              boxShadow: "0 4px 20px rgba(0, 136, 204, 0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              padding: "14px 28px",
+              borderRadius: 14,
+              fontSize: 14.5,
+              fontWeight: 600,
+              width: "100%",
+              maxWidth: 320,
+              cursor: "pointer",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease"
+            }}
+          >
+            <MessageSquare size={16} /> Підключити Telegram-бота
+          </a>
         </section>
 
         {/* ----- Block 4: Stats ----- */}
