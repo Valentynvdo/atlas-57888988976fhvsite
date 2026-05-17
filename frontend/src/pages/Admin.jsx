@@ -77,6 +77,7 @@ function AdminPanel({ onLogout }) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [apiLogs, setApiLogs] = useState([]);
   const [version, setVersion] = useState(null);
+  const [selectedMetric, setSelectedMetric] = useState("users"); // 'users' | 'active' | 'revenue' | 'churn'
   const fileRef = useRef(null);
 
   const refresh = useCallback(async () => {
@@ -117,6 +118,21 @@ function AdminPanel({ onLogout }) {
   const toggleSort = (k) =>
     setSort((s) => (s.key === k ? { key: k, dir: s.dir === "asc" ? "desc" : "asc" } : { key: k, dir: "asc" }));
 
+  // Визначення кольору та назви графіку
+  const chartConfig = useMemo(() => {
+    switch (selectedMetric) {
+      case "active":
+        return { title: "Активні користувачі", color: "#28C840" };
+      case "revenue":
+        return { title: "Місячний дохід ($)", color: "#FEBC2E" };
+      case "churn":
+        return { title: "Відтік ліцензій за місяць", color: "#FF5F57" };
+      case "users":
+      default:
+        return { title: "Зростання користувачів", color: "#00E5FF" };
+    }
+  }, [selectedMetric]);
+
   return (
     <div data-testid="admin-page" style={{ minHeight: "100vh", background: "#050507", color: "#fff", fontFamily: "Inter, sans-serif" }}>
       <Toaster theme="dark" position="top-center" />
@@ -154,23 +170,23 @@ function AdminPanel({ onLogout }) {
         {/* Stats grid */}
         {stats && (
           <section data-testid="admin-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 24 }}>
-            <StatCard icon={<ShieldCheck size={18} />} label="Активних" value={stats.active_count} accent="#28C840" />
-            <StatCard icon={<Users size={18} />} label="Всього юзерів" value={stats.total_users} accent="#00E5FF" />
-            <StatCard icon={<TrendingUp size={18} />} label="Нових сьогодні" value={stats.users_today} accent="#9D4CDD" />
-            <StatCard icon={<AlertCircle size={18} />} label="Відтік / міс" value={stats.churn_this_month} accent="#FF5F57" />
-            <StatCard icon={<DollarSign size={18} />} label="Місячний дохід" value={`$${stats.monthly_revenue}`} accent="#FEBC2E" />
-            <StatCard icon={<DollarSign size={18} />} label="Річний прогноз" value={`$${stats.yearly_forecast}`} accent="#FEBC2E" />
+            <StatCard icon={<ShieldCheck size={18} />} label="Активних" value={stats.active_count} accent="#28C840" active={selectedMetric === "active"} onClick={() => { setSelectedMetric("active"); setFilter("active"); }} />
+            <StatCard icon={<Users size={18} />} label="Всього юзерів" value={stats.total_users} accent="#00E5FF" active={selectedMetric === "users"} onClick={() => { setSelectedMetric("users"); setFilter("all"); }} />
+            <StatCard icon={<TrendingUp size={18} />} label="Нових сьогодні" value={stats.users_today} accent="#9D4CDD" active={false} onClick={() => { setSelectedMetric("users"); }} />
+            <StatCard icon={<AlertCircle size={18} />} label="Відтік / міс" value={stats.churn_this_month} accent="#FF5F57" active={selectedMetric === "churn"} onClick={() => { setSelectedMetric("churn"); setFilter("inactive"); }} />
+            <StatCard icon={<DollarSign size={18} />} label="Місячний дохід" value={`$${stats.monthly_revenue}`} accent="#FEBC2E" active={selectedMetric === "revenue"} onClick={() => { setSelectedMetric("revenue"); }} />
+            <StatCard icon={<DollarSign size={18} />} label="Річний прогноз" value={`$${stats.yearly_forecast}`} accent="#FEBC2E" active={false} onClick={() => { setSelectedMetric("revenue"); }} />
           </section>
         )}
 
         {/* Growth chart */}
         {stats && (
           <section data-testid="admin-growth" className="glass" style={{ padding: 24, borderRadius: 20, marginBottom: 24 }}>
-            <div style={{ fontSize: 11, letterSpacing: "0.18em", color: "#00E5FF", textTransform: "uppercase", fontWeight: 600 }}>
+            <div style={{ fontSize: 11, letterSpacing: "0.18em", color: chartConfig.color, textTransform: "uppercase", fontWeight: 600 }}>
               Графік
             </div>
-            <h3 style={{ margin: "6px 0 16px", fontSize: 18, fontWeight: 600 }}>Зростання користувачів</h3>
-            <GrowthChart data={stats.growth} />
+            <h3 style={{ margin: "6px 0 16px", fontSize: 18, fontWeight: 600 }}>{chartConfig.title}</h3>
+            <GrowthChart data={stats.growth} metric={selectedMetric} color={chartConfig.color} />
           </section>
         )}
 
@@ -392,9 +408,21 @@ function AdminPanel({ onLogout }) {
 
 const td = { padding: "10px 12px", whiteSpace: "nowrap" };
 
-function StatCard({ icon, label, value, accent }) {
+function StatCard({ icon, label, value, accent, active, onClick }) {
   return (
-    <div className="glass" style={{ padding: 18, borderRadius: 16 }}>
+    <div
+      className="glass"
+      onClick={onClick}
+      style={{
+        padding: 18,
+        borderRadius: 16,
+        cursor: "pointer",
+        border: active ? `1px solid ${accent}` : "1px solid rgba(255,255,255,0.06)",
+        background: active ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
+        boxShadow: active ? `0 0 12px ${accent}22` : "none",
+        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: 8, color: accent, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>
         {icon}
         {label}
@@ -404,8 +432,8 @@ function StatCard({ icon, label, value, accent }) {
   );
 }
 
-function GrowthChart({ data }) {
-  const max = Math.max(1, ...data.map((d) => d.users));
+function GrowthChart({ data, metric, color }) {
+  const max = Math.max(1, ...data.map((d) => d[metric] || 0));
   return (
     <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 140 }}>
       {data.map((d) => (
@@ -413,13 +441,13 @@ function GrowthChart({ data }) {
           <div
             style={{
               width: "100%",
-              height: `${(d.users / max) * 100}%`,
-              background: "linear-gradient(180deg, #00E5FF, #007AFF)",
+              height: `${((d[metric] || 0) / max) * 100}%`,
+              background: `linear-gradient(180deg, ${color}, ${color}22)`,
               borderRadius: "6px 6px 0 0",
               minHeight: 4,
               transition: "height 0.6s ease",
             }}
-            title={`${d.users}`}
+            title={`${d[metric] || 0}`}
           />
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>{d.month.slice(5)}</div>
         </div>

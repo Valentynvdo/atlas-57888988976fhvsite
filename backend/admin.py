@@ -76,16 +76,44 @@ async def admin_stats(_=Depends(require_admin)):
     monthly_revenue = round(sum((t.get("amount") or 0) for t in paid_tx), 2)
     yearly_forecast = round(monthly_revenue * 12, 2)
 
-    # 12-month growth (count of users by month)
+    # 12-month growth (count of users, active users, revenue, churn by month)
     growth = []
     for i in range(11, -1, -1):
         m_start = (now.replace(day=1) - timedelta(days=i * 30))
         m_start = m_start.replace(hour=0, minute=0, second=0, microsecond=0)
         m_end = m_start + timedelta(days=31)
+        
+        # New users registered
         cnt = await db.users.count_documents({
             "created_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()},
         })
-        growth.append({"month": m_start.strftime("%Y-%m"), "users": cnt})
+        
+        # Active users in that month (estimated by active licenses)
+        active_cnt = await db.licenses.count_documents({
+            "created_at": {"$lt": m_end.isoformat()},
+            "expires_at": {"$gt": m_start.isoformat()},
+            "active": True
+        })
+        
+        # Revenue in that month
+        txs = await db.payment_transactions.find(
+            {"payment_status": "paid", "created_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()}}
+        ).to_list(1000)
+        rev = round(sum(t.get("amount") or 0 for t in txs), 2)
+        
+        # Churn in that month
+        churn_cnt = await db.licenses.count_documents({
+            "expires_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()},
+            "active": False
+        })
+        
+        growth.append({
+            "month": m_start.strftime("%Y-%m"),
+            "users": cnt,
+            "active": active_cnt,
+            "revenue": rev,
+            "churn": churn_cnt
+        })
 
     return {
         "active_count": active_count,
