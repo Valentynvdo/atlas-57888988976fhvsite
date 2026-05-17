@@ -24,9 +24,9 @@ services:
       - key: TON_PRICE_USD
         value: "28.99"
       - key: FRONTEND_URL
-        value: https://atlas-57888988976fhvsite.onrender.com
+        value: https://atlas-site-2p2d.onrender.com
       - key: BACKEND_URL
-        value: https://atlas-57888988976fhvsite.onrender.com
+        value: https://atlas-site-2p2d.onrender.com
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_PIN
