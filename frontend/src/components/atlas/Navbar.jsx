@@ -35,9 +35,9 @@ export default function Navbar({ onCta }) {
     >
       <div
         style={{
-          maxWidth: 1440,
+          maxWidth: "100%",
           margin: "0 auto",
-          padding: "0 1.5rem",
+          padding: "0 5%",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

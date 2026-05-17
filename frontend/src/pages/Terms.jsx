@@ -39,9 +39,10 @@ export default function Terms() {
       <div
         className="glass"
         style={{
-          maxWidth: 800,
+          maxWidth: "100%",
+          width: "100%",
           margin: "0 auto",
-          padding: "40px 32px",
+          padding: "40px 5%",
           borderRadius: 24,
           border: "1px solid rgba(255,255,255,0.08)",
         }}

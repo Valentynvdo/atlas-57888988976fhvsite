@@ -288,7 +288,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main style={{ maxWidth: 1080, margin: "0 auto", padding: "40px 24px 80px" }}>
+      <main style={{ maxWidth: "100%", padding: "40px 5% 80px" }}>
         {/* ----- Block 1: Subscription ----- */}
         <section data-testid="subscription-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           {/* Header with macOS Dots */}

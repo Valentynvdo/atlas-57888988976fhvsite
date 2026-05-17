@@ -266,7 +266,7 @@ export default function Docs() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 860, margin: "0 auto", padding: "72px 24px 100px" }}>
+      <div style={{ maxWidth: "100%", padding: "72px 5% 100px" }}>
 
         {/* ── System Requirements ── */}
         <section style={{ marginBottom: 80 }}>

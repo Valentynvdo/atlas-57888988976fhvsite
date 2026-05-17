@@ -144,7 +144,7 @@ function AdminPanel({ onLogout }) {
         </button>
       </header>
 
-      <main style={{ maxWidth: 1280, margin: "0 auto", padding: "32px 24px 80px" }}>
+      <main style={{ maxWidth: "100%", padding: "32px 5% 80px" }}>
         {/* Stats grid */}
         {stats && (
           <section data-testid="admin-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 24 }}>
