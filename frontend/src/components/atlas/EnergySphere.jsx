@@ -126,7 +126,8 @@ export default function EnergySphere() {
       }
     `;
 
-    const geometry = new THREE.IcosahedronGeometry(1, 64);
+    // Optimized detail from 64 to 28 for major GPU rendering boost (smooth with vertex shaders)
+    const geometry = new THREE.IcosahedronGeometry(1, 28);
     const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -154,8 +155,8 @@ export default function EnergySphere() {
     const wire = new THREE.Mesh(wireGeo, wireMat);
     scene.add(wire);
 
-    // Outer glow sphere (soft)
-    const glowGeo = new THREE.SphereGeometry(1.55, 64, 64);
+    // Outer glow sphere (soft) - optimized segments from 64 to 32
+    const glowGeo = new THREE.SphereGeometry(1.55, 32, 32);
     const glowMat = new THREE.ShaderMaterial({
       transparent: true,
       side: THREE.BackSide,
