@@ -39,8 +39,12 @@ export default function Dashboard() {
   const tonWallet = useTonWallet();
 
   const loadLicense = useCallback(async () => {
-    const r = await api.get("/api/me/license");
-    setLicense(r.data);
+    try {
+      const r = await api.get("/api/me/license");
+      setLicense(r.data);
+    } catch (err) {
+      console.error("Failed to load license", err);
+    }
   }, []);
 
   useEffect(() => {
@@ -49,6 +53,10 @@ export default function Dashboard() {
     api.get("/api/billing/packages").then((r) => setPackages(r.data)).catch(() => {});
     // Load live TON prices
     api.get("/api/billing/ton-price").then((r) => setTonPrices(r.data)).catch(() => {});
+
+    // Polling every 15 seconds for real-time updates
+    const intervalId = setInterval(loadLicense, 15000);
+    return () => clearInterval(intervalId);
   }, [loadLicense]);
 
   // Handle Stripe redirect (?session_id=…) — poll for status
