@@ -9,7 +9,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 
-from auth import require_admin, _generate_key, _current_admin_email
+from auth import require_admin, _generate_key
 from db import db
 
 logger = logging.getLogger("atlas.admin")
