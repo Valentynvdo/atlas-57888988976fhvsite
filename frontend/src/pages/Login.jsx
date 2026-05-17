@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import api from "../lib/api";
@@ -7,16 +7,45 @@ export default function Login() {
   const { user, loading, refresh } = useAuth();
   const navigate = useNavigate();
 
+  // Tab: 'login' | 'register'
+  const [tab, setTab] = useState("login");
+
+  // Form states
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+
   useEffect(() => {
     if (!loading && user) {
       navigate(user.is_admin ? "/x7k9m-admin" : "/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
 
-  const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth — backend handles the full flow
-    const backendUrl = api.defaults.baseURL || window.location.origin;
-    window.location.href = `${backendUrl}/api/auth/google/login`;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setFormLoading(true);
+
+    try {
+      if (tab === "login") {
+        await api.post("/api/auth/login", { email, password });
+      } else {
+        await api.post("/api/auth/register", { email, password, name });
+      }
+      // Refresh Auth State
+      await refresh();
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.detail || 
+        "Сталася помилка при авторизації. Перевірте з'єднання."
+      );
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const handleDevLogin = async (role) => {
@@ -47,66 +76,228 @@ export default function Login() {
       <div
         className="glass"
         style={{
-          width: "min(420px, 100%)",
-          padding: 40,
+          width: "min(440px, 100%)",
+          padding: "40px 30px",
           borderRadius: 28,
           textAlign: "center",
           position: "relative",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.06)",
         }}
       >
         <img
           src="/atlas-icon.png"
           alt="Atlas AI"
           style={{
-            width: 72, height: 72, borderRadius: 18,
-            margin: "0 auto 24px", display: "block",
-            boxShadow: "0 0 40px rgba(0,229,255,0.35)",
+            width: 64, height: 64, borderRadius: 16,
+            margin: "0 auto 20px", display: "block",
+            boxShadow: "0 0 35px rgba(0,229,255,0.4)",
           }}
         />
         <h1
           data-testid="login-title"
-          style={{ fontSize: 28, fontWeight: 600, letterSpacing: "-0.02em", margin: 0 }}
+          style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}
         >
           Atlas AI
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.65)", marginTop: 12, marginBottom: 32, fontSize: 15, lineHeight: 1.5 }}>
-          Увійди щоб керувати підпискою та ліцензійним ключем
+        <p style={{ color: "rgba(255,255,255,0.6)", marginTop: 8, marginBottom: 28, fontSize: 14 }}>
+          Особистий кабінет клієнта та система управління ліцензіями
         </p>
 
-        {/* Google OAuth Button */}
-        <button
-          data-testid="google-login-btn"
-          onClick={handleGoogleLogin}
-          style={{
-            width: "100%",
-            padding: "14px 20px",
-            background: "#fff",
-            color: "#1a1a1a",
-            border: "none",
-            borderRadius: 12,
-            fontSize: 15,
-            fontWeight: 600,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-            transition: "transform 0.15s ease, box-shadow 0.15s ease",
-            marginBottom: 16,
-            boxShadow: "0 2px 16px rgba(0,0,0,0.35)",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,0,0,0.4)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.35)"; }}
-        >
-          {/* Google Icon */}
-          <svg width="20" height="20" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          Увійти через Google
-        </button>
+        {/* Beautiful Tabs */}
+        <div style={{
+          display: "flex",
+          background: "rgba(255,255,255,0.05)",
+          padding: 4,
+          borderRadius: 12,
+          marginBottom: 24,
+          border: "1px solid rgba(255,255,255,0.05)"
+        }}>
+          <button
+            onClick={() => { setTab("login"); setError(""); }}
+            style={{
+              flex: 1,
+              padding: "10px 0",
+              background: tab === "login" ? "rgba(0,122,255,0.85)" : "transparent",
+              color: tab === "login" ? "#fff" : "rgba(255,255,255,0.6)",
+              border: "none",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.2s ease"
+            }}
+          >
+            Увійти
+          </button>
+          <button
+            onClick={() => { setTab("register"); setError(""); }}
+            style={{
+              flex: 1,
+              padding: "10px 0",
+              background: tab === "register" ? "rgba(0,122,255,0.85)" : "transparent",
+              color: tab === "register" ? "#fff" : "rgba(255,255,255,0.6)",
+              border: "none",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.2s ease"
+            }}
+          >
+            Реєстрація
+          </button>
+        </div>
+
+        {/* Error message */}
+        {error && (
+          <div style={{
+            background: "rgba(255,69,58,0.15)",
+            border: "1px solid rgba(255,69,58,0.3)",
+            color: "#ff453a",
+            padding: "12px 16px",
+            borderRadius: 10,
+            marginBottom: 20,
+            fontSize: 13,
+            textAlign: "left",
+            lineHeight: 1.4
+          }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
+          {tab === "register" && (
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Ім'я
+              </label>
+              <input
+                type="text"
+                placeholder="Іван Франко"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 10,
+                  color: "#fff",
+                  fontSize: 14,
+                  boxSizing: "border-box",
+                  outline: "none",
+                  transition: "border-color 0.2s"
+                }}
+                onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
+                onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+              />
+            </div>
+          )}
+
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              Електронна пошта
+            </label>
+            <input
+              type="email"
+              required
+              placeholder="example@mail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 10,
+                color: "#fff",
+                fontSize: 14,
+                boxSizing: "border-box",
+                outline: "none",
+                transition: "border-color 0.2s"
+              }}
+              onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
+              onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+            />
+          </div>
+
+          <div style={{ marginBottom: 20, position: "relative" }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              Пароль
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                placeholder={tab === "register" ? "Мінімум 6 символів" : "••••••"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px 48px 12px 16px",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 10,
+                  color: "#fff",
+                  fontSize: 14,
+                  boxSizing: "border-box",
+                  outline: "none",
+                  transition: "border-color 0.2s"
+                }}
+                onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
+                onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  color: "rgba(255,255,255,0.45)",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  padding: 4,
+                }}
+              >
+                {showPassword ? "Приховати" : "Показати"}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={formLoading}
+            style={{
+              width: "100%",
+              padding: "14px 20px",
+              background: "linear-gradient(135deg, #007aff, #00c6ff)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 12,
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: formLoading ? "not-allowed" : "pointer",
+              transition: "transform 0.15s ease, box-shadow 0.15s ease",
+              boxShadow: "0 4px 20px rgba(0,122,255,0.3)",
+              opacity: formLoading ? 0.75 : 1
+            }}
+            onMouseEnter={(e) => { if (!formLoading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,122,255,0.4)"; } }}
+            onMouseLeave={(e) => { if (!formLoading) { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,122,255,0.3)"; } }}
+          >
+            {formLoading ? (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                Завантаження...
+              </span>
+            ) : tab === "login" ? "Увійти в кабінет" : "Зареєструватися"}
+          </button>
+        </form>
 
         {/* Dev-login buttons (only in development) */}
         {isDev && (
@@ -133,8 +324,8 @@ export default function Login() {
           </div>
         )}
 
-        <p style={{ marginTop: 24, color: "rgba(255,255,255,0.35)", fontSize: 12, lineHeight: 1.5 }}>
-          Натискаючи кнопку, ти погоджуєшся з умовами та політикою приватності.
+        <p style={{ marginTop: 24, color: "rgba(255,255,255,0.35)", fontSize: 11, lineHeight: 1.5 }}>
+          Вся інформація шифрується та передається через захищене з'єднання.
         </p>
       </div>
     </div>

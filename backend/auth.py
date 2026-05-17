@@ -129,86 +129,57 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
     return user
 
 
+import hashlib
+
+def _hash_password(password: str, salt: str) -> str:
+    return hashlib.sha256((password + salt).encode()).hexdigest()
+
+
 # ──────────────────────────────────────────────────────────────────────────────
-# Google OAuth
+# Email/Password Authentication
 # ──────────────────────────────────────────────────────────────────────────────
 
-@router.get("/google/login")
-async def google_login(request: Request):
-    """Redirect to Google OAuth consent screen."""
-    from fastapi.responses import RedirectResponse
-    redirect_uri = _google_redirect_uri(request)
-    params = urlencode({
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": redirect_uri,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "select_account",
-    })
-    return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+@router.post("/register")
+async def register(body: dict, response: Response):
+    email = (body.get("email") or "").strip().lower()
+    password = body.get("password") or ""
+    name = (body.get("name") or "").strip()
 
+    if not email or "@" not in email:
+        raise HTTPException(status_code=400, detail="Некоректний email")
+    if len(password) < 6:
+        raise HTTPException(status_code=400, detail="Пароль має бути не менше 6 символів")
 
-@router.get("/google/callback")
-async def google_callback(code: str, request: Request, response: Response):
-    """Exchange Google code → user profile → session."""
-    from fastapi.responses import RedirectResponse
-
-    redirect_uri = _google_redirect_uri(request)
-    # Exchange code for tokens
-    async with httpx.AsyncClient() as client_http:
-        token_resp = await client_http.post(
-            "https://oauth2.googleapis.com/token",
-            data={
-                "code": code, "client_id": GOOGLE_CLIENT_ID,
-                "client_secret": GOOGLE_CLIENT_SECRET,
-                "redirect_uri": redirect_uri, "grant_type": "authorization_code",
-            },
-        )
-        if token_resp.status_code != 200:
-            raise HTTPException(status_code=400, detail="Google token exchange failed")
-        tokens = token_resp.json()
-        access_token = tokens.get("access_token")
-
-        # Get user info
-        info_resp = await client_http.get(
-            "https://www.googleapis.com/oauth2/v2/userinfo",
-            headers={"Authorization": f"Bearer {access_token}"},
-        )
-        if info_resp.status_code != 200:
-            raise HTTPException(status_code=400, detail="Google userinfo failed")
-        guser = info_resp.json()
-
-    email = (guser.get("email") or "").lower()
-    name = guser.get("name") or email.split("@")[0]
-    picture = guser.get("picture") or ""
-    google_id = guser.get("id") or ""
-
-    # Upsert user
     existing = await db.users.find_one({"email": email})
     if existing:
-        user_id = existing["user_id"]
-        await db.users.update_one(
-            {"user_id": user_id},
-            {"$set": {"name": name, "avatar_url": picture}},
+        raise HTTPException(status_code=400, detail="Користувач з таким email вже існує")
+
+    salt = secrets.token_hex(16)
+    hashed = _hash_password(password, salt)
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+
+    await db.users.insert_one({
+        "user_id": user_id,
+        "email": email,
+        "name": name or email.split("@")[0],
+        "password_hash": hashed,
+        "password_salt": salt,
+        "provider": "email",
+        "avatar_url": "",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "is_blocked": False,
+        "admin_notes": "",
+    })
+
+    # Claim first user as admin if no admin set
+    admin_email = await _admin_email()
+    if not admin_email:
+        await db.app_config.update_one(
+            {"_id": "admin_claimed"},
+            {"$set": {"claimed": True, "email": email}},
+            upsert=True,
         )
-    else:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        await db.users.insert_one({
-            "user_id": user_id, "email": email, "name": name,
-            "provider": "google", "avatar_url": picture,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "is_blocked": False, "admin_notes": "",
-        })
-        # Claim first user as admin if no admin set
-        admin_email = await _admin_email()
-        if not admin_email:
-            await db.app_config.update_one(
-                {"_id": "admin_claimed"},
-                {"$set": {"claimed": True, "email": email}},
-                upsert=True,
-            )
-            logger.warning("Admin auto-claimed by first user: %s", email)
+        logger.warning("Admin auto-claimed by first registered user: %s", email)
 
     await _ensure_license(user_id)
 
@@ -221,13 +192,43 @@ async def google_callback(code: str, request: Request, response: Response):
         "expires_at": expires.isoformat(),
     })
 
-    redirect = RedirectResponse(url=f"{FRONTEND_URL}/dashboard", status_code=302)
-    redirect.set_cookie(
-        key=SESSION_COOKIE, value=token,
-        max_age=int(SESSION_TTL.total_seconds()),
-        httponly=True, secure=True, samesite="none", path="/",
-    )
-    return redirect
+    _set_session_cookie(response, token)
+    return {"ok": True, "user": {"user_id": user_id, "email": email, "name": name or email.split("@")[0]}}
+
+
+@router.post("/login")
+async def login(body: dict, response: Response):
+    email = (body.get("email") or "").strip().lower()
+    password = body.get("password") or ""
+
+    if not email or not password:
+        raise HTTPException(status_code=400, detail="Заповніть всі поля")
+
+    user = await db.users.find_one({"email": email})
+    if not user:
+        raise HTTPException(status_code=401, detail="Невірний email або пароль")
+
+    if user.get("is_blocked"):
+        raise HTTPException(status_code=403, detail="Акаунт заблоковано")
+
+    # Verify password
+    salt = user.get("password_salt")
+    stored_hash = user.get("password_hash")
+    if not salt or not stored_hash or _hash_password(password, salt) != stored_hash:
+        raise HTTPException(status_code=401, detail="Невірний email або пароль")
+
+    # Create session
+    token = secrets.token_urlsafe(32)
+    expires = datetime.now(timezone.utc) + SESSION_TTL
+    await db.user_sessions.insert_one({
+        "session_token": token, "user_id": user["user_id"], "email": email,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "expires_at": expires.isoformat(),
+    })
+
+    _set_session_cookie(response, token)
+    return {"ok": True, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name")}}
+
 
 
 # ──────────────────────────────────────────────────────────────────────────────
