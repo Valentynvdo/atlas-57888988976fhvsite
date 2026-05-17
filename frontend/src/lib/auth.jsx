@@ -34,6 +34,7 @@ export function AuthProvider({ children }) {
     } catch (e) {
       // ignore
     }
+    localStorage.removeItem("atlas_session");
     setUser(null);
   }, []);
 

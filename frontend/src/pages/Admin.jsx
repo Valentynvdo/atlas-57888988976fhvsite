@@ -65,7 +65,7 @@ export default function Admin() {
 
   if (!unlocked) return <AdminPin onUnlock={() => setUnlocked(true)} />;
 
-  return <AdminPanel onLogout={async () => { await logout(); navigate("/login"); }} />;
+  return <AdminPanel onLogout={async () => { await logout(); navigate("/"); }} />;
 }
 
 function AdminPanel({ onLogout }) {
@@ -116,6 +116,7 @@ function AdminPanel({ onLogout }) {
       <Toaster theme="dark" position="top-center" />
 
       <header
+        className="admin-header"
         style={{
           padding: "14px 24px",
           borderBottom: "1px solid rgba(255,255,255,0.06)",

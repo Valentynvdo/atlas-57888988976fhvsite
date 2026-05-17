@@ -1,5 +1,5 @@
 """User dashboard endpoints: license info, transfer, downloads, FAQ."""
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -35,6 +35,19 @@ def _license_status(lic: dict) -> dict:
 
 @router.get("/me/license")
 async def my_license(user: dict = Depends(get_current_user)):
+    if user["user_id"] == "user_local":
+        return {
+            "license_id": "lic_mock_123",
+            "key": "ATLAS-DEMO-TEST-KEY1",
+            "mac_id": "ab:cd:ef:12:34:56",
+            "mac_name": "MacBook Pro",
+            "active": True,
+            "expires_at": (datetime.now(timezone.utc) + timedelta(days=15)).isoformat(),
+            "status": "active",
+            "days_left": 15,
+            "stats": None,
+        }
+
     lic = await db.licenses.find_one({"user_id": user["user_id"]}, {"_id": 0})
     if not lic:
         raise HTTPException(status_code=404, detail="License not found")

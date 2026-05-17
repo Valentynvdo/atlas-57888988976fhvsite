@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
+
 import Navbar from "./components/atlas/Navbar";
 import Hero from "./components/atlas/Hero";
 import LivingIntelligence from "./components/atlas/LivingIntelligence";
@@ -18,6 +20,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Docs from "./pages/Docs";
+
+const MANIFEST_URL = `${window.location.origin}/tonconnect-manifest.json`;
 
 function Landing() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,7 +45,6 @@ function Landing() {
 
 function AppRouter() {
   const location = useLocation();
-  // CRITICAL — handle OAuth callback FIRST during render, before any ProtectedRoute runs
   if (location.hash?.includes("session_id=")) {
     return <AuthCallback />;
   }
@@ -48,6 +52,7 @@ function AppRouter() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/docs" element={<Docs />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route
         path="/dashboard"
@@ -71,11 +76,13 @@ function AppRouter() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppRouter />
-      </AuthProvider>
-    </BrowserRouter>
+    <TonConnectUIProvider manifestUrl={MANIFEST_URL}>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
+      </BrowserRouter>
+    </TonConnectUIProvider>
   );
 }
 

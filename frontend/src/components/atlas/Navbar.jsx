@@ -103,6 +103,16 @@ export default function Navbar({ onCta }) {
           ))}
         </div>
 
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <a
+            href="/docs"
+            data-testid="nav-docs-link"
+            style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+          >
+            📖 Документація
+          </a>
         <button
           data-testid="nav-cta-btn"
           onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
@@ -120,6 +130,7 @@ export default function Navbar({ onCta }) {
             }}
           />
         </button>
+        </div>
       </div>
     </nav>
   );

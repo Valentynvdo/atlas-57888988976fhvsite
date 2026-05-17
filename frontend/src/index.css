@@ -421,3 +421,99 @@ a:focus-visible {
     gap: 24px;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
+
+/* --- Premium Responsiveness for User Dashboard & Admin Panel --- */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    main {
+        padding: 16px 12px 60px !important;
+    }
+    
+    section {
+        padding: 20px 16px !important;
+        margin-bottom: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    /* Headers styling */
+    .dashboard-header,
+    .admin-header {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        text-align: center !important;
+    }
+    
+    .dashboard-header > div,
+    .admin-header > div {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .dashboard-header button,
+    .admin-header button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Buttons wrapping & full-width scaling */
+    .ghost-btn, .cta-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 10px 16px !important;
+    }
+
+    /* License key block layout adjustments */
+    [data-testid="key-block"] > div:nth-child(3) {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    /* Pricing tiers grid: display one per row stack on mobile */
+    .three-col {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* Table responsive wrapper scroll */
+    .glass > div {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px !important;
+    }
+
+    /* Admin user search toolbar */
+    [data-testid="admin-users-block"] > div:nth-child(1) {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    [data-testid="admin-users-block"] input {
+        width: 100% !important;
+    }
+
+    [data-testid="admin-users-block"] select {
+        width: 100% !important;
+    }
+
+    /* Modals and dialog layouts */
+    [data-testid="user-details-modal"] > div {
+        width: 96% !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+
+    [data-testid="user-details-modal"] button {
+        width: 100% !important;
+    }
+}

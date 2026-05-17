@@ -13,7 +13,11 @@ import {
   Loader2,
   AlertTriangle,
   Settings,
+  Check,
+  Wallet,
+  Zap,
 } from "lucide-react";
+import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
 
@@ -29,6 +33,10 @@ export default function Dashboard() {
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmTransfer, setConfirmTransfer] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [tonPrices, setTonPrices] = useState(null);
+  const [tonBusy, setTonBusy] = useState(false);
+  const [tonConnectUI] = useTonConnectUI();
+  const tonWallet = useTonWallet();
 
   const loadLicense = useCallback(async () => {
     const r = await api.get("/api/me/license");
@@ -39,6 +47,8 @@ export default function Dashboard() {
     loadLicense();
     api.get("/api/me/download").then((r) => setDownloadInfo(r.data)).catch(() => {});
     api.get("/api/billing/packages").then((r) => setPackages(r.data)).catch(() => {});
+    // Load live TON prices
+    api.get("/api/billing/ton-price").then((r) => setTonPrices(r.data)).catch(() => {});
   }, [loadLicense]);
 
   // Handle Stripe redirect (?session_id=…) — poll for status
@@ -84,17 +94,57 @@ export default function Dashboard() {
     return { label: "Неактивна", color: "#FF5F57", bg: "rgba(255,95,87,0.1)" };
   }, [license]);
 
-  const startCheckout = async (packageId = "atlas_monthly") => {
-    setBusy(true);
+  const payWithTon = async (packageId = "atlas_monthly") => {
+    if (!tonWallet) {
+      // Connect wallet first
+      tonConnectUI.openModal();
+      return;
+    }
+    if (!tonPrices) {
+      toast.error("Завантажую ціни, спробуй ще раз...");
+      return;
+    }
+    const pkg = tonPrices.packages.find((p) => p.id === packageId);
+    if (!pkg) return;
+
+    setTonBusy(true);
     try {
-      const r = await api.post("/api/billing/checkout", {
-        package_id: packageId,
-        origin_url: window.location.origin,
+      // Send TON transaction
+      const result = await tonConnectUI.sendTransaction({
+        validUntil: Math.floor(Date.now() / 1000) + 300, // 5 min
+        messages: [{
+          address: pkg.receiver,
+          amount: pkg.ton_nano, // in nanotons
+        }],
       });
-      window.location.href = r.data.url;
+
+      // Get wallet address
+      const walletAddress = tonWallet.account?.address || "";
+
+      // Verify on backend
+      toast.loading("Верифікую транзакцію...", { id: "ton-verify" });
+      const verify = await api.post("/api/billing/ton-verify", {
+        wallet_address: walletAddress,
+        ton_amount: pkg.ton_amount,
+        package_id: packageId,
+        tx_hash: result?.boc || "",
+      });
+
+      toast.dismiss("ton-verify");
+      toast.success(`✅ ${verify.data.message}`);
+      await loadLicense();
+      // Refresh TON prices
+      api.get("/api/billing/ton-price").then((r) => setTonPrices(r.data)).catch(() => {});
     } catch (e) {
-      toast.error("Не вдалося розпочати оплату");
-      setBusy(false);
+      toast.dismiss("ton-verify");
+      if (e?.message?.includes("User rejecte")) {
+        toast.error("Транзакцію скасовано");
+      } else {
+        const msg = e?.response?.data?.detail || "Помилка оплати";
+        toast.error(msg);
+      }
+    } finally {
+      setTonBusy(false);
     }
   };
 
@@ -147,6 +197,7 @@ export default function Dashboard() {
 
       {/* Header */}
       <header
+        className="dashboard-header"
         style={{
           position: "sticky",
           top: 0,
@@ -217,7 +268,7 @@ export default function Dashboard() {
             data-testid="logout-btn"
             onClick={async () => {
               await logout();
-              navigate("/login", { replace: true });
+              navigate("/", { replace: true });
             }}
             style={{
               background: "transparent",
@@ -239,94 +290,291 @@ export default function Dashboard() {
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "40px 24px 80px" }}>
         {/* ----- Block 1: Subscription ----- */}
-        <section data-testid="subscription-block" className="glass" style={blockStyle}>
-          <SectionHeader title="Підписка" eyebrow="Статус" />
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 16px",
-              borderRadius: 999,
-              background: status.bg,
-              border: `1px solid ${status.color}55`,
-              color: status.color,
-              fontWeight: 600,
-              fontSize: 18,
-              marginBottom: 16,
-            }}
-            data-testid="subscription-status"
-          >
-            <span style={{ width: 10, height: 10, borderRadius: "50%", background: status.color, boxShadow: `0 0 12px ${status.color}` }} />
-            {status.label}
-          </div>
-          {license.expires_at && (
-            <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, marginBottom: 20 }}>
-              Наступне списання: {fmtDate(license.expires_at)}
+        <section data-testid="subscription-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+          {/* Header with macOS Dots */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+            <SectionHeader title="Управління підпискою" eyebrow="Тарифний план" />
+            <div className="mac-dots">
+              <span></span><span></span><span></span>
             </div>
-          )}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {license.status !== "active" ? (
-              <button
-                data-testid="renew-btn"
-                onClick={() => startCheckout("atlas_monthly")}
-                disabled={busy}
-                className="cta-btn"
-              >
-                {busy ? <Loader2 size={16} className="spin" /> : <Sparkles size={16} />} Поновити підписку
-              </button>
-            ) : (
-              <button
-                data-testid="cancel-btn"
-                onClick={() => setConfirmCancel(true)}
-                className="ghost-btn"
-              >
-                Скасувати авто-поновлення
-              </button>
-            )}
           </div>
 
-          {packages.length > 0 && license.status !== "active" && (
-            <div style={{ marginTop: 24, display: "grid", gap: 8 }}>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                Тарифи
+          {/* Current Plan Summary Card */}
+          <div style={{
+            background: "rgba(255, 255, 255, 0.02)",
+            border: "1px solid rgba(255, 255, 255, 0.06)",
+            borderRadius: 20,
+            padding: 24,
+            marginBottom: 40,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 20
+          }}>
+            <div>
+              <div style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>
+                Поточний статус
               </div>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                {packages.map((p) => (
-                  <button
-                    key={p.id}
-                    data-testid={`package-${p.id}`}
-                    onClick={() => startCheckout(p.id)}
-                    style={{
-                      flex: "1 1 200px",
-                      padding: 16,
-                      borderRadius: 16,
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "#fff",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                      e.currentTarget.style.borderColor = "rgba(0,229,255,0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                    }}
-                  >
-                    <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{p.label}</div>
-                    <div style={{ fontSize: 22, fontWeight: 600, marginTop: 4 }}>
-                      ${p.amount}
-                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginLeft: 4 }}>/ {p.days} дн.</span>
-                    </div>
-                  </button>
-                ))}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "6px 12px",
+                  borderRadius: 999,
+                  background: status.bg,
+                  border: `1px solid ${status.color}33`,
+                  color: status.color,
+                  fontWeight: 600,
+                  fontSize: 15,
+                }} data-testid="subscription-status">
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: status.color, boxShadow: `0 0 10px ${status.color}` }} />
+                  {status.label}
+                </div>
+                {license.days_left !== undefined && (
+                  <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, fontWeight: 500 }}>
+                    Залишилось днів: {license.days_left}
+                  </span>
+                )}
+              </div>
+              {license.expires_at && (
+                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, marginTop: 8 }}>
+                  Дата закінчення: {fmtDate(license.expires_at)}
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: "flex", gap: 12 }}>
+              {license.status === "active" && (
+                <button
+                  data-testid="cancel-btn"
+                  onClick={() => setConfirmCancel(true)}
+                  className="ghost-btn"
+                  style={{ padding: "10px 20px", fontSize: 13 }}
+                >
+                  Скасувати авто-поновлення
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* TON Wallet Status */}
+          <div style={{ marginBottom: 24, padding: "14px 18px", borderRadius: 14, background: tonWallet ? "rgba(40,200,64,0.06)" : "rgba(255,255,255,0.03)", border: `1px solid ${tonWallet ? "rgba(40,200,64,0.2)" : "rgba(255,255,255,0.08)"}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <Wallet size={18} color={tonWallet ? "#28C840" : "rgba(255,255,255,0.4)"} />
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: tonWallet ? "#28C840" : "rgba(255,255,255,0.6)" }}>
+                  {tonWallet ? `Гаманець підключено` : "TON гаманець не підключено"}
+                </div>
+                {tonWallet?.account?.address && (
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
+                    {tonWallet.account.address.slice(0, 12)}...{tonWallet.account.address.slice(-8)}
+                  </div>
+                )}
+                {tonPrices && (
+                  <div style={{ fontSize: 11, color: "rgba(0,229,255,0.7)", marginTop: 2 }}>
+                    1 TON = ${tonPrices.ton_usd_price.toFixed(3)} USD (live)
+                  </div>
+                )}
               </div>
             </div>
-          )}
+            <button
+              onClick={() => tonConnectUI.openModal()}
+              style={{ padding: "8px 16px", borderRadius: 999, background: tonWallet ? "rgba(255,255,255,0.05)" : "rgba(0,122,255,0.15)", border: `1px solid ${tonWallet ? "rgba(255,255,255,0.1)" : "rgba(0,122,255,0.4)"}`, color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <Wallet size={13} /> {tonWallet ? "Змінити гаманець" : "Підключити TON гаманець"}
+            </button>
+          </div>
+
+          {/* Pricing Section Grid */}
+          <div style={{ marginTop: 24 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 24, display: "flex", alignItems: "center", gap: 8 }}>
+              <Sparkles size={18} color="#00E5FF" /> Оберіть тарифний план для подовження
+            </h3>
+
+            <div className="three-col">
+              {(packages.length > 0 ? packages : [
+                { id: "atlas_monthly", amount: 28.99, days: 30, label: "Atlas AI · Місяць" },
+                { id: "atlas_quarterly", amount: 74.99, days: 90, label: "Atlas AI · 3 місяці" },
+                { id: "atlas_yearly", amount: 249.99, days: 365, label: "Atlas AI · Рік" }
+              ]).map((p) => {
+                const isPopular = p.id === "atlas_quarterly";
+                const isYearly = p.id === "atlas_yearly";
+                
+                // Calculate monthly cost equivalent
+                const monthlyCost = (p.amount / (p.days / 30)).toFixed(2);
+                
+                // Features based on plan
+                const features = {
+                  atlas_monthly: [
+                    "Повний доступ до Atlas AI на Mac",
+                    "Надшвидкий голос (STT & TTS)",
+                    "Автономне створення нових скілів",
+                    "100% локальне збереження даних",
+                    "Стандартні оновлення модулів"
+                  ],
+                  atlas_quarterly: [
+                    "Усі можливості місячного тарифу",
+                    "Пріоритетна підтримка",
+                    "Робота з великими контекстами",
+                    "Швидший час реакції AI",
+                    "Краща ціна в еквіваленті місяця"
+                  ],
+                  atlas_yearly: [
+                    "Максимальний пріоритет обробки",
+                    "VIP підтримка 24/7",
+                    "Пожиттєва сумісність з macOS",
+                    "Усі нові майбутні модулі безкоштовно",
+                    "Найбільша вигода (економія 30%)"
+                  ]
+                }[p.id] || [];
+
+                return (
+                  <div
+                    key={p.id}
+                    data-testid={`package-${p.id}`}
+                    style={{
+                      borderRadius: 24,
+                      padding: 32,
+                      background: isPopular 
+                        ? "linear-gradient(180deg, rgba(0, 122, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)" 
+                        : "rgba(255, 255, 255, 0.02)",
+                      border: isPopular 
+                        ? "1px solid rgba(0, 122, 255, 0.4)" 
+                        : "1px solid rgba(255, 255, 255, 0.06)",
+                      boxShadow: isPopular ? "0 0 30px rgba(0, 122, 255, 0.15)" : "none",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      position: "relative",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-6px)";
+                      e.currentTarget.style.borderColor = isPopular ? "rgba(0, 229, 255, 0.6)" : "rgba(255,255,255,0.18)";
+                      e.currentTarget.style.boxShadow = isPopular 
+                        ? "0 20px 40px rgba(0, 122, 255, 0.25)" 
+                        : "0 12px 30px rgba(0, 229, 255, 0.08)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.borderColor = isPopular ? "rgba(0, 122, 255, 0.4)" : "rgba(255, 255, 255, 0.06)";
+                      e.currentTarget.style.boxShadow = isPopular ? "0 0 30px rgba(0, 122, 255, 0.15)" : "none";
+                    }}
+                  >
+                    {/* Badge */}
+                    {isPopular && (
+                      <span style={{
+                        position: "absolute",
+                        top: -12,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        background: "linear-gradient(90deg, #007AFF, #00E5FF)",
+                        color: "#fff",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        padding: "4px 12px",
+                        borderRadius: 99,
+                        letterSpacing: "0.08em",
+                        boxShadow: "0 0 15px rgba(0, 229, 255, 0.4)"
+                      }}>
+                        Популярний вибір
+                      </span>
+                    )}
+
+                    {isYearly && (
+                      <span style={{
+                        position: "absolute",
+                        top: -12,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        background: "linear-gradient(90deg, #28C840, #00E5FF)",
+                        color: "#000",
+                        fontSize: 11,
+                        fontWeight: 800,
+                        textTransform: "uppercase",
+                        padding: "4px 12px",
+                        borderRadius: 99,
+                        letterSpacing: "0.08em",
+                        boxShadow: "0 0 15px rgba(40, 200, 64, 0.4)"
+                      }}>
+                        Економія 30%
+                      </span>
+                    )}
+
+                    <div>
+                      {/* Plan Header */}
+                      <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 8 }}>
+                        {p.id === "atlas_monthly" ? "Місячний" : p.id === "atlas_quarterly" ? "Квартальний" : "Річний"}
+                      </div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginBottom: 20 }}>
+                        {p.id === "atlas_monthly" ? "Гнучкий старт для знайомства з ШІ" : p.id === "atlas_quarterly" ? "Оптимальний баланс вартості та можливостей" : "Максимальна вигода для професіоналів"}
+                      </div>
+
+                      {/* Plan Price */}
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 28 }}>
+                        <span style={{ fontSize: 36, fontWeight: 800, color: "#fff" }}>${p.amount}</span>
+                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
+                          / {p.days === 30 ? "місяць" : p.days === 90 ? "3 міс." : "рік"}
+                        </span>
+                      </div>
+
+                      {p.days > 30 && (
+                        <div style={{ fontSize: 12, color: "rgba(0, 229, 255, 0.85)", fontWeight: 500, marginTop: -20, marginBottom: 24 }}>
+                          Еквівалент: ${monthlyCost} / міс.
+                        </div>
+                      )}
+
+                      {/* Features List */}
+                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 24, marginBottom: 32 }}>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 14 }}>
+                          {features.map((feat, idx) => (
+                            <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "rgba(255,255,255,0.75)" }}>
+                              <Check size={14} color="#00E5FF" style={{ marginTop: 2, flexShrink: 0 }} />
+                              <span>{feat}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    {/* TON price display */}
+                    {tonPrices && (() => {
+                      const tp = tonPrices.packages.find(x => x.id === p.id);
+                      return tp ? (
+                        <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(0,229,255,0.05)", border: "1px solid rgba(0,229,255,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Ціна в TON (live):</span>
+                          <span style={{ fontSize: 14, fontWeight: 700, color: "#00E5FF" }}>{tp.ton_amount} TON</span>
+                        </div>
+                      ) : null;
+                    })()}
+                    <button
+                      onClick={() => payWithTon(p.id)}
+                      disabled={tonBusy}
+                      className="cta-btn"
+                      style={{
+                        width: "100%",
+                        padding: "12px 20px",
+                        fontSize: 14,
+                        justifyContent: "center",
+                        borderRadius: 14,
+                        background: isPopular ? "rgba(0, 122, 255, 0.15)" : "rgba(255,255,255,0.04)",
+                        border: isPopular ? "1px solid rgba(0, 122, 255, 0.4)" : "1px solid rgba(255,255,255,0.12)"
+                      }}
+                    >
+                      {tonBusy ? <Loader2 size={16} className="spin" /> : (
+                        <>{!tonWallet ? <><Wallet size={14} /> Підключити гаманець</> : <><Zap size={14} /> Оплатити TON</>}</>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
 
         {/* ----- Block 2: License Key ----- */}

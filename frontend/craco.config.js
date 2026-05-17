@@ -61,6 +61,11 @@ let webpackConfig = {
 };
 
 webpackConfig.devServer = (devServerConfig) => {
+  // Disable the red development error overlay so third-party extensions don't hijack the UI
+  devServerConfig.client = {
+    ...devServerConfig.client,
+    overlay: false,
+  };
   // Add health check endpoints if enabled
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
     const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
