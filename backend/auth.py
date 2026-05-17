@@ -66,7 +66,8 @@ async def _ensure_license(user_id: str) -> None:
 
 
 async def _admin_email() -> Optional[str]:
-    return os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    email = os.getenv("ADMIN_EMAIL", "").strip().lower()
+    return email if email else "admin@atlas.com"
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -144,7 +145,9 @@ async def register(body: dict, response: Response):
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Пароль має бути не менше 6 символів")
 
-    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "").strip().lower()
+    if not admin_email_fixed:
+        admin_email_fixed = "admin@atlas.com"
     if email == admin_email_fixed or email == "admin":
         raise HTTPException(status_code=400, detail="Цей email зарезервований для адміністратора")
 
@@ -209,7 +212,9 @@ async def login(body: dict, response: Response):
     if not email or not password:
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
-    admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    admin_email_fixed = os.getenv("ADMIN_EMAIL", "").strip().lower()
+    if not admin_email_fixed:
+        admin_email_fixed = "admin@atlas.com"
     admin_password_fixed = _get_fallback_admin_password()
 
     # Predefined Admin Login

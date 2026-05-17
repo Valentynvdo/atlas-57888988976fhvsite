@@ -80,10 +80,8 @@ export default function Login() {
       <div
         className="glass"
         style={{
-          width: "100%",
-          maxWidth: "100%",
-          margin: "0 auto",
-          padding: "40px 5%",
+          width: "min(440px, 90%)",
+          padding: "40px 32px",
           borderRadius: 28,
           textAlign: "center",
           position: "relative",
