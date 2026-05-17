@@ -183,27 +183,51 @@ export default function EnergySphere() {
     const glow = new THREE.Mesh(glowGeo, glowMat);
     scene.add(glow);
 
-    // Particle ring around sphere
-    const particleCount = 600;
+    // Full-screen background particles, fading out towards the bottom
+    const particleCount = 1500;
     const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const baseColor = new THREE.Color("#ff2a5f"); // Premium glowing red/pink
+
     for (let i = 0; i < particleCount; i++) {
-      const r = 1.9 + Math.random() * 0.8;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = r * Math.cos(phi);
+      // Spread across the full width of the screen (X)
+      const x = (Math.random() - 0.5) * 14.0;
+      // Spread along height (Y), slightly shifted upwards
+      const y = (Math.random() - 0.5) * 6.5 + 0.5;
+      // Spread in depth (Z), physically behind the sphere
+      const z = -3.5 + Math.random() * 2.5;
+
+      positions[i * 3] = x;
+      positions[i * 3 + 1] = y;
+      positions[i * 3 + 2] = z;
+
+      // Calculate smooth falloff/fade-out towards the bottom
+      const yMin = -2.75;
+      const yMax = 3.75;
+      const t = Math.max(0, Math.min(1, (y - yMin) / (yMax - yMin)));
+      const fade = Math.pow(t, 2.0); // Quadratic falloff for smooth fade
+
+      // Apply fade to particle colors
+      colors[i * 3] = baseColor.r * fade;
+      colors[i * 3 + 1] = baseColor.g * fade;
+      colors[i * 3 + 2] = baseColor.b * fade;
     }
+
     const particleGeo = new THREE.BufferGeometry();
     particleGeo.setAttribute(
       "position",
       new THREE.BufferAttribute(positions, 3)
     );
+    particleGeo.setAttribute(
+      "color",
+      new THREE.BufferAttribute(colors, 3)
+    );
+
     const particleMat = new THREE.PointsMaterial({
-      color: 0x9d4cdd,
-      size: 0.018,
+      size: 0.035, // Slightly larger premium glowing bokeh feel
+      vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
@@ -244,7 +268,7 @@ export default function EnergySphere() {
       sphere.rotation.x = Math.sin(t * 0.25) * 0.15;
       wire.rotation.y = -t * 0.12;
       wire.rotation.x = Math.cos(t * 0.2) * 0.2;
-      particles.rotation.y = t * 0.05;
+      particles.rotation.z = t * 0.02; // Gentle slow cosmic background rotation
 
       // Mouse parallax
       scene.rotation.y += (mx * 0.25 - scene.rotation.y) * 0.04;
