@@ -351,50 +351,61 @@ main();`} />
 
           {/* 4. Installation & Local Setup Section */}
           <section ref={(el) => (sectionsRef.current.installation = el)} style={{ scrollMarginTop: 100, marginBottom: 80 }}>
-            <SectionTitle eyebrow="Локальний запуск" title="Розгортання на macOS" desc="Для розробників, які бажають запустити локальний екземпляр ядра Atlas AI з підтримкою локального STT (Vosk) та голосового синтезу." />
+            <SectionTitle eyebrow="Швидке встановлення" title="Інсталяція в одну команду" desc="Завдяки вбудованому macOS-інсталятору, вам більше не потрібно клонувати репозиторій або вручну налаштовувати Python-середовище. Все відбувається повністю автоматично та безпечно." />
             
-            {/* System Requirements */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 32 }}>
-              {[
-                { icon: <Cpu size={16} />, label: "macOS 13+", sub: "Ventura або новіше" },
-                { icon: <Package size={16} />, label: "Python 3.10+", sub: "Рекомендовано 3.11–3.12" },
-                { icon: <Shield size={16} />, label: "8 GB RAM", sub: "Рекомендовано 16 GB" },
-                { icon: <Zap size={16} />, label: "Мікрофон", sub: "Вбудований або USB" },
-              ].map((item, i) => (
-                <div key={i} style={{ padding: "16px 20px", borderRadius: 12, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: 12, alignItems: "center" }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(0,229,255,0.08)", display: "grid", placeItems: "center", color: "#00E5FF" }}>{item.icon}</div>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: 13 }}>{item.label}</div>
-                    <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11.5 }}>{item.sub}</div>
-                  </div>
+            {/* Main Single Command Code Box */}
+            <div style={{ padding: 24, borderRadius: 16, background: "rgba(0, 229, 255, 0.04)", border: "1px solid rgba(0, 229, 255, 0.15)", marginBottom: 24 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#00E5FF", marginBottom: 12 }}>Просто вставте це у ваш термінал:</div>
+              <CodeBlock lang="bash" code="curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash" />
+            </div>
+
+            {/* Product Protection Matrix Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 32 }} className="two-col">
+              <div style={{ padding: 20, borderRadius: 12, background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <Shield size={16} color="#28C840" />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Подвійний захист папок</span>
                 </div>
-              ))}
+                <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: 0 }}>
+                  Компоненти Atlas встановлюються у системну директорію <code style={{ color: "#FEBC2E" }}>/Library/Application Support/Atlas/</code> з правами доступу <code style={{ color: "#00E5FF" }}>chmod 700</code> та власником <code style={{ color: "#00E5FF" }}>root:wheel</code>. Користувач не може відкрити папку в Finder або прочитати файли конфігурації.
+                </p>
+              </div>
+
+              <div style={{ padding: 20, borderRadius: 12, background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <Cpu size={16} color="#007AFF" />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Бінарна компіляція (PyInstaller)</span>
+                </div>
+                <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.5)", lineHeight: 1.5, margin: 0 }}>
+                  Вихідний Python-код повністю трансформується у захищений бінарний файл за допомогою команди <code style={{ color: "#00E5FF" }}>pyinstaller --onefile main.py</code>. У дистрибутиві немає жодного відкритого файлу <code style={{ color: "#FEBC2E" }}>.py</code>, що виключає декомпіляцію та копіювання технологій.
+                </p>
+              </div>
             </div>
 
             {/* Steps */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {[
                 {
                   step: "01",
-                  title: "Клонування репозиторію",
-                  code: `git clone https://github.com/Valentynvdo/atlas-57888988976fhvsite.git\ncd atlas_ai\npython3 -m venv .venv\nsource .venv/bin/activate`
+                  title: "Запуск інсталятора",
+                  desc: "Скрипт перевіряє сумісність з вашою версією macOS та готує захищені системні директорії."
                 },
                 {
                   step: "02",
-                  title: "Встановлення модулів STT/TTS та ШІ",
-                  code: `pip install vosk edge-tts pyaudio sounddevice google-genai openai pynput numpy pillow httpx scipy`
+                  title: "Активація ліцензії",
+                  desc: "Скрипт запитає ліцензійний ключ для перевірки на сервері та прив'яже сесію до апаратного Mac ID."
                 },
                 {
                   step: "03",
-                  title: "Конфігурація середовища (.env)",
-                  code: `# Створіть файл .env у корені\nGEMINI_API_KEY=your_gemini_api_key\nOPENAI_API_KEY=your_openai_api_key\nLICENSE_SERVER=https://atlas-site-2p2d.onrender.com`
+                  title: "Завантаження компонентів та Vosk",
+                  desc: "Автоматично завантажується скомпільований бінарник та україномовна модель розпізнавання мовлення (~50MB)."
                 }
               ].map((s, idx) => (
-                <div key={idx} style={{ display: "flex", gap: 16 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(0,122,255,0.1)", border: "1px solid rgba(0,122,255,0.2)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>{s.step}</div>
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ fontSize: 15, fontWeight: 600, margin: "8px 0" }}>{s.title}</h4>
-                    <CodeBlock lang="bash" code={s.code} />
+                <div key={idx} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>{s.step}</div>
+                  <div>
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: "0 0 4px" }}>{s.title}</h4>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.4 }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
