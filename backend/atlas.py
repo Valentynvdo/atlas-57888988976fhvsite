@@ -169,7 +169,8 @@ async def post_live_thought(body: dict):
 @router.get("/thought")
 async def get_live_thought():
     """Returns the most recent live thought."""
-    latest = await db.atlas_thoughts.find_one({}, sort=[("ts", -1)])
+    latest_list = await db.atlas_thoughts.find({}).sort("ts", -1).limit(1).to_list()
+    latest = latest_list[0] if latest_list else None
     if not latest:
         return {
             "thought": "Синхронізація систем. Аналізую нові дані...",
