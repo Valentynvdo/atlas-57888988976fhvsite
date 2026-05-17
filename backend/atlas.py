@@ -126,3 +126,52 @@ async def report_stats(body: dict):
         upsert=True,
     )
     return {"ok": True}
+
+
+@router.post("/thought")
+async def post_live_thought(body: dict):
+    """Atlas AI locally posts its live thoughts here."""
+    thought = (body.get("thought") or "").strip()
+    secret = (body.get("secret") or "").strip()
+    # Simple auth to ensure only Atlas or Admin can post thoughts
+    import os
+    expected_secret = os.getenv("ADMIN_PASSWORD", "srv-d84mtqjtqb8s73fgcjog")
+    
+    if secret != expected_secret and secret != "internal_atlas_system":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+        
+    if not thought:
+        raise HTTPException(status_code=400, detail="Empty thought")
+        
+    await db.atlas_thoughts.insert_one({
+        "thought": thought,
+        "category": body.get("category", "learning"),
+        "ts": datetime.now(timezone.utc).isoformat()
+    })
+    
+    # Keep only the latest 50 thoughts to save space
+    cnt = await db.atlas_thoughts.count_documents({})
+    if cnt > 50:
+        oldest = await db.atlas_thoughts.find({}).sort("ts", 1).limit(cnt - 50).to_list(None)
+        if oldest:
+            for doc in oldest:
+                await db.atlas_thoughts.delete_one({"_id": doc["_id"]})
+                
+    return {"ok": True}
+
+
+@router.get("/thought")
+async def get_live_thought():
+    """Returns the most recent live thought."""
+    latest = await db.atlas_thoughts.find_one({}, sort=[("ts", -1)])
+    if not latest:
+        return {
+            "thought": "Синхронізація систем. Аналізую нові дані...",
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "category": "system"
+        }
+    return {
+        "thought": latest.get("thought"),
+        "ts": latest.get("ts"),
+        "category": latest.get("category", "learning")
+    }

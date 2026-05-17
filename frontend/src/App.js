@@ -5,6 +5,7 @@ import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
 import Navbar from "./components/atlas/Navbar";
 import Hero from "./components/atlas/Hero";
+import AtlasLiveThought from "./components/atlas/AtlasLiveThought";
 import LivingIntelligence from "./components/atlas/LivingIntelligence";
 import MacOSControl from "./components/atlas/MacOSControl";
 import SmartConcierge from "./components/atlas/SmartConcierge";
@@ -34,6 +35,7 @@ function Landing() {
     <div className="App" ref={rootRef} data-testid="atlas-landing">
       <Navbar onCta={() => navigate("/login")} />
       <Hero onCta={() => navigate("/login")} />
+      <AtlasLiveThought />
       <LivingIntelligence />
       <MacOSControl />
       <SmartConcierge />
