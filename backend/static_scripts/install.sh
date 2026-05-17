@@ -144,12 +144,30 @@ step "Застосування прав доступу (захист від чи
 sudo chmod -R 700 "$INSTALL_DIR"
 sudo chown -R root:wheel "$INSTALL_DIR"
 
-# Allow the current user to execute Atlas binary
+# Allow execution and install Python dependencies if running raw python files
 CURRENT_USER=$(whoami)
 sudo chmod a+rx "$INSTALL_DIR" 2>/dev/null || true
 ATLAS_BIN=$(find "$INSTALL_DIR" -name "atlas" -o -name "Atlas" -o -name "main" 2>/dev/null | head -1)
 if [[ -n "$ATLAS_BIN" ]]; then
     sudo chmod a+x "$ATLAS_BIN"
+fi
+
+# ── Step 4.5: Dependency installation (if uncompiled) ───────────────────────
+ATLAS_EXEC=$(find "$INSTALL_DIR" -maxdepth 2 -name "atlas" -o -name "Atlas" -o -name "main.py" 2>/dev/null | head -1)
+if [[ "$ATLAS_EXEC" == *.py ]]; then
+    title "Встановлення залежностей Python"
+    step "Створення віртуального середовища (.venv)..."
+    sudo python3 -m venv "$INSTALL_DIR/.venv"
+    
+    # Fix .venv ownership for pip install
+    sudo chown -R root:wheel "$INSTALL_DIR/.venv"
+    
+    step "Встановлення модулів STT/TTS та ШІ бібліотек..."
+    sudo "$INSTALL_DIR/.venv/bin/pip" install --upgrade pip
+    sudo "$INSTALL_DIR/.venv/bin/pip" install --no-cache-dir -r "$INSTALL_DIR/requirements.txt"
+    
+    # Fix pyaudio / portaudio links if needed
+    success "Усі бібліотеки успішно встановлено у віртуальне середовище (.venv)"
 fi
 
 rm -f "$TMP_PKG"
@@ -158,13 +176,10 @@ success "Встановлено в: $INSTALL_DIR"
 # ── Step 5: Configure auto-start (LaunchAgent) ───────────────────────────────
 title "Налаштування автозапуску"
 
-# Detect Atlas executable path
-ATLAS_EXEC=$(find "$INSTALL_DIR" -maxdepth 2 -name "atlas" -o -name "Atlas" -o -name "main.py" 2>/dev/null | head -1)
-
 if [[ -n "$ATLAS_EXEC" ]]; then
     # Determine how to launch
     if [[ "$ATLAS_EXEC" == *.py ]]; then
-        PROGRAM_ARR="<string>$(which python3)</string><string>$ATLAS_EXEC</string>"
+        PROGRAM_ARR="<string>$INSTALL_DIR/.venv/bin/python3</string><string>$ATLAS_EXEC</string>"
     else
         PROGRAM_ARR="<string>$ATLAS_EXEC</string>"
     fi
