@@ -19,7 +19,7 @@ DATABASE_URL = DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
 COLLECTIONS = [
     "users", "licenses", "user_sessions", "atlas_stats",
     "payment_transactions", "app_config", "admin_pin_sessions",
-    "admin_logs", "api_logs", "admin_pin_lock",
+    "admin_logs", "api_logs", "admin_pin_lock", "atlas_thoughts"
 ]
 
 
