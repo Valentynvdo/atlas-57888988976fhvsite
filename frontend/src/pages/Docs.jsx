@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../lib/auth";
+import { toast, Toaster } from "sonner";
 import {
   ArrowLeft,
   Copy,
@@ -80,10 +82,11 @@ function Accordion({ q, children }) {
 }
 
 export default function Docs() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("intro");
   const sectionsRef = useRef({});
-
+  
   const SECTIONS = [
     { id: "intro", label: "Вступ", icon: <BookOpen size={16} /> },
     { id: "quickstart", label: "Швидкий старт (SDK)", icon: <Zap size={16} /> },
@@ -126,6 +129,7 @@ export default function Docs() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#030303", color: "#fff", fontFamily: "Inter, system-ui, sans-serif" }}>
+      <Toaster theme="dark" position="top-center" />
       {/* --- Background Elements --- */}
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: "100vh", background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 122, 255, 0.08), transparent 70%), radial-gradient(ellipse 50% 50% at 80% 80%, rgba(157, 76, 221, 0.04), transparent 60%)", pointerEvents: "none", zIndex: 0 }} />
 
@@ -138,77 +142,102 @@ export default function Docs() {
           <span style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
           <span style={{ fontSize: 14, fontWeight: 700, background: "linear-gradient(90deg, #00E5FF, #9D4CDD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Atlas Docs v0.9.5</span>
         </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <a href="/dashboard" style={{ padding: "8px 18px", borderRadius: 10, background: "linear-gradient(135deg, #007AFF, #00E5FF)", color: "#fff", fontWeight: 600, fontSize: 13, textDecoration: "none", transition: "transform 0.2s" }} className="hover:scale-105">Особистий кабінет</a>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <button
+            data-testid="nav-cta-btn"
+            onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
+            className="cta-btn"
+            style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
+          >
+            {user ? "Кабінет" : "Увійти"}
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#00E5FF",
+                boxShadow: "0 0 12px #00E5FF",
+              }}
+            />
+          </button>
         </div>
       </header>
 
       {/* --- Modern Product Docs Hero Section --- */}
       <section style={{ position: "relative", padding: "80px 5% 50px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", zIndex: 1 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)", marginBottom: 18 }}>
-          <Sparkles size={13} color="#00E5FF" />
-          <span style={{ fontSize: 11, color: "#00E5FF", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>Cognitive AI Platform</span>
+        <div style={{ width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #00E5FF, #9D4CDD)", display: "grid", placeItems: "center", marginBottom: 20, boxShadow: "0 0 30px rgba(0, 229, 255, 0.2)" }}>
+          <Terminal size={22} color="#fff" />
         </div>
-        <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)", fontWeight: 900, letterSpacing: "-0.04em", margin: "0 0 16px", lineHeight: 1.1, background: "linear-gradient(120deg, #fff 20%, #d4dcff 60%, #b8f0ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          Atlas AI Platform
+        <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 800, margin: "0 0 12px", letterSpacing: "-0.03em", background: "linear-gradient(135deg, #fff, rgba(255,255,255,0.7))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          Документація Atlas AI
         </h1>
-        <p style={{ fontSize: 17, color: "rgba(255,255,255,0.65)", maxWidth: 680, margin: "0 auto 36px", lineHeight: 1.6 }}>
-          Cognitive AI Operating System for local background research, multi-agent orchestrations, semantic memory sync, and intelligent hardware automation.
+        <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "rgba(255,255,255,0.6)", maxWidth: 600, margin: 0, lineHeight: 1.6 }}>
+          Дізнайтеся, як налаштувати, активувати та інтегрувати когнітивну операційну систему Atlas у свій щоденний робочий процес.
         </p>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-          <button onClick={() => scrollTo("quickstart")} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 999, background: "#fff", color: "#000", fontWeight: 700, fontSize: 14, cursor: "pointer", border: "none" }} className="hover:scale-105">
-            <Play size={14} fill="#000" /> Швидкий старт
-          </button>
-          <button onClick={() => scrollTo("api")} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 999, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }} className="hover:scale-105">
-            <Code size={14} /> API Reference
-          </button>
-        </div>
       </section>
 
-      {/* --- Main Workspace Layout: Sticky Sidebar + Scrolling Content Panel --- */}
-      <div style={{ maxWidth: "100%", width: "100%", padding: "40px 5% 120px", display: "grid", gridTemplateColumns: "250px 1fr", gap: 48, position: "relative", zIndex: 1 }}>
-        
-        {/* --- Left Sticky Sidebar Navigation --- */}
-        <aside style={{ position: "sticky", top: 120, height: "calc(100vh - 160px)", overflowY: "auto", alignSelf: "start", borderRight: "1px solid rgba(255,255,255,0.04)", paddingRight: 16 }} className="no-scrollbar">
-          <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>Навігація</div>
-          <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {SECTIONS.map((sec) => (
-              <button
-                key={sec.id}
-                onClick={() => scrollTo(sec.id)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "10px 14px",
-                  borderRadius: 10,
-                  background: activeSection === sec.id ? "rgba(0, 229, 255, 0.08)" : "transparent",
-                  color: activeSection === sec.id ? "#00E5FF" : "rgba(255,255,255,0.55)",
-                  border: activeSection === sec.id ? "1px solid rgba(0, 229, 255, 0.15)" : "1px solid transparent",
-                  fontSize: 13.5,
-                  fontWeight: activeSection === sec.id ? 600 : 500,
-                  textAlign: "left",
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-                className="hover:text-white"
-              >
-                {sec.icon}
-                {sec.label}
-              </button>
-            ))}
+      {/* --- Main Two-Column Layout --- */}
+      <div style={{ display: "flex", gap: 40, maxWidth: "100%", margin: "0 auto", padding: "40px 5% 100px", position: "relative", zIndex: 1 }} className="two-col">
+        {/* Left Navigation Sidebar */}
+        <aside style={{ width: 280, flexShrink: 0, position: "sticky", top: 120, height: "fit-content", display: "flex", flexDirection: "column", gap: 16 }} className="sidebar">
+          <div style={{ padding: "0 8px 8px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em", textTransform: "uppercase" }}>Навігація по розділах</span>
+          </div>
+          <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {SECTIONS.map((sec) => {
+              const active = activeSection === sec.id;
+              return (
+                <button
+                  key={sec.id}
+                  onClick={() => scrollTo(sec.id)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    width: "100%",
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "none",
+                    background: active ? "rgba(0, 229, 255, 0.08)" : "transparent",
+                    color: active ? "#00E5FF" : "rgba(255,255,255,0.65)",
+                    fontSize: 13.5,
+                    fontWeight: active ? 600 : 500,
+                    textAlign: "left",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                      e.currentTarget.style.color = "#fff";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.65)";
+                    }
+                  }}
+                >
+                  <span style={{ display: "flex", color: active ? "#00E5FF" : "rgba(255,255,255,0.4)" }}>{sec.icon}</span>
+                  {sec.label}
+                </button>
+              );
+            })}
           </nav>
         </aside>
 
-        {/* --- Right Main Scrollable Documentation Contents --- */}
-        <main style={{ minWidth: 0 }}>
-          
-          {/* 1. Introduction Section */}
+        {/* Right Content Area */}
+        <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+          {/* 1. Intro Section */}
           <section ref={(el) => (sectionsRef.current.intro = el)} style={{ scrollMarginTop: 100, marginBottom: 80 }}>
-            <SectionTitle eyebrow="Вступ" title="Про платформу Atlas AI" desc="Atlas AI — це не просто чат-бот. Це повноцінне когнітивне середовище асистента, спроектоване для автономного виконання завдань, фонового збору інформації, безшовного керування Mac-оточенням та синхронізації контекстної пам'яті." />
+            <SectionTitle eyebrow="Вступ" title="Про продукт" desc="Atlas AI — це повнофункціональна когнітивна операційна система, розроблена для глибокої автоматизації вашого Mac, ведення розумного розкладу та автономних досліджень." />
             
-            {/* Pill Cards Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginTop: 24 }}>
+            <p style={paragraph}>
+              Платформа складається з двох ключових частин: локального інтелектуального клієнта (який працює безпосередньо у вашій системі macOS) та захищеного веб-інтерфейсу хмарної синхронізації. Завдяки цьому ви отримуєте безпрецедентний рівень швидкодії, безпеки та приватного контролю за своїми даними.
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginTop: 30 }}>
               <div className="glass" style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(0, 122, 255, 0.12)", color: "#007AFF", display: "grid", placeItems: "center", marginBottom: 14 }}>
                   <Shield size={18} />
@@ -223,14 +252,6 @@ export default function Docs() {
                 </div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Мульти-агентна система</h3>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>Фонові автономні агенти вміють проводити глибокі інтернет-дослідження та планувати складні ланцюжки задач.</p>
-              </div>
-
-              <div className="glass" style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(0, 229, 255, 0.12)", color: "#00E5FF", display: "grid", placeItems: "center", marginBottom: 14 }}>
-                  <Key size={18} />
-                </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Безпечна активація</h3>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>Прив'язка ліцензії на рівні залізо-ідентифікатора пристрою (Mac ID) гарантує високу безпеку та захист.</p>
               </div>
             </div>
           </section>
@@ -247,8 +268,11 @@ export default function Docs() {
               <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.5, margin: 0 }}>Встановіть пакет, ініціалізуйте сесію за допомогою ліцензійного ключа і виконайте свій перший запит.</p>
             </div>
 
-            <CodeBlock lang="bash" code="npm install @atlas-ai/sdk" />
-            <CodeBlock lang="javascript" code={`import { Atlas } from "@atlas-ai/sdk";
+            <div style={{ position: "relative", borderRadius: 16, overflow: "hidden" }}>
+              {/* Blurred container */}
+              <div style={{ filter: "blur(4.5px)", pointerEvents: "none", opacity: 0.45 }}>
+                <CodeBlock lang="bash" code="npm install @atlas-ai/sdk" />
+                <CodeBlock lang="javascript" code={`import { Atlas } from "@atlas-ai/sdk";
 
 // Ініціалізуємо клієнта Atlas AI
 const atlas = new Atlas({
@@ -275,6 +299,52 @@ async function main() {
 }
 
 main();`} />
+              </div>
+
+              {/* Glassmorphic Overlay Badge */}
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(3, 3, 5, 0.45)",
+                backdropFilter: "blur(2.5px)",
+                WebkitBackdropFilter: "blur(2.5px)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 16,
+                zIndex: 2,
+                padding: 24,
+                textAlign: "center"
+              }}>
+                <div style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  background: "rgba(0, 229, 255, 0.1)",
+                  border: "1px solid rgba(0, 229, 255, 0.3)",
+                  boxShadow: "0 0 20px rgba(0, 229, 255, 0.2)",
+                  display: "grid",
+                  placeItems: "center",
+                  color: "#00E5FF",
+                  marginBottom: 16
+                }}>
+                  <Zap size={24} style={{ animation: "pulse 2s infinite" }} />
+                </div>
+                <h4 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, color: "#fff" }}>Atlas Cloud SDK (Coming Soon)</h4>
+                <p style={{ margin: 0, fontSize: 13, color: "rgba(255, 255, 255, 0.6)", maxWidth: 360, lineHeight: 1.5 }}>
+                  SDK наразі перебуває у закритому бета-тестуванні. Можливість підключення зовнішніх систем буде активована найближчим часом.
+                </p>
+                <button 
+                  className="cta-btn" 
+                  style={{ marginTop: 20, padding: "8px 20px", fontSize: 12, cursor: "pointer" }}
+                  onClick={() => toast.success("Ви успішно записалися у список очікування на Beta-тест SDK!")}
+                >
+                  Отримати ранній доступ
+                </button>
+              </div>
+            </div>
           </section>
 
           {/* 3. Product Architecture Diagram */}
@@ -404,7 +474,7 @@ main();`} />
           <section ref={(el) => (sectionsRef.current.activation = el)} style={{ scrollMarginTop: 100, marginBottom: 80 }}>
             <SectionTitle eyebrow="Активація" title="Система перевірки ліцензії" desc="Кожен екземпляр Atlas AI при запуску перевіряє ліцензійний ключ. Ми прив'язуємо сесію до унікального залізо-ідентифікатора (Mac ID)." />
             
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }} className="two-col">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20, marginBottom: 24 }}>
               <div style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <h4 style={{ fontSize: 15, fontWeight: 700, color: "#00E5FF", marginBottom: 12 }}>🚀 Повний цикл активації:</h4>
                 <ol style={{ paddingLeft: 18, margin: 0, fontSize: 13.5, color: "rgba(255,255,255,0.65)", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -413,16 +483,6 @@ main();`} />
                   <li>Авторизація пристрою шляхом відправки запиту активації.</li>
                 </ol>
               </div>
-
-              <div style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#FEBC2E", marginBottom: 12 }}>⚡ Режим розробника (Bypass):</h4>
-                <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.5, margin: 0 }}>
-                  Для локальних тестів без підключення до мережі ви можете скористатися спеціальним розробницьким ключем обходу ліцензії:
-                </p>
-                <div style={{ marginTop: 12, padding: "8px 16px", borderRadius: 8, background: "rgba(254,188,46,0.1)", border: "1px solid rgba(254,188,46,0.25)", fontFamily: "monospace", fontSize: 13, color: "#FEBC2E", textAlign: "center", fontWeight: 700 }}>
-                  ATLAS-DEV-MODE-9999
-                </div>
-              </div>
             </div>
 
             <CodeBlock lang="javascript" code={`// Приклад перевірки ліцензії через API
@@ -430,7 +490,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    key: "ATLAS-DEV-MODE-9999",
+    key: "ATLAS-XXXX-XXXX-XXXX-XXXX",
     mac_id: "7C:D1:C3:E4:F5:A6",
     mac_name: "MacBook Pro Valentyna"
   })
@@ -539,12 +599,6 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             <Accordion q="Як працює офлайн розпізнавання Vosk?">
               <div>
                 <p>Компактна модель мовлення завантажується локально в папку `models/model-uk`. Це означає, що ваші голосові команди обробляються безпосередньо на вашому Mac без відправки аудіофайлів на сервери третіх сторін.</p>
-              </div>
-            </Accordion>
-
-            <Accordion q="Що дає ліцензійний ключ ATLAS-DEV-MODE-9999?">
-              <div>
-                <p>Це локальний інженерний ключ для розробників, який повністю обходить валідацію на мережевому сервері та дозволяє тестувати всі навички Atlas в офлайн-режимі протягом 10 років.</p>
               </div>
             </Accordion>
           </section>
