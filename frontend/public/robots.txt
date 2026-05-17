@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /x7k9m-admin
+Disallow: /admin

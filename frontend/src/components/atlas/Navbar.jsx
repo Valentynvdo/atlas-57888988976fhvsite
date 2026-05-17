@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../lib/auth";
 
 export default function Navbar({ onCta }) {
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -101,11 +105,11 @@ export default function Navbar({ onCta }) {
 
         <button
           data-testid="nav-cta-btn"
-          onClick={onCta}
+          onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
           className="cta-btn"
           style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
         >
-          Скоро
+          {user ? "Кабінет" : "Увійти"}
           <span
             style={{
               width: 6,
