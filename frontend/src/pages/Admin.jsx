@@ -80,20 +80,26 @@ function AdminPanel({ onLogout }) {
   const fileRef = useRef(null);
 
   const refresh = useCallback(async () => {
-    const [s, u, l, v] = await Promise.all([
-      api.get("/api/admin/stats"),
-      api.get("/api/admin/users", { params: { q, filter } }),
-      api.get("/api/admin/api-logs"),
-      api.get("/api/admin/version"),
-    ]);
-    setStats(s.data);
-    setUsers(u.data);
-    setApiLogs(l.data);
-    setVersion(v.data);
+    try {
+      const [s, u, l, v] = await Promise.all([
+        api.get("/api/admin/stats"),
+        api.get("/api/admin/users", { params: { q, filter } }),
+        api.get("/api/admin/api-logs"),
+        api.get("/api/admin/version"),
+      ]);
+      setStats(s.data);
+      setUsers(u.data);
+      setApiLogs(l.data);
+      setVersion(v.data);
+    } catch (err) {
+      console.error("Admin refresh error", err);
+    }
   }, [q, filter]);
 
   useEffect(() => {
     refresh();
+    const intervalId = setInterval(refresh, 15000); // Оновлення кожні 15 секунд
+    return () => clearInterval(intervalId);
   }, [refresh]);
 
   const sortedUsers = useMemo(() => {
