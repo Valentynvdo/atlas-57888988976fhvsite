@@ -3,6 +3,11 @@ import axios from "axios";
 const getBackendUrl = () => {
   if (typeof window === "undefined") return "http://localhost:8000";
   const hostname = window.location.hostname;
+  // On Render (production) — same origin, no port needed
+  if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+    return window.location.origin;
+  }
+  // Local dev — backend on port 8000
   return `http://${hostname}:8000`;
 };
 

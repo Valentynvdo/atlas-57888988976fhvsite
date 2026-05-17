@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: atlas-site
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: |
+      pip install -r requirements.txt
+      cd ../frontend
+      npm install --legacy-peer-deps
+      npm run build
+      cp -r build ../backend/static
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://atlas_65dr_user:ZlCGeV2iyAeJ4ZEe3q1374QhsHlkoEWy@dpg-d84m5cnaqgkc73ao2ih0-a/atlas_65dr
+      - key: GOOGLE_CLIENT_ID
+        value: 602255333396-uk0ek702vtp4jmdt2gl15q1kvsa6d3n4.apps.googleusercontent.com
+      - key: GOOGLE_CLIENT_SECRET
+        value: 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
+      - key: TON_RECEIVER_ADDRESS
+        value: UQAzeFO819-pumlHDacrkiD_FmepkupojDj7OPTPDHe3hH2j
+      - key: TON_PRICE_USD
+        value: "28.99"
+      - key: FRONTEND_URL
+        value: https://atlas-57888988976fhvsite.onrender.com
+      - key: BACKEND_URL
+        value: https://atlas-57888988976fhvsite.onrender.com
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_PIN
+        value: "0000"
+      - key: PYTHON_VERSION
+        value: "3.11.0"

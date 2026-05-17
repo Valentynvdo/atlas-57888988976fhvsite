@@ -95,9 +95,10 @@ async def _log_request(key: str, ip: str, result: str, mac_id: Optional[str] = N
     # Keep table bounded: trim oldest beyond 1000
     cnt = await db.api_logs.count_documents({})
     if cnt > 1000:
-        oldest = await db.api_logs.find({}, {"_id": 1}).sort("ts", 1).limit(cnt - 1000).to_list(None)
+        oldest = await db.api_logs.find({}).sort("ts", 1).limit(cnt - 1000).to_list(None)
         if oldest:
-            await db.api_logs.delete_many({"_id": {"$in": [d["_id"] for d in oldest]}})
+            for doc in oldest:
+                await db.api_logs.delete_one({"ts": doc["ts"], "key_full": doc.get("key_full", "")})
 
 
 @router.post("/stats")
