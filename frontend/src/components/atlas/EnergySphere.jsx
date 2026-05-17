@@ -18,7 +18,7 @@ export default function EnergySphere() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 3.6;
+    camera.position.z = 5.2;
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
