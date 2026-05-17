@@ -408,6 +408,20 @@ a:focus-visible {
     background: #28c840;
 }
 
+/* Responsive layout specifically for docs pages with top-pinned sticky sidebar */
+.docs-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+@media (min-width: 900px) {
+    .docs-layout {
+        flex-direction: row;
+        gap: 40px;
+        align-items: flex-start; /* Pins the sticky sidebar to the top */
+    }
+}
+
 /* Two-column responsive grid */
 .two-col {
     display: grid;

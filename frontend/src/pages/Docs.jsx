@@ -177,7 +177,7 @@ export default function Docs() {
       </section>
 
       {/* --- Main Two-Column Layout --- */}
-      <div style={{ display: "flex", gap: 40, maxWidth: "100%", margin: "0 auto", padding: "40px 5% 100px", position: "relative", zIndex: 1 }} className="two-col">
+      <div style={{ display: "flex", gap: 40, maxWidth: "100%", margin: "0 auto", padding: "40px 5% 100px", position: "relative", zIndex: 1 }} className="docs-layout">
         {/* Left Navigation Sidebar */}
         <aside style={{ width: 280, flexShrink: 0, position: "sticky", top: 120, height: "fit-content", display: "flex", flexDirection: "column", gap: 16 }} className="sidebar">
           <div style={{ padding: "0 8px 8px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
