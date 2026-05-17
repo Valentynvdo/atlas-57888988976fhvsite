@@ -21,7 +21,12 @@ from db import init_pool, close_pool, client
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
 logger = logging.getLogger("atlas")
 
-app = FastAPI(title="Atlas AI Backend")
+app = FastAPI(
+    title="Atlas AI Backend",
+    docs_url=None,       # Disable default Swagger UI at /docs to allow React Router to serve custom /docs page
+    redoc_url=None,      # Disable default ReDoc UI at /redoc
+    openapi_url="/api/openapi.json" # Keep openapi schema accessible under API
+)
 
 
 @app.on_event("startup")
