@@ -113,6 +113,22 @@ def _build_where(filter_dict: dict) -> tuple:
     return (" AND ".join(conditions) or "TRUE"), params
 
 
+def _parse_row_data(data) -> dict:
+    if isinstance(data, str):
+        try:
+            return json.loads(data)
+        except Exception as e:
+            logger.error("Failed to parse JSON string: %s, error: %s", data, e)
+            return {}
+    elif isinstance(data, dict):
+        return data
+    else:
+        try:
+            return dict(data)
+        except Exception:
+            return {}
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Cursor (supports .sort().limit().to_list())
 # ──────────────────────────────────────────────────────────────────────────────
@@ -148,7 +164,7 @@ class PGCursor:
         sql = f"SELECT data FROM {self.table} WHERE {where}{order}{limit_sql}"
         async with _pool.acquire() as conn:
             rows = await conn.fetch(sql, *params)
-        return [dict(r["data"]) for r in rows]
+        return [_parse_row_data(r["data"]) for r in rows]
 
     def __aiter__(self):
         self._iter_data = None
@@ -178,7 +194,7 @@ class PGCollection:
         sql = f"SELECT data FROM {self.table} WHERE {where} LIMIT 1"
         async with _pool.acquire() as conn:
             row = await conn.fetchrow(sql, *params)
-        return dict(row["data"]) if row else None
+        return _parse_row_data(row["data"]) if row else None
 
     def find(self, filter_dict=None, projection=None):
         return PGCursor(self.table, filter_dict or {})
@@ -203,7 +219,7 @@ class PGCollection:
         async with _pool.acquire() as conn:
             row = await conn.fetchrow(sql_find, *params)
             if row:
-                merged = {**dict(row["data"]), **set_data}
+                merged = {**_parse_row_data(row["data"]), **set_data}
                 await conn.execute(
                     f"UPDATE {self.table} SET data = $1::jsonb WHERE id = $2",
                     json.dumps(merged, default=str), row["id"],
