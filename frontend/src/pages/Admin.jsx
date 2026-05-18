@@ -593,71 +593,122 @@ function ManualKeyGen({ onCreated }) {
     try {
       const r = await api.post("/api/admin/generate-key", { email, days });
       setResult(r.data);
-      toast.success("Ключ створено");
+      toast.success("Новий ліцензійний ключ успішно створено", { style: { background: "rgba(40,200,64,0.15)", border: "1px solid rgba(40,200,64,0.4)", color: "#fff" }});
       onCreated();
     } catch (e) {
-      toast.error("Помилка");
+      toast.error("Сталася помилка при створенні ключа", { style: { background: "rgba(255,95,87,0.15)", border: "1px solid rgba(255,95,87,0.4)", color: "#fff" }});
     } finally {
       setBusy(false);
     }
   };
 
+  const copyKey = () => {
+    if (result && result.key) {
+      navigator.clipboard.writeText(result.key);
+      toast.success("Ключ скопійовано", { duration: 2000 });
+    }
+  };
+
   return (
-    <div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <input
-          data-testid="gen-email-input"
-          type="email"
-          placeholder="email@user.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{
-            flex: "1 1 240px",
-            padding: "10px 12px",
-            background: "rgba(0,0,0,0.4)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 10,
-            color: "#fff",
-            fontSize: 13,
-            outline: "none",
-          }}
-        />
+    <div style={{ padding: "8px 0" }}>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ flex: "1 1 240px", position: "relative" }}>
+          <input
+            data-testid="gen-email-input"
+            type="email"
+            placeholder="Введіть email користувача..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              background: "rgba(0,0,0,0.5)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: 14,
+              color: "#fff",
+              fontSize: 14,
+              outline: "none",
+              boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3)",
+              transition: "border-color 0.2s ease"
+            }}
+            onFocus={(e) => e.target.style.borderColor = "rgba(0,229,255,0.6)"}
+            onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.15)"}
+          />
+        </div>
         <select
           data-testid="gen-days-select"
           value={days}
           onChange={(e) => setDays(Number(e.target.value))}
           style={{
-            padding: "10px 12px",
-            background: "rgba(0,0,0,0.4)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 10,
+            padding: "14px 16px",
+            background: "rgba(0,0,0,0.5)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: 14,
             color: "#fff",
-            fontSize: 13,
+            fontSize: 14,
             outline: "none",
+            minWidth: "120px",
+            cursor: "pointer",
+            boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3)",
           }}
         >
-          {[30, 60, 90, 365].map((d) => (
-            <option key={d} value={d}>{d} днів</option>
-          ))}
+          <option value={30}>30 днів (Місяць)</option>
+          <option value={90}>90 днів (Квартал)</option>
+          <option value={180}>180 днів (Півроку)</option>
+          <option value={365}>365 днів (Рік)</option>
         </select>
-        <button data-testid="gen-submit-btn" disabled={busy || !email} onClick={submit} className="cta-btn">
-          {busy ? <Loader2 size={14} className="spin" /> : null} Згенерувати
+        <button 
+          data-testid="gen-submit-btn" 
+          disabled={busy || !email} 
+          onClick={submit} 
+          className="cta-btn"
+          style={{ padding: "14px 24px", borderRadius: 14, height: 48 }}
+        >
+          {busy ? <Loader2 size={16} className="spin" /> : <KeyRound size={16} />} 
+          Згенерувати
         </button>
       </div>
+
       {result && (
         <div
           data-testid="gen-result"
           style={{
-            marginTop: 12,
-            padding: 12,
-            background: "rgba(0,229,255,0.06)",
-            border: "1px solid rgba(0,229,255,0.2)",
-            borderRadius: 10,
-            fontFamily: "monospace",
-            fontSize: 13,
+            marginTop: 20,
+            padding: 24,
+            background: "linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(0,122,255,0.04) 100%)",
+            border: "1px solid rgba(0,229,255,0.25)",
+            borderRadius: 16,
+            boxShadow: "0 8px 32px rgba(0,229,255,0.05)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12
           }}
         >
-          {result.email} → <b>{result.key}</b> · до {fmtDate(result.expires_at)}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Новий ключ для {result.email}</span>
+            <span style={{ fontSize: 12, background: "rgba(40,200,64,0.15)", color: "#28C840", padding: "4px 10px", borderRadius: 999, fontWeight: 600 }}>Дійсний до {fmtDate(result.expires_at)}</span>
+          </div>
+          
+          <div style={{ 
+            display: "flex", 
+            justifyContent: "space-between", 
+            alignItems: "center", 
+            background: "rgba(0,0,0,0.4)", 
+            padding: "16px 20px", 
+            borderRadius: 12,
+            border: "1px dashed rgba(0,229,255,0.3)" 
+          }}>
+            <div style={{ fontFamily: "'Source Code Pro', monospace", fontSize: 20, fontWeight: 700, color: "#00E5FF", letterSpacing: "0.08em" }}>
+              {result.key}
+            </div>
+            <button 
+              onClick={copyKey}
+              className="ghost-btn" 
+              style={{ padding: "8px 16px", borderRadius: 10, background: "rgba(255,255,255,0.08)", border: "none" }}
+            >
+              Копіювати
+            </button>
+          </div>
         </div>
       )}
     </div>

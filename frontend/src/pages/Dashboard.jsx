@@ -297,8 +297,152 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main style={{ maxWidth: "100%", padding: "40px 5% 80px" }}>
-        {/* ----- Block 1: Subscription ----- */}
+      <main className="dashboard-main" style={{ maxWidth: "100%", padding: "40px 5% 80px", display: "flex", flexDirection: "column", gap: "24px" }}>
+        {/* ----- Block 1: License Key ----- */}
+        <section data-testid="key-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", border: "1px solid rgba(0, 229, 255, 0.2)", boxShadow: "0 8px 32px rgba(0, 229, 255, 0.08)" }}>
+          <SectionHeader title="Ваш Ліцензійний Ключ" eyebrow="Активація" />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: 24,
+              borderRadius: 16,
+              background: "rgba(0,0,0,0.6)",
+              border: "1px solid rgba(0, 229, 255, 0.2)",
+              fontFamily: "'Source Code Pro', monospace",
+              fontSize: 22,
+              fontWeight: 700,
+              color: "#00E5FF",
+              letterSpacing: "0.06em",
+              filter: keyHidden ? "blur(8px)" : "none",
+              transition: "filter 0.3s ease",
+              userSelect: keyHidden ? "none" : "text",
+              wordBreak: "break-all",
+              boxShadow: "inset 0 2px 10px rgba(0,0,0,0.5)"
+            }}
+            data-testid="license-key-value"
+          >
+            {license.key}
+          </div>
+          <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
+            <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="cta-btn" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
+              {keyHidden ? <Eye size={16} /> : <EyeOff size={16} />} {keyHidden ? "Показати ключ" : "Сховати"}
+            </button>
+            <button data-testid="copy-key-btn" onClick={copyKey} className="cta-btn" style={{ background: "rgba(0, 229, 255, 0.15)", border: "1px solid rgba(0, 229, 255, 0.3)", color: "#00E5FF" }}>
+              <Copy size={16} /> Скопіювати
+            </button>
+            {license.mac_id && (
+              <button
+                data-testid="transfer-btn"
+                onClick={() => setConfirmTransfer(true)}
+                className="ghost-btn"
+                style={{ fontSize: 14 }}
+              >
+                <ArrowRightLeft size={16} /> Перенести на інший Mac
+              </button>
+            )}
+          </div>
+          <div
+            style={{
+              marginTop: 24,
+              fontSize: 14,
+              fontWeight: 500,
+              color: license.mac_id ? "#28C840" : "rgba(255,255,255,0.5)",
+              display: "flex",
+              alignItems: "center",
+              gap: 8
+            }}
+            data-testid="activation-status"
+          >
+            {license.mac_id ? <Check size={16} /> : <AlertTriangle size={16} />}
+            {license.mac_id
+              ? `Активований на: ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
+              : "Ще не активований на вашому пристрої"}
+          </div>
+        </section>
+
+        {/* ----- Block 2: Telegram Bot ----- */}
+        <section data-testid="telegram-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", border: "1px solid rgba(0, 136, 204, 0.3)", boxShadow: "0 8px 32px rgba(0, 136, 204, 0.1)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+            <SectionHeader title="Віддалений контроль (Telegram)" eyebrow="Підключення бота" />
+            <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)", display: "grid", placeItems: "center", color: "#fff", boxShadow: "0 4px 15px rgba(0, 136, 204, 0.4)" }}>
+              <MessageSquare size={24} />
+            </div>
+          </div>
+          
+          <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: 15, lineHeight: 1.6, marginBottom: 28 }}>
+            Керуйте Atlas AI віддалено зі смартфона! Отримуйте сповіщення, переглядайте результати досліджень та відправляйте команди у будь-який час.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
+            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>1</div>
+              <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+                Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>2</div>
+              <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+                Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.
+              </div>
+            </div>
+          </div>
+
+          <a
+            href={`https://t.me/Atlas_aimac_bot?start=ACT_${encodeURIComponent(license.key)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="cta-btn"
+            style={{
+              textDecoration: "none",
+              background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
+              border: "none",
+              boxShadow: "0 6px 20px rgba(0, 136, 204, 0.4)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              padding: "16px 32px",
+              borderRadius: 16,
+              fontSize: 16,
+              fontWeight: 600,
+              width: "100%",
+              maxWidth: 340,
+              cursor: "pointer",
+              transition: "all 0.3s ease"
+            }}
+          >
+            <MessageSquare size={18} /> Підключити Telegram-бота
+          </a>
+        </section>
+
+        {/* ----- Block 3: Download ----- */}
+        <section data-testid="download-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+          <SectionHeader title="Завантаження" eyebrow="Atlas для macOS" />
+          <a
+            data-testid="download-btn"
+            href={downloadInfo?.url || "#"}
+            download
+            className="cta-btn"
+            style={{ textDecoration: "none", background: "linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.2)" }}
+          >
+            <Download size={18} /> Завантажити Atlas 1.0.0
+          </a>
+          <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: 16 }}>
+            macOS 13 Ventura або новіший. Apple Silicon або Intel. 200 MB вільного місця. · ~841.2 MB
+          </div>
+
+          <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.8)", paddingLeft: 20, lineHeight: 1.8, fontSize: 14.5 }}>
+            <li style={{ marginBottom: 8 }}>Завантаж .dmg і перетягни Atlas у Applications.</li>
+            <li style={{ marginBottom: 8 }}>Запусти Atlas з Applications (перший раз — права кліком → Open).</li>
+            <li style={{ marginBottom: 8 }}>Введи свій ліцензійний ключ зверху.</li>
+            <li>Дозволь доступ до мікрофона і Accessibility — і Atlas готовий.</li>
+          </ol>
+        </section>
+
+        {/* ----- Block 4: Subscription ----- */}
         <section data-testid="subscription-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           {/* Header with macOS Dots */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
@@ -586,151 +730,8 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* ----- Block 2: License Key ----- */}
-        <section data-testid="key-block" className="glass" style={blockStyle}>
-          <SectionHeader title="Ліцензійний ключ" eyebrow="Активація" />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: 18,
-              borderRadius: 16,
-              background: "rgba(0,0,0,0.5)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              fontFamily: "'Source Code Pro', monospace",
-              fontSize: 18,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              filter: keyHidden ? "blur(7px)" : "none",
-              transition: "filter 0.3s ease",
-              userSelect: keyHidden ? "none" : "text",
-              wordBreak: "break-all",
-            }}
-            data-testid="license-key-value"
-          >
-            {license.key}
-          </div>
-          <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
-            <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="ghost-btn">
-              {keyHidden ? <Eye size={14} /> : <EyeOff size={14} />} {keyHidden ? "Показати" : "Сховати"}
-            </button>
-            <button data-testid="copy-key-btn" onClick={copyKey} className="ghost-btn">
-              <Copy size={14} /> Скопіювати
-            </button>
-            {license.mac_id && (
-              <button
-                data-testid="transfer-btn"
-                onClick={() => setConfirmTransfer(true)}
-                className="ghost-btn"
-              >
-                <ArrowRightLeft size={14} /> Перенести на інший Mac
-              </button>
-            )}
-          </div>
-          <div
-            style={{
-              marginTop: 18,
-              fontSize: 14,
-              color: license.mac_id ? "rgba(40,200,64,0.9)" : "rgba(255,255,255,0.5)",
-            }}
-            data-testid="activation-status"
-          >
-            {license.mac_id
-              ? `Активований на: ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
-              : "Ще не активований"}
-          </div>
-        </section>
-
-        {/* ----- Block 3: Download ----- */}
-        <section data-testid="download-block" className="glass" style={blockStyle}>
-          <SectionHeader title="Завантаження" eyebrow="Atlas для macOS" />
-          <a
-            data-testid="download-btn"
-            href={downloadInfo?.url || "#"}
-            download
-            className="cta-btn"
-            style={{ textDecoration: "none" }}
-          >
-            <Download size={16} /> Завантажити Atlas {downloadInfo?.version || "0.9.0"}
-          </a>
-          <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginTop: 16 }}>
-            {downloadInfo?.requirements || "macOS 13+ · Apple Silicon / Intel"} · ~{downloadInfo?.size_mb || 84} MB
-          </div>
-
-          <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.7)", paddingLeft: 18, lineHeight: 1.7, fontSize: 14 }}>
-            <li>Завантаж .dmg і перетягни Atlas у Applications.</li>
-            <li>Запусти Atlas з Applications (перший раз — права кліком → Open).</li>
-            <li>Введи свій ліцензійний ключ зверху.</li>
-            <li>Дозволь доступ до мікрофона і Accessibility — і Atlas готовий.</li>
-          </ol>
-        </section>
-
-        {/* ----- Block 3.5: Telegram Bot ----- */}
-        <section data-testid="telegram-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0, 136, 204, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%)", border: "1px solid rgba(0, 136, 204, 0.25)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-            <SectionHeader title="Підключити Telegram-бота Atlas" eyebrow="Мобільне керування" />
-            <div style={{ width: 42, height: 42, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", display: "grid", placeItems: "center", color: "#0088cc", border: "1px solid rgba(0, 136, 204, 0.3)" }}>
-              <MessageSquare size={20} />
-            </div>
-          </div>
-          
-          <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
-            Ви можете керувати своїм Atlas AI віддалено зі свого смартфона через наш офіційний Telegram бот. 
-            Отримуйте миттєві сповіщення, переглядайте звіти автономних досліджень, відправляйте команди та спілкуйтеся з Atlas будь-де та будь-коли.
-          </p>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>1</div>
-              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
-                Натисніть кнопку <strong>«Підключити бота»</strong> нижче. Вас буде перенаправлено до нашого офіційного Telegram-бота <span style={{ color: "#00E5FF", fontWeight: 500 }}>@Atlas_aimac_bot</span>.
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>2</div>
-              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
-                Натисніть кнопку <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації з лінк-параметру.
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(0, 136, 204, 0.1)", border: "1px solid rgba(0, 136, 204, 0.2)", display: "grid", placeItems: "center", fontSize: 11, fontWeight: 700, color: "#0088cc", flexShrink: 0, marginTop: 2 }}>3</div>
-              <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
-                Якщо бот попросить код вручну — просто надішліть йому ваш ліцензійний ключ: <code style={{ background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 4, fontFamily: "monospace", fontSize: 12, color: "#00E5FF", fontWeight: 600 }}>{license.key}</code>
-              </div>
-            </div>
-          </div>
-
-          <a
-            href={`https://t.me/Atlas_aimac_bot?start=ACT_${license.key}`}
-            target="_blank"
-            rel="noreferrer"
-            className="cta-btn"
-            style={{
-              textDecoration: "none",
-              background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
-              border: "none",
-              boxShadow: "0 4px 20px rgba(0, 136, 204, 0.35)",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              padding: "14px 28px",
-              borderRadius: 14,
-              fontSize: 14.5,
-              fontWeight: 600,
-              width: "100%",
-              maxWidth: 320,
-              cursor: "pointer",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease"
-            }}
-          >
-            <MessageSquare size={16} /> Підключити Telegram-бота
-          </a>
-        </section>
-
-        {/* ----- Block 4: Stats ----- */}
-        <section data-testid="stats-block" className="glass" style={blockStyle}>
+        {/* ----- Block 5: Stats ----- */}
+        <section data-testid="stats-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           <SectionHeader title="Статистика Atlas" eyebrow="Активність" />
           {license.mac_id && license.stats ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16 }}>
@@ -758,8 +759,8 @@ export default function Dashboard() {
           )}
         </section>
 
-        {/* ----- Block 5: Support ----- */}
-        <section data-testid="support-block" className="glass" style={blockStyle}>
+        {/* ----- Block 6: Support ----- */}
+        <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           <SectionHeader title="Підтримка" eyebrow="Допомога" />
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
             <a href="https://t.me/atlas_support" className="ghost-btn" target="_blank" rel="noreferrer" data-testid="telegram-link">

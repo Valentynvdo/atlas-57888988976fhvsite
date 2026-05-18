@@ -4,25 +4,87 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
+        <meta name="background-color" content="#000000" />
         <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
+        <link rel="canonical" href="https://atlas-ai.com/" />
         
-        <!-- SEO Tags -->
-        <meta name="description" content="Atlas AI — Ваш персональний автономний інтелектуальний помічник. Управління даними, розширений моніторинг та продуктивність." />
-        <meta name="keywords" content="Atlas AI, ШІ, персональний асистент, штучний інтелект, продуктивність, автоматизація, розумний помічник, автономний ШІ" />
-        <meta name="author" content="Valentin" />
-        <meta name="robots" content="index, follow" />
-        
-        <!-- Open Graph / Social Media -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Atlas AI — Ваш персональний всесвіт" />
-        <meta property="og:description" content="Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності." />
-        <meta property="og:site_name" content="Atlas AI" />
-        
+        <!-- Preconnect & DNS Prefetch -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        
+        <!-- Preload critical assets -->
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         
-        <title>Atlas AI — Ваш персональний всесвіт</title>
+        <!-- SEO Meta Tags -->
+        <title>Atlas AI — Автономний ШІ Асистент для macOS</title>
+        <meta name="description" content="Atlas AI — Ваш персональний автономний інтелектуальний помічник для macOS. Керуйте даними, автоматизуйте рутину та підвищуйте свою продуктивність." />
+        <meta name="keywords" content="Atlas AI, ШІ, персональний асистент, штучний інтелект, продуктивність, автоматизація, macOS, розумний помічник, автономний ШІ" />
+        <meta name="author" content="Валентин Вдовіченко" />
+        <meta name="robots" content="index, follow" />
+        <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE_HERE" />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://atlas-ai.com/" />
+        <meta property="og:title" content="Atlas AI — Автономний ШІ Асистент для macOS" />
+        <meta property="og:description" content="Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS." />
+        <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+        <meta property="og:locale" content="uk_UA" />
+        <meta property="og:site_name" content="Atlas AI" />
+        
+        <!-- Twitter Cards -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://atlas-ai.com/" />
+        <meta name="twitter:title" content="Atlas AI — Автономний ШІ Асистент для macOS" />
+        <meta name="twitter:description" content="Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS." />
+        <meta name="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
+
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!-- Schema.org JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Atlas AI",
+          "url": "https://atlas-ai.com/",
+          "author": {
+            "@type": "Person",
+            "name": "Валентин Вдовіченко"
+          }
+        }
+        </script>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Atlas AI",
+          "operatingSystem": "macOS",
+          "applicationCategory": "UtilitiesApplication",
+          "description": "Автономний ШІ-асистент нового покоління для macOS, що інтегрується з системою, підтримує створення автономних скілів, обробку голосу, віддалене керування через Telegram та має локальну базу знань."
+        }
+        </script>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Валентин Вдовіченко",
+          "jobTitle": "AI Developer",
+          "url": "https://atlas-ai.com/",
+          "knowsAbout": ["Artificial Intelligence", "Python", "React", "macOS Development", "Software Architecture"]
+        }
+        </script>
+        
+        <!-- Google Analytics 4 Placeholder -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-XXXXXXXXXX');
+        </script>
     </head>
     <body>
         <noscript>Вам потрібно увімкнути JavaScript, щоб запустити цей додаток.</noscript>

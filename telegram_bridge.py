@@ -166,7 +166,7 @@ async def command_processor():
                 print(f"[Telegram Bridge] Виконання: {text}")
                 try:
                     await asyncio.get_event_loop().run_in_executor(
-                        None, handlers.execute_cmd, None, text
+                        None, lambda: handlers.execute_cmd(None, text, is_telegram=True)
                     )
                 except Exception as e:
                     logger.error(f"Error executing command: {e}")
