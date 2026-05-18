@@ -88,17 +88,115 @@ async def validate_key(body: dict, request: Request):
     }
 
 
+async def get_ip_geo(ip: str) -> dict:
+    if not ip or ip in ("127.0.0.1", "localhost", "unknown") or ip.startswith("192.168.") or ip.startswith("10."):
+        return {"country": "Ukraine", "city": "Kyiv", "lat": 50.4501, "lon": 30.5234}
+    try:
+        cached = await db.ip_geo_cache.find_one({"ip": ip}, {"_id": 0})
+        if cached:
+            return cached
+    except Exception:
+        pass
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            r = await client.get(f"http://ip-api.com/json/{ip}")
+            if r.status_code == 200:
+                data = r.json()
+                if data.get("status") == "success":
+                    geo = {
+                        "ip": ip,
+                        "country": data.get("country", "Unknown"),
+                        "city": data.get("city", "Unknown"),
+                        "lat": data.get("lat", 50.4501),
+                        "lon": data.get("lon", 30.5234),
+                        "ts": datetime.now(timezone.utc).isoformat()
+                    }
+                    try:
+                        await db.ip_geo_cache.insert_one(geo)
+                    except Exception:
+                        pass
+                    return geo
+    except Exception:
+        pass
+    return {"country": "Unknown", "city": "Unknown", "lat": 50.4501, "lon": 30.5234}
+
+
+def haversine_distance(lon1, lat1, lon2, lat2):
+    from math import radians, cos, sin, asin, sqrt
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    r = 6371.0
+    return c * r
+
+
+async def send_telegram_alert(message: str):
+    import httpx
+    try:
+        import sys
+        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        import telegram_auth
+        allowed_id = telegram_auth.get_allowed_user_id()
+        bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        if bot_token and allowed_id:
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                await client.post(url, json={"chat_id": allowed_id, "text": message})
+    except Exception:
+        pass
+
+
 async def _log_request(key: str, ip: str, result: str, mac_id: Optional[str] = None) -> None:
+    now = datetime.now(timezone.utc)
+    suspicious = False
+    
+    try:
+        prev = await db.api_logs.find({"key_full": key}).sort("ts", -1).limit(1).to_list()
+        if prev:
+            prev_log = prev[0]
+            prev_ip = prev_log.get("ip")
+            prev_ts = _parse_dt(prev_log.get("ts"))
+            if prev_ip and prev_ip != ip and prev_ts:
+                geo1 = await get_ip_geo(prev_ip)
+                geo2 = await get_ip_geo(ip)
+                
+                lat1, lon1 = geo1.get("lat", 50.4501), geo1.get("lon", 30.5234)
+                lat2, lon2 = geo2.get("lat", 50.4501), geo2.get("lon", 30.5234)
+                
+                distance = haversine_distance(lon1, lat1, lon2, lat2)
+                hours_diff = (now - prev_ts).total_seconds() / 3600.0
+                
+                if distance > 100.0 and hours_diff > 0.0:
+                    speed = distance / hours_diff
+                    if speed > 900.0:
+                        suspicious = True
+                        alert_msg = (
+                            f"🚨 [Anti-Fraud Alert] Зафіксовано спробу піратства ліцензійного ключа!\n\n"
+                            f"Ключ: {key[:14]}...\n"
+                            f"Час між запитами: {round(hours_diff * 60, 1)} хв\n"
+                            f"Попередня локація: {geo1.get('city')}, {geo1.get('country')} (IP: {prev_ip})\n"
+                            f"Нова локація: {geo2.get('city')}, {geo2.get('country')} (IP: {ip})\n"
+                            f"Відстань: {round(distance, 1)} км\n"
+                            f"Розрахункова швидкість: {round(speed, 1)} км/год ✈️"
+                        )
+                        await send_telegram_alert(alert_msg)
+    except Exception:
+        pass
+
     await db.api_logs.insert_one({
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": now.isoformat(),
         "endpoint": "/api/atlas/validate-key",
         "key_prefix": key[:14] if key else "",
         "key_full": key,
         "mac_id": mac_id,
         "ip": ip,
         "result": result,
+        "suspicious": suspicious
     })
-    # Keep table bounded: trim oldest beyond 1000
+    
     cnt = await db.api_logs.count_documents({})
     if cnt > 1000:
         oldest = await db.api_logs.find({}).sort("ts", 1).limit(cnt - 1000).to_list(None)
@@ -182,6 +280,41 @@ async def get_live_thought():
         "ts": latest.get("ts"),
         "category": latest.get("category", "learning")
     }
+
+
+@router.post("/heartbeat")
+async def report_heartbeat(body: dict):
+    """Mac app reports live status heartbeat periodically. Idempotent upsert."""
+    key = (body.get("key") or "").strip().upper()
+    mac_id = (body.get("mac_id") or "").strip()
+    mac_name = (body.get("mac_name") or "Mac").strip()
+    version = (body.get("version") or "—").strip()
+    active_skill = (body.get("active_skill") or "Idle").strip()
+
+    if not key or not mac_id:
+        raise HTTPException(status_code=400, detail="key and mac_id required")
+
+    lic = await db.licenses.find_one({"key": key, "mac_id": mac_id}, {"_id": 0})
+    if not lic:
+        raise HTTPException(status_code=404, detail="License/Mac mismatch")
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    await db.app_heartbeats.update_one(
+        {"license_id": lic["license_id"]},
+        {"$set": {
+            "user_id": lic["user_id"],
+            "license_id": lic["license_id"],
+            "key": key,
+            "mac_id": mac_id,
+            "mac_name": mac_name,
+            "version": version,
+            "active_skill": active_skill,
+            "last_ping": now_iso,
+            "status": "online"
+        }},
+        upsert=True
+    )
+    return {"ok": True}
 
 
 # ── Secure Download System ────────────────────────────────────────────────────
