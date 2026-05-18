@@ -75,8 +75,46 @@ export default function Login() {
         placeItems: "center",
         padding: 24,
         fontFamily: "Inter, sans-serif",
+        position: "relative",
       }}
     >
+      {/* Back to Home Button */}
+      <button
+        onClick={() => navigate("/")}
+        style={{
+          position: "absolute",
+          top: 24,
+          left: 24,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          background: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          padding: "10px 16px",
+          borderRadius: 12,
+          color: "rgba(255, 255, 255, 0.8)",
+          cursor: "pointer",
+          fontSize: 13,
+          fontWeight: 500,
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          transition: "all 0.2s ease",
+          zIndex: 10,
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+          e.currentTarget.style.color = "#fff";
+          e.currentTarget.style.transform = "translateX(-2px)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+          e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)";
+          e.currentTarget.style.transform = "none";
+        }}
+      >
+        <span style={{ fontSize: 14 }}>←</span> На головну
+      </button>
+
       <div
         className="glass"
         style={{

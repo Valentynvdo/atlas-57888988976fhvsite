@@ -2,12 +2,18 @@ import axios from "axios";
 
 const getBackendUrl = () => {
   if (typeof window === "undefined") return "http://localhost:8000";
+  
+  // 1. Prioritize environment variable (e.g. set in Render Static Site environment variables)
+  if (process.env.REACT_APP_BACKEND_URL) {
+    return process.env.REACT_APP_BACKEND_URL;
+  }
+  
   const hostname = window.location.hostname;
-  // On Render (production) — same origin, no port needed
+  // 2. On Render (production unified) — same origin, no port needed
   if (hostname !== "localhost" && hostname !== "127.0.0.1") {
     return window.location.origin;
   }
-  // Local dev — backend on port 8000
+  // 3. Local dev — backend on port 8000
   return `http://${hostname}:8000`;
 };
 
