@@ -31,5 +31,9 @@ services:
         generateValue: true
       - key: ADMIN_PIN
         value: "0000"
+      - key: ADMIN_EMAIL
+        value: admin@atlas.com
+      - key: ADMIN_PASSWORD
+        value: srv-d84mtqjtqb8s73fgcjog
       - key: PYTHON_VERSION
         value: "3.11.0"
