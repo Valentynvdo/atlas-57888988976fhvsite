@@ -282,6 +282,14 @@ async def get_live_thought():
     }
 
 
+@router.get("/broadcasts")
+async def get_broadcasts():
+    """Returns active system broadcasts for Mac clients."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    broadcasts = await db.system_broadcasts.find({"created_at": {"$gte": cutoff}}, {"_id": 0}).sort("created_at", -1).limit(5).to_list(10)
+    return broadcasts
+
+
 @router.post("/heartbeat")
 async def report_heartbeat(body: dict):
     """Mac app reports live status heartbeat periodically. Idempotent upsert."""
