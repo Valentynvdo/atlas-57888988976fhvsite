@@ -370,28 +370,54 @@ function AdminPanel({ onLogout }) {
                   </h3>
                 </div>
 
-                <div style={{ position: "relative", width: "100%", background: "#0b0b0e", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", overflow: "hidden", padding: "40px 20px" }}>
-                  {/* Stylized Abstract SVG World Map Background */}
+                <div style={{ position: "relative", width: "100%", background: "#060609", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", overflow: "hidden", padding: "40px 20px" }}>
+                  {/* High-Definition Realistic SVG World Map Outline */}
                   <svg viewBox="0 0 1000 500" style={{ width: "100%", height: "auto", display: "block" }}>
-                    {/* Outline Continents (Simplified premium visual nodes) */}
+                    {/* Dark Grid Background */}
                     <rect x="0" y="0" width="1000" height="500" fill="none" />
-                    {/* Abstract digital world grid system */}
-                    <path d="M 0 100 H 1000 M 0 200 H 1000 M 0 300 H 1000 M 0 400 H 1000" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
-                    <path d="M 200 0 V 500 M 400 0 V 500 M 600 0 V 500 M 800 0 V 500" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+                    <path d="M 0 50 H 1000 M 0 100 H 1000 M 0 150 H 1000 M 0 200 H 1000 M 0 250 H 1000 M 0 300 H 1000 M 0 350 H 1000 M 0 400 H 1000 M 0 450 H 1000" stroke="rgba(255,255,255,0.015)" strokeWidth="1" />
+                    <path d="M 100 0 V 500 M 200 0 V 500 M 300 0 V 500 M 400 0 V 500 M 500 0 V 500 M 600 0 V 500 M 700 0 V 500 M 800 0 V 500 M 900 0 V 500" stroke="rgba(255,255,255,0.015)" strokeWidth="1" />
                     
-                    {/* Stylized Abstract Continent Shapes */}
-                    <path d="M 120 120 Q 180 80 250 140 T 320 220 Q 300 280 220 320 T 150 250 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-                    <path d="M 450 100 Q 550 80 620 120 T 750 150 Q 820 220 780 320 T 600 350 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.04)" strokeWidth="1" strokeDasharray="3,3" />
-                    <path d="M 380 320 Q 420 380 440 450 T 400 480 Q 360 440 350 360 Z" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                    <path d="M 780 320 Q 840 360 880 440 T 840 470 Z" fill="rgba(255,255,255,0.01)" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                    {/* Greenland */}
+                    <path d="M 370 40 L 400 35 L 430 45 L 410 75 L 390 85 L 365 70 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* North America */}
+                    <path d="M 100 60 L 150 50 L 220 50 L 290 60 L 310 90 L 320 110 L 280 120 L 290 140 L 270 170 L 280 190 L 260 210 L 270 230 L 255 240 L 245 220 L 235 225 L 245 190 L 220 190 L 210 170 L 180 170 L 190 130 L 140 120 L 160 90 L 110 80 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* South America */}
+                    <path d="M 255 240 L 280 250 L 305 270 L 330 290 L 340 330 L 320 380 L 300 420 L 285 460 L 275 470 L 270 450 L 280 410 L 270 380 L 255 330 L 240 290 L 245 260 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Africa */}
+                    <path d="M 450 200 L 490 190 L 530 195 L 565 215 L 585 245 L 560 270 L 545 300 L 530 350 L 515 385 L 500 395 L 490 380 L 490 350 L 475 320 L 460 280 L 435 250 L 430 220 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+                    
+                    {/* Madagascar */}
+                    <path d="M 570 340 L 580 330 L 590 350 L 575 375 L 565 365 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Eurasia (Europe + Asia) */}
+                    <path d="M 400 90 L 420 80 L 470 70 L 520 60 L 600 50 L 700 55 L 800 65 L 850 80 L 890 85 L 900 110 L 880 145 L 890 180 L 850 210 L 835 190 L 840 230 L 820 250 L 795 245 L 780 220 L 740 235 L 725 210 L 720 250 L 690 260 L 665 250 L 650 215 L 610 200 L 595 215 L 540 200 L 500 195 L 490 170 L 470 160 L 485 140 L 450 135 L 420 130 L 415 110 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Great Britain & Ireland */}
+                    <path d="M 430 110 L 440 100 L 445 115 L 435 125 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Japan */}
+                    <path d="M 885 130 L 895 120 L 905 150 L 895 170 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Indochina & Indonesia Islands (Stylized Nodes) */}
+                    <path d="M 760 250 L 775 240 L 780 255 Z M 790 260 L 820 270 L 800 280 Z M 830 265 L 850 280 L 840 290 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+
+                    {/* Australia */}
+                    <path d="M 780 340 L 820 325 L 860 340 L 880 375 L 865 410 L 830 420 L 800 415 L 775 390 L 770 365 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+                    
+                    {/* New Zealand */}
+                    <path d="M 900 420 L 910 410 L 920 440 L 910 450 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
 
                     {/* Active Pulsing Locations */}
                     {activeMap.map((spot, idx) => {
-                      // Simple Equirectangular projection
-                      // map lon from [-180, 180] to [50, 950]
-                      // map lat from [-90, 90] to [450, 50]
-                      const x = 500 + (spot.lon * 500) / 180;
-                      const y = 250 - (spot.lat * 250) / 90;
+                      // Equirectangular projection mapping coordinates precisely:
+                      // Longitude range: [-180, 180] -> X pixel: [50, 950]
+                      // Latitude range: [-90, 90] -> Y pixel: [450, 50]
+                      const x = 500 + (spot.lon * 450) / 180;
+                      const y = 250 - (spot.lat * 200) / 90;
                       return (
                         <g key={idx}>
                           {/* Outer pulse */}
@@ -400,7 +426,7 @@ function AdminPanel({ onLogout }) {
                             <animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite" />
                           </circle>
                           {/* Inner glowing dot */}
-                          <circle cx={x} cy={y} r="4" fill="#00E5FF" style={{ filter: "drop-shadow(0 0 4px #00E5FF)" }} />
+                          <circle cx={x} cy={y} r="4" fill="#00E5FF" style={{ filter: "drop-shadow(0 0 5px #00E5FF)" }} />
                         </g>
                       );
                     })}
