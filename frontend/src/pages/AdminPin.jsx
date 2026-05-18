@@ -73,13 +73,13 @@ export default function AdminPin({ onUnlock }) {
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>Адмін доступ</h2>
         <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, margin: "8px 0 24px" }}>
-          Введи 6-значний PIN
+          Введи PIN-код адміністратора (4-8 цифр)
         </p>
         <input
           data-testid="admin-pin-input"
           autoFocus
           inputMode="numeric"
-          maxLength={6}
+          maxLength={8}
           value={pin}
           onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
           style={{
@@ -104,9 +104,9 @@ export default function AdminPin({ onUnlock }) {
         <button
           data-testid="admin-pin-submit"
           type="submit"
-          disabled={busy || pin.length !== 6}
+          disabled={busy || pin.length < 4 || pin.length > 8}
           className="cta-btn"
-          style={{ marginTop: 24, width: "100%", justifyContent: "center", opacity: busy || pin.length !== 6 ? 0.6 : 1 }}
+          style={{ marginTop: 24, width: "100%", justifyContent: "center", opacity: busy || pin.length < 4 || pin.length > 8 ? 0.6 : 1 }}
         >
           {busy ? <Loader2 size={16} className="spin" /> : null} Увійти
         </button>
