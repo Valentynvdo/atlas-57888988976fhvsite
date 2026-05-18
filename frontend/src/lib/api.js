@@ -31,18 +31,30 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
+  const pinToken = localStorage.getItem("atlas_admin_pin");
+  if (pinToken) {
+    config.headers["X-Admin-Pin"] = pinToken;
+  }
   return config;
 });
 
 // Response interceptor: automatically save token if returned in response body
 api.interceptors.response.use((response) => {
-  if (response.data && response.data.token) {
-    localStorage.setItem("atlas_session", response.data.token);
+  if (response.data) {
+    if (response.data.token) {
+      localStorage.setItem("atlas_session", response.data.token);
+    }
+    if (response.data.pin_token) {
+      localStorage.setItem("atlas_admin_pin", response.data.pin_token);
+    }
   }
   return response;
 }, (error) => {
   if (error.response && error.response.status === 401) {
     localStorage.removeItem("atlas_session");
+  }
+  if (error.response && error.response.status === 403) {
+    localStorage.removeItem("atlas_admin_pin");
   }
   return Promise.reject(error);
 });

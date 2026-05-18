@@ -107,7 +107,7 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
     admin_email = await _admin_email()
     if not admin_email or user["email"].lower() != admin_email:
         raise HTTPException(status_code=404, detail="Not found")
-    pin_token = request.cookies.get("atlas_admin_pin")
+    pin_token = request.cookies.get("atlas_admin_pin") or request.headers.get("X-Admin-Pin")
     if not pin_token:
         raise HTTPException(status_code=403, detail="Admin PIN required")
     rec = await db.admin_pin_sessions.find_one({"token": pin_token})
@@ -279,7 +279,7 @@ async def login(body: dict, response: Response):
             httponly=True, secure=True, samesite="none", path="/"
         )
 
-        return {"ok": True, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
+        return {"ok": True, "token": token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
 
     # Regular User Login
     user = await db.users.find_one({"email": email})
@@ -305,7 +305,7 @@ async def login(body: dict, response: Response):
     })
 
     _set_session_cookie(response, token)
-    return {"ok": True, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name")}}
+    return {"ok": True, "token": token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name")}}
 
 
 
@@ -419,7 +419,7 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
     await db.admin_pin_sessions.insert_one({"token": token, "user_id": user["user_id"], "expires_at": expires.isoformat()})
     response.set_cookie(key="atlas_admin_pin", value=token, max_age=int(PIN_TTL.total_seconds()), httponly=True, secure=True, samesite="none", path="/")
     await db.admin_logs.insert_one({"action": "admin_login", "performed_by": user["email"], "performed_at": datetime.now(timezone.utc).isoformat(), "ip": ip})
-    return {"ok": True}
+    return {"ok": True, "pin_token": token}
 
 
 @router.get("/admin/status")
