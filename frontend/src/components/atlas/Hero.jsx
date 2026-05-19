@@ -143,7 +143,7 @@ export default function Hero({ onCta }) {
 
         {/* Tiny stats / proof row */}
         <div
-          className="reveal in-view delay-3"
+          className="reveal in-view delay-3 hero-proof-row"
           style={{
             marginTop: 56,
             display: "flex",

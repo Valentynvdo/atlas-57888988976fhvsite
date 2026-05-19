@@ -166,7 +166,7 @@ export default function SmartConcierge() {
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
+        <div className="concierge-nav-buttons" style={{ display: "flex", gap: 12 }}>
           <button
             data-testid="concierge-prev-btn"
             onClick={() => scroll(-1)}

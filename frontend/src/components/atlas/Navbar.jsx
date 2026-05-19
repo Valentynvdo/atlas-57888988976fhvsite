@@ -8,6 +8,7 @@ export default function Navbar({ onCta }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isHomePage = window.location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -25,7 +26,7 @@ export default function Navbar({ onCta }) {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 50,
+          zIndex: 101,
           transition: "all 0.4s ease",
           padding: scrolled ? "12px 0" : "20px 0",
           background: scrolled ? "rgba(0,0,0,0.55)" : "transparent",
@@ -89,7 +90,7 @@ export default function Navbar({ onCta }) {
             ].map((link) => (
               <a
                 key={link.id}
-                href={`#${link.id}`}
+                href={isHomePage ? `#${link.id}` : `/#${link.id}`}
                 data-testid={`nav-link-${link.id}`}
                 style={{
                   color: "rgba(255,255,255,0.72)",
@@ -125,8 +126,23 @@ export default function Navbar({ onCta }) {
             <button
               data-testid="nav-cta-btn"
               onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
-              className="cta-btn"
-              style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.72)",
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                transition: "color 0.3s ease",
+                padding: 0,
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "rgba(255,255,255,0.72)")
+              }
             >
               {user ? "Кабінет" : "Увійти"}
               <span
@@ -186,7 +202,7 @@ export default function Navbar({ onCta }) {
           ].map((link) => (
             <a
               key={link.id}
-              href={`#${link.id}`}
+              href={isHomePage ? `#${link.id}` : `/#${link.id}`}
               onClick={() => setIsMobileMenuOpen(false)}
               style={{
                 color: "#fff",
@@ -223,14 +239,14 @@ export default function Navbar({ onCta }) {
               setIsMobileMenuOpen(false);
               user ? navigate("/dashboard") : navigate("/login");
             }}
-            className="cta-btn"
             style={{
+              background: "none",
+              border: "none",
+              color: "#00E5FF",
+              fontSize: 20,
+              fontWeight: 600,
               marginTop: 12,
-              width: "100%",
-              maxWidth: "280px",
-              justifyContent: "center",
-              fontSize: 16,
-              padding: "14px 20px",
+              cursor: "pointer",
             }}
           >
             {user ? "Кабінет" : "Увійти"}

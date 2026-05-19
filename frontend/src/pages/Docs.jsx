@@ -179,18 +179,48 @@ export default function Docs() {
       {/* --- Global Sticky Navigation Header --- */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(3,3,3,0.75)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 5%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button onClick={() => navigate("/")} className="ghost-btn" style={{ padding: "6px 12px", fontSize: 13, borderRadius: 8, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff" }}>
+          <button
+            onClick={() => navigate("/")}
+            style={{
+              background: "none",
+              border: "none",
+              color: "rgba(255,255,255,0.72)",
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              transition: "color 0.3s ease",
+              padding: 0,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")}
+          >
             <ArrowLeft size={14} /> На Головну
           </button>
-          <span style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
-          <span style={{ fontSize: 14, fontWeight: 700, background: "linear-gradient(90deg, #00E5FF, #9D4CDD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Atlas Docs v0.9.5</span>
+          <span className="docs-divider" style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
+          <span className="docs-version" style={{ fontSize: 14, fontWeight: 700, background: "linear-gradient(90deg, #00E5FF, #9D4CDD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Atlas Docs v0.9.5</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <button
             data-testid="nav-cta-btn"
             onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
-            className="cta-btn"
-            style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "rgba(255,255,255,0.72)",
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "color 0.3s ease",
+              padding: 0,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")}
           >
             {user ? "Кабінет" : "Увійти"}
             <span
@@ -550,7 +580,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             <div style={{ display: "grid", gap: 32 }}>
               
               {/* Endpoint 1 */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 24 }} className="two-col">
+              <div style={{ gap: 24 }} className="two-col">
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                     <span style={{ padding: "4px 8px", borderRadius: 6, background: "rgba(40,200,64,0.15)", color: "#28C840", fontWeight: 700, fontSize: 11 }}>POST</span>
@@ -582,7 +612,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
               <hr style={{ border: "none", borderBottom: "1px solid rgba(255,255,255,0.05)" }} />
 
               {/* Endpoint 2 */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 24 }} className="two-col">
+              <div style={{ gap: 24 }} className="two-col">
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                     <span style={{ padding: "4px 8px", borderRadius: 6, background: "rgba(0,122,255,0.15)", color: "#007AFF", fontWeight: 700, fontSize: 11 }}>GET</span>
