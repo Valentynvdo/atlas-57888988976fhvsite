@@ -544,7 +544,7 @@ async def create_broadcast(body: dict, admin: dict = Depends(require_admin)):
 async def get_ip_geo(ip: str) -> dict:
     if not ip or ip in ("127.0.0.1", "localhost", "unknown") or ip.startswith("192.168.") or ip.startswith("10."):
         # Central Ukraine default location
-        return {"country": "Ukraine", "city": "Kyiv", "lat": 50.4501, "lon": 30.5234}
+        return {"country": "Ukraine", "region": "Kyiv Oblast", "city": "Kyiv", "lat": 50.4501, "lon": 30.5234}
 
     try:
         cached = await db.ip_geo_cache.find_one({"ip": ip}, {"_id": 0})
@@ -563,6 +563,7 @@ async def get_ip_geo(ip: str) -> dict:
                     geo = {
                         "ip": ip,
                         "country": data.get("country", "Unknown"),
+                        "region": data.get("regionName", "Unknown"),
                         "city": data.get("city", "Unknown"),
                         "lat": data.get("lat", 50.4501),
                         "lon": data.get("lon", 30.5234),
@@ -576,7 +577,7 @@ async def get_ip_geo(ip: str) -> dict:
     except Exception as e:
         logger.error("Geo lookup error for IP %s: %s", ip, e)
 
-    return {"country": "Unknown", "city": "Unknown", "lat": 50.4501, "lon": 30.5234}
+    return {"country": "Unknown", "region": "Unknown", "city": "Unknown", "lat": 50.4501, "lon": 30.5234}
 
 
 @router.get("/active-map")
@@ -595,10 +596,12 @@ async def get_active_map(_=Depends(require_admin)):
             "key_prefix": kp,
             "ip": ip,
             "country": geo.get("country", "Unknown"),
+            "region": geo.get("region", "Unknown"),
             "city": geo.get("city", "Unknown"),
             "lat": geo.get("lat", 50.4501),
             "lon": geo.get("lon", 30.5234),
-            "ts": l.get("ts")
+            "ts": l.get("ts"),
+            "suspicious": bool(l.get("suspicious", False))
         })
     return spots
 

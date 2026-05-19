@@ -23,11 +23,15 @@ import {
   Radio,
   FileText,
   Lock,
-  Globe
+  Globe,
+  MapPin,
+  AlertTriangle
 } from "lucide-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import AdminPin from "./AdminPin";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 export default function Admin() {
   const { user, loading, logout } = useAuth();
@@ -86,6 +90,7 @@ function AdminPanel({ onLogout }) {
   const [version, setVersion] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState("users"); // 'users' | 'active' | 'revenue' | 'churn'
   const fileRef = useRef(null);
+  const mapRef = useRef(null);
 
   // Нові стани для розширених преміум-фіч
   const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, analytics, map, users, health, broadcast, logs
@@ -358,97 +363,205 @@ function AdminPanel({ onLogout }) {
             </div>
           )}
 
-          {/* Tab: SVG World Glow Map */}
-          {activeTab === "map" && (
-            <div className="fade-in">
-              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 10, color: "#00E5FF", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>Географія активацій</div>
-                  <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <Globe size={20} color="#00E5FF" />
-                    Інтерактивна Glow Map
-                  </h3>
-                </div>
+          {/* Tab: Realistic Leaflet Glow Map & Detailed Telemetry */}
+          {activeTab === "map" && (() => {
+            // Compute real-time map telemetry metrics
+            const totalNodes = activeMap.length;
+            
+            const countryCounts = {};
+            const regionCounts = {};
+            let suspiciousCount = 0;
 
-                <div style={{ position: "relative", width: "100%", background: "#060609", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", overflow: "hidden", padding: "40px 20px" }}>
-                  {/* High-Definition Realistic SVG World Map Outline */}
-                  <svg viewBox="0 0 1000 500" style={{ width: "100%", height: "auto", display: "block" }}>
-                    {/* Dark Grid Background */}
-                    <rect x="0" y="0" width="1000" height="500" fill="none" />
-                    <path d="M 0 50 H 1000 M 0 100 H 1000 M 0 150 H 1000 M 0 200 H 1000 M 0 250 H 1000 M 0 300 H 1000 M 0 350 H 1000 M 0 400 H 1000 M 0 450 H 1000" stroke="rgba(255,255,255,0.015)" strokeWidth="1" />
-                    <path d="M 100 0 V 500 M 200 0 V 500 M 300 0 V 500 M 400 0 V 500 M 500 0 V 500 M 600 0 V 500 M 700 0 V 500 M 800 0 V 500 M 900 0 V 500" stroke="rgba(255,255,255,0.015)" strokeWidth="1" />
-                    
-                    {/* Greenland */}
-                    <path d="M 370 40 L 400 35 L 430 45 L 410 75 L 390 85 L 365 70 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+            activeMap.forEach(spot => {
+              if (spot.suspicious) suspiciousCount++;
+              
+              const c = spot.country || "Невідомо";
+              countryCounts[c] = (countryCounts[c] || 0) + 1;
 
-                    {/* North America */}
-                    <path d="M 100 60 L 150 50 L 220 50 L 290 60 L 310 90 L 320 110 L 280 120 L 290 140 L 270 170 L 280 190 L 260 210 L 270 230 L 255 240 L 245 220 L 235 225 L 245 190 L 220 190 L 210 170 L 180 170 L 190 130 L 140 120 L 160 90 L 110 80 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+              const r = spot.region || "Невідомо";
+              const key = `${r} (${c})`;
+              regionCounts[key] = (regionCounts[key] || 0) + 1;
+            });
 
-                    {/* South America */}
-                    <path d="M 255 240 L 280 250 L 305 270 L 330 290 L 340 330 L 320 380 L 300 420 L 285 460 L 275 470 L 270 450 L 280 410 L 270 380 L 255 330 L 240 290 L 245 260 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+            const sortedCountries = Object.entries(countryCounts)
+              .map(([name, count]) => ({ name, count, pct: Math.round((count / totalNodes) * 100) || 0 }))
+              .sort((a, b) => b.count - a.count);
 
-                    {/* Africa */}
-                    <path d="M 450 200 L 490 190 L 530 195 L 565 215 L 585 245 L 560 270 L 545 300 L 530 350 L 515 385 L 500 395 L 490 380 L 490 350 L 475 320 L 460 280 L 435 250 L 430 220 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-                    
-                    {/* Madagascar */}
-                    <path d="M 570 340 L 580 330 L 590 350 L 575 375 L 565 365 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+            const sortedRegions = Object.entries(regionCounts)
+              .map(([name, count]) => ({ name, count }))
+              .sort((a, b) => b.count - a.count);
 
-                    {/* Eurasia (Europe + Asia) */}
-                    <path d="M 400 90 L 420 80 L 470 70 L 520 60 L 600 50 L 700 55 L 800 65 L 850 80 L 890 85 L 900 110 L 880 145 L 890 180 L 850 210 L 835 190 L 840 230 L 820 250 L 795 245 L 780 220 L 740 235 L 725 210 L 720 250 L 690 260 L 665 250 L 650 215 L 610 200 L 595 215 L 540 200 L 500 195 L 490 170 L 470 160 L 485 140 L 450 135 L 420 130 L 415 110 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
+            const focusOnMarker = (lat, lon) => {
+              const map = mapRef.current;
+              if (!map) return;
+              map.setView([lat, lon], 8, { animate: true });
+              
+              // Find the layer in map layers and open popup
+              map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                  const pos = layer.getLatLng();
+                  if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
+                    layer.openPopup();
+                  }
+                }
+              });
+            };
 
-                    {/* Great Britain & Ireland */}
-                    <path d="M 430 110 L 440 100 L 445 115 L 435 125 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-
-                    {/* Japan */}
-                    <path d="M 885 130 L 895 120 L 905 150 L 895 170 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-
-                    {/* Indochina & Indonesia Islands (Stylized Nodes) */}
-                    <path d="M 760 250 L 775 240 L 780 255 Z M 790 260 L 820 270 L 800 280 Z M 830 265 L 850 280 L 840 290 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-
-                    {/* Australia */}
-                    <path d="M 780 340 L 820 325 L 860 340 L 880 375 L 865 410 L 830 420 L 800 415 L 775 390 L 770 365 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-                    
-                    {/* New Zealand */}
-                    <path d="M 900 420 L 910 410 L 920 440 L 910 450 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,229,255,0.2)" strokeWidth="1.2" />
-
-                    {/* Active Pulsing Locations */}
-                    {activeMap.map((spot, idx) => {
-                      // Equirectangular projection mapping coordinates precisely:
-                      // Longitude range: [-180, 180] -> X pixel: [50, 950]
-                      // Latitude range: [-90, 90] -> Y pixel: [450, 50]
-                      const x = 500 + (spot.lon * 450) / 180;
-                      const y = 250 - (spot.lat * 200) / 90;
-                      return (
-                        <g key={idx}>
-                          {/* Outer pulse */}
-                          <circle cx={x} cy={y} r="8" fill="none" stroke="#00E5FF" strokeWidth="1.5" opacity="0.8">
-                            <animate attributeName="r" values="4;16;4" dur="2.5s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite" />
-                          </circle>
-                          {/* Inner glowing dot */}
-                          <circle cx={x} cy={y} r="4" fill="#00E5FF" style={{ filter: "drop-shadow(0 0 5px #00E5FF)" }} />
-                        </g>
-                      );
-                    })}
-                  </svg>
-                  
-                  {/* Floating legend list */}
-                  <div style={{ position: "absolute", bottom: 15, left: 15, background: "rgba(0,0,0,0.6)", padding: "10px 14px", borderRadius: 10, fontSize: 11, border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(6px)" }}>
-                    <div style={{ fontWeight: 700, color: "#00E5FF", marginBottom: 6 }}>Активні хости:</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      {activeMap.slice(0, 5).map((spot, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00E5FF", display: "inline-block" }} />
-                          <span>{spot.city}, {spot.country} ({spot.key_prefix.slice(0, 9)}...)</span>
-                        </div>
-                      ))}
-                      {activeMap.length === 0 && <span style={{ color: "rgba(255,255,255,0.4)" }}>Немає підключень</span>}
+            return (
+              <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                
+                {/* 1. Global Telemetry Cards */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #00E5FF", background: "rgba(255,255,255,0.01)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Всього підключень</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{totalNodes}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Активні сесії Mac-клієнтів</div>
+                  </div>
+                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #9D4CDD", background: "rgba(255,255,255,0.01)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Гео-охоплення (Країни)</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{sortedCountries.length}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Унікальних країн в мережі</div>
+                  </div>
+                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #FEBC2E", background: "rgba(255,255,255,0.01)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Охоплення областей / штатів</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{sortedRegions.length}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Адміністративних областей</div>
+                  </div>
+                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: `4px solid ${suspiciousCount > 0 ? '#FF5F57' : '#28C840'}`, background: "rgba(255,255,255,0.01)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Гео-інциденти фроду</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4, color: suspiciousCount > 0 ? "#FF5F57" : "#28C840" }}>
+                      {suspiciousCount}
+                    </div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+                      {suspiciousCount > 0 ? "⚠️ Аномальна швидкість переміщення" : "Аномалій переміщення не виявлено"}
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
-          )}
+
+                {/* 2. Main Map Dashboard Grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24, alignItems: "start" }}>
+                  
+                  {/* Left Column: Geographic Breakdown & Leaderboards */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                    
+                    {/* Countries Leaderboard */}
+                    <div className="glass" style={{ padding: 20, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+                      <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "#00E5FF", display: "flex", alignItems: "center", gap: 6 }}>
+                        <Globe size={16} /> Розподіл по країнах
+                      </h4>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 180, overflowY: "auto", paddingRight: 4 }}>
+                        {sortedCountries.map((c, i) => (
+                          <div key={i}>
+                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
+                              <span>{c.name}</span>
+                              <span style={{ fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>{c.count} ({c.pct}%)</span>
+                            </div>
+                            <div style={{ width: "100%", height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
+                              <div style={{ width: `${c.pct}%`, height: "100%", background: "linear-gradient(90deg, #00E5FF, #9D4CDD)", borderRadius: 2 }} />
+                            </div>
+                          </div>
+                        ))}
+                        {sortedCountries.length === 0 && (
+                          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Дані відсутні</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Regions & Oblasts Monitor */}
+                    <div className="glass" style={{ padding: 20, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+                      <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "#9D4CDD", display: "flex", alignItems: "center", gap: 6 }}>
+                        <MapPin size={16} /> Активні області та регіони
+                      </h4>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 220, overflowY: "auto", paddingRight: 4 }}>
+                        {sortedRegions.map((r, i) => (
+                          <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, padding: "6px 8px", background: "rgba(255,255,255,0.02)", borderRadius: 8 }}>
+                            <span style={{ color: "rgba(255,255,255,0.85)" }}>{r.name}</span>
+                            <span style={{ fontWeight: 700, color: "#9D4CDD", background: "rgba(157,76,221,0.12)", padding: "2px 8px", borderRadius: 6, fontSize: 11 }}>{r.count}</span>
+                          </div>
+                        ))}
+                        {sortedRegions.length === 0 && (
+                          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Дані відсутні</div>
+                        )}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Right Column: Leaflet Interactive Map */}
+                  <div className="glass" style={{ padding: 10, borderRadius: 24, border: "1px solid rgba(255,255,255,0.04)", background: "rgba(4,4,6,0.3)" }}>
+                    <div style={{ width: "100%", height: 500, borderRadius: 16, overflow: "hidden" }}>
+                      <LeafletGlowMap activeMap={activeMap} mapRef={mapRef} />
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* 3. Detailed Telemetry Log Table */}
+                <div className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <h4 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
+                    <Activity size={18} color="#00E5FF" />
+                    Повний лог геолокації активних хостів
+                  </h4>
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                      <thead>
+                        <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                          <th style={{ padding: 12 }}>IP адреса</th>
+                          <th style={{ padding: 12 }}>Країна</th>
+                          <th style={{ padding: 12 }}>Область / Штат</th>
+                          <th style={{ padding: 12 }}>Місто</th>
+                          <th style={{ padding: 12 }}>Координати</th>
+                          <th style={{ padding: 12 }}>Ключ ліцензії</th>
+                          <th style={{ padding: 12 }}>Статус</th>
+                          <th style={{ padding: 12 }}>Остання активність</th>
+                          <th style={{ padding: 12, textAlign: "center" }}>Дії</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeMap.map((spot, idx) => (
+                          <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", background: spot.suspicious ? "rgba(255,95,87,0.02)" : "transparent" }}>
+                            <td style={{ padding: 12, fontFamily: "monospace", fontWeight: 600 }}>{spot.ip}</td>
+                            <td style={{ padding: 12 }}>{spot.country}</td>
+                            <td style={{ padding: 12, color: "rgba(255,255,255,0.85)" }}>{spot.region || "—"}</td>
+                            <td style={{ padding: 12 }}>{spot.city}</td>
+                            <td style={{ padding: 12, color: "rgba(255,255,255,0.5)", fontFamily: "monospace" }}>{spot.lat.toFixed(4)}, {spot.lon.toFixed(4)}</td>
+                            <td style={{ padding: 12, fontFamily: "monospace", color: "rgba(0,229,255,0.85)" }}>{spot.key_prefix.slice(0, 14)}...</td>
+                            <td style={{ padding: 12 }}>
+                              {spot.suspicious ? (
+                                <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: "rgba(255,95,87,0.12)", color: "#FF5F57", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                                  <AlertTriangle size={10} /> Підозріло
+                                </span>
+                              ) : (
+                                <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: "rgba(40,200,64,0.12)", color: "#28C840" }}>
+                                  Норма
+                                </span>
+                              )}
+                            </td>
+                            <td style={{ padding: 12, color: "rgba(255,255,255,0.4)" }}>{fmtDateTime(spot.ts)}</td>
+                            <td style={{ padding: 12, textAlign: "center" }}>
+                              <button
+                                onClick={() => focusOnMarker(spot.lat, spot.lon)}
+                                className="ghost-btn"
+                                style={{ padding: "4px 10px", fontSize: 11, background: "rgba(0,229,255,0.06)", border: "1px solid rgba(0,229,255,0.15)", color: "#00E5FF" }}
+                              >
+                                Знайти на карті
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {activeMap.length === 0 && (
+                          <tr>
+                            <td colSpan={9} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>Немає активних підключень</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            );
+          })()}
 
           {/* Tab: Users Table (Live heartbeats) */}
           {activeTab === "users" && (
@@ -1265,4 +1378,221 @@ function fmtDate(iso) {
 function fmtDateTime(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("uk-UA", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
+function LeafletGlowMap({ activeMap, mapRef }) {
+  const mapContainerRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersGroupRef = useRef(null);
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    // Initialize map
+    const map = L.map(mapContainerRef.current, {
+      center: [48.3794, 31.1656], // Default centered on Ukraine/Eastern Europe
+      zoom: 3,
+      minZoom: 1.5,
+      maxZoom: 18,
+      zoomControl: false,
+      attributionControl: false,
+    });
+
+    mapInstanceRef.current = map;
+    if (mapRef) {
+      mapRef.current = map;
+    }
+
+    // Add zoom control in bottom right
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+
+    // Add CartoDB Dark Matter tiles (sleek, high resolution dark map with all borders, oblasts and details)
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      maxZoom: 20,
+    }).addTo(map);
+
+    // Create markers layer group
+    const markersGroup = L.layerGroup().addTo(map);
+    markersGroupRef.current = markersGroup;
+
+    // Cleanup
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [mapRef]);
+
+  // Update markers when activeMap changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const markersGroup = markersGroupRef.current;
+    if (!map || !markersGroup) return;
+
+    markersGroup.clearLayers();
+
+    if (!activeMap || activeMap.length === 0) return;
+
+    activeMap.forEach((spot) => {
+      const lat = parseFloat(spot.lat);
+      const lon = parseFloat(spot.lon);
+      if (isNaN(lat) || isNaN(lon)) return;
+
+      const isSuspicious = spot.suspicious;
+      const markerColor = isSuspicious ? "#FF5F57" : "#00E5FF";
+
+      const customIcon = L.divIcon({
+        className: `custom-glow-marker ${isSuspicious ? "suspicious" : ""}`,
+        html: `
+          <div class="marker-glow-ring" style="border-color: ${markerColor}"></div>
+          <div class="marker-glow-ring2" style="border-color: ${isSuspicious ? '#FF5F57' : '#9D4CDD'}"></div>
+          <div class="marker-glow-core" style="background-color: ${markerColor}; box-shadow: 0 0 8px ${markerColor}, 0 0 16px ${markerColor}"></div>
+        `,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+
+      const popupContent = `
+        <div class="map-popup-card">
+          <div class="map-popup-header">
+            <span class="status-dot online"></span>
+            <strong>${spot.city || "Unknown City"}</strong>, ${spot.country || "Unknown Country"}
+          </div>
+          <div class="map-popup-body">
+            <div><strong>IP:</strong> <span class="mono">${spot.ip}</span></div>
+            ${spot.region ? `<div><strong>Регіон / Область:</strong> ${spot.region}</div>` : ""}
+            <div><strong>Ключ:</strong> <span class="mono">${spot.key_prefix.slice(0, 14)}...</span></div>
+            <div><strong>Час активності:</strong> ${new Date(spot.ts).toLocaleString()}</div>
+            ${isSuspicious ? `
+              <div class="suspicious-alert">
+                ⚠️ Виявлено аномальну швидкість переміщення!
+              </div>
+            ` : ""}
+          </div>
+        </div>
+      `;
+
+      const marker = L.marker([lat, lon], { icon: customIcon });
+      marker.bindPopup(popupContent, {
+        closeButton: false,
+        className: "custom-leaflet-popup"
+      });
+
+      markersGroup.addLayer(marker);
+    });
+
+  }, [activeMap]);
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <div ref={mapContainerRef} style={{ width: "100%", height: "100%", background: "#060609" }} />
+      <style>{`
+        .custom-glow-marker {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .marker-glow-core {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          z-index: 3;
+        }
+        .marker-glow-ring {
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          border: 2px solid;
+          border-radius: 50%;
+          opacity: 0;
+          animation: pulse-glow-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+          z-index: 1;
+        }
+        .marker-glow-ring2 {
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          border: 1px solid;
+          border-radius: 50%;
+          opacity: 0;
+          animation: pulse-glow-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+          animation-delay: 0.8s;
+          z-index: 2;
+        }
+        @keyframes pulse-glow-ring {
+          0% {
+            transform: scale(0.3);
+            opacity: 0;
+          }
+          50% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(2.2);
+            opacity: 0;
+          }
+        }
+
+        .custom-leaflet-popup .leaflet-popup-content-wrapper {
+          background: rgba(10, 10, 15, 0.9) !important;
+          backdrop-filter: blur(16px) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          border-radius: 14px !important;
+          color: #fff !important;
+          padding: 6px !important;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+        }
+        .custom-leaflet-popup .leaflet-popup-tip {
+          background: rgba(10, 10, 15, 0.9) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+        .map-popup-card {
+          font-family: 'Inter', sans-serif;
+          min-width: 210px;
+        }
+        .map-popup-header {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding-bottom: 6px;
+          margin-bottom: 8px;
+        }
+        .status-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+        .status-dot.online {
+          background-color: #28C840;
+          box-shadow: 0 0 6px #28C840;
+        }
+        .map-popup-body {
+          font-size: 11px;
+          line-height: 1.6;
+          color: rgba(255,255,255,0.7);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .map-popup-body .mono {
+          font-family: monospace;
+          color: #00E5FF;
+        }
+        .suspicious-alert {
+          background: rgba(255, 95, 87, 0.12);
+          border: 1px solid rgba(255, 95, 87, 0.25);
+          color: #FF5F57;
+          padding: 6px;
+          border-radius: 6px;
+          margin-top: 6px;
+          font-weight: 600;
+        }
+      `}</style>
+    </div>
+  );
 }
