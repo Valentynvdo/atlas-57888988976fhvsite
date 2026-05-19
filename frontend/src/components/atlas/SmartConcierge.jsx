@@ -206,7 +206,7 @@ export default function SmartConcierge() {
 
       <div
         ref={trackRef}
-        className="no-scrollbar"
+        className="no-scrollbar concierge-track"
         style={{
           display: "flex",
           gap: 20,
@@ -255,6 +255,7 @@ export default function SmartConcierge() {
             />
 
             <div
+              className="concierge-icon"
               style={{
                 width: 60,
                 height: 60,
@@ -284,6 +285,7 @@ export default function SmartConcierge() {
               {item.label}
             </div>
             <h3
+              className="concierge-card-title"
               style={{
                 marginTop: 8,
                 fontSize: 22,
@@ -294,6 +296,7 @@ export default function SmartConcierge() {
               {item.title}
             </h3>
             <p
+              className="concierge-card-desc"
               style={{
                 marginTop: 12,
                 fontSize: 14,

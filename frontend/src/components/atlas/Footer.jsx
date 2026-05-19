@@ -10,26 +10,14 @@ export default function Footer() {
   return (
     <footer
       data-testid="footer"
+      className="footer-section"
       style={{
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        padding: "48px 0 32px",
-        background: "rgba(0,0,0,0.5)",
-        backdropFilter: "blur(12px)",
         position: "relative",
         zIndex: 1,
       }}
     >
       <div
-        style={{
-          maxWidth: "100%",
-          margin: "0 auto",
-          padding: "0 5%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 24,
-          flexWrap: "wrap",
-        }}
+        className="footer-container"
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <img

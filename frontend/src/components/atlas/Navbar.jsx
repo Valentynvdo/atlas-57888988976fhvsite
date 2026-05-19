@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar({ onCta }) {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -15,67 +17,167 @@ export default function Navbar({ onCta }) {
   }, []);
 
   return (
-    <nav
-      data-testid="navbar"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        transition: "all 0.4s ease",
-        padding: scrolled ? "12px 0" : "20px 0",
-        background: scrolled ? "rgba(0,0,0,0.55)" : "transparent",
-        backdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
-        borderBottom: scrolled
-          ? "1px solid rgba(255,255,255,0.06)"
-          : "1px solid transparent",
-      }}
-    >
-      <div
+    <>
+      <nav
+        data-testid="navbar"
         style={{
-          maxWidth: "100%",
-          margin: "0 auto",
-          padding: "0 5%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          transition: "all 0.4s ease",
+          padding: scrolled ? "12px 0" : "20px 0",
+          background: scrolled ? "rgba(0,0,0,0.55)" : "transparent",
+          backdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
+          borderBottom: scrolled
+            ? "1px solid rgba(255,255,255,0.06)"
+            : "1px solid transparent",
         }}
       >
-        <a
-          href="#hero"
-          data-testid="nav-logo"
+        <div
           style={{
+            maxWidth: "100%",
+            margin: "0 auto",
+            padding: "0 5%",
             display: "flex",
             alignItems: "center",
-            gap: 10,
-            textDecoration: "none",
-            color: "#fff",
+            justifyContent: "space-between",
           }}
         >
-          <img
-            src="/atlas-icon.png"
-            alt="Atlas AI"
+          <a
+            href="#hero"
+            data-testid="nav-logo"
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              boxShadow: "0 0 24px rgba(0,229,255,0.35)",
-            }}
-          />
-          <span
-            style={{
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              fontSize: 18,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              textDecoration: "none",
+              color: "#fff",
+              position: "relative",
+              zIndex: 51,
             }}
           >
-            Atlas AI
-          </span>
-        </a>
+            <img
+              src="/atlas-icon.png"
+              alt="Atlas AI"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                boxShadow: "0 0 24px rgba(0,229,255,0.35)",
+              }}
+            />
+            <span
+              style={{
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                fontSize: 18,
+              }}
+            >
+              Atlas AI
+            </span>
+          </a>
 
-        <div className="nav-links">
+          <div className="nav-links">
+            {[
+              { id: "intelligence", label: "Інтелект" },
+              { id: "macos", label: "macOS" },
+              { id: "concierge", label: "Concierge" },
+              { id: "awareness", label: "Свідомість" },
+            ].map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                data-testid={`nav-link-${link.id}`}
+                style={{
+                  color: "rgba(255,255,255,0.72)",
+                  fontSize: 14,
+                  textDecoration: "none",
+                  fontWeight: 500,
+                  transition: "color 0.3s ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgba(255,255,255,0.72)")
+                }
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="navbar-actions">
+            <a
+              href="/docs"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/docs");
+              }}
+              data-testid="nav-docs-link"
+              style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            >
+              📖 Документація
+            </a>
+            <button
+              data-testid="nav-cta-btn"
+              onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
+              className="cta-btn"
+              style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
+            >
+              {user ? "Кабінет" : "Увійти"}
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#00E5FF",
+                  boxShadow: "0 0 12px #00E5FF",
+                }}
+              />
+            </button>
+          </div>
+
+          <button
+            className="burger-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#fff",
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              zIndex: 101,
+            }}
+          >
+            {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Fullscreen Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.95)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            zIndex: 100,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 28,
+            padding: "40px",
+          }}
+        >
           {[
             { id: "intelligence", label: "Інтелект" },
             { id: "macos", label: "macOS" },
@@ -85,57 +187,56 @@ export default function Navbar({ onCta }) {
             <a
               key={link.id}
               href={`#${link.id}`}
-              data-testid={`nav-link-${link.id}`}
+              onClick={() => setIsMobileMenuOpen(false)}
               style={{
-                color: "rgba(255,255,255,0.72)",
-                fontSize: 14,
+                color: "#fff",
+                fontSize: 24,
                 textDecoration: "none",
-                fontWeight: 500,
-                transition: "color 0.3s ease",
+                fontWeight: 600,
+                letterSpacing: "-0.02em",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(255,255,255,0.72)")
-              }
             >
               {link.label}
             </a>
           ))}
-        </div>
 
-        <div className="navbar-actions">
           <a
             href="/docs"
             onClick={(e) => {
               e.preventDefault();
+              setIsMobileMenuOpen(false);
               navigate("/docs");
             }}
-            data-testid="nav-docs-link"
-            style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            style={{
+              color: "rgba(255, 255, 255, 0.8)",
+              fontSize: 20,
+              textDecoration: "none",
+              fontWeight: 500,
+              marginTop: 12,
+            }}
           >
             📖 Документація
           </a>
-        <button
-          data-testid="nav-cta-btn"
-          onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
-          className="cta-btn"
-          style={{ padding: "0.6rem 1.2rem", fontSize: 14 }}
-        >
-          {user ? "Кабінет" : "Увійти"}
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#00E5FF",
-              boxShadow: "0 0 12px #00E5FF",
+
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              user ? navigate("/dashboard") : navigate("/login");
             }}
-          />
-        </button>
+            className="cta-btn"
+            style={{
+              marginTop: 12,
+              width: "100%",
+              maxWidth: "280px",
+              justifyContent: "center",
+              fontSize: 16,
+              padding: "14px 20px",
+            }}
+          >
+            {user ? "Кабінет" : "Увійти"}
+          </button>
         </div>
-      </div>
-    </nav>
+      )}
+    </>
   );
 }

@@ -444,6 +444,10 @@ a:focus-visible {
 
 /* --- Premium Responsiveness for User Dashboard & Admin Panel --- */
 @media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+    }
+
     body {
         font-size: 14px;
     }
@@ -452,10 +456,21 @@ a:focus-visible {
         padding: 16px 12px 60px !important;
     }
     
-    section {
-        padding: 20px 16px !important;
+    /* Section paddings and typography */
+    section, .section-container {
+        padding: 48px 20px !important;
         margin-bottom: 16px !important;
         border-radius: 16px !important;
+    }
+
+    section h2, .section-container h2 {
+        font-size: 1.75rem !important;
+        line-height: 1.25 !important;
+    }
+
+    section p, .section-container p {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
     }
     
     /* Headers styling */
@@ -474,7 +489,7 @@ a:focus-visible {
         flex-wrap: wrap !important;
         gap: 8px !important;
     }
-
+    
     .dashboard-header button,
     .admin-header button {
         width: 100% !important;
@@ -486,7 +501,7 @@ a:focus-visible {
         width: 100% !important;
         justify-content: center !important;
         text-align: center !important;
-        padding: 10px 16px !important;
+        padding: 12px 20px !important;
     }
 
     /* License key block layout adjustments */
@@ -495,10 +510,15 @@ a:focus-visible {
         gap: 8px !important;
     }
 
-    /* Pricing tiers grid: display one per row stack on mobile */
+    /* Three-column grid layout stack on mobile */
     .three-col {
         grid-template-columns: 1fr !important;
-        gap: 20px !important;
+        gap: 16px !important;
+    }
+
+    .three-col .glass, .three-col article, .three-col > div {
+        padding: 20px !important;
+        border-radius: 16px !important;
     }
 
     /* Table responsive wrapper scroll */
@@ -536,6 +556,106 @@ a:focus-visible {
     [data-testid="user-details-modal"] button {
         width: 100% !important;
     }
+
+    /* Navbar adaptive style */
+    .nav-links {
+        display: none !important;
+    }
+
+    .navbar-actions {
+        display: none !important;
+    }
+
+    .burger-btn {
+        display: flex !important;
+    }
+
+    /* Hero responsiveness */
+    #hero {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 80px 20px 48px !important;
+    }
+
+    #hero h1 {
+        font-size: 2rem !important;
+        line-height: 1.25 !important;
+    }
+
+    #hero p {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        margin-top: 16px !important;
+    }
+
+    #hero .reveal.delay-2 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 12px !important;
+        margin-top: 24px !important;
+        align-items: center !important;
+    }
+
+    /* Sphere responsiveness */
+    .hero-sphere-container {
+        width: 200px !important;
+        height: 200px !important;
+        max-width: 200px !important;
+        max-height: 200px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .hero-sphere-canvas-container {
+        width: 200px !important;
+        height: 200px !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        overflow: hidden !important;
+    }
+
+    /* Concierge Section Features vertical alignment */
+    .concierge-track {
+        flex-direction: column !important;
+        gap: 16px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .concierge-card {
+        flex: 1 1 auto !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 20px !important;
+        border-radius: 16px !important;
+    }
+
+    .concierge-icon {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 12px !important;
+    }
+
+    .concierge-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .concierge-card-title {
+        font-size: 1rem !important;
+        margin-top: 8px !important;
+    }
+
+    .concierge-card-desc {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        margin-top: 8px !important;
+    }
 }
 
 /* Concierge card hover override to remove translation, scale and glow */
@@ -555,13 +675,7 @@ a:focus-visible {
     align-items: center;
 }
 
-@media (max-width: 768px) {
-    .nav-links {
-        display: none !important;
-    }
-}
-
-/* Responsive Sphere container */
+/* Responsive Sphere container default style */
 .hero-sphere-container {
     position: relative;
     width: min(380px, 80vw);
@@ -569,15 +683,7 @@ a:focus-visible {
     margin-bottom: 12px;
 }
 
-@media (max-width: 768px) {
-    .hero-sphere-container {
-        width: min(200px, 50vw);
-        height: min(200px, 50vw);
-        margin-bottom: 8px;
-    }
-}
-
-/* Responsive Sphere canvas container */
+/* Responsive Sphere canvas container default style */
 .hero-sphere-canvas-container {
     position: absolute;
     left: 50%;
@@ -589,30 +695,51 @@ a:focus-visible {
     z-index: 1;
 }
 
-@media (max-width: 768px) {
-    .hero-sphere-canvas-container {
-        width: 100vw;
-        height: 380px !important;
-    }
-}
-
-/* Navbar actions layout and scaling on mobile */
+/* Navbar actions layout and scaling */
 .navbar-actions {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-@media (max-width: 480px) {
-    .navbar-actions {
-        gap: 8px !important;
+/* Footer responsive styling */
+.footer-section {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 48px 0 32px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+}
+
+.footer-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .footer-section {
+        padding: 40px 20px !important;
     }
-    .navbar-actions a {
-        font-size: 11px !important;
-    }
-    .navbar-actions button {
-        padding: 0.4rem 0.8rem !important;
-        font-size: 12px !important;
+    .footer-container {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 24px !important;
     }
 }
 
+/* Extra small screen scaling for buttons < 480px */
+@media (max-width: 480px) {
+    .cta-btn, .ghost-btn {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 14px 20px !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box !important;
+    }
+}
