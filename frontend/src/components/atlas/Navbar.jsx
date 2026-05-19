@@ -75,7 +75,7 @@ export default function Navbar({ onCta }) {
           </span>
         </a>
 
-        <div className="hidden md:flex" style={{ gap: 32 }}>
+        <div className="nav-links">
           {[
             { id: "intelligence", label: "Інтелект" },
             { id: "macos", label: "macOS" },
@@ -103,7 +103,7 @@ export default function Navbar({ onCta }) {
           ))}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div className="navbar-actions">
           <a
             href="/docs"
             onClick={(e) => {

@@ -54,36 +54,18 @@ export default function Hero({ onCta }) {
         }}
       >
         {/* Sphere */}
-        <div
-          style={{
-            position: "relative",
-            width: "min(380px, 80vw)",
-            height: "min(380px, 80vw)",
-            marginBottom: 12,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "100vw",
-              height: "min(650px, 85vh)",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          >
+        <div className="hero-sphere-container">
+          <div className="hero-sphere-canvas-container">
             <EnergySphere />
           </div>
-          <div className="pulse-ring" style={{ width: 280, height: 280, zIndex: 2 }} />
+          <div className="pulse-ring" style={{ width: "100%", height: "100%", zIndex: 2 }} />
           <div
             className="pulse-ring"
-            style={{ width: 280, height: 280, animationDelay: "1.4s", zIndex: 2 }}
+            style={{ width: "100%", height: "100%", animationDelay: "1.4s", zIndex: 2 }}
           />
           <div
             className="pulse-ring"
-            style={{ width: 280, height: 280, animationDelay: "2.8s", zIndex: 2 }}
+            style={{ width: "100%", height: "100%", animationDelay: "2.8s", zIndex: 2 }}
           />
         </div>
 

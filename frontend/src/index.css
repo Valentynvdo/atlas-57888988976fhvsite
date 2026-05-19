@@ -537,3 +537,82 @@ a:focus-visible {
         width: 100% !important;
     }
 }
+
+/* Concierge card hover override to remove translation, scale and glow */
+.concierge-card:hover {
+    transform: none !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Nav links custom display & responsive behavior */
+.nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none !important;
+    }
+}
+
+/* Responsive Sphere container */
+.hero-sphere-container {
+    position: relative;
+    width: min(380px, 80vw);
+    height: min(380px, 80vw);
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .hero-sphere-container {
+        width: min(200px, 50vw);
+        height: min(200px, 50vw);
+        margin-bottom: 8px;
+    }
+}
+
+/* Responsive Sphere canvas container */
+.hero-sphere-canvas-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: min(650px, 85vh);
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .hero-sphere-canvas-container {
+        width: 100vw;
+        height: 380px !important;
+    }
+}
+
+/* Navbar actions layout and scaling on mobile */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+@media (max-width: 480px) {
+    .navbar-actions {
+        gap: 8px !important;
+    }
+    .navbar-actions a {
+        font-size: 11px !important;
+    }
+    .navbar-actions button {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 12px !important;
+    }
+}
+

@@ -1,61 +1,61 @@
 import { useRef } from "react";
 import {
-  Car,
-  Pizza,
-  Hotel,
-  Ticket,
-  Scissors,
-  Plane,
+  Brain,
+  Terminal,
+  FileText,
+  Code,
+  Calendar,
+  Music,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 
 const items = [
   {
-    icon: <Car size={26} />,
-    title: "Транспорт",
-    label: "Bolt · Uber",
-    desc: "Викликає таксі за пару секунд — потрібну категорію, в потрібний час.",
+    icon: <Brain size={26} />,
+    title: "Конспектування та Пам'ять",
+    label: "Локальний контекст",
+    desc: "Конспектує ваші зустрічі, запам'ятовує контекст розмов та вибудовує довготривалу асоціативну пам'ять.",
     grad: "linear-gradient(135deg, #00E5FF, #007AFF)",
     glow: "rgba(0,229,255,0.35)",
   },
   {
-    icon: <Pizza size={26} />,
-    title: "Доставка їжі",
-    label: "Glovo · Bolt Food",
-    desc: "Замовляє вашу улюблену їжу за коротким голосовим запитом.",
+    icon: <Terminal size={26} />,
+    title: "Керування macOS",
+    label: "Системні скрипти",
+    desc: "Виконує AppleScript, запускає та налаштовує програми, керує вікнами та оптимізує робоче середовище.",
     grad: "linear-gradient(135deg, #FF6B6B, #FF9A3C)",
     glow: "rgba(255,107,107,0.3)",
   },
   {
-    icon: <Hotel size={26} />,
-    title: "Готелі поблизу",
-    label: "Booking · Airbnb",
-    desc: "Знаходить найкращі варіанти проживання за вашим стилем.",
+    icon: <FileText size={26} />,
+    title: "Аналіз документів",
+    label: "Локальна обробка",
+    desc: "Аналізує локальні PDF, CSV та бази даних без відправки конфіденційної інформації у хмару.",
     grad: "linear-gradient(135deg, #9D4CDD, #007AFF)",
     glow: "rgba(157,76,221,0.35)",
   },
   {
-    icon: <Ticket size={26} />,
-    title: "Квитки на події",
-    label: "Концерти · Кіно",
-    desc: "Відстежує події, які ви любите, і бронює квитки заздалегідь.",
+    icon: <Code size={26} />,
+    title: "Автоматизація коду",
+    label: "Створення скілів",
+    desc: "Пише та виконує Python-скрипти в безпечній пісочниці, самостійно розширюючи свої можливості.",
     grad: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
     glow: "rgba(0,229,255,0.3)",
   },
   {
-    icon: <Scissors size={26} />,
-    title: "Послуги поруч",
-    label: "Барбер · Спа",
-    desc: "Знаходить майстрів, перевіряє рейтинги та бронює час.",
+    icon: <Calendar size={26} />,
+    title: "Організація розкладу",
+    label: "Розумне планування",
+    desc: "Узгоджує зустрічі, створює нагадування, впорядковує списки завдань та стежить за дедлайнами.",
     grad: "linear-gradient(135deg, #FFD56B, #FF6B6B)",
     glow: "rgba(255,213,107,0.3)",
   },
   {
-    icon: <Plane size={26} />,
-    title: "Авіаквитки",
-    label: "Глобально",
-    desc: "Шукає найкращі рейси за ціною, часом і вашими преференціями.",
+    icon: <Music size={26} />,
+    title: "Медіа-контроль",
+    label: "Аудіо & Відео",
+    desc: "Інтегрується зі Spotify чи Apple Music, керує відтворенням відповідно до вашого настрою та поточного контексту.",
     grad: "linear-gradient(135deg, #007AFF, #00E5FF)",
     glow: "rgba(0,122,255,0.35)",
   },
@@ -91,7 +91,7 @@ export default function SmartConcierge() {
         }}
       >
         <div style={{ maxWidth: 640 }}>
-          <div className="section-eyebrow">Smart Concierge</div>
+          <div className="section-eyebrow">Автоматизація macOS</div>
           <h2
             data-testid="concierge-title"
             style={{
@@ -126,8 +126,7 @@ export default function SmartConcierge() {
               maxWidth: 560,
             }}
           >
-            Атлас виходить за межі екрану. Він виконує реальні дії для
-            вашого комфорту — від таксі до квитків.
+            Атлас автоматизує вашу роботу на Mac. Він взаємодіє з операційною системою, керує даними та програмами, забезпечуючи максимальну продуктивність.
           </p>
         </div>
 
@@ -189,7 +188,7 @@ export default function SmartConcierge() {
             key={item.title}
             data-card
             data-testid={`concierge-card-${i}`}
-            className="glass"
+            className="glass concierge-card"
             style={{
               flex: "0 0 320px",
               maxWidth: 360,
@@ -201,12 +200,6 @@ export default function SmartConcierge() {
               minHeight: 320,
               display: "flex",
               flexDirection: "column",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 60px ${item.glow}`;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "";
             }}
           >
             {/* Color halo */}
