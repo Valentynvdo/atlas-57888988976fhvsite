@@ -162,34 +162,31 @@ export default function Hero({ onCta }) {
           <span style={{ opacity: 0.4 }}>•</span>
           <span>Приватність за замовчуванням</span>
         </div>
-      </div>
 
-      {/* Scroll hint */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 24,
-          left: "50%",
-          transform: "translateX(-50%)",
-          color: "rgba(255,255,255,0.4)",
-          fontSize: 11,
-          letterSpacing: "0.25em",
-          textTransform: "uppercase",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
-        Прокрутіть
-        <span
+        {/* Scroll hint */}
+        <div
+          className="hero-scroll-hint"
           style={{
-            width: 1,
-            height: 28,
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,0.6), transparent)",
+            color: "rgba(255,255,255,0.4)",
+            fontSize: 11,
+            letterSpacing: "0.25em",
+            textTransform: "uppercase",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 8,
           }}
-        />
+        >
+          Прокрутіть
+          <span
+            style={{
+              width: 1,
+              height: 28,
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.6), transparent)",
+            }}
+          />
+        </div>
       </div>
     </section>
   );

@@ -446,6 +446,22 @@ a:focus-visible {
     display: none;
 }
 
+.hero-scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.docs-hero {
+    padding: 40px 5% 40px !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    margin-bottom: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
 /* --- Premium Responsiveness for User Dashboard & Admin Panel --- */
 @media (max-width: 768px) {
     html, body {
@@ -640,6 +656,8 @@ a:focus-visible {
         border-radius: 20px !important;
         overflow: hidden !important;
         isolation: isolate;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        mask-image: radial-gradient(white, black);
     }
 
     .concierge-icon {
@@ -677,6 +695,14 @@ a:focus-visible {
         gap: 8px !important;
         font-size: 7.5px !important;
         letter-spacing: 0.08em !important;
+        margin-top: 32px !important;
+    }
+
+    .hero-scroll-hint {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        transform: none !important;
         margin-top: 32px !important;
     }
 
@@ -729,6 +755,10 @@ a:focus-visible {
     }
     .docs-divider, .docs-version {
         display: none !important;
+    }
+
+    .docs-hero {
+        padding: 24px 20px 24px !important;
     }
 }
 

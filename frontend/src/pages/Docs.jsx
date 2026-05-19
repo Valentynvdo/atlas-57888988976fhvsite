@@ -237,7 +237,7 @@ export default function Docs() {
       </header>
 
       {/* --- Modern Product Docs Hero Section --- */}
-      <section style={{ position: "relative", padding: "80px 5% 50px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", zIndex: 1 }}>
+      <section className="docs-hero" style={{ position: "relative", padding: "40px 5% 40px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", zIndex: 1 }}>
         <div style={{ width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #00E5FF, #9D4CDD)", display: "grid", placeItems: "center", marginBottom: 20, boxShadow: "0 0 30px rgba(0, 229, 255, 0.2)" }}>
           <Terminal size={22} color="#fff" />
         </div>
