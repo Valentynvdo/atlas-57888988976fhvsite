@@ -20,7 +20,7 @@ COLLECTIONS = [
     "users", "licenses", "user_sessions", "atlas_stats",
     "payment_transactions", "app_config", "admin_pin_sessions",
     "admin_logs", "api_logs", "admin_pin_lock", "atlas_thoughts",
-    "app_heartbeats", "ip_geo_cache", "system_broadcasts"
+    "app_heartbeats", "ip_geo_cache", "system_broadcasts", "custom_docs"
 ]
 
 

@@ -25,7 +25,9 @@ import {
   Lock,
   Globe,
   MapPin,
-  AlertTriangle
+  AlertTriangle,
+  Plus,
+  BookOpen
 } from "lucide-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -93,7 +95,7 @@ function AdminPanel({ onLogout }) {
   const mapRef = useRef(null);
 
   // Нові стани для розширених преміум-фіч
-  const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, analytics, map, users, health, broadcast, logs
+  const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, analytics, map, users, health, broadcast, logs, docs_cms
   const [detailedStats, setDetailedStats] = useState(null);
   const [healthMetrics, setHealthMetrics] = useState(null);
   const [activeMap, setActiveMap] = useState([]);
@@ -101,10 +103,15 @@ function AdminPanel({ onLogout }) {
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [broadcastTarget, setBroadcastTarget] = useState("all");
   const [sendingBroadcast, setSendingBroadcast] = useState(false);
+  const [customDocs, setCustomDocs] = useState([]);
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [isDocModalOpen, setIsDocModalOpen] = useState(false);
+  const [activeEditorTab, setActiveEditorTab] = useState("edit");
+  const [liveContent, setLiveContent] = useState("");
 
   const refresh = useCallback(async () => {
     try {
-      const [s, u, l, v, ds, hm, am, al] = await Promise.all([
+      const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([
         api.get("/api/admin/stats"),
         api.get("/api/admin/users", { params: { q, filter } }),
         api.get("/api/admin/api-logs"),
@@ -113,6 +120,7 @@ function AdminPanel({ onLogout }) {
         api.get("/api/admin/health-metrics"),
         api.get("/api/admin/active-map"),
         api.get("/api/admin/admin-logs"),
+        api.get("/api/admin/docs/custom"),
       ]);
       setStats(s.data);
       setUsers(u.data);
@@ -122,6 +130,7 @@ function AdminPanel({ onLogout }) {
       setHealthMetrics(hm.data);
       setActiveMap(am.data);
       setAdminLogs(al.data);
+      setCustomDocs(cd.data);
     } catch (err) {
       console.error("Admin refresh error", err);
     }
@@ -911,6 +920,364 @@ function AdminPanel({ onLogout }) {
               </section>
             </div>
           )}
+          {/* Tab: Documentation CMS (Markdown Editor & Preview) */}
+          {activeTab === "docs_cms" && (() => {
+            const handleSaveDoc = async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const data = {
+                id: formData.get("id"),
+                title: formData.get("title"),
+                eyebrow: formData.get("eyebrow"),
+                desc: formData.get("desc"),
+                icon: formData.get("icon"),
+                order: parseInt(formData.get("order")) || 99,
+                content: formData.get("content")
+              };
+
+              try {
+                await api.post("/api/admin/docs", data);
+                toast.success("Розділ документації успішно збережено!");
+                setIsDocModalOpen(false);
+                setEditingDoc(null);
+                refresh();
+              } catch (err) {
+                console.error("Save doc error:", err);
+                toast.error("Не вдалося зберегти розділ: " + (err.response?.data?.detail || err.message));
+              }
+            };
+
+            const handleDeleteDoc = async (id) => {
+              if (!window.confirm(`Ви дійсно бажаєте видалити розділ "${id}"?`)) return;
+              try {
+                await api.delete(`/api/admin/docs/${id}`);
+                toast.success("Розділ успішно видалено!");
+                refresh();
+              } catch (err) {
+                console.error("Delete doc error:", err);
+                toast.error("Не вдалося видалити розділ: " + (err.response?.data?.detail || err.message));
+              }
+            };
+
+            return (
+              <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                
+                <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+                    <div>
+                      <div style={{ fontSize: 10, color: "#9D4CDD", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>CMS контенту</div>
+                      <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                        <BookOpen size={20} color="#9D4CDD" />
+                        Динамічна документація сайту
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setEditingDoc({ id: "", title: "", eyebrow: "Додатково", desc: "", icon: "BookOpen", order: 99, content: "" });
+                        setLiveContent("");
+                        setActiveEditorTab("edit");
+                        setIsDocModalOpen(true);
+                      }}
+                      className="cta-btn"
+                      style={{ padding: "8px 16px", fontSize: 12 }}
+                    >
+                      <Plus size={14} style={{ marginRight: 6 }} /> Додати розділ
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                      <thead>
+                        <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                          <th style={{ padding: 12 }}>Назва</th>
+                          <th style={{ padding: 12 }}>Slug / ID</th>
+                          <th style={{ padding: 12 }}>Надзаголовок</th>
+                          <th style={{ padding: 12 }}>Іконка</th>
+                          <th style={{ padding: 12 }}>Порядок</th>
+                          <th style={{ padding: 12 }}>Останнє оновлення</th>
+                          <th style={{ padding: 12, textAlign: "center" }}>Дії</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {customDocs.map((doc, idx) => (
+                          <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                            <td style={{ padding: 12, fontWeight: 600 }}>{doc.title}</td>
+                            <td style={{ padding: 12, fontFamily: "monospace", color: "#00E5FF" }}>{doc.id}</td>
+                            <td style={{ padding: 12 }}>{doc.eyebrow}</td>
+                            <td style={{ padding: 12, color: "rgba(255,255,255,0.6)" }}>{doc.icon}</td>
+                            <td style={{ padding: 12, fontWeight: 700, color: "#9D4CDD" }}>{doc.order}</td>
+                            <td style={{ padding: 12, color: "rgba(255,255,255,0.4)" }}>
+                              {doc.updated_at ? fmtDateTime(doc.updated_at) : "—"}
+                            </td>
+                            <td style={{ padding: 12, textAlign: "center" }}>
+                              <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+                                <button
+                                  onClick={() => {
+                                    setEditingDoc(doc);
+                                    setLiveContent(doc.content || "");
+                                    setActiveEditorTab("edit");
+                                    setIsDocModalOpen(true);
+                                  }}
+                                  className="ghost-btn"
+                                  style={{ padding: "4px 10px", fontSize: 11, background: "rgba(255,255,255,0.04)" }}
+                                >
+                                  Редагувати
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteDoc(doc.id)}
+                                  className="ghost-btn"
+                                  style={{ padding: "4px 10px", fontSize: 11, background: "rgba(255,95,87,0.06)", border: "1px solid rgba(255,95,87,0.15)", color: "#FF5F57" }}
+                                >
+                                  Видалити
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                        {customDocs.length === 0 && (
+                          <tr>
+                            <td colSpan={7} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
+                              Немає динамічних розділів. Документація містить лише статичні за замовчуванням.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                {/* MODAL / SLIDE-OVER FOR CREATE & EDIT */}
+                {isDocModalOpen && editingDoc && (() => {
+                  return (
+                    <div style={{
+                      position: "fixed",
+                      inset: 0,
+                      zIndex: 1000,
+                      background: "rgba(3, 3, 5, 0.75)",
+                      backdropFilter: "blur(20px)",
+                      display: "grid",
+                      placeItems: "center",
+                      padding: 24
+                    }}>
+                      <div className="glass" style={{
+                        width: "100%",
+                        maxWidth: 960,
+                        height: "85vh",
+                        borderRadius: 24,
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        background: "#08080C",
+                        display: "flex",
+                        flexDirection: "column",
+                        overflow: "hidden"
+                      }}>
+                        {/* Header */}
+                        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>
+                              {editingDoc.id ? `Редагувати розділ "${editingDoc.title}"` : "Створити новий розділ документації"}
+                            </h3>
+                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Slug: {editingDoc.id || "буде згенеровано автоматично"}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setIsDocModalOpen(false);
+                              setEditingDoc(null);
+                            }}
+                            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }}
+                          >
+                            Закрити ✕
+                          </button>
+                        </div>
+
+                        {/* Form & Workspace */}
+                        <form onSubmit={handleSaveDoc} style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                          
+                          {/* Top Metadata Row */}
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                            
+                            <div>
+                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>ID / Slug (унікальний URL)</label>
+                              <input
+                                name="id"
+                                type="text"
+                                defaultValue={editingDoc.id}
+                                disabled={!!editingDoc.id}
+                                placeholder="напр: advanced-pyaudio"
+                                required
+                                className="input-field"
+                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Назва сторінки (Title)</label>
+                              <input
+                                name="title"
+                                type="text"
+                                defaultValue={editingDoc.title}
+                                placeholder="напр: Інтеграція PyAudio"
+                                required
+                                className="input-field"
+                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Надзаголовок (Eyebrow)</label>
+                              <input
+                                name="eyebrow"
+                                type="text"
+                                defaultValue={editingDoc.eyebrow}
+                                placeholder="напр: Додатково"
+                                className="input-field"
+                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Іконка меню</label>
+                              <select
+                                name="icon"
+                                defaultValue={editingDoc.icon}
+                                className="input-field"
+                                style={{ width: "100%", padding: "8px 12px", background: "rgba(10,10,12,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                              >
+                                {["BookOpen", "Zap", "Layers", "Package", "Key", "Globe", "Activity", "HelpCircle", "Settings", "Shield", "Code", "Sparkles"].map(iconName => (
+                                  <option key={iconName} value={iconName}>{iconName}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div>
+                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Порядок сортування</label>
+                              <input
+                                name="order"
+                                type="number"
+                                defaultValue={editingDoc.order}
+                                className="input-field"
+                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                              />
+                            </div>
+
+                          </div>
+
+                          <div style={{ padding: "10px 24px 0" }}>
+                            <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Короткий опис (Description)</label>
+                            <input
+                              name="desc"
+                              type="text"
+                              defaultValue={editingDoc.desc}
+                              placeholder="Короткий підзаголовок для відображення під назвою розділу"
+                              className="input-field"
+                              style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
+                            />
+                          </div>
+
+                          {/* Editor Area with Tab Selectors */}
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: 24, overflow: "hidden" }}>
+                            
+                            {/* Editor Tab Selectors */}
+                            <div style={{ display: "flex", gap: 12, marginBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: 8 }}>
+                              <button
+                                type="button"
+                                onClick={() => setActiveEditorTab("edit")}
+                                style={{
+                                  background: "none", border: "none",
+                                  color: activeEditorTab === "edit" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                                  fontSize: 12, fontWeight: 700, cursor: "pointer",
+                                  paddingBottom: 4, borderBottom: activeEditorTab === "edit" ? "2px solid #00E5FF" : "none"
+                                }}
+                              >
+                                Редактор (Markdown)
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setActiveEditorTab("preview")}
+                                style={{
+                                  background: "none", border: "none",
+                                  color: activeEditorTab === "preview" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                                  fontSize: 12, fontWeight: 700, cursor: "pointer",
+                                  paddingBottom: 4, borderBottom: activeEditorTab === "preview" ? "2px solid #00E5FF" : "none"
+                                }}
+                              >
+                                Передперегляд контенту
+                              </button>
+                            </div>
+
+                            {/* Tab Content */}
+                            {activeEditorTab === "edit" ? (
+                              <textarea
+                                name="content"
+                                value={liveContent}
+                                onChange={(e) => setLiveContent(e.target.value)}
+                                placeholder="# Назва розділу&#10;&#10;Тут ви можете писати документацію використовуючи Markdown.&#10;&#10;* Пункт списку 1&#10;* Пункт списку 2&#10;&#10;```javascript&#10;console.log('Синтаксичний блок коду');&#10;```"
+                                style={{
+                                  flex: 1,
+                                  width: "100%",
+                                  background: "rgba(5,5,7,0.95)",
+                                  border: "1px solid rgba(255,255,255,0.08)",
+                                  borderRadius: 14,
+                                  padding: 16,
+                                  color: "#a5b4fc",
+                                  fontFamily: "monospace",
+                                  fontSize: 13,
+                                  lineHeight: 1.6,
+                                  resize: "none",
+                                  outline: "none"
+                                }}
+                              />
+                            ) : (
+                              <div style={{
+                                flex: 1,
+                                width: "100%",
+                                background: "#030303",
+                                border: "1px solid rgba(255,255,255,0.08)",
+                                borderRadius: 14,
+                                padding: "20px 24px",
+                                overflowY: "auto",
+                                textAlign: "left",
+                                fontSize: "14.5px",
+                                color: "rgba(255,255,255,0.75)",
+                                lineHeight: 1.8
+                              }}>
+                                {/* Render Live Markdown Preview */}
+                                <div dangerouslySetInnerHTML={{ __html: formatMarkdownPreview(liveContent) }} />
+                              </div>
+                            )}
+
+                          </div>
+
+                          {/* Footer Actions */}
+                          <div style={{ padding: "20px 24px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "flex-end", gap: 12 }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsDocModalOpen(false);
+                                setEditingDoc(null);
+                              }}
+                              className="ghost-btn"
+                              style={{ padding: "10px 20px", fontSize: 13 }}
+                            >
+                              Скасувати
+                            </button>
+                            <button
+                              type="submit"
+                              className="cta-btn"
+                              style={{ padding: "10px 24px", fontSize: 13 }}
+                            >
+                              Зберегти зміни
+                            </button>
+                          </div>
+
+                        </form>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+              </div>
+            );
+          })()}
 
         </main>
 
@@ -942,6 +1309,7 @@ function AdminPanel({ onLogout }) {
           <SidebarButton icon={<Cpu size={16} />} label="Здоров'я Системи" active={activeTab === "health"} onClick={() => setActiveTab("health")} />
           <SidebarButton icon={<Radio size={16} />} label="Центр Розсилок" active={activeTab === "broadcast"} onClick={() => setActiveTab("broadcast")} />
           <SidebarButton icon={<FileText size={16} />} label="Аудит Сповіщень" active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
+          <SidebarButton icon={<BookOpen size={16} />} label="Документація (CMS)" active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
           
           <div style={{ marginTop: "auto", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 16 }}>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", display: "flex", alignItems: "center", gap: 6 }}>
@@ -1595,4 +1963,42 @@ function LeafletGlowMap({ activeMap, mapRef }) {
       `}</style>
     </div>
   );
+}
+
+// Simple Markdown Preview renderer for CMS Editor
+function formatMarkdownPreview(text) {
+  if (!text) return "";
+  
+  // Escapes HTML tags
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  
+  // Format code blocks (```lang ... ```)
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    return `<div style="position: relative; border-radius: 12px; overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.08); font-family: monospace;">
+      <div style="background: rgba(10,10,12,0.85); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase;">${lang || 'code'}</div>
+      <pre style="margin: 0; padding: 20px; background: rgba(5,5,7,0.95); overflow-x: auto; color: #a5b4fc; font-size: 13px; line-height: 1.6;"><code>${code.trim()}</code></pre>
+    </div>`;
+  });
+
+  // Format inline code (`code`)
+  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #00E5FF;">$1</code>');
+
+  // Format headers (### title, ## title, # title)
+  html = html.replace(/^### (.*?)$/gm, '<h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 12px; color: #fff;">$1</h4>');
+  html = html.replace(/^## (.*?)$/gm, '<h3 style="font-size: 20px; font-weight: 700; margin: 32px 0 16px; color: #fff;">$1</h3>');
+  html = html.replace(/^# (.*?)$/gm, '<h2 style="font-size: 24px; font-weight: 800; margin: 40px 0 20px; color: #fff;">$1</h2>');
+
+  // Format bold (**text**)
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+  // Format bullets (* item)
+  html = html.replace(/^\* (.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 6px; list-style-type: disc; color: rgba(255,255,255,0.75);">$1</li>');
+
+  // Format links ([text](url))
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">$1</a>');
+
+  return html;
 }

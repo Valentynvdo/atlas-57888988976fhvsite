@@ -605,3 +605,67 @@ async def get_active_map(_=Depends(require_admin)):
         })
     return spots
 
+
+# ── Custom Documentation CMS Endpoints ────────────────────────────────────────
+
+@router.get("/docs/custom", tags=["docs"])
+async def get_custom_docs():
+    """Public endpoint to fetch all dynamic/custom documentation sections."""
+    docs = await db.custom_docs.find({}).to_list(1000)
+    # Sort custom docs by order index
+    docs.sort(key=lambda d: int(d.get("order", 99)))
+    return docs
+
+
+@router.post("/docs")
+async def save_custom_doc(body: dict, admin: dict = Depends(require_admin)):
+    """Creates or updates a custom documentation page."""
+    doc_id = body.get("id")
+    if not doc_id:
+        raise HTTPException(status_code=400, detail="id (slug) is required")
+        
+    doc_id = doc_id.strip().lower().replace(" ", "-")
+    
+    doc_data = {
+        "id": doc_id,
+        "title": body.get("title", "Untitled Section").strip(),
+        "eyebrow": body.get("eyebrow", "Додатково").strip(),
+        "desc": body.get("desc", "").strip(),
+        "content": body.get("content", "").strip(),
+        "icon": body.get("icon", "BookOpen").strip(),
+        "order": int(body.get("order", 99)),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "updated_by": admin["email"]
+    }
+    
+    await db.custom_docs.update_one({"id": doc_id}, {"$set": doc_data}, upsert=True)
+    
+    await db.admin_logs.insert_one({
+        "action": "save_custom_doc",
+        "performed_by": admin["email"],
+        "performed_at": datetime.now(timezone.utc).isoformat(),
+        "details": {"doc_id": doc_id, "title": doc_data["title"]}
+    })
+    
+    return {"ok": True, "doc": doc_data}
+
+
+@router.delete("/docs/{doc_id}")
+async def delete_custom_doc(doc_id: str, admin: dict = Depends(require_admin)):
+    """Deletes a custom documentation page."""
+    existing = await db.custom_docs.find_one({"id": doc_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Document not found")
+        
+    await db.custom_docs.delete_one({"id": doc_id})
+    
+    await db.admin_logs.insert_one({
+        "action": "delete_custom_doc",
+        "performed_by": admin["email"],
+        "performed_at": datetime.now(timezone.utc).isoformat(),
+        "details": {"doc_id": doc_id, "title": existing.get("title")}
+    })
+    
+    return {"ok": True}
+
+

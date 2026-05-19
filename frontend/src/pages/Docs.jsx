@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { toast, Toaster } from "sonner";
+import api from "../lib/api";
 import {
   ArrowLeft,
   Copy,
@@ -86,17 +87,59 @@ export default function Docs() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("intro");
   const sectionsRef = useRef({});
-  
-  const SECTIONS = [
-    { id: "intro", label: "Вступ", icon: <BookOpen size={16} /> },
-    { id: "quickstart", label: "Швидкий старт (SDK)", icon: <Zap size={16} /> },
-    { id: "architecture", label: "Архітектура", icon: <Layers size={16} /> },
-    { id: "installation", label: "Встановлення локально", icon: <Package size={16} /> },
-    { id: "activation", label: "Система ліцензування", icon: <Key size={16} /> },
-    { id: "api", label: "REST API Reference", icon: <Globe size={16} /> },
-    { id: "roadmap", label: "План розвитку (Beta)", icon: <Activity size={16} /> },
-    { id: "faq", label: "Вирішення проблем / FAQ", icon: <HelpCircle size={16} /> }
-  ];
+  const [customDocs, setCustomDocs] = useState([]);
+
+  useEffect(() => {
+    const fetchCustomDocs = async () => {
+      try {
+        const res = await api.get("/api/admin/docs/custom");
+        setCustomDocs(res.data || []);
+      } catch (err) {
+        console.error("Failed to load custom docs:", err);
+      }
+    };
+    fetchCustomDocs();
+  }, []);
+
+  const SECTIONS = useMemo(() => {
+    const base = [
+      { id: "intro", label: "Вступ", icon: <BookOpen size={16} /> },
+      { id: "quickstart", label: "Швидкий старт (SDK)", icon: <Zap size={16} /> },
+      { id: "architecture", label: "Архітектура", icon: <Layers size={16} /> },
+      { id: "installation", label: "Встановлення локально", icon: <Package size={16} /> },
+      { id: "activation", label: "Система ліцензування", icon: <Key size={16} /> },
+      { id: "api", label: "REST API Reference", icon: <Globe size={16} /> },
+      { id: "roadmap", label: "План розвитку (Beta)", icon: <Activity size={16} /> },
+      { id: "faq", label: "Вирішення проблем / FAQ", icon: <HelpCircle size={16} /> }
+    ];
+
+    const lucideIcons = {
+      BookOpen: <BookOpen size={16} />,
+      Zap: <Zap size={16} />,
+      Layers: <Layers size={16} />,
+      Package: <Package size={16} />,
+      Key: <Key size={16} />,
+      Globe: <Globe size={16} />,
+      Activity: <Activity size={16} />,
+      HelpCircle: <HelpCircle size={16} />,
+      Settings: <Settings size={16} />,
+      Shield: <Shield size={16} />,
+      Code: <Code size={16} />,
+      Sparkles: <Sparkles size={16} />
+    };
+
+    const mappedCustom = customDocs.map(doc => ({
+      id: doc.id,
+      label: doc.title,
+      icon: lucideIcons[doc.icon] || <BookOpen size={16} />,
+      isCustom: true,
+      eyebrow: doc.eyebrow,
+      desc: doc.desc,
+      content: doc.content
+    }));
+
+    return [...base, ...mappedCustom];
+  }, [customDocs]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,7 +157,7 @@ export default function Docs() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [SECTIONS]);
 
   const scrollTo = (id) => {
     const el = sectionsRef.current[id];
@@ -603,6 +646,28 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             </Accordion>
           </section>
 
+          {/* Dynamic Custom Sections from Database (CMS) */}
+          {SECTIONS.filter(s => s.isCustom).map((sec) => (
+            <section 
+              key={sec.id} 
+              ref={(el) => (sectionsRef.current[sec.id] = el)} 
+              style={{ scrollMarginTop: 100, marginBottom: 80 }}
+              className="fade-in"
+            >
+              <SectionTitle eyebrow={sec.eyebrow} title={sec.label} desc={sec.desc} />
+              
+              <div 
+                style={{ 
+                  fontSize: "14.5px", 
+                  color: "rgba(255,255,255,0.75)", 
+                  lineHeight: 1.8, 
+                  whiteSpace: "pre-wrap"
+                }}
+                dangerouslySetInnerHTML={{ __html: formatMarkdown(sec.content) }}
+              />
+            </section>
+          ))}
+
           {/* --- Bottom Doc CTA --- */}
           <section style={{ textAlign: "center", padding: "48px 32px", borderRadius: 24, background: "linear-gradient(135deg, rgba(0,122,255,0.06), rgba(0,229,255,0.02))", border: "1px solid rgba(0,122,255,0.15)", marginTop: 80 }}>
             <h3 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Потрібна допомога?</h3>
@@ -616,4 +681,42 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
       </div>
     </div>
   );
+}
+
+// Simple Markdown Formatter for CMS dynamic text content
+function formatMarkdown(text) {
+  if (!text) return "";
+  
+  // Basic HTML Escaping
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  
+  // Format code blocks (```lang ... ```)
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    return `<div style="position: relative; border-radius: 12px; overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.08); font-family: monospace;">
+      <div style="background: rgba(10,10,12,0.85); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase;">${lang || 'code'}</div>
+      <pre style="margin: 0; padding: 20px; background: rgba(5,5,7,0.95); overflow-x: auto; color: #a5b4fc; font-size: 13px; line-height: 1.6;"><code>${code.trim()}</code></pre>
+    </div>`;
+  });
+
+  // Format inline code (`code`)
+  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #00E5FF;">$1</code>');
+
+  // Format headers (### title, ## title, # title)
+  html = html.replace(/^### (.*?)$/gm, '<h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 12px; color: #fff;">$1</h4>');
+  html = html.replace(/^## (.*?)$/gm, '<h3 style="font-size: 20px; font-weight: 700; margin: 32px 0 16px; color: #fff;">$1</h3>');
+  html = html.replace(/^# (.*?)$/gm, '<h2 style="font-size: 24px; font-weight: 800; margin: 40px 0 20px; color: #fff;">$1</h2>');
+
+  // Format bold (**text**)
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+  // Format bullets (* item)
+  html = html.replace(/^\* (.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 6px; list-style-type: disc; color: rgba(255,255,255,0.75);">$1</li>');
+
+  // Format links ([text](url))
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">$1</a>');
+
+  return html;
 }
