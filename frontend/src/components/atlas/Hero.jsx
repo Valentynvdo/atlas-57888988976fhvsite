@@ -69,27 +69,6 @@ export default function Hero({ onCta }) {
           />
         </div>
 
-        <div
-          data-testid="hero-eyebrow"
-          className="reveal in-view"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 16px",
-            borderRadius: 999,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            backdropFilter: "blur(12px)",
-            fontSize: 13,
-            color: "rgba(255,255,255,0.85)",
-            marginBottom: 28,
-          }}
-        >
-          <Sparkles size={14} color="#00E5FF" />
-          Автономний асистент для macOS
-        </div>
-
         <h1
           data-testid="hero-title"
           className="reveal in-view shimmer-text"
