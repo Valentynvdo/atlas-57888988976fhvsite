@@ -217,7 +217,7 @@ export default function AtlasComparison() {
 
 function ComparisonCategory({ title, icon, normalBullets, atlasBullets, delay, visualType }) {
   return (
-    <div className={\`reveal \${delay}\`} style={{
+    <div className={`reveal ${delay}`} style={{
       display: "flex",
       flexDirection: "column",
       gap: 16
