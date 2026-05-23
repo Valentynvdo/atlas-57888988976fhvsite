@@ -100,33 +100,16 @@ function ComparisonItem({ title, normal, atlas, delay }) {
       className={`reveal ${delay} glass`}
       style={{
         borderRadius: 24,
-        padding: "clamp(24px, 4vw, 40px)",
+        padding: "clamp(20px, 3vw, 32px)",
         display: "flex",
         flexDirection: "column",
-        gap: 24,
+        gap: 20,
         position: "relative",
-        overflow: "hidden",
-        transformStyle: "preserve-3d"
+        overflow: "hidden"
       }}
     >
-      <div 
-        style={{
-          position: "absolute",
-          top: "-50%",
-          left: "-50%",
-          width: "200%",
-          height: "200%",
-          background: "radial-gradient(circle at 50% 0%, rgba(0,229,255,0.08), transparent 70%)",
-          opacity: 0,
-          transition: "opacity 0.6s ease",
-          pointerEvents: "none",
-          zIndex: 0
-        }}
-        className="hover-glow"
-      />
-      
       <h3 style={{ 
-        fontSize: "clamp(1.2rem, 2vw, 1.4rem)", 
+        fontSize: "clamp(1.1rem, 1.8vw, 1.25rem)", 
         fontWeight: 600, 
         color: "#fff", 
         margin: 0,
@@ -137,51 +120,49 @@ function ComparisonItem({ title, normal, atlas, delay }) {
       </h3>
       
       <div className="comp-grid" style={{ 
-        gap: 24,
+        gap: 16,
         zIndex: 1,
         position: "relative",
         alignItems: "stretch"
       }}>
         {/* Left Card: Normal AI */}
         <div style={{ 
-          padding: 32, 
-          background: "rgba(10,10,10,0.4)", 
+          padding: 24, 
+          background: "rgba(15,15,15,0.5)", 
           borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.05)",
-          transition: "transform 0.4s ease, background 0.4s ease",
+          border: "1px solid rgba(255,255,255,0.04)",
           display: "flex",
           flexDirection: "column"
         }} className="comp-card-left">
           
-          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginBottom: 20 }}>
-            <Bot size={18} />
-            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.3)", fontWeight: 500, marginBottom: 16 }}>
+            <Bot size={16} />
+            <span style={{ fontSize: "0.8rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
           </div>
           
           {/* Typing Effect fake browser/terminal */}
           <div style={{ 
-            background: "rgba(0,0,0,0.6)", 
-            padding: "12px 16px", 
-            borderRadius: 10, 
-            marginBottom: 20, 
+            background: "rgba(0,0,0,0.4)", 
+            padding: "10px 14px", 
+            borderRadius: 8, 
+            marginBottom: 16, 
             display: "flex", 
             alignItems: "center", 
-            gap: 12, 
-            border: "1px solid rgba(255,255,255,0.03)",
-            boxShadow: "inset 0 2px 10px rgba(0,0,0,0.2)"
+            gap: 10, 
+            border: "1px solid rgba(255,255,255,0.02)",
           }}>
-            <div style={{ display: "flex", gap: 6 }}>
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57" }} />
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
+            <div style={{ display: "flex", gap: 5 }}>
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5f57" }} />
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#febc2e" }} />
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#28c840" }} />
             </div>
-            <div style={{ height: 16, width: 1, background: "rgba(255,255,255,0.1)" }} />
-            <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.4)", fontFamily: "monospace", display: "flex", alignItems: "center" }}>
-              User is typing<span style={{ marginLeft: 2, display: "inline-block", width: 6, height: 14, background: "rgba(255,255,255,0.6)", animation: "cursor-blink 1s step-end infinite" }} />
+            <div style={{ height: 14, width: 1, background: "rgba(255,255,255,0.1)" }} />
+            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.35)", fontFamily: "monospace", display: "flex", alignItems: "center" }}>
+              User is typing<span style={{ marginLeft: 2, display: "inline-block", width: 5, height: 12, background: "rgba(255,255,255,0.5)", animation: "cursor-blink 1s step-end infinite" }} />
             </span>
           </div>
 
-          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
+          <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.6, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>
             {normal}
           </p>
         </div>
@@ -194,66 +175,59 @@ function ComparisonItem({ title, normal, atlas, delay }) {
           position: "relative"
         }}>
            <div style={{
-             width: 48,
-             height: 48,
+             width: 64,
+             height: 64,
              borderRadius: "50%",
-             background: "linear-gradient(135deg, rgba(0,229,255,0.1), rgba(157,76,221,0.1))",
-             border: "1px solid rgba(0,229,255,0.3)",
+             background: "radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, rgba(157,76,221,0.05) 100%)",
+             border: "1px solid rgba(0,229,255,0.25)",
              display: "grid",
              placeItems: "center",
-             boxShadow: "0 0 20px rgba(0,229,255,0.2), inset 0 0 10px rgba(157,76,221,0.2)",
+             boxShadow: "0 0 30px rgba(0,229,255,0.25), inset 0 0 15px rgba(157,76,221,0.3)",
              position: "relative",
              zIndex: 2
            }}>
-             <Atom size={24} color="#00E5FF" className="atom-spin" />
+             <Atom size={32} color="#00E5FF" className="atom-spin" />
+             {/* Small pulse dot */}
+             <div style={{
+               position: "absolute",
+               width: 6,
+               height: 6,
+               background: "#fff",
+               borderRadius: "50%",
+               boxShadow: "0 0 10px #fff, 0 0 20px #00E5FF",
+               animation: "pulse-glow 2s infinite"
+             }} />
            </div>
            {/* Connecting line */}
            <div className="evolution-line" style={{
              position: "absolute",
              top: "50%",
-             left: "-50%",
-             right: "-50%",
-             height: 2,
-             background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.5), transparent)",
+             left: "-100%",
+             right: "-100%",
+             height: 1,
+             background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.6), transparent)",
              transform: "translateY(-50%)",
              zIndex: 1,
-             opacity: 0.5
+             opacity: 0.6
            }} />
         </div>
 
         {/* Right Card: ATLAS */}
         <div style={{ 
-          padding: 32, 
-          background: "rgba(10,10,10,0.4)", 
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.05)",
-          transition: "transform 0.4s ease, background 0.4s ease"
-        }} className="comp-card-left">
-          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginBottom: 16 }}>
-            <Bot size={18} />
-            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
-          </div>
-          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
-            {normal}
-          </p>
-        </div>
-
-        <div style={{ 
           padding: 24, 
-          background: "linear-gradient(145deg, rgba(0,229,255,0.1) 0%, rgba(10,10,10,0.6) 100%)", 
+          background: "linear-gradient(145deg, rgba(0,229,255,0.06) 0%, rgba(15,15,15,0.6) 100%)", 
           borderRadius: 16,
-          border: "1px solid rgba(0,229,255,0.2)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.3)",
+          border: "1px solid rgba(0,229,255,0.15)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.2)",
           position: "relative",
-          overflow: "hidden",
-          transition: "transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease"
+          overflow: "hidden"
         }} className="comp-card-right">
-          <div className="scan-line" style={{ opacity: 0.5, animationDuration: "4s" }}></div>
+          <div className="scan-line" style={{ opacity: 0.4, animationDuration: "5s" }}></div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#00E5FF", fontWeight: 600, marginBottom: 16, position: "relative", zIndex: 2 }}>
-            <Zap size={18} />
-            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>ATLAS</span>
+            <Zap size={16} />
+            <span style={{ fontSize: "0.8rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>ATLAS</span>
           </div>
-          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,0.9)", fontWeight: 400, position: "relative", zIndex: 2 }}>
+          <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.6, color: "rgba(255,255,255,0.85)", fontWeight: 400, position: "relative", zIndex: 2 }}>
             {atlas}
           </p>
         </div>
