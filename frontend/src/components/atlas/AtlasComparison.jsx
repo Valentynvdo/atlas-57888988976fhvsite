@@ -90,43 +90,66 @@ export default function AtlasComparison() {
 function ComparisonItem({ title, normal, atlas }) {
   return (
     <div style={{
-      background: "rgba(255,255,255,0.03)",
-      border: "1px solid rgba(255,255,255,0.08)",
-      borderRadius: 20,
-      padding: 32,
+      background: "rgba(255, 255, 255, 0.02)",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      border: "1px solid rgba(255, 255, 255, 0.06)",
+      borderRadius: 24,
+      padding: 40,
       display: "flex",
       flexDirection: "column",
-      gap: 20,
-      transition: "transform 0.3s ease, border-color 0.3s ease",
+      gap: 24,
+      transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
     }}
     onMouseEnter={(e) => {
-      e.currentTarget.style.borderColor = "rgba(0,229,255,0.3)";
-      e.currentTarget.style.transform = "translateY(-4px)";
+      e.currentTarget.style.transform = "scale(1.02)";
+      e.currentTarget.style.boxShadow = "0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1) inset";
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
       e.currentTarget.style.transform = "none";
+      e.currentTarget.style.boxShadow = "none";
     }}
     >
-      <h3 style={{ fontSize: "1.3rem", fontWeight: 600, color: "#fff", margin: 0 }}>
+      <h3 style={{ 
+        fontSize: "1.4rem", 
+        fontWeight: 500, 
+        color: "#fff", 
+        margin: 0,
+        letterSpacing: "-0.01em"
+      }}>
         {title}
       </h3>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
-        <div style={{ padding: 20, background: "rgba(255,95,87,0.05)", borderRadius: 16, borderLeft: "4px solid rgba(255,95,87,0.5)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,95,87,1)", fontWeight: 600, marginBottom: 12 }}>
-            <Bot size={20} />
-            <span>Звичайний ШІ</span>
+      
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "1fr 1fr", 
+        gap: 1,
+        background: "rgba(255,255,255,0.06)", 
+        borderRadius: 16,
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          padding: 32, 
+          background: "rgba(10,10,10,0.7)", 
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginBottom: 16 }}>
+            <Bot size={18} />
+            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
           </div>
-          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.6, color: "rgba(255,255,255,0.6)" }}>
+          <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
             {normal}
           </p>
         </div>
-        <div style={{ padding: 20, background: "rgba(0,229,255,0.05)", borderRadius: 16, borderLeft: "4px solid rgba(0,229,255,0.5)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(0,229,255,1)", fontWeight: 600, marginBottom: 12 }}>
-            <Zap size={20} />
-            <span>ATLAS</span>
+
+        <div style={{ 
+          padding: 32, 
+          background: "linear-gradient(145deg, rgba(0,229,255,0.05) 0%, rgba(10,10,10,0.7) 100%)", 
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#00E5FF", fontWeight: 600, marginBottom: 16 }}>
+            <Zap size={18} />
+            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>ATLAS</span>
           </div>
-          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.6, color: "rgba(255,255,255,0.85)" }}>
+          <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.9)", fontWeight: 400 }}>
             {atlas}
           </p>
         </div>

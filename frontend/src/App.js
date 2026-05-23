@@ -38,12 +38,12 @@ function Landing() {
     <div className="App" ref={rootRef} data-testid="atlas-landing">
       <Navbar onCta={() => navigate("/login")} />
       <Hero onCta={() => navigate("/login")} />
-      <AtlasComparison />
       <AtlasLiveThought />
       <LivingIntelligence />
       <MacOSControl />
       <SmartConcierge />
       <AbsoluteAwareness />
+      <AtlasComparison />
       <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
     </div>
