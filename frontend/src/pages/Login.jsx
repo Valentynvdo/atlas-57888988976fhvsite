@@ -7,13 +7,14 @@ export default function Login() {
   const { user, loading, refresh } = useAuth();
   const navigate = useNavigate();
 
-  // Tab: 'login' | 'register'
+  // Tab: 'login' | 'register' | 'forgot_password'
   const [tab, setTab] = useState("login");
 
   // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [code, setCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -32,15 +33,24 @@ export default function Login() {
     setFormLoading(true);
 
     try {
-      if (tab === "login") {
+      if (tab === "forgot_password") {
+        await api.post("/api/auth/forgot-password", { email });
+        setSuccess("📩 Інструкції та код скидання відправлені на ваш email.");
+        setTab("reset_password");
+      } else if (tab === "reset_password") {
+        await api.post("/api/auth/reset-password", { email, code, new_password: password });
+        setSuccess("✅ Пароль успішно змінено. Тепер ви можете увійти.");
+        setTab("login");
+        setPassword("");
+      } else if (tab === "login") {
         await api.post("/api/auth/login", { email, password });
+        await refresh();
       } else {
         await api.post("/api/auth/register", { email, password, name });
         setSuccess("🎉 Ви успішно зареєстровані! Налаштування особистого кабінету...");
         await new Promise((resolve) => setTimeout(resolve, 1500));
+        await refresh();
       }
-      // Refresh Auth State
-      await refresh();
     } catch (err) {
       console.error(err);
       setError(
@@ -138,7 +148,7 @@ export default function Login() {
         />
         <h1
           data-testid="login-title"
-          style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}
+          style={{ fontSize: 28, fontWeight: 500, letterSpacing: "-0.04em", margin: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
         >
           Atlas AI
         </h1>
@@ -147,62 +157,85 @@ export default function Login() {
         </p>
 
         {/* Beautiful Tabs */}
-        <div style={{
-          display: "flex",
-          background: "rgba(255,255,255,0.05)",
-          padding: 4,
-          borderRadius: 12,
-          marginBottom: 24,
-          border: "1px solid rgba(255,255,255,0.05)"
-        }}>
-          <button
-            onClick={() => { setTab("login"); setError(""); setSuccess(""); }}
-            style={{
-              flex: 1,
-              padding: "10px 0",
-              background: tab === "login" ? "rgba(0,122,255,0.85)" : "transparent",
-              color: tab === "login" ? "#fff" : "rgba(255,255,255,0.6)",
-              border: "none",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.2s ease"
-            }}
-          >
-            Увійти
-          </button>
-          <button
-            onClick={() => { setTab("register"); setError(""); setSuccess(""); }}
-            style={{
-              flex: 1,
-              padding: "10px 0",
-              background: tab === "register" ? "rgba(0,122,255,0.85)" : "transparent",
-              color: tab === "register" ? "#fff" : "rgba(255,255,255,0.6)",
-              border: "none",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.2s ease"
-            }}
-          >
-            Реєстрація
-          </button>
-        </div>
+        {(tab === "login" || tab === "register") && (
+          <div style={{
+            display: "flex",
+            background: "rgba(255,255,255,0.05)",
+            padding: 4,
+            borderRadius: 14,
+            marginBottom: 24,
+            border: "1px solid rgba(255,255,255,0.08)"
+          }}>
+            <button
+              onClick={() => { setTab("login"); setError(""); setSuccess(""); }}
+              style={{
+                flex: 1,
+                padding: "8px 0",
+                background: tab === "login" ? "rgba(255,255,255,0.15)" : "transparent",
+                color: tab === "login" ? "#fff" : "rgba(255,255,255,0.6)",
+                border: "none",
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: tab === "login" ? "0 2px 8px rgba(0,0,0,0.2)" : "none"
+              }}
+            >
+              Увійти
+            </button>
+            <button
+              onClick={() => { setTab("register"); setError(""); setSuccess(""); }}
+              style={{
+                flex: 1,
+                padding: "8px 0",
+                background: tab === "register" ? "rgba(255,255,255,0.15)" : "transparent",
+                color: tab === "register" ? "#fff" : "rgba(255,255,255,0.6)",
+                border: "none",
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: tab === "register" ? "0 2px 8px rgba(0,0,0,0.2)" : "none"
+              }}
+            >
+              Реєстрація
+            </button>
+          </div>
+        )}
+
+        {tab === "forgot_password" && (
+          <div style={{ marginBottom: 24 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>Відновлення пароля</h2>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0 }}>
+              Введіть email, і ми надішлемо вам код відновлення.
+            </p>
+          </div>
+        )}
+
+        {tab === "reset_password" && (
+          <div style={{ marginBottom: 24 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>Введіть код</h2>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0 }}>
+              Перевірте пошту <b>{email}</b> та введіть 6-значний код і новий пароль.
+            </p>
+          </div>
+        )}
 
         {/* Error message */}
         {error && (
           <div style={{
-            background: "rgba(255,69,58,0.15)",
-            border: "1px solid rgba(255,69,58,0.3)",
+            background: "rgba(255,69,58,0.1)",
+            border: "1px solid rgba(255,69,58,0.2)",
             color: "#ff453a",
             padding: "12px 16px",
-            borderRadius: 10,
+            borderRadius: 12,
             marginBottom: 20,
             fontSize: 13,
             textAlign: "left",
-            lineHeight: 1.4
+            lineHeight: 1.4,
+            backdropFilter: "blur(10px)"
           }}>
             ⚠️ {error}
           </div>
@@ -211,15 +244,16 @@ export default function Login() {
         {/* Success message */}
         {success && (
           <div style={{
-            background: "rgba(40,200,64,0.15)",
-            border: "1px solid rgba(40,200,64,0.3)",
+            background: "rgba(48,209,88,0.1)",
+            border: "1px solid rgba(48,209,88,0.2)",
             color: "#30d158",
             padding: "12px 16px",
-            borderRadius: 10,
+            borderRadius: 12,
             marginBottom: 20,
             fontSize: 13,
             textAlign: "left",
-            lineHeight: 1.4
+            lineHeight: 1.4,
+            backdropFilter: "blur(10px)"
           }}>
             ✅ {success}
           </div>
@@ -229,7 +263,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
           {tab === "register" && (
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
                 Ім'я
               </label>
               <input
@@ -239,123 +273,179 @@ export default function Login() {
                 onChange={(e) => setName(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
-                  background: "rgba(255,255,255,0.06)",
+                  padding: "14px 16px",
+                  background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 10,
+                  borderRadius: 12,
                   color: "#fff",
-                  fontSize: 14,
+                  fontSize: 15,
                   boxSizing: "border-box",
                   outline: "none",
-                  transition: "border-color 0.2s"
+                  transition: "all 0.2s"
                 }}
-                onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
-                onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+                onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.3)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
               />
             </div>
           )}
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
               Електронна пошта
             </label>
             <input
               type="email"
               required
-              placeholder="example@mail.com"
+              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={tab === "reset_password"}
               style={{
                 width: "100%",
-                padding: "12px 16px",
-                background: "rgba(255,255,255,0.06)",
+                padding: "14px 16px",
+                background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: 10,
-                color: "#fff",
-                fontSize: 14,
+                borderRadius: 12,
+                color: tab === "reset_password" ? "rgba(255,255,255,0.4)" : "#fff",
+                fontSize: 15,
                 boxSizing: "border-box",
                 outline: "none",
-                transition: "border-color 0.2s"
+                transition: "all 0.2s"
               }}
-              onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
-              onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+              onFocus={(e) => { if(tab !== "reset_password") { e.target.style.borderColor = "rgba(255,255,255,0.3)"; e.target.style.background = "rgba(255,255,255,0.08)"; } }}
+              onBlur={(e) => { if(tab !== "reset_password") { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; } }}
             />
           </div>
 
-          <div style={{ marginBottom: 20, position: "relative" }}>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Пароль
-            </label>
-            <div style={{ position: "relative" }}>
+          {tab === "reset_password" && (
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
+                Код відновлення (6 цифр)
+              </label>
               <input
-                type={showPassword ? "text" : "password"}
+                type="text"
                 required
-                placeholder={tab === "register" ? "Мінімум 6 символів" : "••••••"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="123456"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "12px 48px 12px 16px",
-                  background: "rgba(255,255,255,0.06)",
+                  padding: "14px 16px",
+                  background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 10,
+                  borderRadius: 12,
                   color: "#fff",
-                  fontSize: 14,
+                  fontSize: 15,
                   boxSizing: "border-box",
                   outline: "none",
-                  transition: "border-color 0.2s"
+                  transition: "all 0.2s",
+                  letterSpacing: "0.2em",
+                  fontFamily: "monospace"
                 }}
-                onFocus={(e) => e.target.style.borderColor = "rgba(0,122,255,0.5)"}
-                onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+                onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.3)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
               />
+            </div>
+          )}
+
+          {(tab === "login" || tab === "register" || tab === "reset_password") && (
+            <div style={{ marginBottom: 8, position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>
+                  {tab === "reset_password" ? "Новий пароль" : "Пароль"}
+                </label>
+                {tab === "login" && (
+                  <button
+                    type="button"
+                    onClick={() => { setTab("forgot_password"); setError(""); setSuccess(""); }}
+                    style={{ background: "none", border: "none", color: "#007aff", fontSize: 13, cursor: "pointer", padding: 0 }}
+                  >
+                    Забули пароль?
+                  </button>
+                )}
+              </div>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder={tab === "register" ? "Мінімум 6 символів" : "••••••••"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "14px 48px 14px 16px",
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: 12,
+                    color: "#fff",
+                    fontSize: 15,
+                    boxSizing: "border-box",
+                    outline: "none",
+                    transition: "all 0.2s"
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.3)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: "absolute",
+                    right: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    color: "rgba(255,255,255,0.5)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    padding: 6,
+                  }}
+                >
+                  {showPassword ? "Сховати" : "Показати"}
+                </button>
+              </div>
+            </div>
+          )}
+          
+          <div style={{ marginTop: 24 }}>
+            <button
+              type="submit"
+              disabled={formLoading}
+              style={{
+                width: "100%",
+                padding: "14px 20px",
+                background: "#fff",
+                color: "#000",
+                border: "none",
+                borderRadius: 12,
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: formLoading ? "not-allowed" : "pointer",
+                transition: "all 0.2s ease",
+                opacity: formLoading ? 0.75 : 1
+              }}
+              onMouseEnter={(e) => { if (!formLoading) { e.currentTarget.style.transform = "scale(0.98)"; } }}
+              onMouseLeave={(e) => { if (!formLoading) { e.currentTarget.style.transform = "none"; } }}
+            >
+              {formLoading ? (
+                <span>Завантаження...</span>
+              ) : tab === "login" ? "Увійти" : tab === "forgot_password" ? "Отримати код" : tab === "reset_password" ? "Зберегти новий пароль" : "Створити акаунт"}
+            </button>
+          </div>
+          
+          {(tab === "forgot_password" || tab === "reset_password") && (
+            <div style={{ textAlign: "center", marginTop: 16 }}>
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  color: "rgba(255,255,255,0.45)",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  padding: 4,
-                }}
+                onClick={() => { setTab("login"); setError(""); setSuccess(""); }}
+                style={{ background: "none", border: "none", color: "rgba(255,255,255,0.6)", fontSize: 13, cursor: "pointer", padding: "4px 8px" }}
               >
-                {showPassword ? "Приховати" : "Показати"}
+                Повернутися до входу
               </button>
             </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={formLoading}
-            style={{
-              width: "100%",
-              padding: "14px 20px",
-              background: "linear-gradient(135deg, #007aff, #00c6ff)",
-              color: "#fff",
-              border: "none",
-              borderRadius: 12,
-              fontSize: 15,
-              fontWeight: 600,
-              cursor: formLoading ? "not-allowed" : "pointer",
-              transition: "transform 0.15s ease, box-shadow 0.15s ease",
-              boxShadow: "0 4px 20px rgba(0,122,255,0.3)",
-              opacity: formLoading ? 0.75 : 1
-            }}
-            onMouseEnter={(e) => { if (!formLoading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,122,255,0.4)"; } }}
-            onMouseLeave={(e) => { if (!formLoading) { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,122,255,0.3)"; } }}
-          >
-            {formLoading ? (
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                Завантаження...
-              </span>
-            ) : tab === "login" ? "Увійти в кабінет" : "Зареєструватися"}
-          </button>
+          )}
         </form>
 
         {/* Dev-login buttons (only in development) */}

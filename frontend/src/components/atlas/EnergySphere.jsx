@@ -245,7 +245,6 @@ export default function EnergySphere() {
       mx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       my = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
     };
-    window.addEventListener("mousemove", onMove);
 
     // Resize
     const onResize = () => {
@@ -258,30 +257,68 @@ export default function EnergySphere() {
     window.addEventListener("resize", onResize);
 
     const clock = new THREE.Clock();
-    let raf;
-    const animate = () => {
-      const t = clock.getElapsedTime();
-      material.uniforms.uTime.value = t;
-      material.uniforms.uAmp.value = 0.85 + Math.sin(t * 0.8) * 0.18;
+    let raf = null;
+    let isMouseListenerActive = false;
 
-      sphere.rotation.y = t * 0.18;
-      sphere.rotation.x = Math.sin(t * 0.25) * 0.15;
-      wire.rotation.y = -t * 0.12;
-      wire.rotation.x = Math.cos(t * 0.2) * 0.2;
-      particles.rotation.z = t * 0.02; // Gentle slow cosmic background rotation
+    const startAnimation = () => {
+      if (raf) return;
+      const animate = () => {
+        const t = clock.getElapsedTime();
+        material.uniforms.uTime.value = t;
+        material.uniforms.uAmp.value = 0.85 + Math.sin(t * 0.8) * 0.18;
 
-      // Mouse parallax
-      scene.rotation.y += (mx * 0.25 - scene.rotation.y) * 0.04;
-      scene.rotation.x += (-my * 0.18 - scene.rotation.x) * 0.04;
+        sphere.rotation.y = t * 0.18;
+        sphere.rotation.x = Math.sin(t * 0.25) * 0.15;
+        wire.rotation.y = -t * 0.12;
+        wire.rotation.x = Math.cos(t * 0.2) * 0.2;
+        particles.rotation.z = t * 0.02;
 
-      renderer.render(scene, camera);
+        // Mouse parallax
+        scene.rotation.y += (mx * 0.25 - scene.rotation.y) * 0.04;
+        scene.rotation.x += (-my * 0.18 - scene.rotation.x) * 0.04;
+
+        renderer.render(scene, camera);
+        raf = requestAnimationFrame(animate);
+      };
       raf = requestAnimationFrame(animate);
     };
-    animate();
+
+    const stopAnimation = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+    };
+
+    const updateMouseListener = (shouldListen) => {
+      if (shouldListen && !isMouseListenerActive) {
+        window.addEventListener("mousemove", onMove);
+        isMouseListenerActive = true;
+      } else if (!shouldListen && isMouseListenerActive) {
+        window.removeEventListener("mousemove", onMove);
+        isMouseListenerActive = false;
+      }
+    };
+
+    // IntersectionObserver to pause Three.js loop when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startAnimation();
+          updateMouseListener(true);
+        } else {
+          stopAnimation();
+          updateMouseListener(false);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(mount);
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
+      observer.disconnect();
+      stopAnimation();
+      updateMouseListener(false);
       window.removeEventListener("resize", onResize);
       mount.removeChild(renderer.domElement);
       geometry.dispose();

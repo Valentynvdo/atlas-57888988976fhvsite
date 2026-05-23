@@ -421,24 +421,21 @@ export default function Dashboard() {
         {/* ----- Block 3: Download ----- */}
         <section data-testid="download-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           <SectionHeader title="Завантаження" eyebrow="Atlas для macOS" />
-          <a
-            data-testid="download-btn"
-            href={downloadInfo?.url || "#"}
-            download
-            className="cta-btn"
-            style={{ textDecoration: "none", background: "linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.2)" }}
-          >
-            <Download size={18} /> Завантажити Atlas 1.0.0
-          </a>
+          <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>Відкрийте Terminal на вашому Mac і виконайте команду:</div>
+            <code style={{ display: "block", color: "#00E5FF", fontFamily: "'Source Code Pro', monospace", fontSize: 14, wordBreak: "break-all" }}>
+              curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash
+            </code>
+          </div>
           <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: 16 }}>
-            macOS 13 Ventura або новіший. Apple Silicon або Intel. 200 MB вільного місця. · ~841.2 MB
+            macOS 13 Ventura або новіший. Apple Silicon або Intel. 200 MB вільного місця.
           </div>
 
           <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.8)", paddingLeft: 20, lineHeight: 1.8, fontSize: 14.5 }}>
-            <li style={{ marginBottom: 8 }}>Завантаж .dmg і перетягни Atlas у Applications.</li>
-            <li style={{ marginBottom: 8 }}>Запусти Atlas з Applications (перший раз — права кліком → Open).</li>
-            <li style={{ marginBottom: 8 }}>Введи свій ліцензійний ключ зверху.</li>
-            <li>Дозволь доступ до мікрофона і Accessibility — і Atlas готовий.</li>
+            <li style={{ marginBottom: 8 }}>Скопіюйте команду вище та вставте її у Terminal.</li>
+            <li style={{ marginBottom: 8 }}>Дочекайтесь завершення встановлення. Atlas автоматично з'явиться в Applications.</li>
+            <li style={{ marginBottom: 8 }}>Запустіть Atlas та введіть свій ліцензійний ключ для активації.</li>
+            <li>Надайте доступи до мікрофона та Accessibility (Спеціальні можливості).</li>
           </ol>
         </section>
 

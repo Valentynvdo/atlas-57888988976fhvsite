@@ -22,14 +22,16 @@ const items = [
     desc: "Пряме керування macOS: взаємодія з активними вікнами (Finder, Safari, Xcode, Terminal) та автоматизація дій через AppleScript.",
     grad: "linear-gradient(135deg, #00E5FF, #007AFF)",
     glow: "rgba(0,229,255,0.35)",
+    status: "active",
   },
   {
     icon: <Zap size={26} />,
     title: "Автономна Само-Еволюція",
     label: "evolution.py · plan.md",
-    desc: "Унікальний цикл самовдосконалення: асистент аналізує свої помилки, пише нові скіли, проводить тестування та оновлює свій код.",
+    desc: "Унікальний цикл самовдосконалення: асистент аналізує свои помилки, пише нові скіли, проводить тестування та оновлює свій код.",
     grad: "linear-gradient(135deg, #FF6B6B, #FF9A3C)",
     glow: "rgba(255,107,107,0.3)",
+    status: "active",
   },
   {
     icon: <Brain size={26} />,
@@ -38,6 +40,7 @@ const items = [
     desc: "Зберігає контекст розмов, важливі факти про користувача та вибудовує довготривалу семантичну пам'ять у локальному JSON.",
     grad: "linear-gradient(135deg, #9D4CDD, #007AFF)",
     glow: "rgba(157,76,221,0.35)",
+    status: "active",
   },
   {
     icon: <Search size={26} />,
@@ -46,6 +49,7 @@ const items = [
     desc: "Самостійно шукає інформацію в мережі, агрегує джерела, перевіряє факти (fact_checker.py) та готує аналітичні звіти.",
     grad: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
     glow: "rgba(0,229,255,0.3)",
+    status: "active",
   },
   {
     icon: <FileText size={26} />,
@@ -54,6 +58,7 @@ const items = [
     desc: "Глибока інтеграція з базою контактів macOS, читання та запис у Apple Notes, а також аналіз історії викликів.",
     grad: "linear-gradient(135deg, #FFD56B, #FF6B6B)",
     glow: "rgba(255,213,107,0.3)",
+    status: "active",
   },
   {
     icon: <Eye size={26} />,
@@ -62,6 +67,7 @@ const items = [
     desc: "Стежить за файловою системою, новими файлами та подіями на екрані, щоб вчасно пропонувати автоматизацію рутинних завдань.",
     grad: "linear-gradient(135deg, #007AFF, #00E5FF)",
     glow: "rgba(0,122,255,0.35)",
+    status: "active",
   },
   {
     icon: <Smile size={26} />,
@@ -70,6 +76,7 @@ const items = [
     desc: "Визначає настрій користувача, аналізує рівень стресу, розпізнає сарказм та підлаштовує стиль відповідей.",
     grad: "linear-gradient(135deg, #FF9A3C, #9D4CDD)",
     glow: "rgba(255,154,60,0.3)",
+    status: "soon",
   },
   {
     icon: <Heart size={26} />,
@@ -78,6 +85,7 @@ const items = [
     desc: "Стежить за часом безперервної роботи, нагадує про перерви для очей та аналізує графік сну відповідно до активності.",
     grad: "linear-gradient(135deg, #FF6B6B, #00E5FF)",
     glow: "rgba(255,107,107,0.3)",
+    status: "soon",
   },
   {
     icon: <Camera size={26} />,
@@ -86,6 +94,7 @@ const items = [
     desc: "Аналізує інтерфейс та вміст екрана користувача, розпізнає активні області та розуміє візуальний контекст роботи.",
     grad: "linear-gradient(135deg, #9D4CDD, #FF6B6B)",
     glow: "rgba(157,76,221,0.3)",
+    status: "active",
   },
   {
     icon: <ShieldAlert size={26} />,
@@ -94,6 +103,7 @@ const items = [
     desc: "Захищає конфіденційні дані, блокує небезпечні команди, фільтрує витік токенів та паролів, шифрує логи розмов.",
     grad: "linear-gradient(135deg, #00E5FF, #FFD56B)",
     glow: "rgba(0,229,255,0.3)",
+    status: "active",
   },
 ];
 
@@ -315,7 +325,7 @@ export default function SmartConcierge() {
                 alignItems: "center",
                 gap: 8,
                 fontSize: 13,
-                color: "rgba(255,255,255,0.85)",
+                color: item.status === "active" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.65)",
                 fontWeight: 500,
               }}
             >
@@ -324,11 +334,11 @@ export default function SmartConcierge() {
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  background: "#00E5FF",
-                  boxShadow: "0 0 10px #00E5FF",
+                  background: item.status === "active" ? "#00E676" : "#00E5FF",
+                  boxShadow: item.status === "active" ? "0 0 10px #00E676" : "0 0 10px #00E5FF",
                 }}
               />
-              Скоро доступно
+              {item.status === "active" ? "Працює локально" : "Незабаром"}
             </div>
           </article>
         ))}

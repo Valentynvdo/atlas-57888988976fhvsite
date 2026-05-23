@@ -5,7 +5,7 @@ import uuid
 import os
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, BackgroundTasks
 from fastapi.responses import FileResponse
 
 from db import db
@@ -26,7 +26,7 @@ def _parse_dt(v) -> Optional[datetime]:
 
 
 @router.post("/validate-key")
-async def validate_key(body: dict, request: Request):
+async def validate_key(body: dict, request: Request, background_tasks: BackgroundTasks):
     """Mac app calls this on every launch (or periodically).
 
     Body: {"key": "ATLAS-...", "mac_id": "abc123", "mac_name": "MacBook Pro"}
@@ -41,13 +41,13 @@ async def validate_key(body: dict, request: Request):
     lic = await db.licenses.find_one({"key": key}, {"_id": 0})
     if not lic:
         result_summary = "key_not_found"
-        await _log_request(key, ip, result_summary)
+        background_tasks.add_task(_log_request, key, ip, result_summary)
         raise HTTPException(status_code=404, detail="Невірний ключ")
 
     user = await db.users.find_one({"user_id": lic["user_id"]}, {"_id": 0})
     if user and user.get("is_blocked"):
         result_summary = "blocked"
-        await _log_request(key, ip, result_summary)
+        background_tasks.add_task(_log_request, key, ip, result_summary)
         raise HTTPException(status_code=403, detail="Акаунт заблоковано")
 
     # Bind mac_id on first activation
@@ -60,7 +60,7 @@ async def validate_key(body: dict, request: Request):
         lic["mac_name"] = mac_name
     elif lic["mac_id"] != mac_id:
         result_summary = "wrong_mac"
-        await _log_request(key, ip, result_summary, mac_id=mac_id)
+        background_tasks.add_task(_log_request, key, ip, result_summary, mac_id)
         raise HTTPException(
             status_code=409,
             detail="Ключ уже активовано на іншому Mac. Перенесіть в кабінеті.",
@@ -70,7 +70,7 @@ async def validate_key(body: dict, request: Request):
     now = datetime.now(timezone.utc)
     if not lic.get("active") or not exp or exp < now:
         result_summary = "expired"
-        await _log_request(key, ip, result_summary, mac_id=mac_id)
+        background_tasks.add_task(_log_request, key, ip, result_summary, mac_id)
         return {
             "valid": False,
             "expires_at": exp.isoformat() if exp else None,
@@ -79,7 +79,7 @@ async def validate_key(body: dict, request: Request):
         }
 
     days_left = max(0, (exp - now).days)
-    await _log_request(key, ip, result_summary, mac_id=mac_id)
+    background_tasks.add_task(_log_request, key, ip, result_summary, mac_id)
     return {
         "valid": True,
         "expires_at": exp.isoformat(),

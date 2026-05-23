@@ -2,7 +2,7 @@
 <html lang="uk">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#000000" />
         <meta name="background-color" content="#000000" />
         <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
@@ -23,7 +23,8 @@
         <meta name="keywords" content="Atlas AI, ШІ, персональний асистент, штучний інтелект, продуктивність, автоматизація, macOS, розумний помічник, автономний ШІ" />
         <meta name="author" content="Валентин Вдовіченко" />
         <meta name="robots" content="index, follow" />
-        <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE_HERE" />
+        <!-- Замініть вміст content на реальний код верифікації з Google Search Console -->
+        <meta name="google-site-verification" content="" />
         
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
@@ -77,13 +78,20 @@
         }
         </script>
         
-        <!-- Google Analytics 4 Placeholder -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+        <!-- Google Analytics 4 -->
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-XXXXXXXXXX');
+          const gaId = ""; // Замініть порожній рядок на ваш реальний ID (наприклад, G-XXXXXXXXXX)
+          if (gaId && gaId !== "G-XXXXXXXXXX") {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;
+            document.head.appendChild(script);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', gaId);
+          }
         </script>
     </head>
     <body>

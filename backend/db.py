@@ -86,30 +86,59 @@ async def _seed_defaults() -> None:
 # Query builder helpers
 # ──────────────────────────────────────────────────────────────────────────────
 
+import re
+
+def _clean_key(key: str) -> str:
+    """Дозволяє лише безпечні символи, запобігаючи SQL-ін'єкціям."""
+    if not key or not re.match(r"^[a-zA-Z0-9_\-]+$", key):
+        raise ValueError(f"Недозволений символ у ключі бази даних: {key}")
+    return key
+
+def _sql_cast(key: str) -> str:
+    """Приводить поля з JSONB до відповідного SQL-типу для правильного сортування/порівняння."""
+    cleaned = _clean_key(key)
+    # Дати
+    if cleaned in ("created_at", "expires_at", "released_at", "last_check", "last_ping", "ts", "used_at", "locked_until", "last_attempt"):
+        return f"({self_table_cast_prefix(cleaned)})::timestamp"
+    # Числа
+    if cleaned in ("size_mb", "days_active", "skills_count", "evolutions_count", "requests_count", "attempts", "id", "cnt", "amount"):
+        return f"({self_table_cast_prefix(cleaned)})::numeric"
+    # Булеві значення
+    if cleaned in ("active", "is_blocked", "claimed", "used", "suspicious", "is_admin"):
+        return f"({self_table_cast_prefix(cleaned)})::boolean"
+    # Текст за замовчуванням
+    return f"data->>'{cleaned}'"
+
+def self_table_cast_prefix(cleaned_key: str) -> str:
+    return f"data->>'{cleaned_key}'"
+
 def _build_where(filter_dict: dict) -> tuple:
     """Return (where_sql, params_list). Supports simple equality + $gte/$lt/$in."""
     if not filter_dict:
         return "TRUE", []
     conditions, params = [], []
     for key, value in filter_dict.items():
+        cast_sql = _sql_cast(key)
         if isinstance(value, dict) and any(k.startswith("$") for k in value):
             for op, op_val in value.items():
                 if op == "$gte":
                     params.append(str(op_val))
-                    conditions.append(f"(data->>'{key}') >= ${len(params)}")
+                    conditions.append(f"{cast_sql} >= ${len(params)}")
                 elif op == "$lt":
                     params.append(str(op_val))
-                    conditions.append(f"(data->>'{key}') < ${len(params)}")
+                    conditions.append(f"{cast_sql} < ${len(params)}")
                 elif op == "$in" and op_val:
                     phs = []
                     for v in op_val:
                         params.append(str(v))
                         phs.append(f"${len(params)}")
-                    conditions.append(f"data->>'{key}' IN ({', '.join(phs)})")
+                    conditions.append(f"{cast_sql} IN ({', '.join(phs)})")
         elif value is None:
-            conditions.append(f"(data->>'{key}' IS NULL OR data->'{key}' = 'null'::jsonb)")
+            cleaned_key = _clean_key(key)
+            conditions.append(f"(data->>'{cleaned_key}' IS NULL OR data->'{cleaned_key}' = 'null'::jsonb)")
         else:
-            params.append(json.dumps({key: value}))
+            cleaned_key = _clean_key(key)
+            params.append(json.dumps({cleaned_key: value}))
             conditions.append(f"data @> ${len(params)}::jsonb")
     return (" AND ".join(conditions) or "TRUE"), params
 
@@ -156,7 +185,8 @@ class PGCursor:
         order = ""
         if self._sort_key:
             direction = "ASC" if self._sort_dir == 1 else "DESC"
-            order = f" ORDER BY data->>'{self._sort_key}' {direction}"
+            cast_sql = _sql_cast(self._sort_key)
+            order = f" ORDER BY {cast_sql} {direction}"
         limit_sql = ""
         cap = self._limit_n or length
         if cap:

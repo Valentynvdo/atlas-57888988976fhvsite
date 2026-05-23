@@ -41,16 +41,22 @@ async def admin_stats(_=Depends(require_admin)):
     today = now.replace(hour=0, minute=0, second=0, microsecond=0)
     month_start = today.replace(day=1)
 
-    # Active licenses (active=true AND expires_at>now)
+    # Active licenses (active=true, even if expires_at is None; if expires_at is set, must be > now)
     active_count = 0
     inactive_count = 0
     expiring_soon = 0
     all_licenses = await db.licenses.find({}, {"_id": 0}).to_list(10000)
     for lic in all_licenses:
+        is_active = lic.get("active")
         exp = _parse_dt(lic.get("expires_at"))
-        if lic.get("active") and exp and exp > now:
+        
+        # If it has an expiration date in the past, it is not active
+        if exp and exp <= now:
+            is_active = False
+
+        if is_active:
             active_count += 1
-            if (exp - now).days <= 7:
+            if exp and (exp - now).days <= 7:
                 expiring_soon += 1
         else:
             inactive_count += 1
@@ -582,7 +588,7 @@ async def get_ip_geo(ip: str) -> dict:
 
 @router.get("/active-map")
 async def get_active_map(_=Depends(require_admin)):
-    logs = await db.api_logs.find({}).sort("ts", -1).limit(200).to_list()
+    logs = await db.api_logs.find({}).sort("ts", -1).limit(200).to_list(200)
     seen = set()
     spots = []
     for l in logs:
@@ -603,6 +609,32 @@ async def get_active_map(_=Depends(require_admin)):
             "ts": l.get("ts"),
             "suspicious": bool(l.get("suspicious", False))
         })
+        
+    # Include active licenses that might not have recent API logs
+    active_licenses = await db.licenses.find({"active": True}).to_list(1000)
+    import random
+    for lic in active_licenses:
+        kp = lic.get("key", "")[:8] if lic.get("key") else "unknown"
+        if kp in seen:
+            continue
+        seen.add(kp)
+        
+        # Add slight variation to default coordinates
+        lat_offset = random.uniform(-0.03, 0.03)
+        lon_offset = random.uniform(-0.03, 0.03)
+        
+        spots.append({
+            "key_prefix": kp,
+            "ip": "Unknown",
+            "country": "Ukraine",
+            "region": "Kyiv",
+            "city": "Kyiv",
+            "lat": 50.4501 + lat_offset,
+            "lon": 30.5234 + lon_offset,
+            "ts": lic.get("created_at") or datetime.now(timezone.utc).isoformat(),
+            "suspicious": False
+        })
+
     return spots
 
 

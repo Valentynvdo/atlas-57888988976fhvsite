@@ -46,7 +46,7 @@ def _set_session_cookie(response: Response, token: str) -> None:
     response.set_cookie(
         key=SESSION_COOKIE, value=token,
         max_age=int(SESSION_TTL.total_seconds()),
-        httponly=True, secure=True, samesite="none", path="/",
+        httponly=True, secure=True, samesite="lax", path="/",
     )
 
 
@@ -124,9 +124,31 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
 
 
 import hashlib
+import binascii
 
-def _hash_password(password: str, salt: str) -> str:
+def _hash_password_pbkdf2(password: str, salt: str) -> str:
+    hash_bytes = hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode('utf-8'),
+        salt.encode('utf-8'),
+        150000
+    )
+    return "pbkdf2_sha256$150000$" + binascii.hexlify(hash_bytes).decode('utf-8')
+
+def _hash_password_sha256(password: str, salt: str) -> str:
     return hashlib.sha256((password + salt).encode()).hexdigest()
+
+def _verify_and_migrate_password(password: str, salt: str, stored_hash: str) -> tuple:
+    """Повертає (is_valid, needs_migrate)."""
+    if not stored_hash:
+        return False, False
+    if stored_hash.startswith("pbkdf2_sha256$"):
+        expected = _hash_password_pbkdf2(password, salt)
+        return expected == stored_hash, False
+    expected_old = _hash_password_sha256(password, salt)
+    if expected_old == stored_hash:
+        return True, True
+    return False, False
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -153,7 +175,7 @@ async def register(body: dict, response: Response):
         raise HTTPException(status_code=400, detail="Користувач з таким email вже існує")
 
     salt = secrets.token_hex(16)
-    hashed = _hash_password(password, salt)
+    hashed = _hash_password_pbkdf2(password, salt)
     user_id = f"user_{uuid.uuid4().hex[:12]}"
 
     await db.users.insert_one({
@@ -193,20 +215,22 @@ async def login(body: dict, response: Response):
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
     admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
-    admin_password_fixed = os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_PIN", "")).strip()
+    admin_password_fixed = os.getenv("ADMIN_PASSWORD", "").strip()
 
-    # Predefined Admin Login
-    if email == admin_email_fixed or email == "admin":
+    # Predefined Admin Login (must be a valid configured email containing '@')
+    if admin_email_fixed and "@" in admin_email_fixed and email == admin_email_fixed:
         user_id = "admin_user"
         admin_verified = False
         
-        # 1. Check environment variables
-        if admin_password_fixed and password == admin_password_fixed:
-            admin_verified = True
+        # 1. Check environment variables (secure compare, min 8 chars password)
+        if admin_password_fixed and len(admin_password_fixed) >= 8:
+            import secrets
+            if secrets.compare_digest(password, admin_password_fixed):
+                admin_verified = True
             
             # Upsert/save hashed password to DB to ensure it works even if env variable is cleared
             salt = secrets.token_hex(16)
-            hashed = _hash_password(password, salt)
+            hashed = _hash_password_pbkdf2(password, salt)
             await db.users.update_one(
                 {"user_id": user_id},
                 {"$set": {
@@ -228,8 +252,16 @@ async def login(body: dict, response: Response):
             if existing_admin:
                 salt = existing_admin.get("password_salt")
                 stored_hash = existing_admin.get("password_hash")
-                if salt and stored_hash and _hash_password(password, salt) == stored_hash:
-                    admin_verified = True
+                if salt and stored_hash:
+                    is_valid, needs_migrate = _verify_and_migrate_password(password, salt, stored_hash)
+                    if is_valid:
+                        admin_verified = True
+                        if needs_migrate:
+                            new_hash = _hash_password_pbkdf2(password, salt)
+                            await db.users.update_one(
+                                {"user_id": user_id},
+                                {"$set": {"password_hash": new_hash}}
+                            )
         
         if not admin_verified:
             raise HTTPException(status_code=401, detail="Невірний email або пароль")
@@ -238,7 +270,7 @@ async def login(body: dict, response: Response):
         existing_admin = await db.users.find_one({"user_id": user_id})
         if not existing_admin:
             salt = secrets.token_hex(16)
-            hashed = _hash_password(password, salt)
+            hashed = _hash_password_pbkdf2(password, salt)
             await db.users.insert_one({
                 "user_id": user_id,
                 "email": admin_email_fixed,
@@ -276,7 +308,7 @@ async def login(body: dict, response: Response):
         response.set_cookie(
             key="atlas_admin_pin", value=pin_token,
             max_age=int(PIN_TTL.total_seconds()),
-            httponly=True, secure=True, samesite="none", path="/"
+            httponly=True, secure=True, samesite="lax", path="/"
         )
 
         return {"ok": True, "token": token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
@@ -292,8 +324,19 @@ async def login(body: dict, response: Response):
     # Verify password
     salt = user.get("password_salt")
     stored_hash = user.get("password_hash")
-    if not salt or not stored_hash or _hash_password(password, salt) != stored_hash:
+    if not salt or not stored_hash:
         raise HTTPException(status_code=401, detail="Невірний email або пароль")
+
+    is_valid, needs_migrate = _verify_and_migrate_password(password, salt, stored_hash)
+    if not is_valid:
+        raise HTTPException(status_code=401, detail="Невірний email або пароль")
+
+    if needs_migrate:
+        new_hash = _hash_password_pbkdf2(password, salt)
+        await db.users.update_one(
+            {"user_id": user["user_id"]},
+            {"$set": {"password_hash": new_hash}}
+        )
 
     # Create session
     token = secrets.token_urlsafe(32)
@@ -308,6 +351,115 @@ async def login(body: dict, response: Response):
     return {"ok": True, "token": token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name")}}
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Password Reset
+# ──────────────────────────────────────────────────────────────────────────────
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from fastapi import BackgroundTasks
+import random
+
+def _send_reset_email_sync(to_email: str, reset_code: str):
+    smtp_server = os.getenv("SMTP_SERVER")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_user = os.getenv("SMTP_USER")
+    smtp_pass = os.getenv("SMTP_PASSWORD")
+    smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@atlas-ai.com")
+
+    if not smtp_server or not smtp_user or not smtp_pass:
+        logger.warning(f"SMTP not configured. Would have sent reset code {reset_code} to {to_email}")
+        return
+
+    msg = MIMEMultipart()
+    msg['From'] = smtp_from
+    msg['To'] = to_email
+    msg['Subject'] = "Відновлення пароля Atlas AI"
+
+    body = f"""
+Ви запитали відновлення пароля для вашого акаунта Atlas AI.
+
+Ваш код для відновлення: {reset_code}
+
+Цей код дійсний протягом 15 хвилин.
+Якщо ви не робили цей запит, проігноруйте це повідомлення.
+    """
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_pass)
+        text = msg.as_string()
+        server.sendmail(smtp_from, to_email, text)
+        server.quit()
+        logger.info(f"Reset email sent to {to_email}")
+    except Exception as e:
+        logger.error(f"Failed to send reset email: {e}")
+
+@router.post("/forgot-password")
+async def forgot_password(body: dict, background_tasks: BackgroundTasks):
+    email = (body.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=400, detail="Введіть email")
+    
+    user = await db.users.find_one({"email": email})
+    if not user:
+        # Don't leak user existence
+        return {"ok": True, "message": "Якщо email існує, інструкції надіслані."}
+    
+    code = f"{random.randint(100000, 999999)}"
+    expires = datetime.now(timezone.utc) + timedelta(minutes=15)
+    
+    await db.password_resets.update_one(
+        {"email": email},
+        {"$set": {"code": code, "expires_at": expires.isoformat()}},
+        upsert=True
+    )
+    
+    background_tasks.add_task(_send_reset_email_sync, email, code)
+    
+    return {"ok": True, "message": "Інструкції надіслані."}
+
+
+@router.post("/reset-password")
+async def reset_password(body: dict):
+    email = (body.get("email") or "").strip().lower()
+    code = (body.get("code") or "").strip()
+    new_password = body.get("new_password") or ""
+
+    if not email or not code or not new_password:
+        raise HTTPException(status_code=400, detail="Всі поля обов'язкові")
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="Мінімум 6 символів")
+
+    reset_doc = await db.password_resets.find_one({"email": email, "code": code})
+    if not reset_doc:
+        raise HTTPException(status_code=400, detail="Невірний код відновлення")
+    
+    expires_at = reset_doc.get("expires_at")
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at and expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Код закінчився")
+
+    user = await db.users.find_one({"email": email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено")
+
+    salt = secrets.token_hex(16)
+    hashed = _hash_password_pbkdf2(new_password, salt)
+
+    await db.users.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"password_hash": hashed, "password_salt": salt}}
+    )
+    
+    await db.password_resets.delete_one({"_id": reset_doc["_id"]})
+    return {"ok": True}
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Dev-login (local testing)
@@ -315,6 +467,8 @@ async def login(body: dict, response: Response):
 
 @router.post("/dev-login")
 async def dev_login(body: dict, response: Response):
+    if os.getenv("ENV") != "development":
+        raise HTTPException(status_code=403, detail="Доступ заборонено в робочому середовищі")
     role = body.get("role", "user")
     if role == "admin":
         user_id, email, name = "admin_local", "admin@atlas-ai.com", "Адміністратор"
@@ -392,6 +546,8 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
             raise HTTPException(status_code=429, detail="IP locked. Try later.")
     pin = (body.get("pin") or "").strip()
     expected = os.getenv("ADMIN_PIN", "").strip()
+    if expected == "0000" or len(expected) < 4:
+        expected = ""
     
     pin_verified = False
     if expected and pin == expected:
@@ -402,8 +558,16 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
         if admin:
             salt = admin.get("password_salt")
             stored_hash = admin.get("password_hash")
-            if salt and stored_hash and _hash_password(pin, salt) == stored_hash:
-                pin_verified = True
+            if salt and stored_hash:
+                is_valid, needs_migrate = _verify_and_migrate_password(pin, salt, stored_hash)
+                if is_valid:
+                    pin_verified = True
+                    if needs_migrate:
+                        new_hash = _hash_password_pbkdf2(pin, salt)
+                        await db.users.update_one(
+                            {"user_id": "admin_user"},
+                            {"$set": {"password_hash": new_hash}}
+                        )
                 
     if not pin_verified:
         new_attempts = (lock.get("attempts", 0) if lock else 0) + 1
@@ -417,7 +581,7 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
     token = secrets.token_urlsafe(32)
     expires = datetime.now(timezone.utc) + PIN_TTL
     await db.admin_pin_sessions.insert_one({"token": token, "user_id": user["user_id"], "expires_at": expires.isoformat()})
-    response.set_cookie(key="atlas_admin_pin", value=token, max_age=int(PIN_TTL.total_seconds()), httponly=True, secure=True, samesite="none", path="/")
+    response.set_cookie(key="atlas_admin_pin", value=token, max_age=int(PIN_TTL.total_seconds()), httponly=True, secure=True, samesite="lax", path="/")
     await db.admin_logs.insert_one({"action": "admin_login", "performed_by": user["email"], "performed_at": datetime.now(timezone.utc).isoformat(), "ip": ip})
     return {"ok": True, "pin_token": token}
 

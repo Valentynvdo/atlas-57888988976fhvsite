@@ -177,7 +177,7 @@ export default function Hero({ onCta }) {
             gap: 8,
           }}
         >
-          Прокрутіть
+          {/* Прокрутіть (removed as per request) */}
           <span
             style={{
               width: 1,

@@ -104,6 +104,7 @@ export default function Docs() {
   const SECTIONS = useMemo(() => {
     const base = [
       { id: "intro", label: "Вступ", icon: <BookOpen size={16} /> },
+      { id: "tech_deep_dive", label: "Глибинні Технології", icon: <Sparkles size={16} /> },
       { id: "quickstart", label: "Швидкий старт (SDK)", icon: <Zap size={16} /> },
       { id: "architecture", label: "Архітектура", icon: <Layers size={16} /> },
       { id: "installation", label: "Встановлення локально", icon: <Package size={16} /> },
@@ -326,6 +327,69 @@ export default function Docs() {
                 <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Мульти-агентна система</h3>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>Фонові автономні агенти вміють проводити глибокі інтернет-дослідження та планувати складні ланцюжки задач.</p>
               </div>
+            </div>
+          </section>
+
+          {/* 1.5 Deep Tech Section */}
+          <section ref={(el) => (sectionsRef.current.tech_deep_dive = el)} style={{ scrollMarginTop: 100, marginBottom: 80 }}>
+            <SectionTitle eyebrow="Глибинні Технології" title="Під Капотом ATLAS" desc="Детальний огляд ключових систем, що роблють ATLAS не просто чат-ботом, а повноцінною когнітивною системою." />
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <Accordion q="Onboarding (Перший запуск та FaceID)">
+                <div>
+                  <p>При першому запуску ATLAS знайомиться з користувачем. Він сканує ваше обличчя через веб-камеру та створює 512-вимірний вектор (Embedding), який зберігається суто локально. Завдяки цьому ATLAS миттєво впізнає вас, коли ви сідаєте за комп'ютер, не відправляючи фотографії у хмару.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Система мікрофонів (VAD)">
+                <div>
+                  <p>ATLAS використовує технологію <strong>WebRTC VAD</strong> (Voice Activity Detection) для визначення мовлення. Це дозволяє йому "слухати", не реагуючи на фоновий шум або на власний голос (захист від відлуння/echo cancellation).</p>
+                </div>
+              </Accordion>
+              <Accordion q="Архітектура ai_handler та Роутинг">
+                <div>
+                  <p>Система має вбудовану каскадну маршрутизацію (Роутинг). Пріоритети обробки поділені на: <strong>FAST</strong> (швидкі діалоги через економні моделі на кшталт DeepSeek), <strong>SMART</strong> (складне планування через Gemini або Claude), та <strong>EVOLUTION</strong> (написання коду для розширення власних навичок).</p>
+                </div>
+              </Accordion>
+              <Accordion q="Управління гостями (Guest System)">
+                <div>
+                  <p>ATLAS розпізнає не тільки Власника, але й запам'ятовує "Гостей". Завдяки локальній системі зору він розуміє, хто знаходиться перед екраном, надаючи гостям окремі права доступу чи відповідне ставлення під час розмови.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Локальна семантична пам'ять (semantic_memory.py)">
+                <div>
+                  <p>Уся важлива інформація з ваших розмов зберігається у локальній векторній базі даних. ATLAS швидко шукає факти, щоб не "забувати" контекст навіть через місяці після попереднього спілкування.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Telegram-інтеграція (telegram_bridge.py)">
+                <div>
+                  <p>Ваш помічник не прив'язаний до комп'ютера. Завдяки вбудованому мосту, ви можете спілкуватися з ATLAS через Telegram, коли ви в дорозі. Він пам'ятає той самий контекст, використовує ті ж навички і може керувати вашим Mac віддалено.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Візуальне розуміння контексту (UI Understanding)">
+                <div>
+                  <p>ATLAS "бачить" екран. На базі мультимодальної моделі він аналізує відкриті програми, графіки та інтерфейси, допомагаючи вам у контексті того, на що ви зараз дивитесь.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Автономний дослідник (autonomous_researcher.py)">
+                <div>
+                  <p>Делегуйте рутину. Ви можете дати ATLAS завдання "Знайди всю інформацію про X, проаналізуй і зроби звіт". Він створить фонових агентів, проаналізує десятки джерел і надішле вам готовий результат у Telegram.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Privacy Guard">
+                <div>
+                  <p>Модуль <strong>privacy_guard.py</strong> фільтрує конфіденційну інформацію на льоту. Ваші паролі, особисті дані та ключі ніколи не потраплять у запити до хмарних нейромереж.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Комерційна ліцензійна система (license_manager.py)">
+                <div>
+                  <p>ATLAS має професійну систему дистрибуції. Модуль <strong>license_manager.py</strong> перевіряє криптографічні ключі активації, термін дії та прив'язує ліцензію до унікального Mac ID для запобігання піратству.</p>
+                </div>
+              </Accordion>
+              <Accordion q="Гнучке управління особистістю (persona_manager.py)">
+                <div>
+                  <p>ATLAS адаптується до вашого настрою. Потрібен суворий ментор? Або дружній співрозмовник для брейншторму? <strong>Persona Manager</strong> дозволяє миттєво змінювати характер та стиль спілкування вашого ШІ.</p>
+                </div>
+              </Accordion>
             </div>
           </section>
 
@@ -713,6 +777,17 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
   );
 }
 
+// Safe URL sanitizer for markdown links to prevent javascript: or other XSS injections
+function sanitizeUrl(url) {
+  if (!url) return "";
+  const cleaned = url.trim();
+  // Allow http://, https://, mailto:, tel:, or relative paths (starting with / or ./ or ../)
+  if (/^(https?:\/\/|\/|\.\/|\.\.\/|mailto:|tel:)/i.test(cleaned)) {
+    return cleaned;
+  }
+  return "#";
+}
+
 // Simple Markdown Formatter for CMS dynamic text content
 function formatMarkdown(text) {
   if (!text) return "";
@@ -745,8 +820,10 @@ function formatMarkdown(text) {
   // Format bullets (* item)
   html = html.replace(/^\* (.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 6px; list-style-type: disc; color: rgba(255,255,255,0.75);">$1</li>');
 
-  // Format links ([text](url))
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">$1</a>');
+  // Format links ([text](url)) with URL sanitization
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+    return `<a href="${sanitizeUrl(url)}" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">${text}</a>`;
+  });
 
   return html;
 }

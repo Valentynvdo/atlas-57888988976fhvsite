@@ -45,22 +45,44 @@ async def health():
     return {"ok": True}
 
 
+def is_allowed_origin(origin: str) -> bool:
+    if not origin:
+        return False
+    frontend_url = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
+    if frontend_url and origin.rstrip("/") == frontend_url:
+        return True
+    # Дозволяємо локальні хости для розробки
+    clean_origin = origin.rstrip("/")
+    if clean_origin in ("http://localhost:3000", "http://127.0.0.1:3000", "http://localhost", "http://127.0.0.1"):
+        return True
+    return False
+
+
 # ── CORS middleware ─────────────────────────────────────────────────────────
 @app.middleware("http")
 async def cors_middleware(request: Request, call_next):
     origin = request.headers.get("origin", "")
+    allowed = is_allowed_origin(origin)
+    
     if request.method == "OPTIONS":
         from fastapi.responses import Response
         r = Response()
-        r.headers["Access-Control-Allow-Origin"] = origin or "*"
-        r.headers["Access-Control-Allow-Credentials"] = "true"
+        if allowed:
+            r.headers["Access-Control-Allow-Origin"] = origin
+            r.headers["Access-Control-Allow-Credentials"] = "true"
+        else:
+            r.headers["Access-Control-Allow-Origin"] = "null"
         r.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
         r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID"
         return r
+        
     response = await call_next(request)
     if origin:
-        response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Access-Control-Allow-Credentials"] = "true"
+        if allowed:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+        else:
+            response.headers["Access-Control-Allow-Origin"] = "null"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID"
     return response

@@ -5,7 +5,4 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /x7k9m-admin/
 
-User-agent: Googlebot
-Crawl-delay: 1
-
 Sitemap: https://atlas-ai.com/sitemap.xml
