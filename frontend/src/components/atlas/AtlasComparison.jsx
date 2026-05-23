@@ -35,7 +35,7 @@ export default function AtlasComparison() {
         animationDelay: "-3s"
       }} className="float" />
 
-      <div style={{ width: "100%", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
+      <div style={{ width: "100%", maxWidth: 1000, margin: "0 auto", position: "relative", zIndex: 2 }}>
         
         {/* Big Statement Header */}
         <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
@@ -47,7 +47,7 @@ export default function AtlasComparison() {
             margin: 0,
             lineHeight: 1.1
           }}>
-            This is not a chatbot.
+            Це не просто чат-бот.
           </h2>
           <p className="shimmer-text" style={{ 
             fontSize: "clamp(1.2rem, 2vw, 1.5rem)", 
@@ -59,7 +59,7 @@ export default function AtlasComparison() {
             color: "transparent",
             WebkitTextFillColor: "transparent",
           }}>
-            ATLAS is an autonomous AI operating system.
+            ATLAS — це автономна ШІ операційна система.
           </p>
         </div>
 
@@ -72,10 +72,10 @@ export default function AtlasComparison() {
           marginBottom: 100 
         }}>
           {[
-            { v: "< 300ms", l: "Response time" },
-            { v: "24/7", l: "Proactive monitoring" },
-            { v: "Local", l: "FaceID processing" },
-            { v: "0-click", l: "Interaction" }
+            { v: "< 300мс", l: "Швидкість реакції" },
+            { v: "24/7", l: "Проактивний моніторинг" },
+            { v: "Локально", l: "Обробка FaceID" },
+            { v: "0 кліків", l: "Для взаємодії" }
           ].map((stat, i) => (
             <div key={i} style={{ textAlign: "center" }}>
               <div style={{ fontSize: "clamp(1.5rem, 2.5vw, 2rem)", fontWeight: 700, color: "#fff" }}>{stat.v}</div>
@@ -87,7 +87,7 @@ export default function AtlasComparison() {
         {/* Categories Grid */}
         <div style={{ display: "flex", flexDirection: "column", gap: 60 }}>
           <ComparisonCategory 
-            title="Presence"
+            title="Присутність"
             icon={<Fingerprint size={24} color="#00E5FF" />}
             delay="delay-1"
             normalBullets={[
@@ -96,16 +96,16 @@ export default function AtlasComparison() {
               "Забуває вас після закриття"
             ]}
             atlasBullets={[
-              "Always listening",
-              "Voice activated",
-              "Face recognition",
-              "Real-time awareness"
+              "Постійно слухає простір",
+              "Активується голосом",
+              "Розпізнає ваше обличчя",
+              "Розуміє контекст у реальному часі"
             ]}
             visualType="radar"
           />
 
           <ComparisonCategory 
-            title="Intelligence"
+            title="Інтелект"
             icon={<Brain size={24} color="#00E5FF" />}
             delay="delay-2"
             normalBullets={[
@@ -114,16 +114,16 @@ export default function AtlasComparison() {
               "Кожен чат — чистий аркуш"
             ]}
             atlasBullets={[
-              "Self-writing code",
-              "UI understanding",
-              "Semantic memory",
-              "Autonomous actions"
+              "Пише код для самого себе",
+              "Бачить і розуміє ваш екран",
+              "Має довгострокову пам'ять",
+              "Діє автономно і проактивно"
             ]}
             visualType="code"
           />
 
           <ComparisonCategory 
-            title="Infrastructure"
+            title="Інфраструктура"
             icon={<Server size={24} color="#00E5FF" />}
             delay="delay-3"
             normalBullets={[
@@ -132,10 +132,10 @@ export default function AtlasComparison() {
               "Віддає дані на чужі сервери"
             ]}
             atlasBullets={[
-              "Smart routing",
-              "Low latency",
-              "Multi-model orchestration",
-              "Local-first privacy"
+              "Розумна маршрутизація",
+              "Мінімальна затримка",
+              "Каскад різних нейромереж",
+              "Абсолютна конфіденційність"
             ]}
             visualType="network"
           />
@@ -239,7 +239,7 @@ function ComparisonCategory({ title, icon, normalBullets, atlasBullets, delay, v
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.3)", fontWeight: 600, marginBottom: 20, textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.1em" }}>
             <Bot size={14} />
-            Traditional AI
+            Звичайний ШІ
           </div>
           <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 16 }}>
             {normalBullets.map((b, i) => (
@@ -272,7 +272,7 @@ function ComparisonCategory({ title, icon, normalBullets, atlasBullets, delay, v
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#00E5FF", fontWeight: 700, marginBottom: 20, textTransform: "uppercase", fontSize: "0.8rem", letterSpacing: "0.1em" }}>
                 <Zap size={14} fill="#00E5FF" />
-                ATLAS Core
+                Ядро ATLAS
               </div>
               
               <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 16 }}>
