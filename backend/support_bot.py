@@ -1,6 +1,7 @@
 import os
 import logging
 from aiogram import Bot, Dispatcher, types, F
+from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -73,7 +74,7 @@ def create_bot_and_dispatcher():
         logger.warning("TELEGRAM_BOT_TOKEN not set — support bot disabled")
         return None, None
 
-    _bot = Bot(token=TELEGRAM_BOT_TOKEN, parse_mode="HTML")
+    _bot = Bot(token=TELEGRAM_BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
     _dp  = Dispatcher(storage=MemoryStorage())
 
     # ── /start ──────────────────────────────
