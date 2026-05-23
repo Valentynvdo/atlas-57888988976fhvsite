@@ -18,7 +18,7 @@ load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ADMIN_TELEGRAM_ID = os.getenv("ADMIN_TELEGRAM_ID")
 
-bot = Bot(token=TELEGRAM_BOT_TOKEN) if TELEGRAM_BOT_TOKEN else None
+bot = None
 dp = Dispatcher()
 router = Router()
 
@@ -255,9 +255,12 @@ async def handle_admin_reply_or_fallback(message: types.Message):
 dp.include_router(router)
 
 async def start_bot():
-    if not bot:
+    global bot
+    if not TELEGRAM_BOT_TOKEN:
         logger.warning("TELEGRAM_BOT_TOKEN is not set. Support Bot is disabled.")
         return
+    
+    bot = Bot(token=TELEGRAM_BOT_TOKEN)
     logger.info("Starting Support Telegram Bot...")
     
     # Auto-register commands so they appear in the Telegram menu
@@ -279,6 +282,7 @@ async def start_bot():
     await dp.start_polling(bot)
 
 async def stop_bot():
+    global bot
     if bot:
         logger.info("Stopping Support Telegram Bot...")
         await bot.session.close()

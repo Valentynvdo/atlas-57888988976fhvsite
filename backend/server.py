@@ -30,7 +30,15 @@ app = FastAPI(
 
 
 import asyncio
-from support_bot import start_bot, stop_bot
+try:
+    from support_bot import start_bot, stop_bot
+    _SUPPORT_BOT_AVAILABLE = True
+except ImportError as e:
+    logger.error(f"Support bot dependencies missing, bot will not start: {e}")
+    _SUPPORT_BOT_AVAILABLE = False
+    
+    async def start_bot(): pass
+    async def stop_bot(): pass
 
 _bot_task = None
 
