@@ -3,15 +3,16 @@
 TEXTS = {
     "uk": {
         "welcome": (
-            "Вітаємо в офіційній підтримці Atlas AI!\n\n"
-            "Я — Атлас, Ваш цифровий помічник. Я тут, щоб допомогти Вам із будь-якими питаннями щодо використання Atlas AI на macOS.\n\n"
-            "Чим я можу допомогти сьогодні? Оберіть категорію або напишіть своє питання:"
+            "👋 Вітаємо в офіційній підтримці Atlas AI!\n\n"
+            "🤖 Я — Атлас, Ваш цифровий помічник. Я тут, щоб допомогти Вам із будь-якими питаннями щодо використання Atlas AI на macOS.\n\n"
+            "👇 Чим я можу допомогти сьогодні? Оберіть категорію або напишіть своє питання:"
         ),
-        "btn_install": "Встановлення та налаштування",
-        "btn_bugs": "Помилки та технічні проблеми",
-        "btn_billing": "Підписка та оплата",
-        "btn_general": "Загальні питання",
-        "btn_support": "Зв'язатись з підтримкою",
+        "btn_install": "💻 Встановлення та налаштування",
+        "btn_bugs": "⚠️ Помилки та технічні проблеми",
+        "btn_billing": "💳 Підписка та оплата",
+        "btn_general": "ℹ️ Загальні питання",
+        "btn_support": "💬 Зв'язатись з підтримкою",
+        "btn_lang": "🇺🇸 English",
         "faq_install": (
             "🔧 **ВСТАНОВЛЕННЯ ТА НАЛАШТУВАННЯ:**\n\n"
             "**Q: Як встановити Atlas AI?**\n"
@@ -59,44 +60,45 @@ TEXTS = {
             "A: Натисніть кнопку «Зв'язатись з підтримкою» нижче, і я з'єднаю Вас з оператором."
         ),
         "tpl_complaint_tech": (
-            "Дякуємо, що повідомили нас про цю ситуацію. Нам шкода, що Ви зіткнулися з цією технічною проблемою. Ми розуміємо, наскільки це важливо для Вас.\n\n"
+            "🛠 Дякуємо, що повідомили нас про цю ситуацію. Нам шкода, що Ви зіткнулися з цією технічною проблемою. Ми розуміємо, наскільки це важливо для Вас.\n\n"
             "Будь ласка, спробуйте наступне: 1) Перезапустіть додаток; 2) Перевірте наявність оновлень на сайті. Якщо проблема залишається — наша команда вже отримала повідомлення і зв'яжеться з Вами найближчим часом.\n\n"
             "Чи є ще щось, з чим я можу допомогти?"
         ),
         "tpl_complaint_feature": (
-            "Дякуємо за Ваш відгук — він дуже цінний для нас. Ми передамо Ваше зауваження команді розробки для розгляду.\n\n"
-            "Ваш запит зафіксовано."
+            "💡 Дякуємо за Ваш відгук — він дуже цінний для нас. Ми передамо Ваше зауваження команді розробки для розгляду.\n\n"
+            "Ваш запит зафіксовано. ✅"
         ),
         "tpl_complaint_service": (
-            "Перш за все, дозвольте принести щирі вибачення за незручності. Ми цінуємо кожного користувача і хочемо вирішити цю ситуацію якнайшвидше.\n\n"
+            "😔 Перш за все, дозвольте принести щирі вибачення за незручності. Ми цінуємо кожного користувача і хочемо вирішити цю ситуацію якнайшвидше.\n\n"
             "Я передаю Вашу ситуацію безпосередньо до команди підтримки. Очікуйте відповідь протягом 24 годин. Дякуємо за Ваше терпіння."
         ),
         "tpl_refund": (
-            "Розуміємо Вашу ситуацію. Для обробки запиту на повернення коштів, будь ласка, надайте оператору: дату оплати, email, який використовувався під час покупки, та опис проблеми.\n\n"
+            "💸 Розуміємо Вашу ситуацію. Для обробки запиту на повернення коштів, будь ласка, надайте оператору: дату оплати, email, який використовувався під час покупки, та опис проблеми.\n\n"
             "Ваш запит буде розглянуто протягом 3-5 робочих днів."
         ),
         "support_prompt": (
-            "Розумію, що Вам потрібна допомога живого оператора. Передаю Ваш запит прямо зараз.\n\n"
+            "👤 Розумію, що Вам потрібна допомога живого оператора. Передаю Ваш запит прямо зараз.\n\n"
             "Щоб прискорити обробку, будь ласка, коротко опишіть єдиним повідомленням:\n"
             "1. Яка у Вас проблема або питання?\n"
             "2. Яка версія macOS у Вас встановлена?\n"
             "3. Як давно виникла ця ситуація?\n\n"
-            "Оператор отримає Ваше повідомлення і зв'яжеться з Вами найближчим часом. Дякуємо за терпіння!"
+            "Оператор отримає Ваше повідомлення і зв'яжеться з Вами найближчим часом. Дякуємо за терпіння! 🙏"
         ),
         "support_received": "✅ Ваш запит надіслано оператору! Ми зв'яжемося з Вами найближчим часом.",
         "choose_action": "Оберіть дію нижче:",
     },
     "en": {
         "welcome": (
-            "Welcome to the official Atlas AI Support!\n\n"
-            "I am Atlas, your digital assistant. I am here to help you with any questions regarding the use of Atlas AI on macOS.\n\n"
-            "How can I help you today? Choose a category or write your question:"
+            "👋 Welcome to the official Atlas AI Support!\n\n"
+            "🤖 I am Atlas, your digital assistant. I am here to help you with any questions regarding the use of Atlas AI on macOS.\n\n"
+            "👇 How can I help you today? Choose a category or write your question:"
         ),
-        "btn_install": "Installation & Setup",
-        "btn_bugs": "Bugs & Technical Issues",
-        "btn_billing": "Subscription & Billing",
-        "btn_general": "General Questions",
-        "btn_support": "Contact Support",
+        "btn_install": "💻 Installation & Setup",
+        "btn_bugs": "⚠️ Bugs & Technical Issues",
+        "btn_billing": "💳 Subscription & Billing",
+        "btn_general": "ℹ️ General Questions",
+        "btn_support": "💬 Contact Support",
+        "btn_lang": "🇺🇦 Українська",
         "faq_install": (
             "🔧 **INSTALLATION & SETUP:**\n\n"
             "**Q: How to install Atlas AI?**\n"
@@ -144,29 +146,29 @@ TEXTS = {
             "A: Click the 'Contact Support' button below, and I will connect you with an operator."
         ),
         "tpl_complaint_tech": (
-            "Thank you for reporting this to us. We are sorry you encountered this technical issue. We understand how important this is to you.\n\n"
+            "🛠 Thank you for reporting this to us. We are sorry you encountered this technical issue. We understand how important this is to you.\n\n"
             "Please try the following: 1) Restart the app; 2) Check for updates on the website. If the problem persists, our team has already received the report and will contact you shortly.\n\n"
             "Is there anything else I can help with?"
         ),
         "tpl_complaint_feature": (
-            "Thank you for your feedback — it is very valuable to us. We will forward your comment to the development team for consideration.\n\n"
-            "Your request has been recorded."
+            "💡 Thank you for your feedback — it is very valuable to us. We will forward your comment to the development team for consideration.\n\n"
+            "Your request has been recorded. ✅"
         ),
         "tpl_complaint_service": (
-            "First of all, please accept our sincere apologies for the inconvenience. We value every user and want to resolve this situation as quickly as possible.\n\n"
+            "😔 First of all, please accept our sincere apologies for the inconvenience. We value every user and want to resolve this situation as quickly as possible.\n\n"
             "I am forwarding your situation directly to the support team. Expect a response within 24 hours. Thank you for your patience."
         ),
         "tpl_refund": (
-            "We understand your situation. To process a refund request, please provide the operator with: the date of payment, the email used during purchase, and a description of the problem.\n\n"
+            "💸 We understand your situation. To process a refund request, please provide the operator with: the date of payment, the email used during purchase, and a description of the problem.\n\n"
             "Your request will be reviewed within 3-5 business days."
         ),
         "support_prompt": (
-            "I understand you need help from a live operator. I am forwarding your request right now.\n\n"
+            "👤 I understand you need help from a live operator. I am forwarding your request right now.\n\n"
             "To speed up processing, please briefly describe in a single message:\n"
             "1. What is your problem or question?\n"
             "2. What macOS version do you have installed?\n"
             "3. How long has this situation been occurring?\n\n"
-            "The operator will receive your message and contact you shortly. Thank you for your patience!"
+            "The operator will receive your message and contact you shortly. Thank you for your patience! 🙏"
         ),
         "support_received": "✅ Your request has been sent to the operator! We will contact you shortly.",
         "choose_action": "Choose an action below:",

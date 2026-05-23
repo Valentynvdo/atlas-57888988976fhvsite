@@ -36,7 +36,10 @@ def main_keyboard(lang: str) -> types.InlineKeyboardMarkup:
         [types.InlineKeyboardButton(text=t["btn_bugs"],     callback_data="faq_bugs")],
         [types.InlineKeyboardButton(text=t["btn_billing"],  callback_data="faq_billing")],
         [types.InlineKeyboardButton(text=t["btn_general"],  callback_data="faq_general")],
-        [types.InlineKeyboardButton(text=t["btn_support"],  callback_data="live_support")],
+        [
+            types.InlineKeyboardButton(text=t["btn_support"], callback_data="live_support"),
+            types.InlineKeyboardButton(text=t["btn_lang"],    callback_data="switch_lang")
+        ],
     ]
     return types.InlineKeyboardMarkup(inline_keyboard=rows)
 
@@ -109,6 +112,17 @@ def create_bot_and_dispatcher():
         lang = data.get("lang", get_lang(cb.from_user))
         key  = cb.data  # e.g. "faq_install"
         await cb.message.answer(TEXTS[lang][key], parse_mode="Markdown", reply_markup=back_keyboard(lang))
+        await cb.answer()
+
+    # ── Language switch callback ─────────────
+    @_dp.callback_query(F.data == "switch_lang")
+    async def process_switch_lang(cb: types.CallbackQuery, state: FSMContext):
+        await state.clear()
+        data = await state.get_data()
+        current = data.get("lang", get_lang(cb.from_user))
+        new_lang = "en" if current == "uk" else "uk"
+        await state.update_data(lang=new_lang)
+        await cb.message.edit_text(TEXTS[new_lang]["welcome"], reply_markup=main_keyboard(new_lang))
         await cb.answer()
 
     # ── Live support button ──────────────────
