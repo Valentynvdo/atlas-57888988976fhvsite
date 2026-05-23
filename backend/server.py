@@ -29,13 +29,25 @@ app = FastAPI(
 )
 
 
+import asyncio
+from support_bot import start_bot, stop_bot
+
+_bot_task = None
+
 @app.on_event("startup")
 async def startup():
+    global _bot_task
     await init_pool()
+    # Start bot polling in background
+    _bot_task = asyncio.create_task(start_bot())
 
 
 @app.on_event("shutdown")
 async def shutdown():
+    global _bot_task
+    await stop_bot()
+    if _bot_task:
+        _bot_task.cancel()
     await close_pool()
     client.close()
 

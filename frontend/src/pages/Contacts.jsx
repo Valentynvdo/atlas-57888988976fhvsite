@@ -63,7 +63,7 @@ export default function Contacts() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, marginBottom: 40 }}>
           {[
-            { icon: <MessageSquare size={20} />, label: "Telegram Підтримка", value: "@atlas_support", href: "https://t.me/atlas_support" },
+            { icon: <MessageSquare size={20} />, label: "Telegram Підтримка", value: "@ATLAS_Support_Hub_bot", href: "https://t.me/ATLAS_Support_Hub_bot" },
             { icon: <Mail size={20} />, label: "Email Адреса", value: "support@atlas-ai.com", href: "mailto:support@atlas-ai.com" },
             { icon: <Navigation size={20} />, label: "Розробка та Офіс", value: "Київ, Україна", href: "#" }
           ].map((item, i) => (

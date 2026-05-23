@@ -766,7 +766,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
           <section style={{ textAlign: "center", padding: "48px 32px", borderRadius: 24, background: "linear-gradient(135deg, rgba(0,122,255,0.06), rgba(0,229,255,0.02))", border: "1px solid rgba(0,122,255,0.15)", marginTop: 80 }}>
             <h3 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Потрібна допомога?</h3>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14.5, marginBottom: 24 }}>Зв'яжіться з нашою підтримкою або приєднайтеся до спільноти розробників</p>
-            <a href="https://t.me/atlas_support" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>
+            <a href="https://t.me/ATLAS_Support_Hub_bot" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>
               <ExternalLink size={14} /> Telegram Чат підтримки
             </a>
           </section>
