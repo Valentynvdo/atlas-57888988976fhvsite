@@ -1,284 +1,327 @@
 import React from "react";
-import { Zap, Bot, Eye, Brain, EyeOff, Shield, RefreshCw, Atom, ArrowRight } from "lucide-react";
+import { Zap, Bot, Brain, Server, Fingerprint, Network } from "lucide-react";
 
 export default function AtlasComparison() {
   return (
     <section
       id="comparison"
       className="section-container"
-      style={{ position: "relative", perspective: 1000 }}
+      style={{ position: "relative", perspective: 1000, overflow: "hidden" }}
     >
-      <div style={{ width: "100%", margin: "0 auto", position: "relative", zIndex: 2 }}>
+      {/* Background Cinematic Glows */}
+      <div style={{
+        position: "absolute",
+        top: "20%",
+        right: "10%",
+        width: "600px",
+        height: "600px",
+        background: "radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 60%)",
+        filter: "blur(80px)",
+        mixBlendMode: "screen",
+        pointerEvents: "none",
+        zIndex: 0
+      }} className="float" />
+      <div style={{
+        position: "absolute",
+        bottom: "10%",
+        left: "5%",
+        width: "500px",
+        height: "500px",
+        background: "radial-gradient(circle, rgba(157,76,221,0.1) 0%, transparent 60%)",
+        filter: "blur(80px)",
+        mixBlendMode: "screen",
+        pointerEvents: "none",
+        zIndex: 0,
+        animationDelay: "-3s"
+      }} className="float" />
+
+      <div style={{ width: "100%", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
+        
+        {/* Big Statement Header */}
         <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
-          <div className="section-eyebrow">Еволюція ШІ</div>
-          <h2
-            className="shimmer-text"
-            style={{
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              marginBottom: 20,
-              marginTop: 16,
-              background: "linear-gradient(120deg, #ffffff 0%, #d4dcff 35%, #b8f0ff 70%, #ffffff 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Звичайні ШІ vs. ATLAS
-          </h2>
-          <p style={{ fontSize: "1.125rem", color: "rgba(255,255,255,0.7)", maxWidth: 800, margin: "0 auto", lineHeight: 1.6 }}>
-            Чому це не просто чат-бот, а ваша нова операційна система.
-            <br />
-            Більшість штучних інтелектів сьогодні — це просто вкладка у браузері. Вони чекають, поки ви до них звернетесь. <strong style={{ color: "#00E5FF" }}>ATLAS — це дещо зовсім інше.</strong>
-          </p>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
-          <ComparisonItem 
-            delay="delay-1"
-            title="1. Формат взаємодії: Пасивність проти Присутності"
-            normal="Щоб щось запитати, вам потрібно відкрити додаток, надрукувати текст або натиснути кнопку мікрофона і чекати на відповідь."
-            atlas="Завжди поруч. Завдяки технології WebRTC VAD, він постійно (але безпечно) слухає простір навколо. Вам достатньо просто сказати команду вголос, знаходячись у кімнаті. Він розуміє, коли ви звертаєтесь до нього, а коли просто розмовляєте по телефону."
-          />
-          <ComparisonItem 
-            delay="delay-2"
-            title="2. Зір та Розпізнавання: Сліпота проти FaceID"
-            normal="Бачить лише те, що ви йому вручну завантажите як картинку."
-            atlas="Має власний локальний FaceID (на базі InsightFace). Щойно ви сідаєте за комп'ютер, він без жодного кліку розпізнає вас. Він вітається з вами на ім'я, відрізняє вас від гостей та підлаштовує свій контекст. При цьому ваші біометричні дані ніколи не відправляються в інтернет."
-          />
-          <ComparisonItem 
-            delay="delay-3"
-            title="3. Навички: Обмеженість проти Саморозвитку"
-            normal={`Якщо ви попросите його виконати специфічну дію на вашому комп'ютері, він відповість: "Вибачте, я лише мовна модель".`}
-            atlas="Вміє писати код для самого себе! Завдяки модулю evolution.py, якщо ви даєте команду, яку він ще не вміє робити, він не здається. ATLAS самостійно аналізує завдання, генерує новий Python-скрипт, впроваджує його у свою ж систему і миттєво виконує."
-          />
-          <ComparisonItem 
-            delay="delay-1"
-            title="4. Контекст: Ізольованість проти UI-Розуміння"
-            normal="Не знає, що відбувається на вашому екрані. Вам доводиться копіювати текст і пояснювати контекст вручну."
-            atlas="Аналізує ваш робочий стіл (UI Understanding). Він знає, яка програма у вас зараз відкрита, де знаходиться ваша мишка, і може відповідати на запитання в контексті того, на що ви зараз дивитесь."
-          />
-          <ComparisonItem 
-            delay="delay-2"
-            title="5. Ініціатива: Очікування проти Проактивності"
-            normal="Мовчить, поки ви до нього не звернетесь."
-            atlas="Діє на випередження. Модуль proactive_watcher.py постійно моніторить систему. Якщо стається помилка або збій, ATLAS самостійно аналізує проблему і пропонує рішення. Автономно шукає інформацію і надсилає звіти прямо в Telegram."
-          />
-          <ComparisonItem 
-            delay="delay-3"
-            title="6. Пам'ять: 'Ефект Золотої Рибки' проти Семантики"
-            normal="Кожен новий чат — це чистий аркуш. Він забуває те, що ви обговорювали тиждень тому."
-            atlas="Має вбудовану семантичну пам'ять (semantic_memory). Він запам'ятовує ваші звички, уподобання, попередні проєкти та обіцянки. Навіть через кілька місяців він може нагадати вам деталі з минулих розмов."
-          />
-          <ComparisonItem 
-            delay="delay-1"
-            title="7. Архітектура: Спалювання грошей проти Маршрутизації"
-            normal="Використовує найважчу і найдорожчу модель навіть для того, щоб просто сказати 'Привіт'."
-            atlas="Має каскадну систему інтелекту. Для простих розмов використовує швидкі моделі, а для складного планування — автоматично перемикається на найпотужніші нейромережі світу (Claude 3.5 Sonnet). Це робить його розумним і економним."
-          />
-        </div>
-      </div>
-      
-      {/* 3D background effects */}
-      <div 
-        className="pulse-ring" 
-        style={{ width: "800px", height: "800px", borderColor: "rgba(0,229,255,0.15)", top: "30%", left: "20%" }} 
-      />
-      <div 
-        className="pulse-ring" 
-        style={{ width: "1200px", height: "1200px", borderColor: "rgba(157,76,221,0.1)", top: "60%", left: "80%", animationDelay: "-2s" }} 
-      />
-    </section>
-  );
-}
-
-function ComparisonItem({ title, normal, atlas, delay }) {
-  return (
-    <div 
-      className={`reveal ${delay} glass`}
-      style={{
-        borderRadius: 24,
-        padding: "clamp(20px, 3vw, 32px)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 20,
-        position: "relative",
-        overflow: "hidden"
-      }}
-    >
-      <h3 style={{ 
-        fontSize: "clamp(1.1rem, 1.8vw, 1.25rem)", 
-        fontWeight: 600, 
-        color: "#fff", 
-        margin: 0,
-        letterSpacing: "-0.01em",
-        zIndex: 1
-      }}>
-        {title}
-      </h3>
-      
-      <div className="comp-grid" style={{ 
-        gap: 16,
-        zIndex: 1,
-        position: "relative",
-        alignItems: "stretch"
-      }}>
-        {/* Left Card: Normal AI */}
-        <div style={{ 
-          padding: 24, 
-          background: "rgba(15,15,15,0.5)", 
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.04)",
-          display: "flex",
-          flexDirection: "column"
-        }} className="comp-card-left">
-          
-          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.3)", fontWeight: 500, marginBottom: 16 }}>
-            <Bot size={16} />
-            <span style={{ fontSize: "0.8rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
-          </div>
-          
-          {/* Typing Effect fake browser/terminal */}
-          <div style={{ 
-            background: "rgba(0,0,0,0.4)", 
-            padding: "10px 14px", 
-            borderRadius: 8, 
-            marginBottom: 16, 
-            display: "flex", 
-            alignItems: "center", 
-            gap: 10, 
-            border: "1px solid rgba(255,255,255,0.02)",
+          <h2 style={{ 
+            fontSize: "clamp(2.5rem, 6vw, 4.5rem)", 
+            fontWeight: 800, 
+            letterSpacing: "-0.04em", 
+            color: "#fff",
+            margin: 0,
+            lineHeight: 1.1
           }}>
-            <div style={{ display: "flex", gap: 5 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5f57" }} />
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#febc2e" }} />
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#28c840" }} />
-            </div>
-            <div style={{ height: 14, width: 1, background: "rgba(255,255,255,0.1)" }} />
-            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.35)", fontFamily: "monospace", display: "flex", alignItems: "center" }}>
-              User is typing<span style={{ marginLeft: 2, display: "inline-block", width: 5, height: 12, background: "rgba(255,255,255,0.5)", animation: "cursor-blink 1s step-end infinite" }} />
-            </span>
-          </div>
-
-          <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.6, color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>
-            {normal}
+            This is not a chatbot.
+          </h2>
+          <p className="shimmer-text" style={{ 
+            fontSize: "clamp(1.2rem, 2vw, 1.5rem)", 
+            fontWeight: 500, 
+            marginTop: 16,
+            background: "linear-gradient(90deg, #00E5FF 0%, #9D4CDD 100%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+            WebkitTextFillColor: "transparent",
+          }}>
+            ATLAS is an autonomous AI operating system.
           </p>
         </div>
 
-        {/* Center Evolution Separator */}
-        <div className="evolution-separator" style={{ 
+        {/* Hero Numbers */}
+        <div className="reveal delay-1" style={{ 
           display: "flex", 
+          flexWrap: "wrap",
           justifyContent: "center", 
-          alignItems: "center",
-          position: "relative"
+          gap: "clamp(20px, 4vw, 40px)", 
+          marginBottom: 100 
         }}>
-           <div style={{
-             width: 64,
-             height: 64,
-             borderRadius: "50%",
-             background: "radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, rgba(157,76,221,0.05) 100%)",
-             border: "1px solid rgba(0,229,255,0.25)",
-             display: "grid",
-             placeItems: "center",
-             boxShadow: "0 0 30px rgba(0,229,255,0.25), inset 0 0 15px rgba(157,76,221,0.3)",
-             position: "relative",
-             zIndex: 2
-           }}>
-             <Atom size={32} color="#00E5FF" className="atom-spin" />
-             {/* Small pulse dot */}
-             <div style={{
-               position: "absolute",
-               width: 6,
-               height: 6,
-               background: "#fff",
-               borderRadius: "50%",
-               boxShadow: "0 0 10px #fff, 0 0 20px #00E5FF",
-               animation: "pulse-glow 2s infinite"
-             }} />
-           </div>
-           {/* Connecting line */}
-           <div className="evolution-line" style={{
-             position: "absolute",
-             top: "50%",
-             left: "-100%",
-             right: "-100%",
-             height: 1,
-             background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.6), transparent)",
-             transform: "translateY(-50%)",
-             zIndex: 1,
-             opacity: 0.6
-           }} />
+          {[
+            { v: "< 300ms", l: "Response time" },
+            { v: "24/7", l: "Proactive monitoring" },
+            { v: "Local", l: "FaceID processing" },
+            { v: "0-click", l: "Interaction" }
+          ].map((stat, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "clamp(1.5rem, 2.5vw, 2rem)", fontWeight: 700, color: "#fff" }}>{stat.v}</div>
+              <div style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 4 }}>{stat.l}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Right Card: ATLAS */}
-        <div style={{ 
-          padding: 24, 
-          background: "linear-gradient(145deg, rgba(0,229,255,0.06) 0%, rgba(15,15,15,0.6) 100%)", 
-          borderRadius: 16,
-          border: "1px solid rgba(0,229,255,0.15)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.2)",
-          position: "relative",
-          overflow: "hidden"
-        }} className="comp-card-right">
-          <div className="scan-line" style={{ opacity: 0.4, animationDuration: "5s" }}></div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#00E5FF", fontWeight: 600, marginBottom: 16, position: "relative", zIndex: 2 }}>
-            <Zap size={16} />
-            <span style={{ fontSize: "0.8rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>ATLAS</span>
-          </div>
-          <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.6, color: "rgba(255,255,255,0.85)", fontWeight: 400, position: "relative", zIndex: 2 }}>
-            {atlas}
-          </p>
+        {/* Categories Grid */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 60 }}>
+          <ComparisonCategory 
+            title="Presence"
+            icon={<Fingerprint size={24} color="#00E5FF" />}
+            delay="delay-1"
+            normalBullets={[
+              "Чекає на команду",
+              "Бачить лише завантажені файли",
+              "Забуває вас після закриття"
+            ]}
+            atlasBullets={[
+              "Always listening",
+              "Voice activated",
+              "Face recognition",
+              "Real-time awareness"
+            ]}
+            visualType="radar"
+          />
+
+          <ComparisonCategory 
+            title="Intelligence"
+            icon={<Brain size={24} color="#00E5FF" />}
+            delay="delay-2"
+            normalBullets={[
+              "Обмежений зашитими навичками",
+              "Відірваний від вашої системи",
+              "Кожен чат — чистий аркуш"
+            ]}
+            atlasBullets={[
+              "Self-writing code",
+              "UI understanding",
+              "Semantic memory",
+              "Autonomous actions"
+            ]}
+            visualType="code"
+          />
+
+          <ComparisonCategory 
+            title="Infrastructure"
+            icon={<Server size={24} color="#00E5FF" />}
+            delay="delay-3"
+            normalBullets={[
+              "Повільний API-зв'язок",
+              "Єдина важка модель на все",
+              "Віддає дані на чужі сервери"
+            ]}
+            atlasBullets={[
+              "Smart routing",
+              "Low latency",
+              "Multi-model orchestration",
+              "Local-first privacy"
+            ]}
+            visualType="network"
+          />
         </div>
       </div>
       
       <style>{`
-        .comp-grid {
+        .comp-cat-grid {
           display: grid;
-          grid-template-columns: 1fr auto 1fr;
+          grid-template-columns: 1fr 1.5fr;
+          gap: 24px;
         }
         @media (max-width: 900px) {
-          .comp-grid {
+          .comp-cat-grid {
             grid-template-columns: 1fr;
-            gap: 32px;
-          }
-          .evolution-separator {
-            margin: 16px 0;
-          }
-          .evolution-line {
-            width: 2px !important;
-            height: 100px !important;
-            left: 50% !important;
-            top: -50% !important;
-            bottom: -50% !important;
-            transform: translateX(-50%) !important;
-            background: linear-gradient(180deg, transparent, rgba(0,229,255,0.5), transparent) !important;
           }
         }
-        @keyframes cursor-blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
+        
+        .animated-border-box {
+          position: relative;
+          border-radius: 20px;
+          background: rgba(10,10,10,0.8);
+          background-clip: padding-box;
+          border: 1px solid transparent;
         }
-        @keyframes atom-spin {
+        .animated-border-box::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 20px;
+          padding: 1px;
+          background: linear-gradient(145deg, rgba(0,229,255,0.5), rgba(157,76,221,0.2), transparent 50%);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        
+        .mini-visual {
+          width: 60px;
+          height: 60px;
+          border-radius: 12px;
+          background: rgba(0,0,0,0.4);
+          border: 1px solid rgba(0,229,255,0.2);
+          display: grid;
+          place-items: center;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        @keyframes radar-spin {
           to { transform: rotate(360deg); }
         }
-        .atom-spin {
-          animation: atom-spin 4s linear infinite;
+        .radar-sweep {
+          position: absolute;
+          width: 50%;
+          height: 50%;
+          bottom: 50%;
+          right: 50%;
+          background: linear-gradient(45deg, rgba(0,229,255,1) 0%, transparent 70%);
+          transform-origin: bottom right;
+          animation: radar-spin 2s linear infinite;
         }
-        .glass:hover .hover-glow {
-          opacity: 1 !important;
+        
+        @keyframes code-scroll {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
         }
-        .glass:hover .comp-card-left {
-          transform: translateY(-2px) scale(0.98);
-          background: rgba(10,10,10,0.6) !important;
-        }
-        .glass:hover .comp-card-right {
-          transform: translateY(-4px) scale(1.02);
-          border-color: rgba(0,229,255,0.4) !important;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 40px rgba(0,229,255,0.15), 0 10px 20px rgba(0,0,0,0.5) !important;
+        
+        @keyframes pulse-node {
+          0%, 100% { opacity: 0.3; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.2); }
         }
       `}</style>
+    </section>
+  );
+}
+
+function ComparisonCategory({ title, icon, normalBullets, atlasBullets, delay, visualType }) {
+  return (
+    <div className={\`reveal \${delay}\`} style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: 16
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+        {icon}
+        <h3 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700, color: "#fff" }}>{title}</h3>
+      </div>
+      
+      <div className="comp-cat-grid">
+        {/* Left: Normal AI (Dim, boring) */}
+        <div style={{
+          padding: "24px",
+          background: "rgba(15,15,15,0.4)",
+          borderRadius: 20,
+          border: "1px solid rgba(255,255,255,0.03)",
+          display: "flex",
+          flexDirection: "column"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.3)", fontWeight: 600, marginBottom: 20, textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.1em" }}>
+            <Bot size={14} />
+            Traditional AI
+          </div>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 16 }}>
+            {normalBullets.map((b, i) => (
+              <li key={i} style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.9rem", display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span style={{ color: "rgba(255,255,255,0.1)", marginTop: 2 }}>—</span>
+                {b}
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        {/* Right: ATLAS (Premium, glowing) */}
+        <div className="animated-border-box" style={{
+          padding: "24px 32px",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          overflow: "hidden",
+          backdropFilter: "blur(20px)"
+        }}>
+          {/* Inner subtle glow */}
+          <div style={{
+            position: "absolute",
+            top: 0, left: 0, width: "100%", height: "100%",
+            background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, transparent 100%)",
+            pointerEvents: "none"
+          }} />
+          
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", position: "relative", zIndex: 1 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#00E5FF", fontWeight: 700, marginBottom: 20, textTransform: "uppercase", fontSize: "0.8rem", letterSpacing: "0.1em" }}>
+                <Zap size={14} fill="#00E5FF" />
+                ATLAS Core
+              </div>
+              
+              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 16 }}>
+                {atlasBullets.map((b, i) => (
+                  <li key={i} style={{ color: "#fff", fontSize: "1rem", fontWeight: 500, display: "flex", gap: 12, alignItems: "center" }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#00E5FF", boxShadow: "0 0 8px #00E5FF" }} />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Mini Visual Widget */}
+            <div className="mini-visual">
+              {visualType === "radar" && (
+                <>
+                  <div style={{ width: "100%", height: "100%", border: "1px solid rgba(0,229,255,0.2)", borderRadius: "50%", position: "absolute" }} />
+                  <div style={{ width: "50%", height: "50%", border: "1px solid rgba(0,229,255,0.3)", borderRadius: "50%", position: "absolute" }} />
+                  <div className="radar-sweep" />
+                  <div style={{ width: 4, height: 4, background: "#fff", borderRadius: "50%", position: "absolute", top: "30%", left: "60%", boxShadow: "0 0 5px #fff", animation: "pulse-node 2s infinite" }} />
+                </>
+              )}
+              {visualType === "code" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%", padding: 8, overflow: "hidden" }}>
+                  <div style={{ animation: "code-scroll 4s linear infinite", display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div style={{ height: 3, width: "80%", background: "rgba(0,229,255,0.5)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "60%", background: "rgba(157,76,221,0.5)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "90%", background: "rgba(0,229,255,0.3)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "40%", background: "rgba(0,229,255,0.8)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "70%", background: "rgba(157,76,221,0.4)", borderRadius: 2 }} />
+                    {/* Duplicate for seamless scroll */}
+                    <div style={{ height: 3, width: "80%", background: "rgba(0,229,255,0.5)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "60%", background: "rgba(157,76,221,0.5)", borderRadius: 2 }} />
+                    <div style={{ height: 3, width: "90%", background: "rgba(0,229,255,0.3)", borderRadius: 2 }} />
+                  </div>
+                </div>
+              )}
+              {visualType === "network" && (
+                <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                  <Network size={20} color="rgba(0,229,255,0.4)" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
+                  <div style={{ position: "absolute", top: "20%", left: "20%", width: 6, height: 6, background: "#00E5FF", borderRadius: "50%", animation: "pulse-node 1.5s infinite 0.2s" }} />
+                  <div style={{ position: "absolute", top: "70%", left: "30%", width: 4, height: 4, background: "#9D4CDD", borderRadius: "50%", animation: "pulse-node 2s infinite 0.5s" }} />
+                  <div style={{ position: "absolute", top: "40%", left: "80%", width: 5, height: 5, background: "#00E5FF", borderRadius: "50%", animation: "pulse-node 1.8s infinite 0.8s" }} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
