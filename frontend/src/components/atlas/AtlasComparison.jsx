@@ -1,5 +1,5 @@
 import React from "react";
-import { Zap, Bot, Eye, Brain, EyeOff, Shield, RefreshCw } from "lucide-react";
+import { Zap, Bot, Eye, Brain, EyeOff, Shield, RefreshCw, Atom, ArrowRight } from "lucide-react";
 
 export default function AtlasComparison() {
   return (
@@ -8,7 +8,7 @@ export default function AtlasComparison() {
       className="section-container"
       style={{ position: "relative", perspective: 1000 }}
     >
-      <div style={{ maxWidth: 1000, margin: "0 auto", position: "relative", zIndex: 2 }}>
+      <div style={{ width: "100%", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
           <div className="section-eyebrow">Еволюція ШІ</div>
           <h2
@@ -136,14 +136,94 @@ function ComparisonItem({ title, normal, atlas, delay }) {
         {title}
       </h3>
       
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
-        gap: 16,
-        zIndex: 1
+      <div className="comp-grid" style={{ 
+        gap: 24,
+        zIndex: 1,
+        position: "relative",
+        alignItems: "stretch"
       }}>
+        {/* Left Card: Normal AI */}
         <div style={{ 
-          padding: 24, 
+          padding: 32, 
+          background: "rgba(10,10,10,0.4)", 
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.05)",
+          transition: "transform 0.4s ease, background 0.4s ease",
+          display: "flex",
+          flexDirection: "column"
+        }} className="comp-card-left">
+          
+          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginBottom: 20 }}>
+            <Bot size={18} />
+            <span style={{ fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Звичайний ШІ</span>
+          </div>
+          
+          {/* Typing Effect fake browser/terminal */}
+          <div style={{ 
+            background: "rgba(0,0,0,0.6)", 
+            padding: "12px 16px", 
+            borderRadius: 10, 
+            marginBottom: 20, 
+            display: "flex", 
+            alignItems: "center", 
+            gap: 12, 
+            border: "1px solid rgba(255,255,255,0.03)",
+            boxShadow: "inset 0 2px 10px rgba(0,0,0,0.2)"
+          }}>
+            <div style={{ display: "flex", gap: 6 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57" }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
+            </div>
+            <div style={{ height: 16, width: 1, background: "rgba(255,255,255,0.1)" }} />
+            <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.4)", fontFamily: "monospace", display: "flex", alignItems: "center" }}>
+              User is typing<span style={{ marginLeft: 2, display: "inline-block", width: 6, height: 14, background: "rgba(255,255,255,0.6)", animation: "cursor-blink 1s step-end infinite" }} />
+            </span>
+          </div>
+
+          <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>
+            {normal}
+          </p>
+        </div>
+
+        {/* Center Evolution Separator */}
+        <div className="evolution-separator" style={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          alignItems: "center",
+          position: "relative"
+        }}>
+           <div style={{
+             width: 48,
+             height: 48,
+             borderRadius: "50%",
+             background: "linear-gradient(135deg, rgba(0,229,255,0.1), rgba(157,76,221,0.1))",
+             border: "1px solid rgba(0,229,255,0.3)",
+             display: "grid",
+             placeItems: "center",
+             boxShadow: "0 0 20px rgba(0,229,255,0.2), inset 0 0 10px rgba(157,76,221,0.2)",
+             position: "relative",
+             zIndex: 2
+           }}>
+             <Atom size={24} color="#00E5FF" className="atom-spin" />
+           </div>
+           {/* Connecting line */}
+           <div className="evolution-line" style={{
+             position: "absolute",
+             top: "50%",
+             left: "-50%",
+             right: "-50%",
+             height: 2,
+             background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.5), transparent)",
+             transform: "translateY(-50%)",
+             zIndex: 1,
+             opacity: 0.5
+           }} />
+        </div>
+
+        {/* Right Card: ATLAS */}
+        <div style={{ 
+          padding: 32, 
           background: "rgba(10,10,10,0.4)", 
           borderRadius: 16,
           border: "1px solid rgba(255,255,255,0.05)",
@@ -180,6 +260,38 @@ function ComparisonItem({ title, normal, atlas, delay }) {
       </div>
       
       <style>{`
+        .comp-grid {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+        }
+        @media (max-width: 900px) {
+          .comp-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .evolution-separator {
+            margin: 16px 0;
+          }
+          .evolution-line {
+            width: 2px !important;
+            height: 100px !important;
+            left: 50% !important;
+            top: -50% !important;
+            bottom: -50% !important;
+            transform: translateX(-50%) !important;
+            background: linear-gradient(180deg, transparent, rgba(0,229,255,0.5), transparent) !important;
+          }
+        }
+        @keyframes cursor-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        @keyframes atom-spin {
+          to { transform: rotate(360deg); }
+        }
+        .atom-spin {
+          animation: atom-spin 4s linear infinite;
+        }
         .glass:hover .hover-glow {
           opacity: 1 !important;
         }
