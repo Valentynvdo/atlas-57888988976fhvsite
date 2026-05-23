@@ -232,6 +232,21 @@ async def start_bot():
         logger.warning("TELEGRAM_BOT_TOKEN is not set. Support Bot is disabled.")
         return
     logger.info("Starting Support Telegram Bot...")
+    
+    # Auto-register commands so they appear in the Telegram menu
+    commands = [
+        types.BotCommand(command="bug", description="Report a technical issue"),
+        types.BotCommand(command="help", description="General questions"),
+        types.BotCommand(command="payment", description="Billing issues"),
+        types.BotCommand(command="mytickets", description="View your active tickets"),
+        types.BotCommand(command="status", description="Check ticket status"),
+        types.BotCommand(command="close", description="Close a ticket"),
+    ]
+    try:
+        await bot.set_my_commands(commands)
+    except Exception as e:
+        logger.error(f"Failed to set bot commands: {e}")
+
     # await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
