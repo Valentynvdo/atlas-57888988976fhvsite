@@ -33,14 +33,15 @@ def get_priority(category: str) -> str:
 @router.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
-        "Welcome to ATLAS Support Hub.\n\n"
-        "How can we help you today?\n"
-        "Use one of the following commands:\n"
-        "🐛 /bug [description] - Report a technical issue\n"
-        "❓ /help [description] - General questions\n"
-        "💳 /payment [description] - Billing issues\n"
-        "📋 /mytickets - View your active tickets\n"
-        "✅ /close [ticket_number] - Close a ticket\n"
+        "👋 Вітаємо в ATLAS Support Hub!\n\n"
+        "Чим ми можемо вам допомогти?\n"
+        "Використовуйте зручне меню зліва від поля вводу або команди:\n\n"
+        "📚 /faq - Поширені запитання (Швидкі відповіді)\n"
+        "🐛 /bug [опис] - Повідомити про технічну помилку\n"
+        "❓ /help [опис] - Загальне запитання до підтримки\n"
+        "💳 /payment [опис] - Питання щодо оплати\n"
+        "📋 /mytickets - Ваші відкриті тикети\n"
+        "✅ /close [номер] - Закрити тикет\n"
     )
 
 async def handle_ticket_creation(message: types.Message, command: CommandObject, category: str):
@@ -95,6 +96,32 @@ async def handle_ticket_creation(message: types.Message, command: CommandObject,
             )
         except Exception as e:
             logger.error(f"Failed to notify admin: {e}")
+
+@router.message(Command("faq"))
+async def cmd_faq(message: types.Message):
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+        [types.InlineKeyboardButton(text="🔑 Як підключити API?", callback_data="faq_api")],
+        [types.InlineKeyboardButton(text="💎 Тарифи та оплата", callback_data="faq_billing")],
+        [types.InlineKeyboardButton(text="🔒 Безпека та конфіденційність", callback_data="faq_privacy")],
+        [types.InlineKeyboardButton(text="🤖 Можливості ATLAS", callback_data="faq_features")]
+    ])
+    await message.answer("📚 <b>Поширені запитання (FAQ)</b>\n\nОберіть тему, яка вас цікавить:", reply_markup=keyboard, parse_mode="HTML")
+
+@router.callback_query(lambda c: c.data and c.data.startswith('faq_'))
+async def process_faq_callback(callback_query: types.CallbackQuery):
+    code = callback_query.data
+    
+    faq_answers = {
+        "faq_api": "<b>Як підключити API?</b>\nДля того, щоб ATLAS міг працювати автономно, вам потрібен власний API-ключ (OpenAI або Anthropic). Перейдіть в налаштування додатку ATLAS -> розділ API та вставте ваш ключ. Всі запити йдуть напряму до провайдера.",
+        "faq_billing": "<b>Тарифи та оплата</b>\nATLAS продається за моделлю одноразової покупки (Lifetime License) або підписки. Ви отримуєте ліцензійний ключ на вказану пошту. Деталі на сторінці Pricing.",
+        "faq_privacy": "<b>Безпека та конфіденційність</b>\nATLAS працює локально на вашому Mac. Ми не маємо доступу до ваших файлів, екрану чи листування. Аналіз відбувається через офіційні API провайдерів.",
+        "faq_features": "<b>Можливості ATLAS</b>\nATLAS вміє писати код, аналізувати екран, створювати агентів для складних завдань і керуватися через Telegram, коли ви не за комп'ютером."
+    }
+    
+    answer = faq_answers.get(code, "Вибачте, відповідь не знайдена.")
+    
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(callback_query.from_user.id, f"💡 {answer}", parse_mode="HTML")
 
 @router.message(Command("bug"))
 async def cmd_bug(message: types.Message, command: CommandObject):
@@ -235,6 +262,7 @@ async def start_bot():
     
     # Auto-register commands so they appear in the Telegram menu
     commands = [
+        types.BotCommand(command="faq", description="Поширені запитання (FAQ)"),
         types.BotCommand(command="bug", description="Report a technical issue"),
         types.BotCommand(command="help", description="General questions"),
         types.BotCommand(command="payment", description="Billing issues"),
