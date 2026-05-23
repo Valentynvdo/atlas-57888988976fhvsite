@@ -17,6 +17,11 @@ from billing import router as billing_router, webhook_router
 from atlas import router as atlas_router
 from admin import router as admin_router
 from db import init_pool, close_pool, client
+from support_bot import create_bot_and_dispatcher
+
+import asyncio
+_bot_instance = None
+_polling_task = None
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
 logger = logging.getLogger("atlas")
@@ -31,11 +36,26 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
+    global _bot_instance, _polling_task
     await init_pool()
+    _bot, _dp = create_bot_and_dispatcher()
+    if _bot and _dp:
+        _bot_instance = _bot
+        _polling_task = asyncio.create_task(_dp.start_polling(_bot, handle_signals=False))
+        logger.info("Telegram support bot started polling")
 
 
 @app.on_event("shutdown")
 async def shutdown():
+    global _polling_task, _bot_instance
+    if _polling_task and not _polling_task.done():
+        _polling_task.cancel()
+        try:
+            await _polling_task
+        except asyncio.CancelledError:
+            pass
+    if _bot_instance:
+        await _bot_instance.session.close()
     await close_pool()
     client.close()
 

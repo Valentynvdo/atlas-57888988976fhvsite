@@ -767,7 +767,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             <h3 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Потрібна допомога?</h3>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14.5, marginBottom: 24 }}>Зв'яжіться з нашою підтримкою або приєднайтеся до спільноти розробників</p>
             <a href="https://t.me/atlas_support" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>
-              <ExternalLink size={14} /> Telegram Чат підтримки
+              <ExternalLink size={14} /> Telegram: @ATLAS_Support_Hub_bot
             </a>
           </section>
 

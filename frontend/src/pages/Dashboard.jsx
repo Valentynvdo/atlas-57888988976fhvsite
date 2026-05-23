@@ -756,15 +756,34 @@ export default function Dashboard() {
           )}
         </section>
 
-        {/* ----- Block 6: Support ----- */}
-        <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+        <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0,136,204,0.06) 0%, rgba(0,0,0,0.2) 100%)", border: "1px solid rgba(0,136,204,0.2)" }}>
           <SectionHeader title="Підтримка" eyebrow="Допомога" />
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 24 }}>
+            Виникли питання? Наш офіційний бот підтримки Атлас відповість на будь-яке запитання щодо Atlas AI — цілодобово та двома мовами.
+          </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-            <a href="https://t.me/atlas_support" className="ghost-btn" target="_blank" rel="noreferrer" data-testid="telegram-link">
-              Telegram: @atlas_support
-            </a>
-            <a href="mailto:support@atlas-ai.com" className="ghost-btn" data-testid="email-link">
-              support@atlas-ai.com
+            <a
+              href="https://t.me/ATLAS_Support_Hub_bot"
+              className="cta-btn"
+              target="_blank"
+              rel="noreferrer"
+              data-testid="telegram-support-link"
+              style={{
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
+                border: "none",
+                boxShadow: "0 6px 20px rgba(0,136,204,0.35)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "14px 28px",
+                borderRadius: 14,
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: "pointer"
+              }}
+            >
+              💬 Відкрити чат підтримки
             </a>
           </div>
           <FAQ items={FAQ_ITEMS} />
