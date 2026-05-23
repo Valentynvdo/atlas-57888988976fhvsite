@@ -77,9 +77,11 @@ async def get_current_user(
     request: Request,
     authorization: Optional[str] = Header(default=None),
 ) -> dict:
-    token = request.cookies.get(SESSION_COOKIE)
-    if not token and authorization and authorization.lower().startswith("bearer "):
+    token = None
+    if authorization and authorization.lower().startswith("bearer "):
         token = authorization.split(None, 1)[1].strip()
+    if not token:
+        token = request.cookies.get(SESSION_COOKIE)
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
@@ -107,7 +109,7 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
     admin_email = await _admin_email()
     if not admin_email or user["email"].lower() != admin_email:
         raise HTTPException(status_code=404, detail="Not found")
-    pin_token = request.cookies.get("atlas_admin_pin") or request.headers.get("X-Admin-Pin")
+    pin_token = request.headers.get("X-Admin-Pin") or request.cookies.get("atlas_admin_pin")
     if not pin_token:
         raise HTTPException(status_code=403, detail="Admin PIN required")
     rec = await db.admin_pin_sessions.find_one({"token": pin_token})
@@ -203,7 +205,7 @@ async def register(body: dict, response: Response):
     })
 
     _set_session_cookie(response, token)
-    return {"ok": True, "user": {"user_id": user_id, "email": email, "name": name or email.split("@")[0]}}
+    return {"ok": True, "token": token, "user": {"user_id": user_id, "email": email, "name": name or email.split("@")[0]}}
 
 
 @router.post("/login")
@@ -310,7 +312,7 @@ async def login(body: dict, response: Response):
             httponly=True, secure=True, samesite="lax", path="/"
         )
 
-        return {"ok": True, "token": token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
+        return {"ok": True, "token": token, "pin_token": pin_token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
 
     # Regular User Login
     user = await db.users.find_one({"email": email})
