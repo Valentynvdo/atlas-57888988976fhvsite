@@ -224,7 +224,6 @@ async def login(body: dict, response: Response):
         
         # 1. Check environment variables (secure compare, min 8 chars password)
         if admin_password_fixed and len(admin_password_fixed) >= 8:
-            import secrets
             if secrets.compare_digest(password, admin_password_fixed):
                 admin_verified = True
             
@@ -546,7 +545,7 @@ async def submit_admin_pin(body: dict, request: Request, response: Response, use
             raise HTTPException(status_code=429, detail="IP locked. Try later.")
     pin = (body.get("pin") or "").strip()
     expected = os.getenv("ADMIN_PIN", "").strip()
-    if expected == "0000" or len(expected) < 4:
+    if len(expected) < 4:
         expected = ""
     
     pin_verified = False

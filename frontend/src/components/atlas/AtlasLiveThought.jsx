@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { BrainCircuit, Loader2 } from "lucide-react";
+import { BrainCircuit } from "lucide-react";
+import api from "../../lib/api";
 
 export default function AtlasLiveThought() {
   const [thought, setThought] = useState(null);
@@ -7,11 +8,8 @@ export default function AtlasLiveThought() {
 
   const fetchThought = async () => {
     try {
-      const res = await fetch("/api/atlas/thought");
-      if (res.ok) {
-        const data = await res.json();
-        setThought(data);
-      }
+      const res = await api.get("/api/atlas/thought");
+      setThought(res.data);
     } catch (e) {
       console.error("Failed to fetch thought", e);
     } finally {

@@ -51,9 +51,15 @@ def is_allowed_origin(origin: str) -> bool:
     frontend_url = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
     if frontend_url and origin.rstrip("/") == frontend_url:
         return True
-    # Дозволяємо локальні хости для розробки
+    # Дозволяємо фронтенд на Render та локальні хости для розробки
     clean_origin = origin.rstrip("/")
-    if clean_origin in ("http://localhost:3000", "http://127.0.0.1:3000", "http://localhost", "http://127.0.0.1"):
+    if clean_origin in (
+        "https://atlas-xl1e.onrender.com",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost",
+        "http://127.0.0.1",
+    ):
         return True
     return False
 
@@ -63,7 +69,16 @@ def is_allowed_origin(origin: str) -> bool:
 async def cors_middleware(request: Request, call_next):
     origin = request.headers.get("origin", "")
     allowed = is_allowed_origin(origin)
-    
+
+    # Автоматично дозволяємо Same-Origin запити (фронтенд і бекенд на одному домені)
+    if not allowed and origin:
+        host = request.headers.get("host", "")
+        proto = request.headers.get("x-forwarded-proto", request.url.scheme)
+        if host:
+            self_origin = f"{proto}://{host}".rstrip("/")
+            if origin.rstrip("/") == self_origin:
+                allowed = True
+
     if request.method == "OPTIONS":
         from fastapi.responses import Response
         r = Response()
@@ -73,9 +88,9 @@ async def cors_middleware(request: Request, call_next):
         else:
             r.headers["Access-Control-Allow-Origin"] = "null"
         r.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID"
+        r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID, X-Admin-Pin"
         return r
-        
+
     response = await call_next(request)
     if origin:
         if allowed:
@@ -84,7 +99,7 @@ async def cors_middleware(request: Request, call_next):
         else:
             response.headers["Access-Control-Allow-Origin"] = "null"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID, X-Admin-Pin"
     return response
 
 
