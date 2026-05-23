@@ -760,8 +760,8 @@ export default function Dashboard() {
         <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           <SectionHeader title="Підтримка" eyebrow="Допомога" />
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-            <a href="https://t.me/ATLAS_Support_Hub_bot" className="ghost-btn" target="_blank" rel="noreferrer" data-testid="telegram-link">
-              Telegram: @ATLAS_Support_Hub_bot
+            <a href="https://t.me/atlas_support" className="ghost-btn" target="_blank" rel="noreferrer" data-testid="telegram-link">
+              Telegram: @atlas_support
             </a>
             <a href="mailto:support@atlas-ai.com" className="ghost-btn" data-testid="email-link">
               support@atlas-ai.com

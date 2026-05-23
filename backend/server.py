@@ -29,33 +29,13 @@ app = FastAPI(
 )
 
 
-import asyncio
-try:
-    from support_bot import start_bot, stop_bot
-    _SUPPORT_BOT_AVAILABLE = True
-except ImportError as e:
-    logger.error(f"Support bot dependencies missing, bot will not start: {e}")
-    _SUPPORT_BOT_AVAILABLE = False
-    
-    async def start_bot(): pass
-    async def stop_bot(): pass
-
-_bot_task = None
-
 @app.on_event("startup")
 async def startup():
-    global _bot_task
     await init_pool()
-    # Start bot polling in background
-    _bot_task = asyncio.create_task(start_bot())
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    global _bot_task
-    await stop_bot()
-    if _bot_task:
-        _bot_task.cancel()
     await close_pool()
     client.close()
 
