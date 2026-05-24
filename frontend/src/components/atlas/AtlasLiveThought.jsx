@@ -1,8 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BrainCircuit } from "lucide-react";
 import api from "../../lib/api";
 
 export default function AtlasLiveThought() {
+  const { t } = useTranslation();
   const [thought, setThought] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +79,7 @@ export default function AtlasLiveThought() {
         
         <div style={{ flex: 1, overflow: "hidden" }}>
           <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2, fontWeight: 600 }}>
-            Що зараз вивчає Атлас:
+            {t("live_thought.studying")}
           </div>
           <div style={{ fontSize: 15, color: "#fff", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             {thought.thought}

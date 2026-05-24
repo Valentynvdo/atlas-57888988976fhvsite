@@ -17,13 +17,14 @@ import {
   Wallet,
   Zap,
   MessageSquare,
-  CreditCard,
 } from "lucide-react";
 import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
+import { useTranslation, Trans } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [search] = useSearchParams();
@@ -37,7 +38,6 @@ export default function Dashboard() {
   const [busy, setBusy] = useState(false);
   const [tonPrices, setTonPrices] = useState(null);
   const [tonBusy, setTonBusy] = useState(false);
-  const [stripeBusy, setStripeBusy] = useState(false);
   const [tonConnectUI] = useTonConnectUI();
   const tonWallet = useTonWallet();
 
@@ -73,13 +73,13 @@ export default function Dashboard() {
       try {
         const r = await api.get(`/api/billing/checkout/status/${sid}`);
         if (r.data.payment_status === "paid") {
-          toast.success("Оплата пройшла. Підписка активна!");
+          toast.success(t("dashboard.payment_success"));
           await loadLicense();
           navigate("/dashboard", { replace: true });
           return;
         }
         if (r.data.status === "expired") {
-          toast.error("Сесія оплати завершилась.");
+          toast.error(t("dashboard.payment_session_expired"));
           navigate("/dashboard", { replace: true });
           return;
         }
@@ -95,14 +95,14 @@ export default function Dashboard() {
   const status = useMemo(() => {
     if (!license) return null;
     if (license.status === "active")
-      return { label: "Активна", color: "#28C840", bg: "rgba(40,200,64,0.12)" };
+      return { label: t("dashboard.status_active"), color: "#28C840", bg: "rgba(40,200,64,0.12)" };
     if (license.status === "expiring_soon")
       return {
-        label: `Закінчується через ${license.days_left} дн.`,
+        label: t("dashboard.status_expiring_soon", { days: license.days_left }),
         color: "#FEBC2E",
         bg: "rgba(254,188,46,0.12)",
       };
-    return { label: "Неактивна", color: "#FF5F57", bg: "rgba(255,95,87,0.1)" };
+    return { label: t("dashboard.status_inactive"), color: "#FF5F57", bg: "rgba(255,95,87,0.1)" };
   }, [license]);
 
   const payWithTon = async (packageId = "atlas_monthly") => {
@@ -112,7 +112,7 @@ export default function Dashboard() {
       return;
     }
     if (!tonPrices) {
-      toast.error("Завантажую ціни, спробуй ще раз...");
+      toast.error(t("dashboard.loading_prices"));
       return;
     }
     const pkg = tonPrices.packages.find((p) => p.id === packageId);
@@ -133,7 +133,7 @@ export default function Dashboard() {
       const walletAddress = tonWallet.account?.address || "";
 
       // Verify on backend
-      toast.loading("Верифікую транзакцію...", { id: "ton-verify" });
+      toast.loading(t("dashboard.verifying_tx"), { id: "ton-verify" });
       const verify = await api.post("/api/billing/ton-verify", {
         wallet_address: walletAddress,
         ton_amount: pkg.ton_amount,
@@ -149,32 +149,13 @@ export default function Dashboard() {
     } catch (e) {
       toast.dismiss("ton-verify");
       if (e?.message?.includes("User rejecte")) {
-        toast.error("Транзакцію скасовано");
+        toast.error(t("dashboard.tx_cancelled"));
       } else {
-        const msg = e?.response?.data?.detail || "Помилка оплати";
+        const msg = e?.response?.data?.detail || t("dashboard.payment_error");
         toast.error(msg);
       }
     } finally {
       setTonBusy(false);
-    }
-  };
-
-  const payWithStripe = async (packageId = "atlas_monthly") => {
-    setStripeBusy(true);
-    try {
-      const { data } = await api.post("/api/billing/checkout", {
-        package_id: packageId,
-        origin_url: window.location.origin,
-      });
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error("Не вдалося створити платіж");
-      }
-    } catch (e) {
-      toast.error(e?.response?.data?.detail || "Помилка ініціалізації оплати");
-    } finally {
-      setStripeBusy(false);
     }
   };
 
@@ -183,10 +164,10 @@ export default function Dashboard() {
     try {
       await api.post("/api/me/license/transfer");
       await loadLicense();
-      toast.success("Ліцензію скинуто. Введи ключ на новому Mac.");
+      toast.success(t("dashboard.license_reset"));
       setConfirmTransfer(false);
     } catch {
-      toast.error("Помилка перенесення");
+      toast.error(t("dashboard.transfer_error"));
     } finally {
       setBusy(false);
     }
@@ -197,10 +178,10 @@ export default function Dashboard() {
     try {
       await api.post("/api/me/cancel-renewal");
       await loadLicense();
-      toast.success("Авто-поновлення вимкнено");
+      toast.success(t("dashboard.autorenew_disabled"));
       setConfirmCancel(false);
     } catch {
-      toast.error("Помилка скасування");
+      toast.error(t("dashboard.cancel_error"));
     } finally {
       setBusy(false);
     }
@@ -209,7 +190,7 @@ export default function Dashboard() {
   const copyKey = async () => {
     if (!license?.key) return;
     await navigator.clipboard.writeText(license.key);
-    toast.success("Ключ скопійовано");
+    toast.success(t("dashboard.key_copied"));
   };
 
   if (!license) {
@@ -313,7 +294,7 @@ export default function Dashboard() {
               alignItems: "center",
             }}
           >
-            <LogOut size={14} /> Вийти
+            <LogOut size={14} /> {t("dashboard.logout_btn")}
           </button>
         </div>
       </header>
@@ -321,7 +302,7 @@ export default function Dashboard() {
       <main className="dashboard-main" style={{ maxWidth: "100%", padding: "40px 5% 80px", display: "flex", flexDirection: "column", gap: "24px" }}>
         {/* ----- Block 1: License Key ----- */}
         <section data-testid="key-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", border: "1px solid rgba(0, 229, 255, 0.2)", boxShadow: "0 8px 32px rgba(0, 229, 255, 0.08)" }}>
-          <SectionHeader title="Ваш Ліцензійний Ключ" eyebrow="Активація" />
+          <SectionHeader title={t("dashboard.license_block_title")} eyebrow={t("dashboard.license_block_eyebrow")} />
           <div
             style={{
               display: "flex",
@@ -348,10 +329,10 @@ export default function Dashboard() {
           </div>
           <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
             <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="cta-btn" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-              {keyHidden ? <Eye size={16} /> : <EyeOff size={16} />} {keyHidden ? "Показати ключ" : "Сховати"}
+              {keyHidden ? <Eye size={16} /> : <EyeOff size={16} />} {keyHidden ? t("dashboard.show_key") : t("dashboard.hide_key")}
             </button>
             <button data-testid="copy-key-btn" onClick={copyKey} className="cta-btn" style={{ background: "rgba(0, 229, 255, 0.15)", border: "1px solid rgba(0, 229, 255, 0.3)", color: "#00E5FF" }}>
-              <Copy size={16} /> Скопіювати
+              <Copy size={16} /> {t("dashboard.copy_btn")}
             </button>
             {license.mac_id && (
               <button
@@ -360,7 +341,7 @@ export default function Dashboard() {
                 className="ghost-btn"
                 style={{ fontSize: 14 }}
               >
-                <ArrowRightLeft size={16} /> Перенести на інший Mac
+                <ArrowRightLeft size={16} /> {t("dashboard.transfer_btn")}
               </button>
             )}
           </div>
@@ -378,35 +359,35 @@ export default function Dashboard() {
           >
             {license.mac_id ? <Check size={16} /> : <AlertTriangle size={16} />}
             {license.mac_id
-              ? `Активований на: ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
-              : "Ще не активований на вашому пристрої"}
+              ? `${t("dashboard.activated_on")} ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
+              : t("dashboard.not_activated")}
           </div>
         </section>
 
         {/* ----- Block 2: Telegram Bot ----- */}
         <section data-testid="telegram-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", border: "1px solid rgba(0, 136, 204, 0.3)", boxShadow: "0 8px 32px rgba(0, 136, 204, 0.1)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-            <SectionHeader title="Віддалений контроль (Telegram)" eyebrow="Підключення бота" />
+            <SectionHeader title={t("dashboard.tg_block_title")} eyebrow={t("dashboard.tg_block_eyebrow")} />
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)", display: "grid", placeItems: "center", color: "#fff", boxShadow: "0 4px 15px rgba(0, 136, 204, 0.4)" }}>
               <MessageSquare size={24} />
             </div>
           </div>
           
           <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: 15, lineHeight: 1.6, marginBottom: 28 }}>
-            Керуйте Atlas AI віддалено зі смартфона! Отримуйте сповіщення, переглядайте результати досліджень та відправляйте команди у будь-який час.
+            {t("dashboard.tg_desc")}
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>1</div>
               <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.
+                <Trans i18nKey="dashboard.tg_step_1">Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.</Trans>
               </div>
             </div>
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>2</div>
               <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.
+                <Trans i18nKey="dashboard.tg_step_2">Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.</Trans>
               </div>
             </div>
           </div>
@@ -435,28 +416,28 @@ export default function Dashboard() {
               transition: "all 0.3s ease"
             }}
           >
-            <MessageSquare size={18} /> Підключити Telegram-бота
+            <MessageSquare size={18} /> {t("dashboard.tg_btn")}
           </a>
         </section>
 
         {/* ----- Block 3: Download ----- */}
         <section data-testid="download-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
-          <SectionHeader title="Завантаження" eyebrow="Atlas для macOS" />
+          <SectionHeader title={t("dashboard.download_title")} eyebrow={t("dashboard.download_eyebrow")} />
           <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
-            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>Відкрийте Terminal на вашому Mac і виконайте команду:</div>
+            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>{t("dashboard.download_desc")}</div>
             <code style={{ display: "block", color: "#00E5FF", fontFamily: "'Source Code Pro', monospace", fontSize: 14, wordBreak: "break-all" }}>
               curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash
             </code>
           </div>
           <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: 16 }}>
-            macOS 13 Ventura або новіший. Apple Silicon або Intel. 200 MB вільного місця.
+            {t("dashboard.download_reqs")}
           </div>
 
           <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.8)", paddingLeft: 20, lineHeight: 1.8, fontSize: 14.5 }}>
-            <li style={{ marginBottom: 8 }}>Скопіюйте команду вище та вставте її у Terminal.</li>
-            <li style={{ marginBottom: 8 }}>Дочекайтесь завершення встановлення. Atlas автоматично з'явиться в Applications.</li>
-            <li style={{ marginBottom: 8 }}>Запустіть Atlas та введіть свій ліцензійний ключ для активації.</li>
-            <li>Надайте доступи до мікрофона та Accessibility (Спеціальні можливості).</li>
+            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step1")}</li>
+            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step2")}</li>
+            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step3")}</li>
+            <li>{t("dashboard.download_step4")}</li>
           </ol>
         </section>
 
@@ -464,7 +445,7 @@ export default function Dashboard() {
         <section data-testid="subscription-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
           {/* Header with macOS Dots */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-            <SectionHeader title="Управління підпискою" eyebrow="Тарифний план" />
+            <SectionHeader title={t("dashboard.sub_title")} eyebrow={t("dashboard.sub_eyebrow")} />
             <div className="mac-dots">
               <span></span><span></span><span></span>
             </div>
@@ -485,7 +466,7 @@ export default function Dashboard() {
           }}>
             <div>
               <div style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>
-                Поточний статус
+                {t("dashboard.current_status")}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{
@@ -505,13 +486,13 @@ export default function Dashboard() {
                 </div>
                 {license.days_left !== undefined && (
                   <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, fontWeight: 500 }}>
-                    Залишилось днів: {license.days_left}
+                    {t("dashboard.days_left", { days: license.days_left })}
                   </span>
                 )}
               </div>
               {license.expires_at && (
                 <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, marginTop: 8 }}>
-                  Дата закінчення: {fmtDate(license.expires_at)}
+                  {t("dashboard.expires_at", { date: fmtDate(license.expires_at) })}
                 </div>
               )}
             </div>
@@ -524,7 +505,7 @@ export default function Dashboard() {
                   className="ghost-btn"
                   style={{ padding: "10px 20px", fontSize: 13 }}
                 >
-                  Скасувати авто-поновлення
+                  {t("dashboard.cancel_autorenew")}
                 </button>
               )}
             </div>
@@ -536,7 +517,7 @@ export default function Dashboard() {
               <Wallet size={18} color={tonWallet ? "#28C840" : "rgba(255,255,255,0.4)"} />
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: tonWallet ? "#28C840" : "rgba(255,255,255,0.6)" }}>
-                  {tonWallet ? `Гаманець підключено` : "TON гаманець не підключено"}
+                  {tonWallet ? t("dashboard.wallet_connected") : t("dashboard.wallet_not_connected")}
                 </div>
                 {tonWallet?.account?.address && (
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
@@ -545,7 +526,7 @@ export default function Dashboard() {
                 )}
                 {tonPrices && (
                   <div style={{ fontSize: 11, color: "rgba(0,229,255,0.7)", marginTop: 2 }}>
-                    1 TON = ${tonPrices.ton_usd_price.toFixed(3)} USD (live)
+                    {t("dashboard.ton_live_price", { price: tonPrices.ton_usd_price.toFixed(3) })}
                   </div>
                 )}
               </div>
@@ -554,14 +535,14 @@ export default function Dashboard() {
               onClick={() => tonConnectUI.openModal()}
               style={{ padding: "8px 16px", borderRadius: 999, background: tonWallet ? "rgba(255,255,255,0.05)" : "rgba(0,122,255,0.15)", border: `1px solid ${tonWallet ? "rgba(255,255,255,0.1)" : "rgba(0,122,255,0.4)"}`, color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Wallet size={13} /> {tonWallet ? "Змінити гаманець" : "Підключити TON гаманець"}
+              <Wallet size={13} /> {tonWallet ? t("dashboard.change_wallet") : t("dashboard.connect_wallet")}
             </button>
           </div>
 
           {/* Pricing Section Grid */}
           <div style={{ marginTop: 24 }}>
             <h3 style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 24, display: "flex", alignItems: "center", gap: 8 }}>
-              <Sparkles size={18} color="#00E5FF" /> Оберіть тарифний план для подовження
+              <Sparkles size={18} color="#00E5FF" /> {t("dashboard.choose_plan")}
             </h3>
 
             <div className="three-col">
@@ -578,26 +559,26 @@ export default function Dashboard() {
                 
                 // Features based on plan
                 const features = {
-                  atlas_monthly: [
-                    "Повний доступ до Atlas AI на Mac",
-                    "Надшвидкий голос (STT & TTS)",
-                    "Автономне створення нових скілів",
-                    "100% локальне збереження даних",
-                    "Стандартні оновлення модулів"
+                                    atlas_monthly: [
+                    t("dashboard.feature_1"),
+                    t("dashboard.feature_2"),
+                    t("dashboard.feature_3"),
+                    t("dashboard.feature_4"),
+                    t("dashboard.feature_5")
                   ],
-                  atlas_quarterly: [
-                    "Усі можливості місячного тарифу",
-                    "Пріоритетна підтримка",
-                    "Робота з великими контекстами",
-                    "Швидший час реакції AI",
-                    "Краща ціна в еквіваленті місяця"
+                                    atlas_quarterly: [
+                    t("dashboard.feature_q1"),
+                    t("dashboard.feature_q2"),
+                    t("dashboard.feature_q3"),
+                    t("dashboard.feature_q4"),
+                    t("dashboard.feature_q5")
                   ],
-                  atlas_yearly: [
-                    "Максимальний пріоритет обробки",
-                    "VIP підтримка 24/7",
-                    "Пожиттєва сумісність з macOS",
-                    "Усі нові майбутні модулі безкоштовно",
-                    "Найбільша вигода (економія 30%)"
+                                    atlas_yearly: [
+                    t("dashboard.feature_y1"),
+                    t("dashboard.feature_y2"),
+                    t("dashboard.feature_y3"),
+                    t("dashboard.feature_y4"),
+                    t("dashboard.feature_y5")
                   ]
                 }[p.id] || [];
 
@@ -652,7 +633,7 @@ export default function Dashboard() {
                         letterSpacing: "0.08em",
                         boxShadow: "0 0 15px rgba(0, 229, 255, 0.4)"
                       }}>
-                        Популярний вибір
+                        {t("dashboard.popular_choice")}
                       </span>
                     )}
 
@@ -672,30 +653,30 @@ export default function Dashboard() {
                         letterSpacing: "0.08em",
                         boxShadow: "0 0 15px rgba(40, 200, 64, 0.4)"
                       }}>
-                        Економія 30%
+                        {t("dashboard.save_30")}
                       </span>
                     )}
 
                     <div>
                       {/* Plan Header */}
                       <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 8 }}>
-                        {p.id === "atlas_monthly" ? "Місячний" : p.id === "atlas_quarterly" ? "Квартальний" : "Річний"}
+                        {p.id === "atlas_monthly" ? t("dashboard.plan_monthly") : p.id === "atlas_quarterly" ? t("dashboard.plan_quarterly") : t("dashboard.plan_yearly")}
                       </div>
                       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginBottom: 20 }}>
-                        {p.id === "atlas_monthly" ? "Гнучкий старт для знайомства з ШІ" : p.id === "atlas_quarterly" ? "Оптимальний баланс вартості та можливостей" : "Максимальна вигода для професіоналів"}
+                        {p.id === "atlas_monthly" ? t("dashboard.plan_desc_monthly") : p.id === "atlas_quarterly" ? t("dashboard.plan_desc_quarterly") : t("dashboard.plan_desc_yearly")}
                       </div>
 
                       {/* Plan Price */}
                       <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 28 }}>
                         <span style={{ fontSize: 36, fontWeight: 800, color: "#fff" }}>${p.amount}</span>
                         <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
-                          / {p.days === 30 ? "місяць" : p.days === 90 ? "3 міс." : "рік"}
+                          / {p.days === 30 ? t("dashboard.per_month") : p.days === 90 ? t("dashboard.per_quarter") : t("dashboard.per_year")}
                         </span>
                       </div>
 
                       {p.days > 30 && (
                         <div style={{ fontSize: 12, color: "rgba(0, 229, 255, 0.85)", fontWeight: 500, marginTop: -20, marginBottom: 24 }}>
-                          Еквівалент: ${monthlyCost} / міс.
+                          {t("dashboard.equiv_monthly", { cost: monthlyCost })}
                         </div>
                       )}
 
@@ -718,7 +699,7 @@ export default function Dashboard() {
                       const tp = tonPrices.packages.find(x => x.id === p.id);
                       return tp ? (
                         <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(0,229,255,0.05)", border: "1px solid rgba(0,229,255,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Ціна в TON (live):</span>
+                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{t("dashboard.ton_price")}</span>
                           <span style={{ fontSize: 14, fontWeight: 700, color: "#00E5FF" }}>{tp.ton_amount} TON</span>
                         </div>
                       ) : null;
@@ -738,27 +719,7 @@ export default function Dashboard() {
                       }}
                     >
                       {tonBusy ? <Loader2 size={16} className="spin" /> : (
-                        <>{!tonWallet ? <><Wallet size={14} /> Підключити гаманець (TON)</> : <><Zap size={14} /> Оплатити TON</>}</>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => payWithStripe(p.id)}
-                      disabled={stripeBusy}
-                      className="cta-btn"
-                      style={{
-                        width: "100%",
-                        marginTop: 10,
-                        padding: "12px 20px",
-                        fontSize: 14,
-                        justifyContent: "center",
-                        borderRadius: 14,
-                        background: isPopular ? "#007AFF" : "rgba(255,255,255,0.1)",
-                        border: "none",
-                        color: "#fff"
-                      }}
-                    >
-                      {stripeBusy ? <Loader2 size={16} className="spin" /> : (
-                        <><CreditCard size={14} /> Оплатити карткою</>
+                        <>{!tonWallet ? <><Wallet size={14} /> {t("dashboard.connect_wallet")}</> : <><Zap size={14} /> {t("dashboard.pay_ton")}</>}</>
                       )}
                     </button>
                   </div>
@@ -770,14 +731,14 @@ export default function Dashboard() {
 
         {/* ----- Block 5: Stats ----- */}
         <section data-testid="stats-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
-          <SectionHeader title="Статистика Atlas" eyebrow="Активність" />
+          <SectionHeader title={t("dashboard.stats_title")} eyebrow={t("dashboard.stats_eyebrow")} />
           {license.mac_id && license.stats ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16 }}>
-              <Stat label="Версія" value={license.stats.version} />
-              <Stat label="Активний" value={`${license.stats.days_active} дн.`} />
-              <Stat label="Скілів створено" value={license.stats.skills_count} />
-              <Stat label="Запитів оброблено" value={license.stats.requests_count} />
-              <Stat label="Остання еволюція" value={license.stats.last_evolution ? fmtDateTime(license.stats.last_evolution) : "—"} />
+              <Stat label={t("dashboard.stat_version")} value={license.stats.version} />
+              <Stat label={t("dashboard.stat_active")} value={`${license.stats.days_active} дн.`} />
+              <Stat label={t("dashboard.stat_skills")} value={license.stats.skills_count} />
+              <Stat label={t("dashboard.stat_requests")} value={license.stats.requests_count} />
+              <Stat label={t("dashboard.stat_evolution")} value={license.stats.last_evolution ? fmtDateTime(license.stats.last_evolution) : "—"} />
             </div>
           ) : (
             <div
@@ -792,15 +753,15 @@ export default function Dashboard() {
               }}
               data-testid="stats-placeholder"
             >
-              Встанови Atlas щоб бачити статистику
+              {t("dashboard.stats_empty")}
             </div>
           )}
         </section>
 
         <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0,136,204,0.06) 0%, rgba(0,0,0,0.2) 100%)", border: "1px solid rgba(0,136,204,0.2)" }}>
-          <SectionHeader title="Підтримка" eyebrow="Допомога" />
+          <SectionHeader title={t("dashboard.support_title")} eyebrow={t("dashboard.support_eyebrow")} />
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 24 }}>
-            Виникли питання? Наш офіційний бот підтримки Атлас відповість на будь-яке запитання щодо Atlas AI — цілодобово та двома мовами.
+            {t("dashboard.support_desc")}
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
             <a
@@ -824,17 +785,17 @@ export default function Dashboard() {
                 cursor: "pointer"
               }}
             >
-              💬 Відкрити чат підтримки
+              💬 {t("dashboard.open_chat")}
             </a>
           </div>
-          <FAQ items={FAQ_ITEMS} />
+          <FAQ items={FAQ_ITEMS} t={t} />
         </section>
       </main>
 
       {confirmCancel && (
         <Confirm
-          title="Впевнений?"
-          message={`Atlas перестане працювати після ${fmtDate(license.expires_at)}.`}
+          title={t("dashboard.confirm_sure")}
+          message={t("dashboard.confirm_cancel_msg", { date: fmtDate(license.expires_at) })}
           onCancel={() => setConfirmCancel(false)}
           onConfirm={cancelRenewal}
           busy={busy}
@@ -843,8 +804,8 @@ export default function Dashboard() {
       )}
       {confirmTransfer && (
         <Confirm
-          title="Перенести на інший Mac?"
-          message="Atlas на поточному Mac зупиниться. Введи цей ключ на новому Mac щоб активувати."
+          title={t("dashboard.confirm_transfer_title")}
+          message=t("dashboard.confirm_transfer_msg")
           onCancel={() => setConfirmTransfer(false)}
           onConfirm={transferLicense}
           busy={busy}
@@ -929,7 +890,7 @@ function Confirm({ title, message, onCancel, onConfirm, busy, danger }) {
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
           <button data-testid="confirm-cancel-btn" onClick={onCancel} className="ghost-btn">
-            Ні
+            {t("dashboard.confirm_no")}
           </button>
           <button
             data-testid="confirm-ok-btn"
@@ -938,7 +899,7 @@ function Confirm({ title, message, onCancel, onConfirm, busy, danger }) {
             className="cta-btn"
             style={danger ? { borderColor: "rgba(255,95,87,0.4)" } : undefined}
           >
-            {busy ? <Loader2 size={14} className="spin" /> : null} Так
+            {busy ? <Loader2 size={14} className="spin" /> : null} {t("dashboard.confirm_yes")}
           </button>
         </div>
       </div>
@@ -948,28 +909,28 @@ function Confirm({ title, message, onCancel, onConfirm, busy, danger }) {
 
 const FAQ_ITEMS = [
   {
-    q: "Як перенести Atlas на інший Mac?",
-    a: "В блоці 'Ліцензійний ключ' натисни 'Перенести на інший Mac'. Поточний Mac зупинить роботу, ти зможеш ввести цей же ключ на новому Mac.",
+    q: t("dashboard.faq_q1"),
+    a: t("dashboard.faq_a1"),
   },
   {
-    q: "Що якщо я забув ключ?",
-    a: "Ключ завжди тут, у твоєму кабінеті. Якщо ключ скомпрометовано — звернися в підтримку, ми його регенеруємо.",
+    q: t("dashboard.faq_q2"),
+    a: t("dashboard.faq_a2"),
   },
   {
-    q: "Як скасувати підписку?",
-    a: "Натисни 'Скасувати авто-поновлення' в блоці Підписка. Atlas працюватиме до дати закінчення поточного періоду.",
+    q: t("dashboard.faq_q3"),
+    a: t("dashboard.faq_a3"),
   },
   {
-    q: "Atlas не запускається — що робити?",
-    a: "Перевір що дозволив Accessibility та Microphone у System Settings → Privacy. Перезапусти Atlas. Якщо не допомагає — пиши в підтримку.",
+    q: t("dashboard.faq_q4"),
+    a: t("dashboard.faq_a4"),
   },
   {
-    q: "Чи працює Atlas без інтернету?",
-    a: "Базові команди працюють офлайн. Для еволюції, нових скілів і мовних моделей потрібен інтернет.",
+    q: t("dashboard.faq_q5"),
+    a: t("dashboard.faq_a5"),
   },
 ];
 
-function FAQ({ items }) {
+function FAQ({ items, t }) {
   const [open, setOpen] = useState(null);
   return (
     <div data-testid="faq-list" style={{ display: "grid", gap: 8 }}>
@@ -1002,7 +963,7 @@ function FAQ({ items }) {
               gap: 12,
             }}
           >
-            {it.q}
+            {t(it.q)}
             <ChevronDown
               size={18}
               style={{
@@ -1014,7 +975,7 @@ function FAQ({ items }) {
           </button>
           {open === i && (
             <div style={{ padding: "0 18px 16px", color: "rgba(255,255,255,0.65)", fontSize: 13, lineHeight: 1.6 }}>
-              {it.a}
+              {t(it.a)}
             </div>
           )}
         </div>

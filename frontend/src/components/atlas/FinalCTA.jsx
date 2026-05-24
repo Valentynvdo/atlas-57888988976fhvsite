@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 
 export default function FinalCTA({ onCta }) {
+  const { t } = useTranslation();
   return (
     <section
       id="final-cta"
@@ -67,7 +69,7 @@ export default function FinalCTA({ onCta }) {
             }}
           >
             Приєднуйтесь до списку очікування першими — і будьте серед тих,
-            хто змінить спосіб взаємодії з macOS.
+            хто змінить спосіб взаємодії з {t("final_cta.title_2")}OS.
           </p>
 
           <div

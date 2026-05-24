@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Brain, Infinity as InfinityIcon, Activity } from "lucide-react";
 
 /**
@@ -5,6 +6,7 @@ import { Brain, Infinity as InfinityIcon, Activity } from "lucide-react";
  * Pure SVG so it stays crisp and animated.
  */
 export default function LivingIntelligence() {
+  const { t } = useTranslation();
   return (
     <section
       id="intelligence"
@@ -28,7 +30,7 @@ export default function LivingIntelligence() {
               maxWidth: 560,
             }}
           >
-            <span className="gradient-text">Розум, який</span>
+            <span className="gradient-text">{t("living_intel.title_1")}</span>
             <br />
             <span
               style={{
@@ -40,7 +42,7 @@ export default function LivingIntelligence() {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              ніколи не зупиняється.
+              {t("living_intel.title_2")}
             </span>
           </h2>
           <p
@@ -72,18 +74,18 @@ export default function LivingIntelligence() {
             {[
               {
                 icon: <Brain size={20} color="#00E5FF" />,
-                title: "Самонавчання",
-                desc: "Адаптується до вашого ритму та стилю життя.",
+                title: t("living_intel.f1_title"),
+                desc: t("living_intel.f1_desc"),
               },
               {
                 icon: <InfinityIcon size={20} color="#9D4CDD" />,
-                title: "Без обмежень",
-                desc: "Знаходить нові підходи там, де інші зупиняються.",
+                title: t("living_intel.f2_title"),
+                desc: t("living_intel.f2_desc"),
               },
               {
                 icon: <Activity size={20} color="#007AFF" />,
-                title: "Жива еволюція",
-                desc: "Кожен день — крок до кращої версії себе.",
+                title: t("living_intel.f3_title"),
+                desc: t("living_intel.f3_desc"),
               },
             ].map((f, i) => (
               <div
@@ -296,7 +298,7 @@ function NeuralWeb() {
             boxShadow: "0 0 12px #00E5FF",
           }}
         />
-        Активний у реальному часі
+        {t("living_intel.live_badge")}
       </div>
     </div>
   );

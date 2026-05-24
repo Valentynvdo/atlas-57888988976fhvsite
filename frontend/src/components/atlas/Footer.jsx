@@ -1,10 +1,12 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const { t } = useTranslation();
   const links = [
-    { label: "Приватність", path: "/privacy" },
-    { label: "Умови", path: "/terms" },
-    { label: "Контакти", path: "/contacts" }
+    { label: t("footer.privacy"), path: "/privacy" },
+    { label: t("footer.terms"), path: "/terms" },
+    { label: t("footer.contacts"), path: "/contacts" }
   ];
 
   return (
@@ -41,7 +43,7 @@ export default function Footer() {
             color: "rgba(255,255,255,0.5)",
           }}
         >
-          © {new Date().getFullYear()} Atlas AI. Створено з турботою для macOS.
+          © {new Date().getFullYear()} Atlas AI. {t("footer.created_with_care")}
         </div>
 
         <div style={{ display: "flex", gap: 24 }}>
