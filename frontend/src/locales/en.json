@@ -167,16 +167,17 @@
     "f2_desc": "Finds new approaches where others stop.",
     "f3_title": "Living evolution",
     "f3_desc": "Every day is a step towards a better version of itself.",
-    "live_badge": "Active in real time"
+    "live_badge": "Active in real time",
+    "eyebrow": "Living Intelligence"
   },
   "live_thought": {
     "studying": "What Atlas is learning right now:"
   },
   "final_cta": {
-    "title_1": "Ready to evolve your",
-    "title_2": "macOS?",
-    "desc": "Start using Atlas AI today and feel your Mac come to life.",
-    "btn": "Try Now"
+    "soon": "Coming soon",
+    "title_1": "Ready to meet your Atlas?",
+    "desc": "Join the waitlist first — and be among those who will change the way they interact with macOS.",
+    "btn": "Meet Atlas"
   },
   "footer": {
     "privacy": "Privacy",
@@ -623,5 +624,13 @@
   "txt_1437": "Invalid PIN",
   "txt_1438": "Admin access",
   "txt_1439": "Enter the administrator PIN code (4-8 digits)",
-  "txt_1440": "Sign in"
+  "txt_1440": "Sign in",
+  "auth": {
+    "logging_in": "Logging in..."
+  },
+  "coming_soon": {
+    "title": "Coming soon to your Mac.",
+    "desc": "Atlas is currently learning. We are preparing a private beta program for early macOS users — and we will let you know as soon as it is available.",
+    "btn": "Understood"
+  }
 }

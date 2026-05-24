@@ -37,7 +37,7 @@ export default function FinalCTA({ onCta }) {
             className="section-eyebrow"
             style={{ justifyContent: "center", display: "inline-block" }}
           >
-            Скоро
+            {t("final_cta.soon")}
           </div>
           <h2
             style={{
@@ -56,7 +56,7 @@ export default function FinalCTA({ onCta }) {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Готові зустріти свого Атласа?
+            {t("final_cta.title_1")}
           </h2>
           <p
             style={{
@@ -68,8 +68,7 @@ export default function FinalCTA({ onCta }) {
               lineHeight: 1.6,
             }}
           >
-            Приєднуйтесь до списку очікування першими — і будьте серед тих,
-            хто змінить спосіб взаємодії з {t("final_cta.title_2")}OS.
+            {t("final_cta.desc")}
           </p>
 
           <div
@@ -86,7 +85,7 @@ export default function FinalCTA({ onCta }) {
               onClick={onCta}
               className="cta-btn"
             >
-              Зустрічайте Атлас
+              {t("final_cta.btn")}
               <ArrowRight size={18} />
             </button>
           </div>

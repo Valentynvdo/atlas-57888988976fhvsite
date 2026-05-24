@@ -7,7 +7,10 @@ import { useAuth } from "../lib/auth";
  * Handles the post-OAuth redirect from Emergent.
  * Reads #session_id=... from URL fragment, exchanges with backend, then navigates to /dashboard.
  */
+import { useTranslation } from "react-i18next";
+
 export default function AuthCallback() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { refresh } = useAuth();
   const hasProcessed = useRef(false);
@@ -64,7 +67,7 @@ export default function AuthCallback() {
           }}
         />
         <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-        <div style={{ color: "rgba(255,255,255,0.7)" }}>Завершуємо вхід…</div>
+        <div style={{ color: "rgba(255,255,255,0.7)" }}>{t("auth.logging_in")}</div>
       </div>
     </div>
   );

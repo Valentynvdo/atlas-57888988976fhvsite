@@ -18,7 +18,7 @@ export default function LivingIntelligence() {
         className="two-col"
       >
         <div className="reveal">
-          <div className="section-eyebrow">Живий Інтелект</div>
+          <div className="section-eyebrow">{t("living_intel.eyebrow")}</div>
           <h2
             data-testid="intelligence-title"
             style={{
@@ -55,10 +55,7 @@ export default function LivingIntelligence() {
               maxWidth: 520,
             }}
           >
-            Атлас не обмежений заздалегідь написаними сценаріями. Він
-            постійно розвивається, вивчає ваші звички та самостійно
-            знаходить нові шляхи для вирішення щоденних завдань, щоб
-            ставати кращим з кожним днем.
+            {t("living_intel.desc")}
           </p>
 
           <div

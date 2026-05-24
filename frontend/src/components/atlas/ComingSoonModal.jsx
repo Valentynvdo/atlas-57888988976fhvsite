@@ -1,7 +1,8 @@
 import { X, Sparkles } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect } from "react";import { useTranslation } from "react-i18next";
 
 export default function ComingSoonModal({ open, onClose }) {
+  const { t } = useTranslation();
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -127,7 +128,7 @@ export default function ComingSoonModal({ open, onClose }) {
               margin: 0,
             }}
           >
-            Скоро серед вас.
+            {t("coming_soon.title")}
           </h3>
           <p
             style={{
@@ -137,9 +138,7 @@ export default function ComingSoonModal({ open, onClose }) {
               lineHeight: 1.6,
             }}
           >
-            Атлас зараз навчається. Ми готуємо приватну бета-програму для
-            перших користувачів macOS — і дамо вам знати, щойно вона стане
-            доступною.
+            {t("coming_soon.desc")}
           </p>
 
           <button
@@ -148,7 +147,7 @@ export default function ComingSoonModal({ open, onClose }) {
             className="cta-btn"
             style={{ marginTop: 32 }}
           >
-            Зрозуміло
+            {t("coming_soon.btn")}
           </button>
         </div>
       </div>
