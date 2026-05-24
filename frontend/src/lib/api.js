@@ -3,17 +3,24 @@ import axios from "axios";
 const getBackendUrl = () => {
   if (typeof window === "undefined") return "http://localhost:8000";
   
-  // 1. Prioritize environment variable (e.g. set in Render Static Site environment variables)
+  // 1. Prioritize environment variable
   if (process.env.REACT_APP_BACKEND_URL) {
     return process.env.REACT_APP_BACKEND_URL;
   }
   
   const hostname = window.location.hostname;
-  // 2. On Render (production unified) — same origin, no port needed
+  
+  // 2. If we are on the Render production frontend, hit the Render production backend
+  if (hostname === "atlas-xl1e.onrender.com") {
+    return "https://atlas-backend-zhgz.onrender.com";
+  }
+
+  // 3. On Render (production unified) — same origin
   if (hostname !== "localhost" && hostname !== "127.0.0.1") {
     return window.location.origin;
   }
-  // 3. Local dev — backend on port 8000
+  
+  // 4. Local dev — backend on port 8000
   return `http://${hostname}:8000`;
 };
 
