@@ -154,6 +154,7 @@ export default function LivingIntelligence() {
 }
 
 function NeuralWeb() {
+  const { t } = useTranslation();
   const nodes = [
     { x: 50, y: 50, r: 6 },
     { x: 20, y: 25, r: 3 },

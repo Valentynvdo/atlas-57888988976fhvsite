@@ -11,6 +11,7 @@ function CodeBlock({
   code,
   lang = "javascript"
 }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const copy = () => {
     navigator.clipboard.writeText(code);

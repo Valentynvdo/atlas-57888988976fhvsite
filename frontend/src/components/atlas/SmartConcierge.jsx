@@ -1,91 +1,91 @@
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
 import { Cpu, Zap, Brain, Search, FileText, Eye, Smile, Heart, Camera, ShieldAlert, ChevronLeft, ChevronRight } from "lucide-react";
-const items = [{
-  icon: <Cpu size={26} />,
-  title: t("txt_1018"),
-  label: "active_app_applescript_helper.py",
-  desc: t("txt_1019"),
-  grad: "linear-gradient(135deg, #00E5FF, #007AFF)",
-  glow: "rgba(0,229,255,0.35)",
-  status: "active"
-}, {
-  icon: <Zap size={26} />,
-  title: t("txt_1020"),
-  label: "evolution.py · plan.md",
-  desc: t("txt_1021"),
-  grad: "linear-gradient(135deg, #FF6B6B, #FF9A3C)",
-  glow: "rgba(255,107,107,0.3)",
-  status: "active"
-}, {
-  icon: <Brain size={26} />,
-  title: t("txt_1022"),
-  label: "semantic_memory.py",
-  desc: t("txt_1023"),
-  grad: "linear-gradient(135deg, #9D4CDD, #007AFF)",
-  glow: "rgba(157,76,221,0.35)",
-  status: "active"
-}, {
-  icon: <Search size={26} />,
-  title: t("txt_1024"),
-  label: "autonomous_researcher.py",
-  desc: t("txt_1025"),
-  grad: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
-  glow: "rgba(0,229,255,0.3)",
-  status: "active"
-}, {
-  icon: <FileText size={26} />,
-  title: t("txt_1026"),
-  label: "apple_notes_connector.py · contacts_connector.py",
-  desc: t("txt_1027"),
-  grad: "linear-gradient(135deg, #FFD56B, #FF6B6B)",
-  glow: "rgba(255,213,107,0.3)",
-  status: "active"
-}, {
-  icon: <Eye size={26} />,
-  title: t("txt_1028"),
-  label: "proactive_watcher.py",
-  desc: t("txt_1029"),
-  grad: "linear-gradient(135deg, #007AFF, #00E5FF)",
-  glow: "rgba(0,122,255,0.35)",
-  status: "active"
-}, {
-  icon: <Smile size={26} />,
-  title: t("txt_1030"),
-  label: "emotion_recognition.py · sarcasm_detector.py",
-  desc: t("txt_1031"),
-  grad: "linear-gradient(135deg, #FF9A3C, #9D4CDD)",
-  glow: "rgba(255,154,60,0.3)",
-  status: "soon"
-}, {
-  icon: <Heart size={26} />,
-  title: t("txt_1032"),
-  label: "eye_strain_reminder.py · sleep_advisor.py",
-  desc: t("txt_1033"),
-  grad: "linear-gradient(135deg, #FF6B6B, #00E5FF)",
-  glow: "rgba(255,107,107,0.3)",
-  status: "soon"
-}, {
-  icon: <Camera size={26} />,
-  title: t("txt_1034"),
-  label: "vision_handler.py",
-  desc: t("txt_1035"),
-  grad: "linear-gradient(135deg, #9D4CDD, #FF6B6B)",
-  glow: "rgba(157,76,221,0.3)",
-  status: "active"
-}, {
-  icon: <ShieldAlert size={26} />,
-  title: t("txt_1036"),
-  label: "privacy_guard.py · security_manager.py",
-  desc: t("txt_1037"),
-  grad: "linear-gradient(135deg, #00E5FF, #FFD56B)",
-  glow: "rgba(0,229,255,0.3)",
-  status: "active"
-}];
 export default function SmartConcierge() {
   const {
     t
   } = useTranslation();
+  const items = [{
+    icon: <Cpu size={26} />,
+    title: t("txt_1018"),
+    label: "active_app_applescript_helper.py",
+    desc: t("txt_1019"),
+    grad: "linear-gradient(135deg, #00E5FF, #007AFF)",
+    glow: "rgba(0,229,255,0.35)",
+    status: "active"
+  }, {
+    icon: <Zap size={26} />,
+    title: t("txt_1020"),
+    label: "evolution.py · plan.md",
+    desc: t("txt_1021"),
+    grad: "linear-gradient(135deg, #FF6B6B, #FF9A3C)",
+    glow: "rgba(255,107,107,0.3)",
+    status: "active"
+  }, {
+    icon: <Brain size={26} />,
+    title: t("txt_1022"),
+    label: "semantic_memory.py",
+    desc: t("txt_1023"),
+    grad: "linear-gradient(135deg, #9D4CDD, #007AFF)",
+    glow: "rgba(157,76,221,0.35)",
+    status: "active"
+  }, {
+    icon: <Search size={26} />,
+    title: t("txt_1024"),
+    label: "autonomous_researcher.py",
+    desc: t("txt_1025"),
+    grad: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+    glow: "rgba(0,229,255,0.3)",
+    status: "active"
+  }, {
+    icon: <FileText size={26} />,
+    title: t("txt_1026"),
+    label: "apple_notes_connector.py · contacts_connector.py",
+    desc: t("txt_1027"),
+    grad: "linear-gradient(135deg, #FFD56B, #FF6B6B)",
+    glow: "rgba(255,213,107,0.3)",
+    status: "active"
+  }, {
+    icon: <Eye size={26} />,
+    title: t("txt_1028"),
+    label: "proactive_watcher.py",
+    desc: t("txt_1029"),
+    grad: "linear-gradient(135deg, #007AFF, #00E5FF)",
+    glow: "rgba(0,122,255,0.35)",
+    status: "active"
+  }, {
+    icon: <Smile size={26} />,
+    title: t("txt_1030"),
+    label: "emotion_recognition.py · sarcasm_detector.py",
+    desc: t("txt_1031"),
+    grad: "linear-gradient(135deg, #FF9A3C, #9D4CDD)",
+    glow: "rgba(255,154,60,0.3)",
+    status: "soon"
+  }, {
+    icon: <Heart size={26} />,
+    title: t("txt_1032"),
+    label: "eye_strain_reminder.py · sleep_advisor.py",
+    desc: t("txt_1033"),
+    grad: "linear-gradient(135deg, #FF6B6B, #00E5FF)",
+    glow: "rgba(255,107,107,0.3)",
+    status: "soon"
+  }, {
+    icon: <Camera size={26} />,
+    title: t("txt_1034"),
+    label: "vision_handler.py",
+    desc: t("txt_1035"),
+    grad: "linear-gradient(135deg, #9D4CDD, #FF6B6B)",
+    glow: "rgba(157,76,221,0.3)",
+    status: "active"
+  }, {
+    icon: <ShieldAlert size={26} />,
+    title: t("txt_1036"),
+    label: "privacy_guard.py · security_manager.py",
+    desc: t("txt_1037"),
+    grad: "linear-gradient(135deg, #00E5FF, #FFD56B)",
+    glow: "rgba(0,229,255,0.3)",
+    status: "active"
+  }];
   const trackRef = useRef(null);
   const scroll = dir => {
     const track = trackRef.current;

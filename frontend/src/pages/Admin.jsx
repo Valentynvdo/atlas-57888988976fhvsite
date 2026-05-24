@@ -63,6 +63,7 @@ export default function Admin() {
 function AdminPanel({
   onLogout
 }) {
+  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [q, setQ] = useState("");
@@ -2291,6 +2292,7 @@ function UserDetailsModal({
   onClose,
   onUpdated
 }) {
+  const { t } = useTranslation();
   const [notes, setNotes] = useState(user.admin_notes || "");
   const [busy, setBusy] = useState(false);
   const doAction = async (action, extra = {}) => {
@@ -2464,6 +2466,7 @@ function Row({
   value,
   mono
 }) {
+  const { t } = useTranslation();
   return <div style={{
     display: "flex",
     justifyContent: "space-between",
@@ -2485,6 +2488,7 @@ function Row({
 function ManualKeyGen({
   onCreated
 }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [days, setDays] = useState(30);
   const [busy, setBusy] = useState(false);
@@ -2637,6 +2641,7 @@ function VersionUpload({
   fileRef,
   onUploaded
 }) {
+  const { t } = useTranslation();
   const [version, setVersion] = useState("");
   const [busy, setBusy] = useState(false);
   const submit = async () => {

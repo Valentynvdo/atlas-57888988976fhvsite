@@ -851,6 +851,7 @@ function Stat({ label, value }) {
 }
 
 function Confirm({ title, message, onCancel, onConfirm, busy, danger }) {
+  const { t } = useTranslation();
   return (
     <div
       onClick={onCancel}
