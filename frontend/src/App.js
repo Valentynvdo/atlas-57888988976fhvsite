@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import CustomCursor from "./components/CustomCursor";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
@@ -105,6 +106,7 @@ function App() {
     <TonConnectUIProvider manifestUrl={MANIFEST_URL}>
       <BrowserRouter>
         <AuthProvider>
+          <CustomCursor />
           <AppRouter />
         </AuthProvider>
       </BrowserRouter>

@@ -86,17 +86,8 @@ export default function SmartConcierge() {
     glow: "rgba(0,229,255,0.3)",
     status: "active"
   }];
-  const trackRef = useRef(null);
-  const scroll = dir => {
-    const track = trackRef.current;
-    if (!track) return;
-    const card = track.querySelector("[data-card]");
-    const step = card ? card.getBoundingClientRect().width + 20 : 320;
-    track.scrollBy({
-      left: step * dir,
-      behavior: "smooth"
-    });
-  };
+  const gridRef = useRef(null);
+
   return <section id="concierge" data-testid="concierge-section" className="section-container" style={{
     position: "relative"
   }}>
@@ -137,60 +128,17 @@ export default function SmartConcierge() {
           maxWidth: 560
         }}>{t("txt_1041")}</p>
         </div>
-
-        <div className="concierge-nav-buttons" style={{
-        display: "flex",
-        gap: 12
-      }}>
-          <button data-testid="concierge-prev-btn" onClick={() => scroll(-1)} aria-label="Попередня" className="glass" style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          display: "grid",
-          placeItems: "center",
-          cursor: "pointer",
-          color: "#fff"
-        }}>
-            <ChevronLeft size={20} />
-          </button>
-          <button data-testid="concierge-next-btn" onClick={() => scroll(1)} aria-label="Наступна" className="glass" style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          display: "grid",
-          placeItems: "center",
-          cursor: "pointer",
-          color: "#fff"
-        }}>
-            <ChevronRight size={20} />
-          </button>
-        </div>
       </div>
 
-      <div ref={trackRef} className="no-scrollbar concierge-track" style={{
-      display: "flex",
-      gap: 20,
-      overflowX: "auto",
-      scrollSnapType: "x mandatory",
-      paddingBottom: 24,
-      marginLeft: -24,
-      marginRight: -24,
-      paddingLeft: 24,
-      paddingRight: 24
-    }}>
-        {items.map((item, i) => <article key={item.title} data-card data-testid={`concierge-card-${i}`} className="glass concierge-card" style={{
-        flex: "0 0 320px",
-        maxWidth: 360,
-        borderRadius: 28,
-        padding: 28,
-        scrollSnapAlign: "start",
-        position: "relative",
-        overflow: "hidden",
-        minHeight: 320,
-        display: "flex",
-        flexDirection: "column"
-      }}>
-            {/* Color halo */}
+      <div ref={gridRef} className="bento-grid">
+        {items.map((item, i) => {
+          // Make the first card span 2 rows/cols for bento effect on desktop
+          const isLarge = i === 0;
+          return (
+          <article key={item.title} data-card data-testid={`concierge-card-${i}`} className={`bento-card ${isLarge ? 'bento-col-2 bento-row-2' : ''}`} style={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
             <div style={{
           position: "absolute",
           top: -60,
@@ -231,7 +179,7 @@ export default function SmartConcierge() {
             </div>
             <h3 className="concierge-card-title" style={{
           marginTop: 8,
-          fontSize: 22,
+          fontSize: isLarge ? 28 : 22,
           fontWeight: 600,
           letterSpacing: "-0.02em"
         }}>
@@ -239,7 +187,7 @@ export default function SmartConcierge() {
             </h3>
             <p className="concierge-card-desc" style={{
           marginTop: 12,
-          fontSize: 14,
+          fontSize: isLarge ? 16 : 14,
           color: "rgba(255,255,255,0.65)",
           lineHeight: 1.6,
           flex: 1
@@ -265,7 +213,8 @@ export default function SmartConcierge() {
           }} />
               {item.status === "active" ? t("txt_1042") : t("txt_1043")}
             </div>
-          </article>)}
+          </article>
+        )})}
       </div>
     </section>;
 }
