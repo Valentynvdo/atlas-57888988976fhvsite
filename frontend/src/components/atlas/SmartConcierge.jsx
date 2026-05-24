@@ -135,7 +135,7 @@ export default function SmartConcierge() {
           // Make the first card span 2 rows/cols for bento effect on desktop
           const isLarge = i === 0;
           return (
-          <article key={item.title} data-card data-testid={`concierge-card-${i}`} className={`bento-card ${isLarge ? 'bento-col-2 bento-row-2' : ''}`} style={{
+          <article key={i} data-card data-testid={`concierge-card-${i}`} className={`bento-card ${isLarge ? 'bento-col-2 bento-row-2' : ''}`} style={{
             display: "flex",
             flexDirection: "column"
           }}>

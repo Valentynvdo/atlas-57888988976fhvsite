@@ -14,10 +14,12 @@ export default function LivingIntelligence() {
       className="section-container"
       style={{ position: "relative" }}
     >
-      <div
-        className="two-col"
-      >
-        <div className="reveal">
+      <div className="bento-grid">
+        <article className="bento-card reveal bento-col-2" style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center"
+        }}>
           <div className="section-eyebrow">{t("living_intel.eyebrow")}</div>
           <h2
             data-testid="intelligence-title"
@@ -63,9 +65,8 @@ export default function LivingIntelligence() {
             style={{
               marginTop: 40,
               display: "grid",
-              gridTemplateColumns: "1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
               gap: 16,
-              maxWidth: 520,
             }}
           >
             {[
@@ -87,13 +88,14 @@ export default function LivingIntelligence() {
             ].map((f, i) => (
               <div
                 key={i}
-                className="glass"
                 style={{
-                  padding: "16px 18px",
+                  padding: "16px",
                   borderRadius: 16,
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.05)",
                   display: "flex",
-                  alignItems: "center",
-                  gap: 14,
+                  flexDirection: "column",
+                  gap: 12,
                 }}
                 data-testid={`intelligence-feature-${i}`}
               >
@@ -107,7 +109,6 @@ export default function LivingIntelligence() {
                     background:
                       "linear-gradient(135deg, rgba(0,229,255,0.08), rgba(157,76,221,0.08))",
                     border: "1px solid rgba(255,255,255,0.08)",
-                    flexShrink: 0,
                   }}
                 >
                   {f.icon}
@@ -119,8 +120,8 @@ export default function LivingIntelligence() {
                   <div
                     style={{
                       fontSize: 13,
-                      color: "rgba(255,255,255,0.6)",
-                      marginTop: 2,
+                      color: "rgba(255,255,255,0.5)",
+                      marginTop: 4,
                     }}
                   >
                     {f.desc}
@@ -129,22 +130,23 @@ export default function LivingIntelligence() {
               </div>
             ))}
           </div>
-        </div>
+        </article>
 
         {/* Neural visual */}
-        <div
-          className="reveal delay-1"
+        <article
+          className="bento-card reveal delay-1"
           style={{
             position: "relative",
-            aspectRatio: "1 / 1",
-            maxWidth: 560,
-            width: "100%",
-            justifySelf: "center",
+            minHeight: 400,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden"
           }}
           data-testid="intelligence-visual"
         >
           <NeuralWeb />
-        </div>
+        </article>
       </div>
     </section>
   );

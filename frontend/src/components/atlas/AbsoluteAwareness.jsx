@@ -4,25 +4,28 @@ export default function AbsoluteAwareness() {
   const {
     t
   } = useTranslation();
-  return <section id="awareness" data-testid="awareness-section" className="section-container" style={{
-    position: "relative"
-  }}>
-      <div className="two-col">
+  return (
+    <section id="awareness" data-testid="awareness-section" className="section-container" style={{ position: "relative" }}>
+      <div className="two-col" style={{ gap: 24 }}>
         {/* Biometric visual */}
-        <div className="reveal" style={{
+        <article className="bento-card reveal" style={{
         position: "relative",
-        aspectRatio: "1 / 1",
-        maxWidth: 560,
-        width: "100%",
-        justifySelf: "center",
+        minHeight: 400,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
         order: 2
       }} data-testid="awareness-visual">
           <FaceIDOrb />
-        </div>
+        </article>
 
         {/* Text */}
-        <div className="reveal delay-1" style={{
-        order: 1
+        <article className="bento-card reveal delay-1 bento-col-2" style={{
+        order: 1,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
       }}>
           <div className="section-eyebrow">{t("txt_1044")}</div>
           <h2 data-testid="awareness-title" style={{
@@ -54,7 +57,7 @@ export default function AbsoluteAwareness() {
           <div style={{
           marginTop: 40,
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 16,
           maxWidth: 520
         }}>
@@ -74,7 +77,9 @@ export default function AbsoluteAwareness() {
             icon: <Heart size={20} color="#FF6B9A" />,
             title: t("txt_1053"),
             value: t("txt_1054")
-          }].map((m, i) => <div key={i} className="glass" data-testid={`awareness-stat-${i}`} style={{
+          }].map((m, i) => <div key={i} data-testid={`awareness-stat-${i}`} style={{
+            background: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.05)",
             borderRadius: 18,
             padding: 16
           }}>
@@ -108,9 +113,10 @@ export default function AbsoluteAwareness() {
                 </div>
               </div>)}
           </div>
-        </div>
+        </article>
       </div>
-    </section>;
+    </section>
+  );
 }
 function FaceIDOrb() {
   const { t } = useTranslation();

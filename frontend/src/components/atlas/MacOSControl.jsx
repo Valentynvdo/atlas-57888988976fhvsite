@@ -77,7 +77,7 @@ export default function MacOSControl() {
       </div>
 
       <div className="bento-grid" style={{ marginTop: 64 }}>
-        {cards.map((c, i) => <article key={c.title} data-testid={`macos-card-${i}`} className={`bento-card reveal delay-${i + 1}`} style={{
+        {cards.map((c, i) => <article key={i} data-testid={`macos-card-${i}`} className={`bento-card reveal delay-${i + 1}`} style={{
         position: "relative",
         overflow: "hidden",
         minHeight: 380,
