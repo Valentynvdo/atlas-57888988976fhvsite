@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone, timedelta
 
 import httpx
+import stripe
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from auth import get_current_user, _generate_key
@@ -17,10 +18,13 @@ webhook_router = APIRouter(prefix="/api/webhook", tags=["webhook"])
 TON_RECEIVER = os.getenv("TON_RECEIVER_ADDRESS", "")
 TON_PRICE_USD = float(os.getenv("TON_PRICE_USD", "28.99"))
 
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+
 PACKAGES = {
-    "atlas_monthly":   {"amount": 28.99,  "currency": "usd", "days": 30,  "label": "Atlas AI · Місяць"},
-    "atlas_quarterly": {"amount": 74.99,  "currency": "usd", "days": 90,  "label": "Atlas AI · 3 місяці"},
-    "atlas_yearly":    {"amount": 249.99, "currency": "usd", "days": 365, "label": "Atlas AI · Рік"},
+    "atlas_monthly":   {"amount": 28.99,  "currency": "usd", "days": 30,  "label": "Atlas AI · Місяць", "stripe_price_id": "price_1TXxzdD8ZxqWes01QO0e5AWU"},
+    "atlas_quarterly": {"amount": 74.99,  "currency": "usd", "days": 90,  "label": "Atlas AI · 3 місяці", "stripe_price_id": "price_1TaUQaD8ZxqWes01yn6fI6Hy"},
+    "atlas_yearly":    {"amount": 249.99, "currency": "usd", "days": 365, "label": "Atlas AI · Рік", "stripe_price_id": "price_1TaUR8D8ZxqWes017NfUcvnm"},
 }
 
 
@@ -194,7 +198,7 @@ async def _credit_license(user_id: str, days: int) -> None:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Stripe stub (kept for compatibility)
+# Stripe Integration
 # ──────────────────────────────────────────────────────────────────────────────
 
 @router.post("/checkout")
@@ -204,15 +208,46 @@ async def create_checkout(body: dict, request: Request, user: dict = Depends(get
     pkg = PACKAGES.get(package_id)
     if not pkg:
         raise HTTPException(status_code=400, detail="Invalid package")
-    await db.payment_transactions.insert_one({
-        "session_id": f"stub_{user['user_id']}_{package_id}",
-        "user_id": user["user_id"], "email": user["email"],
-        "package_id": package_id, "amount": pkg["amount"],
-        "currency": pkg["currency"], "days": pkg["days"],
-        "payment_status": "initiated", "credited": False,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-    })
-    return {"url": f"{origin}/dashboard", "session_id": "stub_session"}
+        
+    if not stripe.api_key:
+        raise HTTPException(status_code=500, detail="Stripe API key not configured")
+
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[{
+                "price": pkg["stripe_price_id"],
+                "quantity": 1,
+            }],
+            mode="subscription",
+            success_url=f"{origin}/dashboard?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{origin}/dashboard",
+            customer_email=user["email"],
+            client_reference_id=user["user_id"],
+            metadata={
+                "user_id": user["user_id"],
+                "package_id": package_id,
+                "days": pkg["days"]
+            }
+        )
+        
+        await db.payment_transactions.insert_one({
+            "session_id": session.id,
+            "user_id": user["user_id"], 
+            "email": user["email"],
+            "package_id": package_id, 
+            "amount": pkg["amount"],
+            "currency": pkg["currency"], 
+            "days": pkg["days"],
+            "payment_status": "initiated", 
+            "credited": False,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+        
+        return {"url": session.url, "session_id": session.id}
+    except Exception as e:
+        logger.error("Stripe checkout error: %s", e)
+        raise HTTPException(status_code=500, detail="Could not create checkout session")
 
 
 @router.get("/checkout/status/{session_id}")
@@ -220,9 +255,68 @@ async def checkout_status(session_id: str, user: dict = Depends(get_current_user
     tx = await db.payment_transactions.find_one({"session_id": session_id})
     if not tx or tx["user_id"] != user["user_id"]:
         raise HTTPException(status_code=404, detail="Session not found")
-    return {"status": "complete", "payment_status": tx.get("payment_status", "initiated"), "amount_total": 0, "currency": "usd"}
+        
+    # Optional: fetch latest status from Stripe
+    if tx["payment_status"] == "initiated" and stripe.api_key:
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            if session.payment_status == "paid":
+                tx["payment_status"] = "paid"
+                # If not credited yet, webhook will handle it or we can fallback here.
+        except Exception as e:
+            logger.warning("Failed to retrieve stripe session: %s", e)
+
+    return {"status": "complete", "payment_status": tx.get("payment_status", "initiated"), "amount_total": tx.get("amount", 0), "currency": "usd"}
 
 
 @webhook_router.post("/stripe")
 async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+    
+    if not STRIPE_WEBHOOK_SECRET:
+        logger.warning("Stripe webhook received but secret is not set")
+        return {"received": True}
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    except stripe.error.SignatureVerificationError as e:
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        
+        user_id = session.get("client_reference_id")
+        metadata = session.get("metadata", {})
+        package_id = metadata.get("package_id")
+        days = int(metadata.get("days", 30))
+        session_id = session.get("id")
+        
+        if user_id and package_id:
+            # Mark transaction as paid and credited
+            tx = await db.payment_transactions.find_one({"session_id": session_id})
+            if tx and not tx.get("credited"):
+                await _credit_license(user_id, days)
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id},
+                    {"$set": {"payment_status": "paid", "credited": True}}
+                )
+                logger.info("Credited %d days to user %s from Stripe webhook", days, user_id)
+            elif not tx:
+                # Fallback if tx wasn't created properly
+                await _credit_license(user_id, days)
+                await db.payment_transactions.insert_one({
+                    "session_id": session_id,
+                    "user_id": user_id, 
+                    "package_id": package_id, 
+                    "days": days,
+                    "payment_status": "paid", 
+                    "credited": True,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                })
+                
     return {"received": True}

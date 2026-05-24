@@ -17,6 +17,7 @@ import {
   Wallet,
   Zap,
   MessageSquare,
+  CreditCard,
 } from "lucide-react";
 import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
@@ -36,6 +37,7 @@ export default function Dashboard() {
   const [busy, setBusy] = useState(false);
   const [tonPrices, setTonPrices] = useState(null);
   const [tonBusy, setTonBusy] = useState(false);
+  const [stripeBusy, setStripeBusy] = useState(false);
   const [tonConnectUI] = useTonConnectUI();
   const tonWallet = useTonWallet();
 
@@ -154,6 +156,25 @@ export default function Dashboard() {
       }
     } finally {
       setTonBusy(false);
+    }
+  };
+
+  const payWithStripe = async (packageId = "atlas_monthly") => {
+    setStripeBusy(true);
+    try {
+      const { data } = await api.post("/api/billing/checkout", {
+        package_id: packageId,
+        origin_url: window.location.origin,
+      });
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("Не вдалося створити платіж");
+      }
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || "Помилка ініціалізації оплати");
+    } finally {
+      setStripeBusy(false);
     }
   };
 
@@ -717,7 +738,27 @@ export default function Dashboard() {
                       }}
                     >
                       {tonBusy ? <Loader2 size={16} className="spin" /> : (
-                        <>{!tonWallet ? <><Wallet size={14} /> Підключити гаманець</> : <><Zap size={14} /> Оплатити TON</>}</>
+                        <>{!tonWallet ? <><Wallet size={14} /> Підключити гаманець (TON)</> : <><Zap size={14} /> Оплатити TON</>}</>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => payWithStripe(p.id)}
+                      disabled={stripeBusy}
+                      className="cta-btn"
+                      style={{
+                        width: "100%",
+                        marginTop: 10,
+                        padding: "12px 20px",
+                        fontSize: 14,
+                        justifyContent: "center",
+                        borderRadius: 14,
+                        background: isPopular ? "#007AFF" : "rgba(255,255,255,0.1)",
+                        border: "none",
+                        color: "#fff"
+                      }}
+                    >
+                      {stripeBusy ? <Loader2 size={16} className="spin" /> : (
+                        <><CreditCard size={14} /> Оплатити карткою</>
                       )}
                     </button>
                   </div>
