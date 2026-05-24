@@ -104,6 +104,7 @@ function AppRouter() {
 function App() {
   return (
     <TonConnectUIProvider manifestUrl={MANIFEST_URL}>
+      <div className="grain-overlay" />
       <BrowserRouter>
         <AuthProvider>
           <CustomCursor />

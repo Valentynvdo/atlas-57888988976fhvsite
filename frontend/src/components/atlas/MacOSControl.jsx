@@ -76,15 +76,8 @@ export default function MacOSControl() {
       }}>{t("txt_1017")}</p>
       </div>
 
-      <div className="mt-16" style={{
-      marginTop: 64,
-      display: "grid",
-      gap: 24,
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))"
-    }}>
-        {cards.map((c, i) => <article key={c.title} data-testid={`macos-card-${i}`} className={`glass reveal delay-${i + 1}`} style={{
-        borderRadius: 28,
-        padding: 28,
+      <div className="bento-grid" style={{ marginTop: 64 }}>
+        {cards.map((c, i) => <article key={c.title} data-testid={`macos-card-${i}`} className={`bento-card reveal delay-${i + 1}`} style={{
         position: "relative",
         overflow: "hidden",
         minHeight: 380,

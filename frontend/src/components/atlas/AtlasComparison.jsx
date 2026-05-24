@@ -224,13 +224,11 @@ function ComparisonCategory({
       
       <div className="comp-cat-grid">
         {/* Left: Normal AI (Dim, boring) */}
-        <div style={{
+        <div className="glass" style={{
         padding: "24px",
-        background: "rgba(15,15,15,0.4)",
-        borderRadius: 20,
-        border: "1px solid rgba(255,255,255,0.03)",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        borderRadius: 20
       }}>
           <div style={{
           display: "flex",
@@ -269,7 +267,7 @@ function ComparisonCategory({
         </div>
         
         {/* Right: ATLAS (Premium, glowing) */}
-        <div className="animated-border-box" style={{
+        <div className="bento-card animated-border-box" style={{
         padding: "24px 32px",
         display: "flex",
         flexDirection: "column",
