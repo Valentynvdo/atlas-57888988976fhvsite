@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 
 export default function Navbar({ onCta }) {
+  const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
@@ -83,10 +85,10 @@ export default function Navbar({ onCta }) {
 
           <div className="nav-links">
             {[
-              { id: "intelligence", label: "Інтелект" },
-              { id: "macos", label: "macOS" },
-              { id: "concierge", label: "Concierge" },
-              { id: "awareness", label: "Свідомість" },
+              { id: "intelligence", label: t("navbar.nav_intelligence") },
+              { id: "macos", label: t("navbar.nav_macos") },
+              { id: "concierge", label: t("navbar.nav_concierge") },
+              { id: "awareness", label: t("navbar.nav_awareness") },
             ].map((link) => (
               <a
                 key={link.id}
@@ -110,6 +112,36 @@ export default function Navbar({ onCta }) {
           </div>
 
           <div className="navbar-actions">
+            <button
+              onClick={() => {
+                i18n.changeLanguage(i18n.language === 'uk' ? 'en' : 'uk');
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.72)",
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "color 0.2s ease",
+                padding: "4px 8px",
+                borderRadius: "6px"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#fff";
+                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "rgba(255,255,255,0.72)";
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              <Globe size={16} />
+              {i18n.language === 'uk' ? 'EN' : 'UA'}
+            </button>
             <a
               href="/docs"
               onClick={(e) => {
@@ -121,7 +153,7 @@ export default function Navbar({ onCta }) {
               onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
             >
-              📖 Документація
+              {t("navbar.docs")}
             </a>
             <button
               data-testid="nav-cta-btn"
@@ -144,7 +176,7 @@ export default function Navbar({ onCta }) {
                 (e.currentTarget.style.color = "rgba(255,255,255,0.72)")
               }
             >
-              {user ? "Кабінет" : "Увійти"}
+              {user ? t("navbar.cabinet") : t("navbar.login")}
               <span
                 style={{
                   width: 6,
@@ -195,10 +227,10 @@ export default function Navbar({ onCta }) {
           }}
         >
           {[
-            { id: "intelligence", label: "Інтелект" },
-            { id: "macos", label: "macOS" },
-            { id: "concierge", label: "Concierge" },
-            { id: "awareness", label: "Свідомість" },
+            { id: "intelligence", label: t("navbar.nav_intelligence") },
+            { id: "macos", label: t("navbar.nav_macos") },
+            { id: "concierge", label: t("navbar.nav_concierge") },
+            { id: "awareness", label: t("navbar.nav_awareness") },
           ].map((link) => (
             <a
               key={link.id}
@@ -231,8 +263,32 @@ export default function Navbar({ onCta }) {
               marginTop: 12,
             }}
           >
-            📖 Документація
+            {t("navbar.docs")}
           </a>
+
+          <button
+            onClick={() => {
+              i18n.changeLanguage(i18n.language === 'uk' ? 'en' : 'uk');
+              setIsMobileMenuOpen(false);
+            }}
+            style={{
+              background: "rgba(255,255,255,0.1)",
+              border: "none",
+              color: "#fff",
+              fontSize: 16,
+              fontWeight: 500,
+              marginTop: 12,
+              cursor: "pointer",
+              padding: "8px 16px",
+              borderRadius: "8px",
+              display: "flex",
+              alignItems: "center",
+              gap: 8
+            }}
+          >
+            <Globe size={18} />
+            {i18n.language === 'uk' ? 'Switch to English' : 'Перейти на Українську'}
+          </button>
 
           <button
             onClick={() => {
@@ -249,7 +305,7 @@ export default function Navbar({ onCta }) {
               cursor: "pointer",
             }}
           >
-            {user ? "Кабінет" : "Увійти"}
+            {user ? t("navbar.cabinet") : t("navbar.login")}
           </button>
         </div>
       )}

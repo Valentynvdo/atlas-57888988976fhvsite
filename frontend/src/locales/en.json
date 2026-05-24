@@ -1,0 +1,20 @@
+{
+  "navbar": {
+    "nav_intelligence": "Intelligence",
+    "nav_macos": "macOS",
+    "nav_concierge": "Concierge",
+    "nav_awareness": "Awareness",
+    "docs": "📖 Documentation",
+    "cabinet": "Dashboard",
+    "login": "Login"
+  },
+  "hero": {
+    "title_span": "Your personal universe.",
+    "subtitle": "An intelligence that doesn't just listen. It understands, adapts, and acts.",
+    "btn_meet": "Meet Atlas",
+    "btn_learn": "Learn more",
+    "proof_1": "Built for macOS",
+    "proof_2": "Real actions. Real world.",
+    "proof_3": "Privacy by default"
+  }
+}

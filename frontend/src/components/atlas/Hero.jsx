@@ -1,7 +1,9 @@
 import EnergySphere from "./EnergySphere";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Hero({ onCta }) {
+  const { t } = useTranslation();
   return (
     <section
       id="hero"
@@ -99,7 +101,7 @@ export default function Hero({ onCta }) {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Ваш персональний всесвіт.
+            {t("hero.title_span")}
           </span>
         </h1>
 
@@ -115,7 +117,7 @@ export default function Hero({ onCta }) {
             fontWeight: 400,
           }}
         >
-          Інтелект, який не просто слухає. Він розуміє, адаптується і діє.
+          {t("hero.subtitle")}
         </p>
 
         <div
@@ -133,11 +135,11 @@ export default function Hero({ onCta }) {
             onClick={onCta}
             className="cta-btn"
           >
-            Зустрічайте Атлас
+            {t("hero.btn_meet")}
             <ArrowRight size={18} />
           </button>
           <a href="#intelligence" className="ghost-btn" data-testid="hero-learn-more">
-            Дізнатися більше
+            {t("hero.btn_learn")}
           </a>
         </div>
 
@@ -156,11 +158,11 @@ export default function Hero({ onCta }) {
             textTransform: "uppercase",
           }}
         >
-          <span>Створено для macOS</span>
+          <span>{t("hero.proof_1")}</span>
           <span style={{ opacity: 0.4 }}>•</span>
-          <span>Реальні дії. Реальний світ.</span>
+          <span>{t("hero.proof_2")}</span>
           <span style={{ opacity: 0.4 }}>•</span>
-          <span>Приватність за замовчуванням</span>
+          <span>{t("hero.proof_3")}</span>
         </div>
 
         {/* Scroll hint */}

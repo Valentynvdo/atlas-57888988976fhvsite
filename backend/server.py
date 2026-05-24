@@ -166,25 +166,35 @@ app.mount("/downloads", StaticFiles(directory=str(UPLOAD_DIR)), name="downloads"
 # ── Serve React SPA (production build) ─────────────────────────────────────
 STATIC_DIR = ROOT_DIR / "static"
 
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.responses import JSONResponse
+
 if STATIC_DIR.exists():
-    # Mount all static assets (JS, CSS, images) except index.html
+    # Mount compiled static assets (JS, CSS, images) inside /static/
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR / "static")), name="react-static")
 
-    @app.get("/{full_path:path}")
-    async def serve_spa(full_path: str, request: Request):
-        """Serve React index.html for all non-API routes (SPA fallback)."""
-        # Don't intercept API routes or downloads
-        if full_path.startswith("api/") or full_path.startswith("downloads/"):
-            from fastapi.responses import JSONResponse
+@app.exception_handler(StarletteHTTPException)
+async def custom_404_handler(request: Request, exc: StarletteHTTPException):
+    if exc.status_code == 404:
+        path = request.url.path
+        if path.startswith("/api/") or path.startswith("/downloads/"):
             return JSONResponse({"detail": "Not Found"}, status_code=404)
-        # Check for static file (images, manifest, etc.)
-        file_path = STATIC_DIR / full_path
-        if file_path.exists() and file_path.is_file():
-            return FileResponse(str(file_path))
-        # Fallback to index.html for SPA routing
-        index = STATIC_DIR / "index.html"
-        if index.exists():
-            return FileResponse(str(index))
-        return {"error": "Build not found"}
-else:
+            
+        if STATIC_DIR.exists():
+            rel_path = path.lstrip("/")
+            # Attempt to serve root-level static files (favicon, manifest, etc.)
+            if rel_path:
+                file_path = STATIC_DIR / rel_path
+                if file_path.exists() and file_path.is_file():
+                    return FileResponse(str(file_path))
+            
+            # SPA Fallback: serve index.html for React Router
+            index = STATIC_DIR / "index.html"
+            if index.exists():
+                return FileResponse(str(index))
+                
+    # Return default JSON for other HTTP exceptions
+    return JSONResponse({"detail": str(exc.detail)}, status_code=exc.status_code)
+
+if not STATIC_DIR.exists():
     logger.warning("React build not found at %s — running API only", STATIC_DIR)
