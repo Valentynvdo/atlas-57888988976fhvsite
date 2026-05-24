@@ -1,20 +1,28 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Loader2 } from "lucide-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
-
-export default function AdminPin({ onUnlock }) {
-  const { user, loading } = useAuth();
+export default function AdminPin({
+  onUnlock
+}) {
+  const {
+    t
+  } = useTranslation();
+  const {
+    user,
+    loading
+  } = useAuth();
   const navigate = useNavigate();
   const [pin, setPin] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-
   useEffect(() => {
-    if (!loading && (!user || !user.is_admin)) navigate("/", { replace: true });
+    if (!loading && (!user || !user.is_admin)) navigate("/", {
+      replace: true
+    });
   }, [user, loading, navigate]);
-
   useEffect(() => {
     // Inject noindex meta on admin pages
     let meta = document.querySelector('meta[name="robots"]');
@@ -26,92 +34,87 @@ export default function AdminPin({ onUnlock }) {
     meta.content = "noindex,nofollow";
     return () => meta.remove();
   }, []);
-
-  const submit = async (e) => {
+  const submit = async e => {
     e.preventDefault();
     setError("");
     setBusy(true);
     try {
-      await api.post("/api/auth/admin/pin", { pin });
+      await api.post("/api/auth/admin/pin", {
+        pin
+      });
       onUnlock?.();
     } catch (err) {
       const status = err?.response?.status;
-      if (status === 429) setError("IP заблоковано на 1 годину");
-      else setError("Невірний PIN");
+      if (status === 429) setError(t("txt_1436"));else setError(t("txt_1437"));
     } finally {
       setBusy(false);
     }
   };
-
-  return (
-    <div
-      data-testid="admin-pin-page"
-      style={{
-        minHeight: "100vh",
-        background: "#000",
-        color: "#fff",
+  return <div data-testid="admin-pin-page" style={{
+    minHeight: "100vh",
+    background: "#000",
+    color: "#fff",
+    display: "grid",
+    placeItems: "center",
+    padding: 24,
+    fontFamily: "Inter, sans-serif"
+  }}>
+      <form onSubmit={submit} className="glass" style={{
+      padding: 40,
+      borderRadius: 24,
+      width: "min(380px, 100%)",
+      textAlign: "center"
+    }}>
+        <div style={{
+        width: 56,
+        height: 56,
+        borderRadius: "50%",
+        background: "rgba(255,95,87,0.12)",
+        border: "1px solid rgba(255,95,87,0.3)",
+        margin: "0 auto 20px",
         display: "grid",
-        placeItems: "center",
-        padding: 24,
-        fontFamily: "Inter, sans-serif",
-      }}
-    >
-      <form onSubmit={submit} className="glass" style={{ padding: 40, borderRadius: 24, width: "min(380px, 100%)", textAlign: "center" }}>
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            background: "rgba(255,95,87,0.12)",
-            border: "1px solid rgba(255,95,87,0.3)",
-            margin: "0 auto 20px",
-            display: "grid",
-            placeItems: "center",
-          }}
-        >
+        placeItems: "center"
+      }}>
           <Lock size={24} color="#FF5F57" />
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>Адмін доступ</h2>
-        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, margin: "8px 0 24px" }}>
-          Введи PIN-код адміністратора (4-8 цифр)
-        </p>
-        <input
-          data-testid="admin-pin-input"
-          autoFocus
-          inputMode="numeric"
-          maxLength={8}
-          value={pin}
-          onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-          style={{
-            width: "100%",
-            padding: "16px 18px",
-            background: "rgba(0,0,0,0.5)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 14,
-            color: "#fff",
-            fontSize: 22,
-            textAlign: "center",
-            letterSpacing: "0.4em",
-            fontFamily: "'Source Code Pro', monospace",
-            outline: "none",
-          }}
-        />
-        {error && (
-          <div data-testid="pin-error" style={{ color: "#FF5F57", fontSize: 13, marginTop: 12 }}>
+        <h2 style={{
+        fontSize: 22,
+        fontWeight: 600,
+        margin: 0
+      }}>{t("txt_1438")}</h2>
+        <p style={{
+        color: "rgba(255,255,255,0.6)",
+        fontSize: 13,
+        margin: "8px 0 24px"
+      }}>{t("txt_1439")}</p>
+        <input data-testid="admin-pin-input" autoFocus inputMode="numeric" maxLength={8} value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, ""))} style={{
+        width: "100%",
+        padding: "16px 18px",
+        background: "rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 14,
+        color: "#fff",
+        fontSize: 22,
+        textAlign: "center",
+        letterSpacing: "0.4em",
+        fontFamily: "'Source Code Pro', monospace",
+        outline: "none"
+      }} />
+        {error && <div data-testid="pin-error" style={{
+        color: "#FF5F57",
+        fontSize: 13,
+        marginTop: 12
+      }}>
             {error}
-          </div>
-        )}
-        <button
-          data-testid="admin-pin-submit"
-          type="submit"
-          disabled={busy || pin.length < 4 || pin.length > 8}
-          className="cta-btn"
-          style={{ marginTop: 24, width: "100%", justifyContent: "center", opacity: busy || pin.length < 4 || pin.length > 8 ? 0.6 : 1 }}
-        >
-          {busy ? <Loader2 size={16} className="spin" /> : null} Увійти
-        </button>
+          </div>}
+        <button data-testid="admin-pin-submit" type="submit" disabled={busy || pin.length < 4 || pin.length > 8} className="cta-btn" style={{
+        marginTop: 24,
+        width: "100%",
+        justifyContent: "center",
+        opacity: busy || pin.length < 4 || pin.length > 8 ? 0.6 : 1
+      }}>
+          {busy ? <Loader2 size={16} className="spin" /> : null}{t("txt_1440")}</button>
         <style>{`.spin{animation: spin 0.9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </form>
-    </div>
-  );
+    </div>;
 }

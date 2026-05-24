@@ -1,42 +1,22 @@
+import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
-import {
-  LogOut,
-  Search,
-  Users,
-  TrendingUp,
-  DollarSign,
-  AlertCircle,
-  Loader2,
-  Upload,
-  KeyRound,
-  Activity,
-  X,
-  ShieldOff,
-  ShieldCheck,
-  RefreshCw,
-  Clock,
-  Compass,
-  Cpu,
-  Database,
-  Radio,
-  FileText,
-  Lock,
-  Globe,
-  MapPin,
-  AlertTriangle,
-  Plus,
-  BookOpen
-} from "lucide-react";
+import { LogOut, Search, Users, TrendingUp, DollarSign, AlertCircle, Loader2, Upload, KeyRound, Activity, X, ShieldOff, ShieldCheck, RefreshCw, Clock, Compass, Cpu, Database, Radio, FileText, Lock, Globe, MapPin, AlertTriangle, Plus, BookOpen } from "lucide-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import AdminPin from "./AdminPin";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
 export default function Admin() {
-  const { user, loading, logout } = useAuth();
+  const {
+    t
+  } = useTranslation();
+  const {
+    user,
+    loading,
+    logout
+  } = useAuth();
   const navigate = useNavigate();
   const [unlocked, setUnlocked] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -52,41 +32,45 @@ export default function Admin() {
     meta.content = "noindex,nofollow";
     return () => meta.remove();
   }, []);
-
   useEffect(() => {
-    if (!loading && (!user || !user.is_admin)) navigate("/", { replace: true });
+    if (!loading && (!user || !user.is_admin)) navigate("/", {
+      replace: true
+    });
   }, [user, loading, navigate]);
 
   // Check if PIN already unlocked
   useEffect(() => {
     if (!user?.is_admin) return;
-    api
-      .get("/api/admin/ping")
-      .then(() => setUnlocked(true))
-      .catch(() => setUnlocked(false))
-      .finally(() => setChecking(false));
+    api.get("/api/admin/ping").then(() => setUnlocked(true)).catch(() => setUnlocked(false)).finally(() => setChecking(false));
   }, [user]);
-
   if (loading || checking) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#000", display: "grid", placeItems: "center" }}>
+    return <div style={{
+      minHeight: "100vh",
+      background: "#000",
+      display: "grid",
+      placeItems: "center"
+    }}>
         <Loader2 size={28} color="#00E5FF" className="spin" />
         <style>{`.spin{animation: spin 0.9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-      </div>
-    );
+      </div>;
   }
-
   if (!unlocked) return <AdminPin onUnlock={() => setUnlocked(true)} />;
-
-  return <AdminPanel onLogout={async () => { await logout(); navigate("/"); }} />;
+  return <AdminPanel onLogout={async () => {
+    await logout();
+    navigate("/");
+  }} />;
 }
-
-function AdminPanel({ onLogout }) {
+function AdminPanel({
+  onLogout
+}) {
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState("all");
-  const [sort, setSort] = useState({ key: "created_at", dir: "desc" });
+  const [sort, setSort] = useState({
+    key: "created_at",
+    dir: "desc"
+  });
   const [selectedUser, setSelectedUser] = useState(null);
   const [apiLogs, setApiLogs] = useState([]);
   const [version, setVersion] = useState(null);
@@ -108,20 +92,14 @@ function AdminPanel({ onLogout }) {
   const [isDocModalOpen, setIsDocModalOpen] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState("edit");
   const [liveContent, setLiveContent] = useState("");
-
   const refresh = useCallback(async () => {
     try {
-      const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([
-        api.get("/api/admin/stats"),
-        api.get("/api/admin/users", { params: { q, filter } }),
-        api.get("/api/admin/api-logs"),
-        api.get("/api/admin/version"),
-        api.get("/api/admin/detailed-stats"),
-        api.get("/api/admin/health-metrics"),
-        api.get("/api/admin/active-map"),
-        api.get("/api/admin/admin-logs"),
-        api.get("/api/admin/docs/custom"),
-      ]);
+      const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([api.get("/api/admin/stats"), api.get("/api/admin/users", {
+        params: {
+          q,
+          filter
+        }
+      }), api.get("/api/admin/api-logs"), api.get("/api/admin/version"), api.get("/api/admin/detailed-stats"), api.get("/api/admin/health-metrics"), api.get("/api/admin/active-map"), api.get("/api/admin/admin-logs"), api.get("/api/admin/docs/custom")]);
       setStats(s.data);
       setUsers(u.data);
       setApiLogs(l.data);
@@ -135,13 +113,11 @@ function AdminPanel({ onLogout }) {
       console.error("Admin refresh error", err);
     }
   }, [q, filter]);
-
   useEffect(() => {
     refresh();
     const intervalId = setInterval(refresh, 10000); // Оновлення кожні 10 секунд
     return () => clearInterval(intervalId);
   }, [refresh]);
-
   const sortedUsers = useMemo(() => {
     const arr = [...users];
     arr.sort((a, b) => {
@@ -153,24 +129,38 @@ function AdminPanel({ onLogout }) {
     });
     return arr;
   }, [users, sort]);
-
-  const toggleSort = (k) =>
-    setSort((s) => (s.key === k ? { key: k, dir: s.dir === "asc" ? "desc" : "asc" } : { key: k, dir: "asc" }));
-
+  const toggleSort = k => setSort(s => s.key === k ? {
+    key: k,
+    dir: s.dir === "asc" ? "desc" : "asc"
+  } : {
+    key: k,
+    dir: "asc"
+  });
   const chartConfig = useMemo(() => {
     switch (selectedMetric) {
       case "active":
-        return { title: "Активні користувачі", color: "#28C840" };
+        return {
+          title: t("txt_1245"),
+          color: "#28C840"
+        };
       case "revenue":
-        return { title: "Місячний дохід ($)", color: "#FEBC2E" };
+        return {
+          title: t("txt_1246"),
+          color: "#FEBC2E"
+        };
       case "churn":
-        return { title: "Відтік ліцензій за місяць", color: "#FF5F57" };
+        return {
+          title: t("txt_1247"),
+          color: "#FF5F57"
+        };
       case "users":
       default:
-        return { title: "Зростання користувачів", color: "#00E5FF" };
+        return {
+          title: t("txt_1248"),
+          color: "#00E5FF"
+        };
     }
   }, [selectedMetric]);
-
   const handleBroadcast = async () => {
     if (!broadcastMessage.trim()) return;
     setSendingBroadcast(true);
@@ -179,326 +169,713 @@ function AdminPanel({ onLogout }) {
         message: broadcastMessage,
         target: broadcastTarget
       });
-      toast.success("Сповіщення успішно надіслано!", { style: { background: "rgba(40,200,64,0.15)", border: "1px solid rgba(40,200,64,0.4)", color: "#fff" }});
+      toast.success(t("txt_1249"), {
+        style: {
+          background: "rgba(40,200,64,0.15)",
+          border: "1px solid rgba(40,200,64,0.4)",
+          color: "#fff"
+        }
+      });
       setBroadcastMessage("");
       refresh();
     } catch {
-      toast.error("Помилка надсилання сповіщення.");
+      toast.error(t("txt_1250"));
     } finally {
       setSendingBroadcast(false);
     }
   };
-
-  return (
-    <div data-testid="admin-page" style={{ minHeight: "100vh", background: "#040406", color: "#fff", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
+  return <div data-testid="admin-page" style={{
+    minHeight: "100vh",
+    background: "#040406",
+    color: "#fff",
+    fontFamily: "Inter, sans-serif",
+    display: "flex",
+    flexDirection: "column"
+  }}>
       <Toaster theme="dark" position="top-center" />
 
       {/* Header */}
-      <header
-        className="admin-header"
-        style={{
-          padding: "14px 24px",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-          background: "rgba(4,4,6,0.8)",
-          backdropFilter: "blur(16px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #00E5FF, #9D4CDD)", display: "grid", placeItems: "center", fontSize: 14, fontWeight: 700, boxShadow: "0 0 15px rgba(0,229,255,0.3)" }}>
+      <header className="admin-header" style={{
+      padding: "14px 24px",
+      borderBottom: "1px solid rgba(255,255,255,0.05)",
+      background: "rgba(4,4,6,0.8)",
+      backdropFilter: "blur(16px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      position: "sticky",
+      top: 0,
+      zIndex: 100
+    }}>
+        <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }}>
+          <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          background: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+          display: "grid",
+          placeItems: "center",
+          fontSize: 14,
+          fontWeight: 700,
+          boxShadow: "0 0 15px rgba(0,229,255,0.3)"
+        }}>
             A
           </div>
-          <div style={{ fontWeight: 700, letterSpacing: "-0.01em", fontSize: 16 }}>Atlas Mission Control</div>
-          <span style={{ fontSize: 10, background: "rgba(255,255,255,0.06)", padding: "2px 8px", borderRadius: 4, color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <div style={{
+          fontWeight: 700,
+          letterSpacing: "-0.01em",
+          fontSize: 16
+        }}>Atlas Mission Control</div>
+          <span style={{
+          fontSize: 10,
+          background: "rgba(255,255,255,0.06)",
+          padding: "2px 8px",
+          borderRadius: 4,
+          color: "rgba(255,255,255,0.4)",
+          letterSpacing: "0.1em",
+          textTransform: "uppercase"
+        }}>
             v2.1
           </span>
         </div>
-        <button data-testid="admin-logout-btn" onClick={onLogout} className="ghost-btn" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", display: "flex", gap: 6, alignItems: "center" }}>
-          <LogOut size={13} /> Вийти
-        </button>
+        <button data-testid="admin-logout-btn" onClick={onLogout} className="ghost-btn" style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        color: "#fff",
+        display: "flex",
+        gap: 6,
+        alignItems: "center"
+      }}>
+          <LogOut size={13} />{t("txt_1251")}</button>
       </header>
 
       {/* Layout wrapper */}
-      <div style={{ display: "flex", flex: 1, minHeight: "calc(100vh - 61px)", position: "relative" }}>
+      <div style={{
+      display: "flex",
+      flex: 1,
+      minHeight: "calc(100vh - 61px)",
+      position: "relative"
+    }}>
         
         {/* Main Content Area */}
-        <main style={{ flex: 1, padding: "32px 3% 80px", maxWidth: "calc(100% - 280px)", overflowY: "auto" }}>
+        <main style={{
+        flex: 1,
+        padding: "32px 3% 80px",
+        maxWidth: "calc(100% - 280px)",
+        overflowY: "auto"
+      }}>
           
           {/* Tab: Dashboard */}
-          {activeTab === "dashboard" && (
-            <div className="fade-in">
-              {stats && (
-                <section data-testid="admin-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 24 }}>
-                  <StatCard icon={<ShieldCheck size={18} />} label="Активних" value={stats.active_count} accent="#28C840" active={selectedMetric === "active"} onClick={() => { setSelectedMetric("active"); }} />
-                  <StatCard icon={<Users size={18} />} label="Всього юзерів" value={stats.total_users} accent="#00E5FF" active={selectedMetric === "users"} onClick={() => { setSelectedMetric("users"); }} />
-                  <StatCard icon={<TrendingUp size={18} />} label="Нових сьогодні" value={stats.users_today} accent="#9D4CDD" active={false} onClick={() => {}} />
-                  <StatCard icon={<AlertCircle size={18} />} label="Відтік / міс" value={stats.churn_this_month} accent="#FF5F57" active={selectedMetric === "churn"} onClick={() => { setSelectedMetric("churn"); }} />
-                  <StatCard icon={<DollarSign size={18} />} label="Місячний дохід" value={`$${stats.monthly_revenue}`} accent="#FEBC2E" active={selectedMetric === "revenue"} onClick={() => { setSelectedMetric("revenue"); }} />
-                </section>
-              )}
+          {activeTab === "dashboard" && <div className="fade-in">
+              {stats && <section data-testid="admin-stats" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 16,
+            marginBottom: 24
+          }}>
+                  <StatCard icon={<ShieldCheck size={18} />} label={t("txt_1252")} value={stats.active_count} accent="#28C840" active={selectedMetric === "active"} onClick={() => {
+              setSelectedMetric("active");
+            }} />
+                  <StatCard icon={<Users size={18} />} label={t("txt_1253")} value={stats.total_users} accent="#00E5FF" active={selectedMetric === "users"} onClick={() => {
+              setSelectedMetric("users");
+            }} />
+                  <StatCard icon={<TrendingUp size={18} />} label={t("txt_1254")} value={stats.users_today} accent="#9D4CDD" active={false} onClick={() => {}} />
+                  <StatCard icon={<AlertCircle size={18} />} label={t("txt_1255")} value={stats.churn_this_month} accent="#FF5F57" active={selectedMetric === "churn"} onClick={() => {
+              setSelectedMetric("churn");
+            }} />
+                  <StatCard icon={<DollarSign size={18} />} label={t("txt_1256")} value={`$${stats.monthly_revenue}`} accent="#FEBC2E" active={selectedMetric === "revenue"} onClick={() => {
+              setSelectedMetric("revenue");
+            }} />
+                </section>}
 
-              {stats && (
-                <section data-testid="admin-growth" className="glass" style={{ padding: 24, borderRadius: 20, marginBottom: 24, border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              {stats && <section data-testid="admin-growth" className="glass" style={{
+            padding: 24,
+            borderRadius: 20,
+            marginBottom: 24,
+            border: "1px solid rgba(255,255,255,0.04)"
+          }}>
+                  <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 20
+            }}>
                     <div>
-                      <div style={{ fontSize: 10, letterSpacing: "0.15em", color: chartConfig.color, textTransform: "uppercase", fontWeight: 700 }}>Аналітичний звіт</div>
-                      <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700 }}>{chartConfig.title}</h3>
+                      <div style={{
+                  fontSize: 10,
+                  letterSpacing: "0.15em",
+                  color: chartConfig.color,
+                  textTransform: "uppercase",
+                  fontWeight: 700
+                }}>{t("txt_1257")}</div>
+                      <h3 style={{
+                  margin: "4px 0 0",
+                  fontSize: 20,
+                  fontWeight: 700
+                }}>{chartConfig.title}</h3>
                     </div>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      {["users", "active", "revenue"].map((m) => (
-                        <button key={m} onClick={() => setSelectedMetric(m)} style={{
-                          padding: "6px 12px",
-                          borderRadius: 8,
-                          fontSize: 12,
-                          fontWeight: 600,
-                          background: selectedMetric === m ? chartConfig.color : "rgba(255,255,255,0.03)",
-                          color: selectedMetric === m ? "#000" : "#fff",
-                          border: "none",
-                          cursor: "pointer",
-                          transition: "all 0.2s"
-                        }}>
-                          {m === "users" ? "Юзери" : m === "active" ? "Активні" : "Дохід"}
-                        </button>
-                      ))}
+                    <div style={{
+                display: "flex",
+                gap: 8
+              }}>
+                      {["users", "active", "revenue"].map(m => <button key={m} onClick={() => setSelectedMetric(m)} style={{
+                  padding: "6px 12px",
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  background: selectedMetric === m ? chartConfig.color : "rgba(255,255,255,0.03)",
+                  color: selectedMetric === m ? "#000" : "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}>
+                          {m === "users" ? t("txt_1258") : m === "active" ? t("txt_1259") : t("txt_1260")}
+                        </button>)}
                     </div>
                   </div>
                   <GrowthChart data={stats.growth} metric={selectedMetric} color={chartConfig.color} />
-                </section>
-              )}
+                </section>}
 
               {/* Version & Manual Key generator in one row */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
-                <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <KeyRound size={18} color="#00E5FF" />
-                    Згенерувати ліцензійний ключ
-                  </h3>
+              <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: 24
+          }}>
+                <section className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.04)"
+            }}>
+                  <h3 style={{
+                margin: "0 0 16px",
+                fontSize: 16,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <KeyRound size={18} color="#00E5FF" />{t("txt_1261")}</h3>
                   <ManualKeyGen onCreated={refresh} />
                 </section>
 
-                <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <Upload size={18} color="#9D4CDD" />
-                    Завантажити нову версію Atlas
-                  </h3>
-                  <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, marginBottom: 16, background: "rgba(255,255,255,0.02)", padding: "10px 14px", borderRadius: 10 }}>
-                    Поточна стабільна версія: <b style={{ color: "#fff" }}>{version?.version || "—"}</b> · {version?.size_mb || 0} MB<br/>
-                    Опубліковано: <span style={{ color: "#fff" }}>{version?.released_at ? fmtDateTime(version.released_at) : "—"}</span>
+                <section className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.04)"
+            }}>
+                  <h3 style={{
+                margin: "0 0 16px",
+                fontSize: 16,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <Upload size={18} color="#9D4CDD" />{t("txt_1262")}</h3>
+                  <div style={{
+                color: "rgba(255,255,255,0.5)",
+                fontSize: 12,
+                marginBottom: 16,
+                background: "rgba(255,255,255,0.02)",
+                padding: "10px 14px",
+                borderRadius: 10
+              }}>{t("txt_1263")}<b style={{
+                  color: "#fff"
+                }}>{version?.version || "—"}</b> · {version?.size_mb || 0} MB<br />{t("txt_1264")}<span style={{
+                  color: "#fff"
+                }}>{version?.released_at ? fmtDateTime(version.released_at) : "—"}</span>
                   </div>
-                  <input ref={fileRef} type="file" accept=".dmg,.zip,.tar.gz" style={{ display: "none" }} />
+                  <input ref={fileRef} type="file" accept=".dmg,.zip,.tar.gz" style={{
+                display: "none"
+              }} />
                   <VersionUpload fileRef={fileRef} onUploaded={refresh} />
                 </section>
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Tab: Financial Analytics */}
-          {activeTab === "analytics" && (
-            <div className="fade-in">
-              {detailedStats && (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 24 }}>
-                  <div className="glass" style={{ padding: 24, borderRadius: 20, borderLeft: "4px solid #00E5FF", position: "relative", overflow: "hidden" }}>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Оплачено через Stripe</div>
-                    <div style={{ fontSize: 32, fontWeight: 800, marginTop: 8, color: "#00E5FF" }}>${detailedStats.stripe.amount}</div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>Всього успішних транзакцій: {detailedStats.stripe.count}</div>
-                    <DollarSign size={80} style={{ position: "absolute", right: -15, bottom: -15, color: "rgba(0,229,255,0.03)" }} />
+          {activeTab === "analytics" && <div className="fade-in">
+              {detailedStats && <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 20,
+            marginBottom: 24
+          }}>
+                  <div className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              borderLeft: "4px solid #00E5FF",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+                    <div style={{
+                fontSize: 11,
+                color: "rgba(255,255,255,0.4)",
+                textTransform: "uppercase",
+                fontWeight: 700
+              }}>{t("txt_1265")}</div>
+                    <div style={{
+                fontSize: 32,
+                fontWeight: 800,
+                marginTop: 8,
+                color: "#00E5FF"
+              }}>${detailedStats.stripe.amount}</div>
+                    <div style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.5)",
+                marginTop: 6
+              }}>{t("txt_1266")}{detailedStats.stripe.count}</div>
+                    <DollarSign size={80} style={{
+                position: "absolute",
+                right: -15,
+                bottom: -15,
+                color: "rgba(0,229,255,0.03)"
+              }} />
                   </div>
-                  <div className="glass" style={{ padding: 24, borderRadius: 20, borderLeft: "4px solid #FEBC2E", position: "relative", overflow: "hidden" }}>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Оплачено в TON Coin</div>
-                    <div style={{ fontSize: 32, fontWeight: 800, marginTop: 8, color: "#FEBC2E" }}>${detailedStats.ton.amount}</div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>Всього успішних транзакцій: {detailedStats.ton.count}</div>
-                    <Globe size={80} style={{ position: "absolute", right: -15, bottom: -15, color: "rgba(254,188,46,0.03)" }} />
+                  <div className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              borderLeft: "4px solid #FEBC2E",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+                    <div style={{
+                fontSize: 11,
+                color: "rgba(255,255,255,0.4)",
+                textTransform: "uppercase",
+                fontWeight: 700
+              }}>{t("txt_1267")}</div>
+                    <div style={{
+                fontSize: 32,
+                fontWeight: 800,
+                marginTop: 8,
+                color: "#FEBC2E"
+              }}>${detailedStats.ton.amount}</div>
+                    <div style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.5)",
+                marginTop: 6
+              }}>{t("txt_1268")}{detailedStats.ton.count}</div>
+                    <Globe size={80} style={{
+                position: "absolute",
+                right: -15,
+                bottom: -15,
+                color: "rgba(254,188,46,0.03)"
+              }} />
                   </div>
-                </div>
-              )}
+                </div>}
 
-              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 700 }}>Історія транзакцій платежів</h3>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <section className="glass" style={{
+            padding: 24,
+            borderRadius: 20,
+            border: "1px solid rgba(255,255,255,0.04)"
+          }}>
+                <h3 style={{
+              margin: "0 0 16px",
+              fontSize: 18,
+              fontWeight: 700
+            }}>{t("txt_1269")}</h3>
+                <div style={{
+              overflowX: "auto"
+            }}>
+                  <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13
+              }}>
                     <thead>
-                      <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                        <th style={{ padding: 12 }}>ID сесії / Хеш</th>
-                        <th style={{ padding: 12 }}>Користувач (Email)</th>
-                        <th style={{ padding: 12 }}>Метод</th>
-                        <th style={{ padding: 12 }}>Сума</th>
-                        <th style={{ padding: 12 }}>Статус</th>
-                        <th style={{ padding: 12 }}>Дата</th>
+                      <tr style={{
+                    color: "rgba(255,255,255,0.4)",
+                    textAlign: "left",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)"
+                  }}>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1270")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1271")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1272")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1273")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1274")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1275")}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {detailedStats?.transactions.map((tx, idx) => (
-                        <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                          <td style={{ padding: 12, fontFamily: "monospace", color: "rgba(255,255,255,0.6)" }}>
+                      {detailedStats?.transactions.map((tx, idx) => <tr key={idx} style={{
+                    borderBottom: "1px solid rgba(255,255,255,0.03)"
+                  }}>
+                          <td style={{
+                      padding: 12,
+                      fontFamily: "monospace",
+                      color: "rgba(255,255,255,0.6)"
+                    }}>
                             {tx.ton_tx_hash ? tx.ton_tx_hash.slice(0, 16) + "..." : tx.stripe_session_id ? tx.stripe_session_id.slice(0, 16) + "..." : "—"}
                           </td>
-                          <td style={{ padding: 12 }}>{tx.email || "—"}</td>
-                          <td style={{ padding: 12 }}>
+                          <td style={{
+                      padding: 12
+                    }}>{tx.email || "—"}</td>
+                          <td style={{
+                      padding: 12
+                    }}>
                             <span style={{
-                              padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: "uppercase",
-                              background: tx.ton_tx_hash ? "rgba(254,188,46,0.12)" : "rgba(0,229,255,0.12)",
-                              color: tx.ton_tx_hash ? "#FEBC2E" : "#00E5FF"
-                            }}>
+                        padding: "2px 8px",
+                        borderRadius: 4,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        background: tx.ton_tx_hash ? "rgba(254,188,46,0.12)" : "rgba(0,229,255,0.12)",
+                        color: tx.ton_tx_hash ? "#FEBC2E" : "#00E5FF"
+                      }}>
                               {tx.ton_tx_hash ? "TON" : "Stripe"}
                             </span>
                           </td>
-                          <td style={{ padding: 12, fontWeight: 600 }}>${tx.amount}</td>
-                          <td style={{ padding: 12 }}>
+                          <td style={{
+                      padding: 12,
+                      fontWeight: 600
+                    }}>${tx.amount}</td>
+                          <td style={{
+                      padding: 12
+                    }}>
                             <span style={{
-                              padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700,
-                              background: tx.payment_status === "paid" ? "rgba(40,200,64,0.12)" : "rgba(255,95,87,0.12)",
-                              color: tx.payment_status === "paid" ? "#28C840" : "#FF5F57"
-                            }}>
-                              {tx.payment_status === "paid" ? "Оплачено" : "Помилка"}
+                        padding: "2px 8px",
+                        borderRadius: 99,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        background: tx.payment_status === "paid" ? "rgba(40,200,64,0.12)" : "rgba(255,95,87,0.12)",
+                        color: tx.payment_status === "paid" ? "#28C840" : "#FF5F57"
+                      }}>
+                              {tx.payment_status === "paid" ? t("txt_1276") : t("txt_1277")}
                             </span>
                           </td>
-                          <td style={{ padding: 12, color: "rgba(255,255,255,0.5)" }}>{fmtDateTime(tx.created_at)}</td>
-                        </tr>
-                      ))}
-                      {(!detailedStats || detailedStats.transactions.length === 0) && (
-                        <tr>
-                          <td colSpan={6} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>Транзакцій не знайдено</td>
-                        </tr>
-                      )}
+                          <td style={{
+                      padding: 12,
+                      color: "rgba(255,255,255,0.5)"
+                    }}>{fmtDateTime(tx.created_at)}</td>
+                        </tr>)}
+                      {(!detailedStats || detailedStats.transactions.length === 0) && <tr>
+                          <td colSpan={6} style={{
+                      padding: 32,
+                      textAlign: "center",
+                      color: "rgba(255,255,255,0.4)"
+                    }}>{t("txt_1278")}</td>
+                        </tr>}
                     </tbody>
                   </table>
                 </div>
               </section>
-            </div>
-          )}
+            </div>}
 
           {/* Tab: Realistic Leaflet Glow Map & Detailed Telemetry */}
           {activeTab === "map" && (() => {
-            // Compute real-time map telemetry metrics
-            const totalNodes = activeMap.length;
-            
-            const countryCounts = {};
-            const regionCounts = {};
-            let suspiciousCount = 0;
-
-            activeMap.forEach(spot => {
-              if (spot.suspicious) suspiciousCount++;
-              
-              const c = spot.country || "Невідомо";
-              countryCounts[c] = (countryCounts[c] || 0) + 1;
-
-              const r = spot.region || "Невідомо";
-              const key = `${r} (${c})`;
-              regionCounts[key] = (regionCounts[key] || 0) + 1;
+          // Compute real-time map telemetry metrics
+          const totalNodes = activeMap.length;
+          const countryCounts = {};
+          const regionCounts = {};
+          let suspiciousCount = 0;
+          activeMap.forEach(spot => {
+            if (spot.suspicious) suspiciousCount++;
+            const c = spot.country || t("txt_1279");
+            countryCounts[c] = (countryCounts[c] || 0) + 1;
+            const r = spot.region || t("txt_1280");
+            const key = `${r} (${c})`;
+            regionCounts[key] = (regionCounts[key] || 0) + 1;
+          });
+          const sortedCountries = Object.entries(countryCounts).map(([name, count]) => ({
+            name,
+            count,
+            pct: Math.round(count / totalNodes * 100) || 0
+          })).sort((a, b) => b.count - a.count);
+          const sortedRegions = Object.entries(regionCounts).map(([name, count]) => ({
+            name,
+            count
+          })).sort((a, b) => b.count - a.count);
+          const focusOnMarker = (lat, lon) => {
+            const map = mapRef.current;
+            if (!map) return;
+            map.setView([lat, lon], 8, {
+              animate: true
             });
 
-            const sortedCountries = Object.entries(countryCounts)
-              .map(([name, count]) => ({ name, count, pct: Math.round((count / totalNodes) * 100) || 0 }))
-              .sort((a, b) => b.count - a.count);
-
-            const sortedRegions = Object.entries(regionCounts)
-              .map(([name, count]) => ({ name, count }))
-              .sort((a, b) => b.count - a.count);
-
-            const focusOnMarker = (lat, lon) => {
-              const map = mapRef.current;
-              if (!map) return;
-              map.setView([lat, lon], 8, { animate: true });
-              
-              // Find the layer in map layers and open popup
-              map.eachLayer(layer => {
-                if (layer instanceof L.Marker) {
-                  const pos = layer.getLatLng();
-                  if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
-                    layer.openPopup();
-                  }
+            // Find the layer in map layers and open popup
+            map.eachLayer(layer => {
+              if (layer instanceof L.Marker) {
+                const pos = layer.getLatLng();
+                if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
+                  layer.openPopup();
                 }
-              });
-            };
-
-            return (
-              <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              }
+            });
+          };
+          return <div className="fade-in" style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 24
+          }}>
                 
                 {/* 1. Global Telemetry Cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #00E5FF", background: "rgba(255,255,255,0.01)" }}>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Всього підключень</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{totalNodes}</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Активні сесії Mac-клієнтів</div>
+                <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 16
+            }}>
+                  <div className="glass" style={{
+                padding: 18,
+                borderRadius: 16,
+                borderLeft: "4px solid #00E5FF",
+                background: "rgba(255,255,255,0.01)"
+              }}>
+                    <div style={{
+                  fontSize: 10,
+                  color: "rgba(255,255,255,0.4)",
+                  textTransform: "uppercase",
+                  fontWeight: 700
+                }}>{t("txt_1281")}</div>
+                    <div style={{
+                  fontSize: 24,
+                  fontWeight: 800,
+                  marginTop: 4
+                }}>{totalNodes}</div>
+                    <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 4
+                }}>{t("txt_1282")}</div>
                   </div>
-                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #9D4CDD", background: "rgba(255,255,255,0.01)" }}>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Гео-охоплення (Країни)</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{sortedCountries.length}</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Унікальних країн в мережі</div>
+                  <div className="glass" style={{
+                padding: 18,
+                borderRadius: 16,
+                borderLeft: "4px solid #9D4CDD",
+                background: "rgba(255,255,255,0.01)"
+              }}>
+                    <div style={{
+                  fontSize: 10,
+                  color: "rgba(255,255,255,0.4)",
+                  textTransform: "uppercase",
+                  fontWeight: 700
+                }}>{t("txt_1283")}</div>
+                    <div style={{
+                  fontSize: 24,
+                  fontWeight: 800,
+                  marginTop: 4
+                }}>{sortedCountries.length}</div>
+                    <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 4
+                }}>{t("txt_1284")}</div>
                   </div>
-                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: "4px solid #FEBC2E", background: "rgba(255,255,255,0.01)" }}>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Охоплення областей / штатів</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4 }}>{sortedRegions.length}</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Адміністративних областей</div>
+                  <div className="glass" style={{
+                padding: 18,
+                borderRadius: 16,
+                borderLeft: "4px solid #FEBC2E",
+                background: "rgba(255,255,255,0.01)"
+              }}>
+                    <div style={{
+                  fontSize: 10,
+                  color: "rgba(255,255,255,0.4)",
+                  textTransform: "uppercase",
+                  fontWeight: 700
+                }}>{t("txt_1285")}</div>
+                    <div style={{
+                  fontSize: 24,
+                  fontWeight: 800,
+                  marginTop: 4
+                }}>{sortedRegions.length}</div>
+                    <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 4
+                }}>{t("txt_1286")}</div>
                   </div>
-                  <div className="glass" style={{ padding: 18, borderRadius: 16, borderLeft: `4px solid ${suspiciousCount > 0 ? '#FF5F57' : '#28C840'}`, background: "rgba(255,255,255,0.01)" }}>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700 }}>Гео-інциденти фроду</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 4, color: suspiciousCount > 0 ? "#FF5F57" : "#28C840" }}>
+                  <div className="glass" style={{
+                padding: 18,
+                borderRadius: 16,
+                borderLeft: `4px solid ${suspiciousCount > 0 ? '#FF5F57' : '#28C840'}`,
+                background: "rgba(255,255,255,0.01)"
+              }}>
+                    <div style={{
+                  fontSize: 10,
+                  color: "rgba(255,255,255,0.4)",
+                  textTransform: "uppercase",
+                  fontWeight: 700
+                }}>{t("txt_1287")}</div>
+                    <div style={{
+                  fontSize: 24,
+                  fontWeight: 800,
+                  marginTop: 4,
+                  color: suspiciousCount > 0 ? "#FF5F57" : "#28C840"
+                }}>
                       {suspiciousCount}
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
-                      {suspiciousCount > 0 ? "⚠️ Аномальна швидкість переміщення" : "Аномалій переміщення не виявлено"}
+                    <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 4
+                }}>
+                      {suspiciousCount > 0 ? t("txt_1288") : t("txt_1289")}
                     </div>
                   </div>
                 </div>
 
                 {/* 2. Main Map Dashboard Grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24, alignItems: "start" }}>
+                <div style={{
+              display: "grid",
+              gridTemplateColumns: "320px 1fr",
+              gap: 24,
+              alignItems: "start"
+            }}>
                   
                   {/* Left Column: Geographic Breakdown & Leaderboards */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                  <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 20
+              }}>
                     
                     {/* Countries Leaderboard */}
-                    <div className="glass" style={{ padding: 20, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "#00E5FF", display: "flex", alignItems: "center", gap: 6 }}>
-                        <Globe size={16} /> Розподіл по країнах
-                      </h4>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 180, overflowY: "auto", paddingRight: 4 }}>
-                        {sortedCountries.map((c, i) => (
-                          <div key={i}>
-                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
+                    <div className="glass" style={{
+                  padding: 20,
+                  borderRadius: 20,
+                  border: "1px solid rgba(255,255,255,0.04)"
+                }}>
+                      <h4 style={{
+                    margin: "0 0 14px",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#00E5FF",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6
+                  }}>
+                        <Globe size={16} />{t("txt_1290")}</h4>
+                      <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    maxHeight: 180,
+                    overflowY: "auto",
+                    paddingRight: 4
+                  }}>
+                        {sortedCountries.map((c, i) => <div key={i}>
+                            <div style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        marginBottom: 4
+                      }}>
                               <span>{c.name}</span>
-                              <span style={{ fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>{c.count} ({c.pct}%)</span>
+                              <span style={{
+                          fontWeight: 600,
+                          color: "rgba(255,255,255,0.8)"
+                        }}>{c.count} ({c.pct}%)</span>
                             </div>
-                            <div style={{ width: "100%", height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
-                              <div style={{ width: `${c.pct}%`, height: "100%", background: "linear-gradient(90deg, #00E5FF, #9D4CDD)", borderRadius: 2 }} />
+                            <div style={{
+                        width: "100%",
+                        height: 4,
+                        background: "rgba(255,255,255,0.06)",
+                        borderRadius: 2,
+                        overflow: "hidden"
+                      }}>
+                              <div style={{
+                          width: `${c.pct}%`,
+                          height: "100%",
+                          background: "linear-gradient(90deg, #00E5FF, #9D4CDD)",
+                          borderRadius: 2
+                        }} />
                             </div>
-                          </div>
-                        ))}
-                        {sortedCountries.length === 0 && (
-                          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Дані відсутні</div>
-                        )}
+                          </div>)}
+                        {sortedCountries.length === 0 && <div style={{
+                      color: "rgba(255,255,255,0.4)",
+                      fontSize: 12,
+                      textAlign: "center",
+                      padding: "10px 0"
+                    }}>{t("txt_1291")}</div>}
                       </div>
                     </div>
 
                     {/* Regions & Oblasts Monitor */}
-                    <div className="glass" style={{ padding: 20, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "#9D4CDD", display: "flex", alignItems: "center", gap: 6 }}>
-                        <MapPin size={16} /> Активні області та регіони
-                      </h4>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 220, overflowY: "auto", paddingRight: 4 }}>
-                        {sortedRegions.map((r, i) => (
-                          <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, padding: "6px 8px", background: "rgba(255,255,255,0.02)", borderRadius: 8 }}>
-                            <span style={{ color: "rgba(255,255,255,0.85)" }}>{r.name}</span>
-                            <span style={{ fontWeight: 700, color: "#9D4CDD", background: "rgba(157,76,221,0.12)", padding: "2px 8px", borderRadius: 6, fontSize: 11 }}>{r.count}</span>
-                          </div>
-                        ))}
-                        {sortedRegions.length === 0 && (
-                          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Дані відсутні</div>
-                        )}
+                    <div className="glass" style={{
+                  padding: 20,
+                  borderRadius: 20,
+                  border: "1px solid rgba(255,255,255,0.04)"
+                }}>
+                      <h4 style={{
+                    margin: "0 0 14px",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#9D4CDD",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6
+                  }}>
+                        <MapPin size={16} />{t("txt_1292")}</h4>
+                      <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                    maxHeight: 220,
+                    overflowY: "auto",
+                    paddingRight: 4
+                  }}>
+                        {sortedRegions.map((r, i) => <div key={i} style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      fontSize: 12,
+                      padding: "6px 8px",
+                      background: "rgba(255,255,255,0.02)",
+                      borderRadius: 8
+                    }}>
+                            <span style={{
+                        color: "rgba(255,255,255,0.85)"
+                      }}>{r.name}</span>
+                            <span style={{
+                        fontWeight: 700,
+                        color: "#9D4CDD",
+                        background: "rgba(157,76,221,0.12)",
+                        padding: "2px 8px",
+                        borderRadius: 6,
+                        fontSize: 11
+                      }}>{r.count}</span>
+                          </div>)}
+                        {sortedRegions.length === 0 && <div style={{
+                      color: "rgba(255,255,255,0.4)",
+                      fontSize: 12,
+                      textAlign: "center",
+                      padding: "10px 0"
+                    }}>{t("txt_1293")}</div>}
                       </div>
                     </div>
 
                   </div>
 
                   {/* Right Column: Leaflet Interactive Map */}
-                  <div className="glass" style={{ padding: 10, borderRadius: 24, border: "1px solid rgba(255,255,255,0.04)", background: "rgba(4,4,6,0.3)" }}>
-                    <div style={{ width: "100%", height: 500, borderRadius: 16, overflow: "hidden" }}>
+                  <div className="glass" style={{
+                padding: 10,
+                borderRadius: 24,
+                border: "1px solid rgba(255,255,255,0.04)",
+                background: "rgba(4,4,6,0.3)"
+              }}>
+                    <div style={{
+                  width: "100%",
+                  height: 500,
+                  borderRadius: 16,
+                  overflow: "hidden"
+                }}>
                       <LeafletGlowMap activeMap={activeMap} mapRef={mapRef} />
                     </div>
                   </div>
@@ -506,541 +883,924 @@ function AdminPanel({ onLogout }) {
                 </div>
 
                 {/* 3. Detailed Telemetry Log Table */}
-                <div className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <h4 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-                    <Activity size={18} color="#00E5FF" />
-                    Повний лог геолокації активних хостів
-                  </h4>
-                  <div style={{ overflowX: "auto" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <div className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.04)"
+            }}>
+                  <h4 style={{
+                margin: "0 0 16px",
+                fontSize: 15,
+                fontWeight: 700,
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <Activity size={18} color="#00E5FF" />{t("txt_1294")}</h4>
+                  <div style={{
+                overflowX: "auto"
+              }}>
+                    <table style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: 13
+                }}>
                       <thead>
-                        <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                          <th style={{ padding: 12 }}>IP адреса</th>
-                          <th style={{ padding: 12 }}>Країна</th>
-                          <th style={{ padding: 12 }}>Область / Штат</th>
-                          <th style={{ padding: 12 }}>Місто</th>
-                          <th style={{ padding: 12 }}>Координати</th>
-                          <th style={{ padding: 12 }}>Ключ ліцензії</th>
-                          <th style={{ padding: 12 }}>Статус</th>
-                          <th style={{ padding: 12 }}>Остання активність</th>
-                          <th style={{ padding: 12, textAlign: "center" }}>Дії</th>
+                        <tr style={{
+                      color: "rgba(255,255,255,0.4)",
+                      textAlign: "left",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)"
+                    }}>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1295")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1296")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1297")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1298")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1299")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1300")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1301")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1302")}</th>
+                          <th style={{
+                        padding: 12,
+                        textAlign: "center"
+                      }}>{t("txt_1303")}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {activeMap.map((spot, idx) => (
-                          <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", background: spot.suspicious ? "rgba(255,95,87,0.02)" : "transparent" }}>
-                            <td style={{ padding: 12, fontFamily: "monospace", fontWeight: 600 }}>{spot.ip}</td>
-                            <td style={{ padding: 12 }}>{spot.country}</td>
-                            <td style={{ padding: 12, color: "rgba(255,255,255,0.85)" }}>{spot.region || "—"}</td>
-                            <td style={{ padding: 12 }}>{spot.city}</td>
-                            <td style={{ padding: 12, color: "rgba(255,255,255,0.5)", fontFamily: "monospace" }}>{spot.lat.toFixed(4)}, {spot.lon.toFixed(4)}</td>
-                            <td style={{ padding: 12, fontFamily: "monospace", color: "rgba(0,229,255,0.85)" }}>{spot.key_prefix.slice(0, 14)}...</td>
-                            <td style={{ padding: 12 }}>
-                              {spot.suspicious ? (
-                                <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: "rgba(255,95,87,0.12)", color: "#FF5F57", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                                  <AlertTriangle size={10} /> Підозріло
-                                </span>
-                              ) : (
-                                <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: "rgba(40,200,64,0.12)", color: "#28C840" }}>
-                                  Норма
-                                </span>
-                              )}
+                        {activeMap.map((spot, idx) => <tr key={idx} style={{
+                      borderBottom: "1px solid rgba(255,255,255,0.03)",
+                      background: spot.suspicious ? "rgba(255,95,87,0.02)" : "transparent"
+                    }}>
+                            <td style={{
+                        padding: 12,
+                        fontFamily: "monospace",
+                        fontWeight: 600
+                      }}>{spot.ip}</td>
+                            <td style={{
+                        padding: 12
+                      }}>{spot.country}</td>
+                            <td style={{
+                        padding: 12,
+                        color: "rgba(255,255,255,0.85)"
+                      }}>{spot.region || "—"}</td>
+                            <td style={{
+                        padding: 12
+                      }}>{spot.city}</td>
+                            <td style={{
+                        padding: 12,
+                        color: "rgba(255,255,255,0.5)",
+                        fontFamily: "monospace"
+                      }}>{spot.lat.toFixed(4)}, {spot.lon.toFixed(4)}</td>
+                            <td style={{
+                        padding: 12,
+                        fontFamily: "monospace",
+                        color: "rgba(0,229,255,0.85)"
+                      }}>{spot.key_prefix.slice(0, 14)}...</td>
+                            <td style={{
+                        padding: 12
+                      }}>
+                              {spot.suspicious ? <span style={{
+                          padding: "2px 8px",
+                          borderRadius: 6,
+                          fontSize: 10,
+                          fontWeight: 700,
+                          background: "rgba(255,95,87,0.12)",
+                          color: "#FF5F57",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4
+                        }}>
+                                  <AlertTriangle size={10} />{t("txt_1304")}</span> : <span style={{
+                          padding: "2px 8px",
+                          borderRadius: 6,
+                          fontSize: 10,
+                          fontWeight: 700,
+                          background: "rgba(40,200,64,0.12)",
+                          color: "#28C840"
+                        }}>{t("txt_1305")}</span>}
                             </td>
-                            <td style={{ padding: 12, color: "rgba(255,255,255,0.4)" }}>{fmtDateTime(spot.ts)}</td>
-                            <td style={{ padding: 12, textAlign: "center" }}>
-                              <button
-                                onClick={() => focusOnMarker(spot.lat, spot.lon)}
-                                className="ghost-btn"
-                                style={{ padding: "4px 10px", fontSize: 11, background: "rgba(0,229,255,0.06)", border: "1px solid rgba(0,229,255,0.15)", color: "#00E5FF" }}
-                              >
-                                Знайти на карті
-                              </button>
+                            <td style={{
+                        padding: 12,
+                        color: "rgba(255,255,255,0.4)"
+                      }}>{fmtDateTime(spot.ts)}</td>
+                            <td style={{
+                        padding: 12,
+                        textAlign: "center"
+                      }}>
+                              <button onClick={() => focusOnMarker(spot.lat, spot.lon)} className="ghost-btn" style={{
+                          padding: "4px 10px",
+                          fontSize: 11,
+                          background: "rgba(0,229,255,0.06)",
+                          border: "1px solid rgba(0,229,255,0.15)",
+                          color: "#00E5FF"
+                        }}>{t("txt_1306")}</button>
                             </td>
-                          </tr>
-                        ))}
-                        {activeMap.length === 0 && (
-                          <tr>
-                            <td colSpan={9} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>Немає активних підключень</td>
-                          </tr>
-                        )}
+                          </tr>)}
+                        {activeMap.length === 0 && <tr>
+                            <td colSpan={9} style={{
+                        padding: 32,
+                        textAlign: "center",
+                        color: "rgba(255,255,255,0.4)"
+                      }}>{t("txt_1307")}</td>
+                          </tr>}
                       </tbody>
                     </table>
                   </div>
                 </div>
 
-              </div>
-            );
-          })()}
+              </div>;
+        })()}
 
           {/* Tab: Users Table (Live heartbeats) */}
-          {activeTab === "users" && (
-            <section data-testid="admin-users-block" className="glass fade-in" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
+          {activeTab === "users" && <section data-testid="admin-users-block" className="glass fade-in" style={{
+          padding: 24,
+          borderRadius: 20,
+          border: "1px solid rgba(255,255,255,0.04)"
+        }}>
+              <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 12,
+            marginBottom: 20
+          }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Керування користувачами</h3>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
-                    Живі статуси Online / Offline підключаються автоматично з Mac-клієнта.
-                  </div>
+                  <h3 style={{
+                margin: 0,
+                fontSize: 20,
+                fontWeight: 700
+              }}>{t("txt_1308")}</h3>
+                  <div style={{
+                fontSize: 11,
+                color: "rgba(255,255,255,0.4)",
+                marginTop: 4
+              }}>{t("txt_1309")}</div>
                 </div>
-                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                  <div style={{ position: "relative" }}>
-                    <Search size={14} style={{ position: "absolute", left: 12, top: 11, color: "rgba(255,255,255,0.4)" }} />
-                    <input
-                      data-testid="users-search-input"
-                      placeholder="Email або ліцензійний ключ..."
-                      value={q}
-                      onChange={(e) => setQ(e.target.value)}
-                      style={{
-                        padding: "9px 12px 9px 32px",
-                        background: "rgba(0,0,0,0.4)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "#fff",
-                        borderRadius: 10,
-                        fontSize: 13,
-                        width: 240,
-                        outline: "none",
-                      }}
-                    />
+                <div style={{
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+              flexWrap: "wrap"
+            }}>
+                  <div style={{
+                position: "relative"
+              }}>
+                    <Search size={14} style={{
+                  position: "absolute",
+                  left: 12,
+                  top: 11,
+                  color: "rgba(255,255,255,0.4)"
+                }} />
+                    <input data-testid="users-search-input" placeholder={t("txt_1310")} value={q} onChange={e => setQ(e.target.value)} style={{
+                  padding: "9px 12px 9px 32px",
+                  background: "rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  borderRadius: 10,
+                  fontSize: 13,
+                  width: 240,
+                  outline: "none"
+                }} />
                   </div>
-                  <select
-                    data-testid="users-filter-select"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    style={{
-                      padding: "9px 12px",
-                      background: "rgba(0,0,0,0.4)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "#fff",
-                      borderRadius: 10,
-                      fontSize: 13,
-                      outline: "none",
-                    }}
-                  >
-                    <option value="all">Всі</option>
-                    <option value="active">Активні</option>
-                    <option value="inactive">Неактивні</option>
-                    <option value="blocked">Заблоковані</option>
+                  <select data-testid="users-filter-select" value={filter} onChange={e => setFilter(e.target.value)} style={{
+                padding: "9px 12px",
+                background: "rgba(0,0,0,0.4)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#fff",
+                borderRadius: 10,
+                fontSize: 13,
+                outline: "none"
+              }}>
+                    <option value="all">{t("txt_1311")}</option>
+                    <option value="active">{t("txt_1312")}</option>
+                    <option value="inactive">{t("txt_1313")}</option>
+                    <option value="blocked">{t("txt_1314")}</option>
                   </select>
-                  <button data-testid="users-refresh-btn" onClick={refresh} className="ghost-btn" style={{ background: "rgba(255,255,255,0.04)" }}>
+                  <button data-testid="users-refresh-btn" onClick={refresh} className="ghost-btn" style={{
+                background: "rgba(255,255,255,0.04)"
+              }}>
                     <RefreshCw size={13} />
                   </button>
                 </div>
               </div>
 
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <div style={{
+            overflowX: "auto"
+          }}>
+                <table style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 13
+            }}>
                   <thead>
-                    <tr style={{ color: "rgba(255,255,255,0.5)", textAlign: "left" }}>
-                      {[
-                        ["email", "Email"],
-                        ["key", "Ключ"],
-                        ["active", "Статус ліцензії"],
-                        ["heartbeat", "Зв'язок (Online)"],
-                        ["mac_id", "Mac ID / Назва"],
-                        ["version", "Версія"],
-                        ["created_at", "Реєстрація"],
-                        ["expires_at", "Закінчення"],
-                      ].map(([k, l]) => (
-                        <th
-                          key={k}
-                          onClick={() => toggleSort(k)}
-                          style={{ padding: "12px 14px", cursor: "pointer", fontWeight: 600, userSelect: "none", whiteSpace: "nowrap" }}
-                        >
-                          {l} {sort.key === k ? (sort.dir === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                      ))}
-                      <th style={{ padding: "12px 14px" }}>Дії</th>
+                    <tr style={{
+                  color: "rgba(255,255,255,0.5)",
+                  textAlign: "left"
+                }}>
+                      {[["email", "Email"], ["key", t("txt_1315")], ["active", t("txt_1316")], ["heartbeat", t("txt_1317")], ["mac_id", t("txt_1318")], ["version", t("txt_1319")], ["created_at", t("txt_1320")], ["expires_at", t("txt_1321")]].map(([k, l]) => <th key={k} onClick={() => toggleSort(k)} style={{
+                    padding: "12px 14px",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    userSelect: "none",
+                    whiteSpace: "nowrap"
+                  }}>
+                          {l} {sort.key === k ? sort.dir === "asc" ? "▲" : "▼" : ""}
+                        </th>)}
+                      <th style={{
+                    padding: "12px 14px"
+                  }}>{t("txt_1322")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedUsers.map((u) => {
-                      // Check if online: last ping was < 30 seconds ago
-                      const isOnline = u.last_ping && (new Date() - new Date(u.last_ping)) < 45000;
-                      return (
-                        <tr
-                          key={u.user_id}
-                          data-testid={`user-row-${u.user_id}`}
-                          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
-                        >
+                    {sortedUsers.map(u => {
+                  // Check if online: last ping was < 30 seconds ago
+                  const isOnline = u.last_ping && new Date() - new Date(u.last_ping) < 45000;
+                  return <tr key={u.user_id} data-testid={`user-row-${u.user_id}`} style={{
+                    borderTop: "1px solid rgba(255,255,255,0.05)"
+                  }}>
                           <td style={td}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              {u.avatar_url ? (
-                                <img src={u.avatar_url} alt="" style={{ width: 22, height: 22, borderRadius: "50%" }} />
-                              ) : null}
+                            <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8
+                      }}>
+                              {u.avatar_url ? <img src={u.avatar_url} alt="" style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: "50%"
+                        }} /> : null}
                               <span>{u.email}</span>
                               {u.is_blocked && <ShieldOff size={12} color="#FF5F57" />}
                             </div>
                           </td>
-                          <td style={{ ...td, fontFamily: "monospace", color: "rgba(255,255,255,0.6)" }}>
+                          <td style={{
+                      ...td,
+                      fontFamily: "monospace",
+                      color: "rgba(255,255,255,0.6)"
+                    }}>
                             {u.key ? u.key.slice(0, 14) + "…" : "—"}
                           </td>
                           <td style={td}>
-                            <span
-                              style={{
-                                padding: "3px 10px",
-                                borderRadius: 999,
-                                fontSize: 11,
-                                fontWeight: 700,
-                                background: u.active ? "rgba(40,200,64,0.12)" : "rgba(255,95,87,0.12)",
-                                color: u.active ? "#28C840" : "#FF5F57",
-                              }}
-                            >
-                              {u.active ? "Активна" : "Неактивна"}
+                            <span style={{
+                        padding: "3px 10px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        background: u.active ? "rgba(40,200,64,0.12)" : "rgba(255,95,87,0.12)",
+                        color: u.active ? "#28C840" : "#FF5F57"
+                      }}>
+                              {u.active ? t("txt_1323") : t("txt_1324")}
                             </span>
                           </td>
                           <td style={td}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6
+                      }}>
                               <span style={{
-                                width: 8, height: 8, borderRadius: "50%",
-                                background: isOnline ? "#28C840" : "rgba(255,255,255,0.15)",
-                                boxShadow: isOnline ? "0 0 8px #28C840" : "none",
-                                display: "inline-block"
-                              }} />
-                              <span style={{ fontSize: 11, color: isOnline ? "#28C840" : "rgba(255,255,255,0.4)" }}>
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          background: isOnline ? "#28C840" : "rgba(255,255,255,0.15)",
+                          boxShadow: isOnline ? "0 0 8px #28C840" : "none",
+                          display: "inline-block"
+                        }} />
+                              <span style={{
+                          fontSize: 11,
+                          color: isOnline ? "#28C840" : "rgba(255,255,255,0.4)"
+                        }}>
                                 {isOnline ? "Online" : "Offline"}
                               </span>
                             </div>
                           </td>
-                          <td style={{ ...td, fontFamily: "monospace", color: "rgba(255,255,255,0.6)" }}>
+                          <td style={{
+                      ...td,
+                      fontFamily: "monospace",
+                      color: "rgba(255,255,255,0.6)"
+                    }}>
                             {u.mac_id ? `${u.mac_name || "Mac"} (${u.mac_id.slice(0, 6)})` : "—"}
                           </td>
                           <td style={td}>{u.version}</td>
                           <td style={td}>{fmtDate(u.created_at)}</td>
                           <td style={td}>{fmtDate(u.expires_at)}</td>
                           <td style={td}>
-                            <button
-                              data-testid={`user-open-${u.user_id}`}
-                              onClick={() => setSelectedUser(u)}
-                              className="ghost-btn"
-                              style={{ padding: "5px 12px", fontSize: 12, background: "rgba(255,255,255,0.03)" }}
-                            >
-                              Відкрити
-                            </button>
+                            <button data-testid={`user-open-${u.user_id}`} onClick={() => setSelectedUser(u)} className="ghost-btn" style={{
+                        padding: "5px 12px",
+                        fontSize: 12,
+                        background: "rgba(255,255,255,0.03)"
+                      }}>{t("txt_1325")}</button>
                           </td>
-                        </tr>
-                      );
-                    })}
-                    {sortedUsers.length === 0 && (
-                      <tr>
-                        <td colSpan={9} style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
-                          Користувачів не знайдено
-                        </td>
-                      </tr>
-                    )}
+                        </tr>;
+                })}
+                    {sortedUsers.length === 0 && <tr>
+                        <td colSpan={9} style={{
+                    padding: 40,
+                    textAlign: "center",
+                    color: "rgba(255,255,255,0.4)"
+                  }}>{t("txt_1326")}</td>
+                      </tr>}
                   </tbody>
                 </table>
               </div>
-            </section>
-          )}
+            </section>}
 
           {/* Tab: Server and Database Health */}
-          {activeTab === "health" && (
-            <div className="fade-in">
-              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 10, color: "#9D4CDD", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>Здоров'я Системи</div>
-                  <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <Cpu size={20} color="#9D4CDD" />
-                    Моніторинг процесів та бази
-                  </h3>
+          {activeTab === "health" && <div className="fade-in">
+              <section className="glass" style={{
+            padding: 24,
+            borderRadius: 20,
+            border: "1px solid rgba(255,255,255,0.04)"
+          }}>
+                <div style={{
+              marginBottom: 20
+            }}>
+                  <div style={{
+                fontSize: 10,
+                color: "#9D4CDD",
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                fontWeight: 700
+              }}>{t("txt_1327")}</div>
+                  <h3 style={{
+                margin: "4px 0 0",
+                fontSize: 20,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <Cpu size={20} color="#9D4CDD" />{t("txt_1328")}</h3>
                 </div>
 
-                {healthMetrics && (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
-                    <div style={{ background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Навантаження CPU</span>
+                {healthMetrics && <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: 20
+            }}>
+                    <div style={{
+                background: "rgba(255,255,255,0.02)",
+                padding: 20,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.04)"
+              }}>
+                      <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 12
+                }}>
+                        <span style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.4)"
+                  }}>{t("txt_1329")}</span>
                         <Cpu size={16} color="#00E5FF" />
                       </div>
-                      <div style={{ fontSize: 28, fontWeight: 800, color: "#00E5FF" }}>{healthMetrics.cpu_percent}%</div>
-                      <div style={{ width: "100%", height: 6, background: "rgba(255,255,255,0.06)", borderRadius: 3, marginTop: 12, overflow: "hidden" }}>
-                        <div style={{ width: `${healthMetrics.cpu_percent}%`, height: "100%", background: "#00E5FF", borderRadius: 3 }} />
+                      <div style={{
+                  fontSize: 28,
+                  fontWeight: 800,
+                  color: "#00E5FF"
+                }}>{healthMetrics.cpu_percent}%</div>
+                      <div style={{
+                  width: "100%",
+                  height: 6,
+                  background: "rgba(255,255,255,0.06)",
+                  borderRadius: 3,
+                  marginTop: 12,
+                  overflow: "hidden"
+                }}>
+                        <div style={{
+                    width: `${healthMetrics.cpu_percent}%`,
+                    height: "100%",
+                    background: "#00E5FF",
+                    borderRadius: 3
+                  }} />
                       </div>
                     </div>
 
-                    <div style={{ background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Використання RAM</span>
+                    <div style={{
+                background: "rgba(255,255,255,0.02)",
+                padding: 20,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.04)"
+              }}>
+                      <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 12
+                }}>
+                        <span style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.4)"
+                  }}>{t("txt_1330")}</span>
                         <Database size={16} color="#9D4CDD" />
                       </div>
-                      <div style={{ fontSize: 28, fontWeight: 800, color: "#9D4CDD" }}>{healthMetrics.memory.used_mb} MB</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 6 }}>Загальний ліміт: {healthMetrics.memory.total_mb} MB</div>
+                      <div style={{
+                  fontSize: 28,
+                  fontWeight: 800,
+                  color: "#9D4CDD"
+                }}>{healthMetrics.memory.used_mb} MB</div>
+                      <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 6
+                }}>{t("txt_1331")}{healthMetrics.memory.total_mb} MB</div>
                     </div>
 
-                    <div style={{ background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Пінг до PostgreSQL</span>
+                    <div style={{
+                background: "rgba(255,255,255,0.02)",
+                padding: 20,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.04)"
+              }}>
+                      <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 12
+                }}>
+                        <span style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.4)"
+                  }}>{t("txt_1332")}</span>
                         <Radio size={16} color="#28C840" />
                       </div>
-                      <div style={{ fontSize: 28, fontWeight: 800, color: "#28C840" }}>{healthMetrics.db_latency_ms} ms</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 6 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#28C840" }} />
-                        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>З'єднання з сервером стабільне</span>
+                      <div style={{
+                  fontSize: 28,
+                  fontWeight: 800,
+                  color: "#28C840"
+                }}>{healthMetrics.db_latency_ms} ms</div>
+                      <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  marginTop: 6
+                }}>
+                        <span style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#28C840"
+                  }} />
+                        <span style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.5)"
+                  }}>{t("txt_1333")}</span>
                       </div>
                     </div>
 
-                    <div style={{ background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Час роботи API (Uptime)</span>
+                    <div style={{
+                background: "rgba(255,255,255,0.02)",
+                padding: 20,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.04)"
+              }}>
+                      <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 12
+                }}>
+                        <span style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.4)"
+                  }}>{t("txt_1334")}</span>
                         <Clock size={16} color="#FEBC2E" />
                       </div>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: "#FEBC2E", marginTop: 4 }}>
-                        {Math.floor(healthMetrics.uptime_seconds / 3600)} год {Math.floor((healthMetrics.uptime_seconds % 3600) / 60)} хв
-                      </div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 12 }}>Python {healthMetrics.python_version}</div>
+                      <div style={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "#FEBC2E",
+                  marginTop: 4
+                }}>
+                        {Math.floor(healthMetrics.uptime_seconds / 3600)}{t("txt_1335")}{Math.floor(healthMetrics.uptime_seconds % 3600 / 60)}{t("txt_1336")}</div>
+                      <div style={{
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  marginTop: 12
+                }}>Python {healthMetrics.python_version}</div>
                     </div>
-                  </div>
-                )}
+                  </div>}
               </section>
-            </div>
-          )}
+            </div>}
 
           {/* Tab: Broadcast Alert Center */}
-          {activeTab === "broadcast" && (
-            <div className="fade-in">
-              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 10, color: "#FEBC2E", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>Центр Розсилок</div>
-                  <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <Radio size={20} color="#FEBC2E" />
-                    Надіслати сповіщення
-                  </h3>
+          {activeTab === "broadcast" && <div className="fade-in">
+              <section className="glass" style={{
+            padding: 24,
+            borderRadius: 20,
+            border: "1px solid rgba(255,255,255,0.04)"
+          }}>
+                <div style={{
+              marginBottom: 20
+            }}>
+                  <div style={{
+                fontSize: 10,
+                color: "#FEBC2E",
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                fontWeight: 700
+              }}>{t("txt_1337")}</div>
+                  <h3 style={{
+                margin: "4px 0 0",
+                fontSize: 20,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <Radio size={20} color="#FEBC2E" />{t("txt_1338")}</h3>
                 </div>
 
-                <div style={{ display: "grid", gap: 16 }}>
+                <div style={{
+              display: "grid",
+              gap: 16
+            }}>
                   <div>
-                    <label style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8 }}>Оберіть отримувачів</label>
-                    <select
-                      value={broadcastTarget}
-                      onChange={(e) => setBroadcastTarget(e.target.value)}
-                      style={{
-                        padding: "12px 16px",
-                        background: "rgba(0,0,0,0.5)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        color: "#fff",
-                        borderRadius: 12,
-                        fontSize: 14,
-                        outline: "none",
-                        width: "100%",
-                        maxWidth: 320
-                      }}
-                    >
-                      <option value="all">Всім (Telegram та Mac Додатки)</option>
-                      <option value="telegram">Тільки в особистий Telegram асистента</option>
-                      <option value="clients">Тільки клієнтам у додаток Mac</option>
+                    <label style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.5)",
+                  display: "block",
+                  marginBottom: 8
+                }}>{t("txt_1339")}</label>
+                    <select value={broadcastTarget} onChange={e => setBroadcastTarget(e.target.value)} style={{
+                  padding: "12px 16px",
+                  background: "rgba(0,0,0,0.5)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  color: "#fff",
+                  borderRadius: 12,
+                  fontSize: 14,
+                  outline: "none",
+                  width: "100%",
+                  maxWidth: 320
+                }}>
+                      <option value="all">{t("txt_1340")}</option>
+                      <option value="telegram">{t("txt_1341")}</option>
+                      <option value="clients">{t("txt_1342")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8 }}>Текст повідомлення</label>
-                    <textarea
-                      placeholder="Введіть текст оголошення або оновлення, яке побачать ваші користувачі..."
-                      value={broadcastMessage}
-                      onChange={(e) => setBroadcastMessage(e.target.value)}
-                      rows={5}
-                      style={{
-                        width: "100%",
-                        padding: 16,
-                        background: "rgba(0,0,0,0.4)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        borderRadius: 14,
-                        color: "#fff",
-                        fontSize: 14,
-                        fontFamily: "inherit",
-                        resize: "vertical",
-                        outline: "none"
-                      }}
-                    />
+                    <label style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.5)",
+                  display: "block",
+                  marginBottom: 8
+                }}>{t("txt_1343")}</label>
+                    <textarea placeholder={t("txt_1344")} value={broadcastMessage} onChange={e => setBroadcastMessage(e.target.value)} rows={5} style={{
+                  width: "100%",
+                  padding: 16,
+                  background: "rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 14,
+                  color: "#fff",
+                  fontSize: 14,
+                  fontFamily: "inherit",
+                  resize: "vertical",
+                  outline: "none"
+                }} />
                   </div>
 
-                  <button
-                    onClick={handleBroadcast}
-                    disabled={sendingBroadcast || !broadcastMessage.trim()}
-                    className="cta-btn"
-                    style={{ padding: "14px 28px", borderRadius: 12, alignSelf: "flex-start", display: "flex", gap: 8, alignItems: "center" }}
-                  >
-                    {sendingBroadcast ? <Loader2 size={16} className="spin" /> : <Radio size={16} />}
-                    Надіслати сповіщення
-                  </button>
+                  <button onClick={handleBroadcast} disabled={sendingBroadcast || !broadcastMessage.trim()} className="cta-btn" style={{
+                padding: "14px 28px",
+                borderRadius: 12,
+                alignSelf: "flex-start",
+                display: "flex",
+                gap: 8,
+                alignItems: "center"
+              }}>
+                    {sendingBroadcast ? <Loader2 size={16} className="spin" /> : <Radio size={16} />}{t("txt_1345")}</button>
                 </div>
               </section>
-            </div>
-          )}
+            </div>}
 
           {/* Tab: Admin Audit Log */}
-          {activeTab === "logs" && (
-            <div className="fade-in">
-              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 10, color: "#FF5F57", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>Аудит Системи</div>
-                  <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <FileText size={20} color="#FF5F57" />
-                    Логи критичних дій адміністратора
-                  </h3>
+          {activeTab === "logs" && <div className="fade-in">
+              <section className="glass" style={{
+            padding: 24,
+            borderRadius: 20,
+            border: "1px solid rgba(255,255,255,0.04)"
+          }}>
+                <div style={{
+              marginBottom: 20
+            }}>
+                  <div style={{
+                fontSize: 10,
+                color: "#FF5F57",
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                fontWeight: 700
+              }}>{t("txt_1346")}</div>
+                  <h3 style={{
+                margin: "4px 0 0",
+                fontSize: 20,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}>
+                    <FileText size={20} color="#FF5F57" />{t("txt_1347")}</h3>
                 </div>
 
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <div style={{
+              overflowX: "auto"
+            }}>
+                  <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13
+              }}>
                     <thead>
-                      <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                        <th style={{ padding: 12 }}>Дія</th>
-                        <th style={{ padding: 12 }}>Виконав (Admin)</th>
-                        <th style={{ padding: 12 }}>Користувач (Target)</th>
-                        <th style={{ padding: 12 }}>Дата дії</th>
-                        <th style={{ padding: 12 }}>Подробиці</th>
+                      <tr style={{
+                    color: "rgba(255,255,255,0.4)",
+                    textAlign: "left",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)"
+                  }}>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1348")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1349")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1350")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1351")}</th>
+                        <th style={{
+                      padding: 12
+                    }}>{t("txt_1352")}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {adminLogs.map((log, idx) => (
-                        <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                          <td style={{ padding: 12 }}>
+                      {adminLogs.map((log, idx) => <tr key={idx} style={{
+                    borderBottom: "1px solid rgba(255,255,255,0.03)"
+                  }}>
+                          <td style={{
+                      padding: 12
+                    }}>
                             <span style={{
-                              padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 700,
-                              background: "rgba(255,95,87,0.12)", color: "#FF5F57"
-                            }}>
+                        padding: "2px 8px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        background: "rgba(255,95,87,0.12)",
+                        color: "#FF5F57"
+                      }}>
                               {log.action}
                             </span>
                           </td>
-                          <td style={{ padding: 12, fontWeight: 600 }}>{log.performed_by}</td>
-                          <td style={{ padding: 12 }}>{log.target_email || "—"}</td>
-                          <td style={{ padding: 12, color: "rgba(255,255,255,0.5)" }}>{fmtDateTime(log.performed_at)}</td>
-                          <td style={{ padding: 12, fontFamily: "monospace", fontSize: 12, color: "rgba(0,229,255,0.8)" }}>
+                          <td style={{
+                      padding: 12,
+                      fontWeight: 600
+                    }}>{log.performed_by}</td>
+                          <td style={{
+                      padding: 12
+                    }}>{log.target_email || "—"}</td>
+                          <td style={{
+                      padding: 12,
+                      color: "rgba(255,255,255,0.5)"
+                    }}>{fmtDateTime(log.performed_at)}</td>
+                          <td style={{
+                      padding: 12,
+                      fontFamily: "monospace",
+                      fontSize: 12,
+                      color: "rgba(0,229,255,0.8)"
+                    }}>
                             {JSON.stringify(log.details || {})}
                           </td>
-                        </tr>
-                      ))}
-                      {adminLogs.length === 0 && (
-                        <tr>
-                          <td colSpan={5} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>Дій адміністратора не знайдено</td>
-                        </tr>
-                      )}
+                        </tr>)}
+                      {adminLogs.length === 0 && <tr>
+                          <td colSpan={5} style={{
+                      padding: 32,
+                      textAlign: "center",
+                      color: "rgba(255,255,255,0.4)"
+                    }}>{t("txt_1353")}</td>
+                        </tr>}
                     </tbody>
                   </table>
                 </div>
               </section>
-            </div>
-          )}
+            </div>}
           {/* Tab: Documentation CMS (Markdown Editor & Preview) */}
           {activeTab === "docs_cms" && (() => {
-            const handleSaveDoc = async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              const data = {
-                id: formData.get("id"),
-                title: formData.get("title"),
-                eyebrow: formData.get("eyebrow"),
-                desc: formData.get("desc"),
-                icon: formData.get("icon"),
-                order: parseInt(formData.get("order")) || 99,
-                content: formData.get("content")
-              };
-
-              try {
-                await api.post("/api/admin/docs", data);
-                toast.success("Розділ документації успішно збережено!");
-                setIsDocModalOpen(false);
-                setEditingDoc(null);
-                refresh();
-              } catch (err) {
-                console.error("Save doc error:", err);
-                toast.error("Не вдалося зберегти розділ: " + (err.response?.data?.detail || err.message));
-              }
+          const handleSaveDoc = async e => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+              id: formData.get("id"),
+              title: formData.get("title"),
+              eyebrow: formData.get("eyebrow"),
+              desc: formData.get("desc"),
+              icon: formData.get("icon"),
+              order: parseInt(formData.get("order")) || 99,
+              content: formData.get("content")
             };
-
-            const handleDeleteDoc = async (id) => {
-              if (!window.confirm(`Ви дійсно бажаєте видалити розділ "${id}"?`)) return;
-              try {
-                await api.delete(`/api/admin/docs/${id}`);
-                toast.success("Розділ успішно видалено!");
-                refresh();
-              } catch (err) {
-                console.error("Delete doc error:", err);
-                toast.error("Не вдалося видалити розділ: " + (err.response?.data?.detail || err.message));
-              }
-            };
-
-            return (
-              <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            try {
+              await api.post("/api/admin/docs", data);
+              toast.success(t("txt_1354"));
+              setIsDocModalOpen(false);
+              setEditingDoc(null);
+              refresh();
+            } catch (err) {
+              console.error("Save doc error:", err);
+              toast.error(t("txt_1355") + (err.response?.data?.detail || err.message));
+            }
+          };
+          const handleDeleteDoc = async id => {
+            if (!window.confirm(`Ви дійсно бажаєте видалити розділ "${id}"?`)) return;
+            try {
+              await api.delete(`/api/admin/docs/${id}`);
+              toast.success(t("txt_1356"));
+              refresh();
+            } catch (err) {
+              console.error("Delete doc error:", err);
+              toast.error(t("txt_1357") + (err.response?.data?.detail || err.message));
+            }
+          };
+          return <div className="fade-in" style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 24
+          }}>
                 
-                <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+                <section className="glass" style={{
+              padding: 24,
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.04)"
+            }}>
+                  <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 20,
+                flexWrap: "wrap",
+                gap: 12
+              }}>
                     <div>
-                      <div style={{ fontSize: 10, color: "#9D4CDD", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 700 }}>CMS контенту</div>
-                      <h3 style={{ margin: "4px 0 0", fontSize: 20, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                        <BookOpen size={20} color="#9D4CDD" />
-                        Динамічна документація сайту
-                      </h3>
+                      <div style={{
+                    fontSize: 10,
+                    color: "#9D4CDD",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.15em",
+                    fontWeight: 700
+                  }}>{t("txt_1358")}</div>
+                      <h3 style={{
+                    margin: "4px 0 0",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8
+                  }}>
+                        <BookOpen size={20} color="#9D4CDD" />{t("txt_1359")}</h3>
                     </div>
-                    <button
-                      onClick={() => {
-                        setEditingDoc({ id: "", title: "", eyebrow: "Додатково", desc: "", icon: "BookOpen", order: 99, content: "" });
-                        setLiveContent("");
-                        setActiveEditorTab("edit");
-                        setIsDocModalOpen(true);
-                      }}
-                      className="cta-btn"
-                      style={{ padding: "8px 16px", fontSize: 12 }}
-                    >
-                      <Plus size={14} style={{ marginRight: 6 }} /> Додати розділ
-                    </button>
+                    <button onClick={() => {
+                  setEditingDoc({
+                    id: "",
+                    title: "",
+                    eyebrow: t("txt_1360"),
+                    desc: "",
+                    icon: "BookOpen",
+                    order: 99,
+                    content: ""
+                  });
+                  setLiveContent("");
+                  setActiveEditorTab("edit");
+                  setIsDocModalOpen(true);
+                }} className="cta-btn" style={{
+                  padding: "8px 16px",
+                  fontSize: 12
+                }}>
+                      <Plus size={14} style={{
+                    marginRight: 6
+                  }} />{t("txt_1361")}</button>
                   </div>
 
-                  <div style={{ overflowX: "auto" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <div style={{
+                overflowX: "auto"
+              }}>
+                    <table style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: 13
+                }}>
                       <thead>
-                        <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                          <th style={{ padding: 12 }}>Назва</th>
-                          <th style={{ padding: 12 }}>Slug / ID</th>
-                          <th style={{ padding: 12 }}>Надзаголовок</th>
-                          <th style={{ padding: 12 }}>Іконка</th>
-                          <th style={{ padding: 12 }}>Порядок</th>
-                          <th style={{ padding: 12 }}>Останнє оновлення</th>
-                          <th style={{ padding: 12, textAlign: "center" }}>Дії</th>
+                        <tr style={{
+                      color: "rgba(255,255,255,0.4)",
+                      textAlign: "left",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)"
+                    }}>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1362")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>Slug / ID</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1363")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1364")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1365")}</th>
+                          <th style={{
+                        padding: 12
+                      }}>{t("txt_1366")}</th>
+                          <th style={{
+                        padding: 12,
+                        textAlign: "center"
+                      }}>{t("txt_1367")}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {customDocs.map((doc, idx) => (
-                          <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                            <td style={{ padding: 12, fontWeight: 600 }}>{doc.title}</td>
-                            <td style={{ padding: 12, fontFamily: "monospace", color: "#00E5FF" }}>{doc.id}</td>
-                            <td style={{ padding: 12 }}>{doc.eyebrow}</td>
-                            <td style={{ padding: 12, color: "rgba(255,255,255,0.6)" }}>{doc.icon}</td>
-                            <td style={{ padding: 12, fontWeight: 700, color: "#9D4CDD" }}>{doc.order}</td>
-                            <td style={{ padding: 12, color: "rgba(255,255,255,0.4)" }}>
+                        {customDocs.map((doc, idx) => <tr key={idx} style={{
+                      borderBottom: "1px solid rgba(255,255,255,0.03)"
+                    }}>
+                            <td style={{
+                        padding: 12,
+                        fontWeight: 600
+                      }}>{doc.title}</td>
+                            <td style={{
+                        padding: 12,
+                        fontFamily: "monospace",
+                        color: "#00E5FF"
+                      }}>{doc.id}</td>
+                            <td style={{
+                        padding: 12
+                      }}>{doc.eyebrow}</td>
+                            <td style={{
+                        padding: 12,
+                        color: "rgba(255,255,255,0.6)"
+                      }}>{doc.icon}</td>
+                            <td style={{
+                        padding: 12,
+                        fontWeight: 700,
+                        color: "#9D4CDD"
+                      }}>{doc.order}</td>
+                            <td style={{
+                        padding: 12,
+                        color: "rgba(255,255,255,0.4)"
+                      }}>
                               {doc.updated_at ? fmtDateTime(doc.updated_at) : "—"}
                             </td>
-                            <td style={{ padding: 12, textAlign: "center" }}>
-                              <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-                                <button
-                                  onClick={() => {
-                                    setEditingDoc(doc);
-                                    setLiveContent(doc.content || "");
-                                    setActiveEditorTab("edit");
-                                    setIsDocModalOpen(true);
-                                  }}
-                                  className="ghost-btn"
-                                  style={{ padding: "4px 10px", fontSize: 11, background: "rgba(255,255,255,0.04)" }}
-                                >
-                                  Редагувати
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteDoc(doc.id)}
-                                  className="ghost-btn"
-                                  style={{ padding: "4px 10px", fontSize: 11, background: "rgba(255,95,87,0.06)", border: "1px solid rgba(255,95,87,0.15)", color: "#FF5F57" }}
-                                >
-                                  Видалити
-                                </button>
+                            <td style={{
+                        padding: 12,
+                        textAlign: "center"
+                      }}>
+                              <div style={{
+                          display: "flex",
+                          gap: 8,
+                          justifyContent: "center"
+                        }}>
+                                <button onClick={() => {
+                            setEditingDoc(doc);
+                            setLiveContent(doc.content || "");
+                            setActiveEditorTab("edit");
+                            setIsDocModalOpen(true);
+                          }} className="ghost-btn" style={{
+                            padding: "4px 10px",
+                            fontSize: 11,
+                            background: "rgba(255,255,255,0.04)"
+                          }}>{t("txt_1368")}</button>
+                                <button onClick={() => handleDeleteDoc(doc.id)} className="ghost-btn" style={{
+                            padding: "4px 10px",
+                            fontSize: 11,
+                            background: "rgba(255,95,87,0.06)",
+                            border: "1px solid rgba(255,95,87,0.15)",
+                            color: "#FF5F57"
+                          }}>{t("txt_1369")}</button>
                               </div>
                             </td>
-                          </tr>
-                        ))}
-                        {customDocs.length === 0 && (
-                          <tr>
-                            <td colSpan={7} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
-                              Немає динамічних розділів. Документація містить лише статичні за замовчуванням.
-                            </td>
-                          </tr>
-                        )}
+                          </tr>)}
+                        {customDocs.length === 0 && <tr>
+                            <td colSpan={7} style={{
+                        padding: 32,
+                        textAlign: "center",
+                        color: "rgba(255,255,255,0.4)"
+                      }}>{t("txt_1370")}</td>
+                          </tr>}
                       </tbody>
                     </table>
                   </div>
@@ -1048,672 +1808,747 @@ function AdminPanel({ onLogout }) {
 
                 {/* MODAL / SLIDE-OVER FOR CREATE & EDIT */}
                 {isDocModalOpen && editingDoc && (() => {
-                  return (
-                    <div style={{
-                      position: "fixed",
-                      inset: 0,
-                      zIndex: 1000,
-                      background: "rgba(3, 3, 5, 0.75)",
-                      backdropFilter: "blur(20px)",
-                      display: "grid",
-                      placeItems: "center",
-                      padding: 24
-                    }}>
+              return <div style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 1000,
+                background: "rgba(3, 3, 5, 0.75)",
+                backdropFilter: "blur(20px)",
+                display: "grid",
+                placeItems: "center",
+                padding: 24
+              }}>
                       <div className="glass" style={{
-                        width: "100%",
-                        maxWidth: 960,
-                        height: "85vh",
-                        borderRadius: 24,
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        background: "#08080C",
-                        display: "flex",
-                        flexDirection: "column",
-                        overflow: "hidden"
-                      }}>
+                  width: "100%",
+                  maxWidth: 960,
+                  height: "85vh",
+                  borderRadius: 24,
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "#08080C",
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden"
+                }}>
                         {/* Header */}
-                        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{
+                    padding: "20px 24px",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}>
                           <div>
-                            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>
-                              {editingDoc.id ? `Редагувати розділ "${editingDoc.title}"` : "Створити новий розділ документації"}
+                            <h3 style={{
+                        margin: 0,
+                        fontSize: 18,
+                        fontWeight: 700
+                      }}>
+                              {editingDoc.id ? `Редагувати розділ "${editingDoc.title}"` : t("txt_1371")}
                             </h3>
-                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Slug: {editingDoc.id || "буде згенеровано автоматично"}</span>
+                            <span style={{
+                        fontSize: 12,
+                        color: "rgba(255,255,255,0.4)"
+                      }}>Slug: {editingDoc.id || t("txt_1372")}</span>
                           </div>
-                          <button
-                            onClick={() => {
-                              setIsDocModalOpen(false);
-                              setEditingDoc(null);
-                            }}
-                            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }}
-                          >
-                            Закрити ✕
-                          </button>
+                          <button onClick={() => {
+                      setIsDocModalOpen(false);
+                      setEditingDoc(null);
+                    }} style={{
+                      background: "none",
+                      border: "none",
+                      color: "rgba(255,255,255,0.4)",
+                      cursor: "pointer"
+                    }}>{t("txt_1373")}</button>
                         </div>
 
                         {/* Form & Workspace */}
-                        <form onSubmit={handleSaveDoc} style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                        <form onSubmit={handleSaveDoc} style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden"
+                  }}>
                           
                           {/* Top Metadata Row */}
-                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                          <div style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                      gap: 14,
+                      padding: "20px 24px",
+                      borderBottom: "1px solid rgba(255,255,255,0.04)"
+                    }}>
                             
                             <div>
-                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>ID / Slug (унікальний URL)</label>
-                              <input
-                                name="id"
-                                type="text"
-                                defaultValue={editingDoc.id}
-                                disabled={!!editingDoc.id}
-                                placeholder="напр: advanced-pyaudio"
-                                required
-                                className="input-field"
-                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                              />
+                              <label style={{
+                          display: "block",
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          marginBottom: 6
+                        }}>{t("txt_1374")}</label>
+                              <input name="id" type="text" defaultValue={editingDoc.id} disabled={!!editingDoc.id} placeholder={t("txt_1375")} required className="input-field" style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          background: "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          borderRadius: 10,
+                          color: "#fff"
+                        }} />
                             </div>
 
                             <div>
-                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Назва сторінки (Title)</label>
-                              <input
-                                name="title"
-                                type="text"
-                                defaultValue={editingDoc.title}
-                                placeholder="напр: Інтеграція PyAudio"
-                                required
-                                className="input-field"
-                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                              />
+                              <label style={{
+                          display: "block",
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          marginBottom: 6
+                        }}>{t("txt_1376")}</label>
+                              <input name="title" type="text" defaultValue={editingDoc.title} placeholder={t("txt_1377")} required className="input-field" style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          background: "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          borderRadius: 10,
+                          color: "#fff"
+                        }} />
                             </div>
 
                             <div>
-                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Надзаголовок (Eyebrow)</label>
-                              <input
-                                name="eyebrow"
-                                type="text"
-                                defaultValue={editingDoc.eyebrow}
-                                placeholder="напр: Додатково"
-                                className="input-field"
-                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                              />
+                              <label style={{
+                          display: "block",
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          marginBottom: 6
+                        }}>{t("txt_1378")}</label>
+                              <input name="eyebrow" type="text" defaultValue={editingDoc.eyebrow} placeholder={t("txt_1379")} className="input-field" style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          background: "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          borderRadius: 10,
+                          color: "#fff"
+                        }} />
                             </div>
 
                             <div>
-                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Іконка меню</label>
-                              <select
-                                name="icon"
-                                defaultValue={editingDoc.icon}
-                                className="input-field"
-                                style={{ width: "100%", padding: "8px 12px", background: "rgba(10,10,12,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                              >
-                                {["BookOpen", "Zap", "Layers", "Package", "Key", "Globe", "Activity", "HelpCircle", "Settings", "Shield", "Code", "Sparkles"].map(iconName => (
-                                  <option key={iconName} value={iconName}>{iconName}</option>
-                                ))}
+                              <label style={{
+                          display: "block",
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          marginBottom: 6
+                        }}>{t("txt_1380")}</label>
+                              <select name="icon" defaultValue={editingDoc.icon} className="input-field" style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          background: "rgba(10,10,12,0.95)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          borderRadius: 10,
+                          color: "#fff"
+                        }}>
+                                {["BookOpen", "Zap", "Layers", "Package", "Key", "Globe", "Activity", "HelpCircle", "Settings", "Shield", "Code", "Sparkles"].map(iconName => <option key={iconName} value={iconName}>{iconName}</option>)}
                               </select>
                             </div>
 
                             <div>
-                              <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Порядок сортування</label>
-                              <input
-                                name="order"
-                                type="number"
-                                defaultValue={editingDoc.order}
-                                className="input-field"
-                                style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                              />
+                              <label style={{
+                          display: "block",
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          marginBottom: 6
+                        }}>{t("txt_1381")}</label>
+                              <input name="order" type="number" defaultValue={editingDoc.order} className="input-field" style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          background: "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          borderRadius: 10,
+                          color: "#fff"
+                        }} />
                             </div>
 
                           </div>
 
-                          <div style={{ padding: "10px 24px 0" }}>
-                            <label style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Короткий опис (Description)</label>
-                            <input
-                              name="desc"
-                              type="text"
-                              defaultValue={editingDoc.desc}
-                              placeholder="Короткий підзаголовок для відображення під назвою розділу"
-                              className="input-field"
-                              style={{ width: "100%", padding: "8px 12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff" }}
-                            />
+                          <div style={{
+                      padding: "10px 24px 0"
+                    }}>
+                            <label style={{
+                        display: "block",
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.4)",
+                        textTransform: "uppercase",
+                        fontWeight: 700,
+                        marginBottom: 6
+                      }}>{t("txt_1382")}</label>
+                            <input name="desc" type="text" defaultValue={editingDoc.desc} placeholder={t("txt_1383")} className="input-field" style={{
+                        width: "100%",
+                        padding: "8px 12px",
+                        background: "rgba(255,255,255,0.02)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 10,
+                        color: "#fff"
+                      }} />
                           </div>
 
                           {/* Editor Area with Tab Selectors */}
-                          <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: 24, overflow: "hidden" }}>
+                          <div style={{
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      padding: 24,
+                      overflow: "hidden"
+                    }}>
                             
                             {/* Editor Tab Selectors */}
-                            <div style={{ display: "flex", gap: 12, marginBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: 8 }}>
-                              <button
-                                type="button"
-                                onClick={() => setActiveEditorTab("edit")}
-                                style={{
-                                  background: "none", border: "none",
-                                  color: activeEditorTab === "edit" ? "#00E5FF" : "rgba(255,255,255,0.4)",
-                                  fontSize: 12, fontWeight: 700, cursor: "pointer",
-                                  paddingBottom: 4, borderBottom: activeEditorTab === "edit" ? "2px solid #00E5FF" : "none"
-                                }}
-                              >
-                                Редактор (Markdown)
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setActiveEditorTab("preview")}
-                                style={{
-                                  background: "none", border: "none",
-                                  color: activeEditorTab === "preview" ? "#00E5FF" : "rgba(255,255,255,0.4)",
-                                  fontSize: 12, fontWeight: 700, cursor: "pointer",
-                                  paddingBottom: 4, borderBottom: activeEditorTab === "preview" ? "2px solid #00E5FF" : "none"
-                                }}
-                              >
-                                Передперегляд контенту
-                              </button>
+                            <div style={{
+                        display: "flex",
+                        gap: 12,
+                        marginBottom: 12,
+                        borderBottom: "1px solid rgba(255,255,255,0.04)",
+                        paddingBottom: 8
+                      }}>
+                              <button type="button" onClick={() => setActiveEditorTab("edit")} style={{
+                          background: "none",
+                          border: "none",
+                          color: activeEditorTab === "edit" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          paddingBottom: 4,
+                          borderBottom: activeEditorTab === "edit" ? "2px solid #00E5FF" : "none"
+                        }}>{t("txt_1384")}</button>
+                              <button type="button" onClick={() => setActiveEditorTab("preview")} style={{
+                          background: "none",
+                          border: "none",
+                          color: activeEditorTab === "preview" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          paddingBottom: 4,
+                          borderBottom: activeEditorTab === "preview" ? "2px solid #00E5FF" : "none"
+                        }}>{t("txt_1385")}</button>
                             </div>
 
                             {/* Tab Content */}
-                            {activeEditorTab === "edit" ? (
-                              <textarea
-                                name="content"
-                                value={liveContent}
-                                onChange={(e) => setLiveContent(e.target.value)}
-                                placeholder="# Назва розділу&#10;&#10;Тут ви можете писати документацію використовуючи Markdown.&#10;&#10;* Пункт списку 1&#10;* Пункт списку 2&#10;&#10;```javascript&#10;console.log('Синтаксичний блок коду');&#10;```"
-                                style={{
-                                  flex: 1,
-                                  width: "100%",
-                                  background: "rgba(5,5,7,0.95)",
-                                  border: "1px solid rgba(255,255,255,0.08)",
-                                  borderRadius: 14,
-                                  padding: 16,
-                                  color: "#a5b4fc",
-                                  fontFamily: "monospace",
-                                  fontSize: 13,
-                                  lineHeight: 1.6,
-                                  resize: "none",
-                                  outline: "none"
-                                }}
-                              />
-                            ) : (
-                              <div style={{
-                                flex: 1,
-                                width: "100%",
-                                background: "#030303",
-                                border: "1px solid rgba(255,255,255,0.08)",
-                                borderRadius: 14,
-                                padding: "20px 24px",
-                                overflowY: "auto",
-                                textAlign: "left",
-                                fontSize: "14.5px",
-                                color: "rgba(255,255,255,0.75)",
-                                lineHeight: 1.8
-                              }}>
+                            {activeEditorTab === "edit" ? <textarea name="content" value={liveContent} onChange={e => setLiveContent(e.target.value)} placeholder={t("txt_1386")} style={{
+                        flex: 1,
+                        width: "100%",
+                        background: "rgba(5,5,7,0.95)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 14,
+                        padding: 16,
+                        color: "#a5b4fc",
+                        fontFamily: "monospace",
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        resize: "none",
+                        outline: "none"
+                      }} /> : <div style={{
+                        flex: 1,
+                        width: "100%",
+                        background: "#030303",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 14,
+                        padding: "20px 24px",
+                        overflowY: "auto",
+                        textAlign: "left",
+                        fontSize: "14.5px",
+                        color: "rgba(255,255,255,0.75)",
+                        lineHeight: 1.8
+                      }}>
                                 {/* Render Live Markdown Preview */}
-                                <div dangerouslySetInnerHTML={{ __html: formatMarkdownPreview(liveContent) }} />
-                              </div>
-                            )}
+                                <div dangerouslySetInnerHTML={{
+                          __html: formatMarkdownPreview(liveContent)
+                        }} />
+                              </div>}
 
                           </div>
 
                           {/* Footer Actions */}
-                          <div style={{ padding: "20px 24px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "flex-end", gap: 12 }}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setIsDocModalOpen(false);
-                                setEditingDoc(null);
-                              }}
-                              className="ghost-btn"
-                              style={{ padding: "10px 20px", fontSize: 13 }}
-                            >
-                              Скасувати
-                            </button>
-                            <button
-                              type="submit"
-                              className="cta-btn"
-                              style={{ padding: "10px 24px", fontSize: 13 }}
-                            >
-                              Зберегти зміни
-                            </button>
+                          <div style={{
+                      padding: "20px 24px",
+                      borderTop: "1px solid rgba(255,255,255,0.06)",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: 12
+                    }}>
+                            <button type="button" onClick={() => {
+                        setIsDocModalOpen(false);
+                        setEditingDoc(null);
+                      }} className="ghost-btn" style={{
+                        padding: "10px 20px",
+                        fontSize: 13
+                      }}>{t("txt_1387")}</button>
+                            <button type="submit" className="cta-btn" style={{
+                        padding: "10px 24px",
+                        fontSize: 13
+                      }}>{t("txt_1388")}</button>
                           </div>
 
                         </form>
                       </div>
-                    </div>
-                  );
-                })()}
+                    </div>;
+            })()}
 
-              </div>
-            );
-          })()}
+              </div>;
+        })()}
 
         </main>
 
         {/* Right Sidebar Navigation Menu */}
-        <aside
-          className="admin-sidebar"
-          style={{
-            width: 280,
-            background: "rgba(4,4,6,0.6)",
-            borderLeft: "1px solid rgba(255,255,255,0.05)",
-            padding: 24,
+        <aside className="admin-sidebar" style={{
+        width: 280,
+        background: "rgba(4,4,6,0.6)",
+        borderLeft: "1px solid rgba(255,255,255,0.05)",
+        padding: 24,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        position: "sticky",
+        top: 61,
+        height: "calc(100vh - 61px)",
+        backdropFilter: "blur(12px)"
+      }}>
+          <div style={{
+          fontSize: 10,
+          letterSpacing: "0.15em",
+          color: "rgba(255,255,255,0.4)",
+          textTransform: "uppercase",
+          fontWeight: 700,
+          marginBottom: 12
+        }}>{t("txt_1389")}</div>
+          
+          <SidebarButton icon={<Compass size={16} />} label={t("txt_1390")} active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
+          <SidebarButton icon={<DollarSign size={16} />} label={t("txt_1391")} active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} />
+          <SidebarButton icon={<Globe size={16} />} label={t("txt_1392")} active={activeTab === "map"} onClick={() => setActiveTab("map")} />
+          <SidebarButton icon={<Users size={16} />} label={t("txt_1393")} active={activeTab === "users"} onClick={() => setActiveTab("users")} />
+          <SidebarButton icon={<Cpu size={16} />} label={t("txt_1394")} active={activeTab === "health"} onClick={() => setActiveTab("health")} />
+          <SidebarButton icon={<Radio size={16} />} label={t("txt_1395")} active={activeTab === "broadcast"} onClick={() => setActiveTab("broadcast")} />
+          <SidebarButton icon={<FileText size={16} />} label={t("txt_1396")} active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
+          <SidebarButton icon={<BookOpen size={16} />} label={t("txt_1397")} active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
+          
+          <div style={{
+          marginTop: "auto",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          paddingTop: 16
+        }}>
+            <div style={{
+            fontSize: 11,
+            color: "rgba(255,255,255,0.3)",
             display: "flex",
-            flexDirection: "column",
-            gap: 8,
-            position: "sticky",
-            top: 61,
-            height: "calc(100vh - 61px)",
-            backdropFilter: "blur(12px)",
-          }}
-        >
-          <div style={{ fontSize: 10, letterSpacing: "0.15em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 700, marginBottom: 12 }}>
-            Розділи керування
-          </div>
-          
-          <SidebarButton icon={<Compass size={16} />} label="Головна консоль" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
-          <SidebarButton icon={<DollarSign size={16} />} label="Аналітика та Фінанси" active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} />
-          <SidebarButton icon={<Globe size={16} />} label="Інтерактивна Glow Map" active={activeTab === "map"} onClick={() => setActiveTab("map")} />
-          <SidebarButton icon={<Users size={16} />} label="База Користувачів" active={activeTab === "users"} onClick={() => setActiveTab("users")} />
-          <SidebarButton icon={<Cpu size={16} />} label="Здоров'я Системи" active={activeTab === "health"} onClick={() => setActiveTab("health")} />
-          <SidebarButton icon={<Radio size={16} />} label="Центр Розсилок" active={activeTab === "broadcast"} onClick={() => setActiveTab("broadcast")} />
-          <SidebarButton icon={<FileText size={16} />} label="Аудит Сповіщень" active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
-          <SidebarButton icon={<BookOpen size={16} />} label="Документація (CMS)" active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
-          
-          <div style={{ marginTop: "auto", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 16 }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", display: "flex", alignItems: "center", gap: 6 }}>
+            alignItems: "center",
+            gap: 6
+          }}>
               <Lock size={12} color="#28C840" />
-              <span>Шифрування AES-256</span>
+              <span>{t("txt_1398")}</span>
             </div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>
-              База даних PostgreSQL: <b style={{ color: "#28C840" }}>Online</b>
+            <div style={{
+            fontSize: 11,
+            color: "rgba(255,255,255,0.3)",
+            marginTop: 4
+          }}>{t("txt_1399")}<b style={{
+              color: "#28C840"
+            }}>Online</b>
             </div>
           </div>
         </aside>
 
       </div>
 
-      {selectedUser && (
-        <UserDetailsModal
-          user={selectedUser}
-          onClose={() => setSelectedUser(null)}
-          onUpdated={() => { refresh(); }}
-        />
-      )}
-    </div>
-  );
+      {selectedUser && <UserDetailsModal user={selectedUser} onClose={() => setSelectedUser(null)} onUpdated={() => {
+      refresh();
+    }} />}
+    </div>;
 }
-
-const td = { padding: "12px 14px", whiteSpace: "nowrap" };
-
-function SidebarButton({ icon, label, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        width: "100%",
-        padding: "12px 16px",
-        borderRadius: 12,
-        border: "none",
-        background: active ? "linear-gradient(135deg, rgba(0,229,255,0.12) 0%, rgba(157,76,221,0.05) 100%)" : "transparent",
-        color: active ? "#00E5FF" : "rgba(255,255,255,0.65)",
-        cursor: "pointer",
-        fontWeight: active ? 700 : 500,
-        fontSize: 13,
-        textAlign: "left",
-        borderLeft: active ? "3px solid #00E5FF" : "3px solid transparent",
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
-      onMouseEnter={(e) => {
-        if (!active) {
-          e.currentTarget.style.background = "rgba(255,255,255,0.02)";
-          e.currentTarget.style.color = "#fff";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!active) {
-          e.currentTarget.style.background = "transparent";
-          e.currentTarget.style.color = "rgba(255,255,255,0.65)";
-        }
-      }}
-    >
+const td = {
+  padding: "12px 14px",
+  whiteSpace: "nowrap"
+};
+function SidebarButton({
+  icon,
+  label,
+  active,
+  onClick
+}) {
+  return <button onClick={onClick} style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    width: "100%",
+    padding: "12px 16px",
+    borderRadius: 12,
+    border: "none",
+    background: active ? "linear-gradient(135deg, rgba(0,229,255,0.12) 0%, rgba(157,76,221,0.05) 100%)" : "transparent",
+    color: active ? "#00E5FF" : "rgba(255,255,255,0.65)",
+    cursor: "pointer",
+    fontWeight: active ? 700 : 500,
+    fontSize: 13,
+    textAlign: "left",
+    borderLeft: active ? "3px solid #00E5FF" : "3px solid transparent",
+    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+  }} onMouseEnter={e => {
+    if (!active) {
+      e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+      e.currentTarget.style.color = "#fff";
+    }
+  }} onMouseLeave={e => {
+    if (!active) {
+      e.currentTarget.style.background = "transparent";
+      e.currentTarget.style.color = "rgba(255,255,255,0.65)";
+    }
+  }}>
       {icon}
       {label}
-    </button>
-  );
+    </button>;
 }
-
-function StatCard({ icon, label, value, accent, active, onClick }) {
-  return (
-    <div
-      className="glass"
-      onClick={onClick}
-      style={{
-        padding: 20,
-        borderRadius: 16,
-        cursor: "pointer",
-        border: active ? `1px solid ${accent}` : "1px solid rgba(255,255,255,0.05)",
-        background: active ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
-        boxShadow: active ? `0 0 15px ${accent}15` : "none",
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-        borderLeft: `4px solid ${accent}`
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.5)", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700 }}>
-        <span style={{ color: accent }}>{icon}</span>
+function StatCard({
+  icon,
+  label,
+  value,
+  accent,
+  active,
+  onClick
+}) {
+  return <div className="glass" onClick={onClick} style={{
+    padding: 20,
+    borderRadius: 16,
+    cursor: "pointer",
+    border: active ? `1px solid ${accent}` : "1px solid rgba(255,255,255,0.05)",
+    background: active ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
+    boxShadow: active ? `0 0 15px ${accent}15` : "none",
+    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+    borderLeft: `4px solid ${accent}`
+  }}>
+      <div style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      color: "rgba(255,255,255,0.5)",
+      fontSize: 11,
+      letterSpacing: "0.08em",
+      textTransform: "uppercase",
+      fontWeight: 700
+    }}>
+        <span style={{
+        color: accent
+      }}>{icon}</span>
         {label}
       </div>
-      <div style={{ fontSize: 28, fontWeight: 800, marginTop: 8, letterSpacing: "-0.02em" }}>{value}</div>
-    </div>
-  );
+      <div style={{
+      fontSize: 28,
+      fontWeight: 800,
+      marginTop: 8,
+      letterSpacing: "-0.02em"
+    }}>{value}</div>
+    </div>;
 }
-
-function GrowthChart({ data, metric, color }) {
-  const max = Math.max(1, ...data.map((d) => d[metric] || 0));
-  return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 160, paddingTop: 10 }}>
-      {data.map((d) => (
-        <div key={d.month} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-          <div
-            style={{
-              width: "100%",
-              height: `${((d[metric] || 0) / max) * 100}%`,
-              background: `linear-gradient(180deg, ${color}, ${color}15)`,
-              borderRadius: "4px 4px 0 0",
-              minHeight: 4,
-              transition: "height 0.6s ease",
-            }}
-            title={`${d[metric] || 0}`}
-          />
-          <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>{d.month.slice(5)}</div>
-        </div>
-      ))}
-    </div>
-  );
+function GrowthChart({
+  data,
+  metric,
+  color
+}) {
+  const max = Math.max(1, ...data.map(d => d[metric] || 0));
+  return <div style={{
+    display: "flex",
+    alignItems: "flex-end",
+    gap: 8,
+    height: 160,
+    paddingTop: 10
+  }}>
+      {data.map(d => <div key={d.month} style={{
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 6
+    }}>
+          <div style={{
+        width: "100%",
+        height: `${(d[metric] || 0) / max * 100}%`,
+        background: `linear-gradient(180deg, ${color}, ${color}15)`,
+        borderRadius: "4px 4px 0 0",
+        minHeight: 4,
+        transition: "height 0.6s ease"
+      }} title={`${d[metric] || 0}`} />
+          <div style={{
+        fontSize: 9,
+        color: "rgba(255,255,255,0.45)",
+        fontWeight: 500
+      }}>{d.month.slice(5)}</div>
+        </div>)}
+    </div>;
 }
-
-function UserDetailsModal({ user, onClose, onUpdated }) {
+function UserDetailsModal({
+  user,
+  onClose,
+  onUpdated
+}) {
   const [notes, setNotes] = useState(user.admin_notes || "");
   const [busy, setBusy] = useState(false);
-
   const doAction = async (action, extra = {}) => {
     setBusy(true);
     try {
-      await api.post("/api/admin/users/action", { user_id: user.user_id, action, ...extra });
+      await api.post("/api/admin/users/action", {
+        user_id: user.user_id,
+        action,
+        ...extra
+      });
       toast.success(`Дія "${action}" виконана`);
       onUpdated();
       if (["regen_key", "extend"].includes(action)) {
         // Stay open
       }
     } catch (e) {
-      toast.error("Помилка");
+      toast.error(t("txt_1400"));
     } finally {
       setBusy(false);
     }
   };
-
-  return (
-    <div
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(12px)", zIndex: 1000, display: "grid", placeItems: "center", padding: 24 }}
-      data-testid="user-details-modal"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="glass"
-        style={{ width: "min(560px, 100%)", maxHeight: "90vh", overflowY: "auto", padding: 28, borderRadius: 24, border: "1px solid rgba(255,255,255,0.06)" }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyConstraint: "space-between", justifyContent: "space-between", marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {user.avatar_url ? (
-              <img src={user.avatar_url} alt="" style={{ width: 44, height: 44, borderRadius: "50%", border: "2px solid #00E5FF" }} />
-            ) : (
-              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg,#00E5FF,#9D4CDD)", boxShadow: "0 0 10px rgba(0,229,255,0.3)" }} />
-            )}
+  return <div onClick={onClose} style={{
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.8)",
+    backdropFilter: "blur(12px)",
+    zIndex: 1000,
+    display: "grid",
+    placeItems: "center",
+    padding: 24
+  }} data-testid="user-details-modal">
+      <div onClick={e => e.stopPropagation()} className="glass" style={{
+      width: "min(560px, 100%)",
+      maxHeight: "90vh",
+      overflowY: "auto",
+      padding: 28,
+      borderRadius: 24,
+      border: "1px solid rgba(255,255,255,0.06)"
+    }}>
+        <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyConstraint: "space-between",
+        justifyContent: "space-between",
+        marginBottom: 20
+      }}>
+          <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12
+        }}>
+            {user.avatar_url ? <img src={user.avatar_url} alt="" style={{
+            width: 44,
+            height: 44,
+            borderRadius: "50%",
+            border: "2px solid #00E5FF"
+          }} /> : <div style={{
+            width: 44,
+            height: 44,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg,#00E5FF,#9D4CDD)",
+            boxShadow: "0 0 10px rgba(0,229,255,0.3)"
+          }} />}
             <div>
-              <div style={{ fontWeight: 700, fontSize: 16 }}>{user.name || user.email}</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{user.email}</div>
+              <div style={{
+              fontWeight: 700,
+              fontSize: 16
+            }}>{user.name || user.email}</div>
+              <div style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.5)",
+              marginTop: 2
+            }}>{user.email}</div>
             </div>
           </div>
-          <button onClick={onClose} className="ghost-btn" style={{ width: 36, height: 36, padding: 0, borderRadius: "50%", display: "grid", placeItems: "center", background: "rgba(255,255,255,0.03)" }}>
+          <button onClick={onClose} className="ghost-btn" style={{
+          width: 36,
+          height: 36,
+          padding: 0,
+          borderRadius: "50%",
+          display: "grid",
+          placeItems: "center",
+          background: "rgba(255,255,255,0.03)"
+        }}>
             <X size={16} />
           </button>
         </div>
 
-        <div style={{ display: "grid", gap: 10, fontSize: 13, color: "rgba(255,255,255,0.7)", marginBottom: 24, background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 14 }}>
-          <Row label="Ключ ліцензії" value={user.key} mono />
-          <Row label="Зв'язаний Mac" value={user.mac_id ? `${user.mac_name || "Mac"} · ${user.mac_id.slice(0, 16)}...` : "Ні"} />
-          <Row label="Версія додатка" value={user.version} />
-          <Row label="Статус ліцензії" value={user.active ? "Активна" : "Неактивна"} />
-          <Row label="Дата реєстрації" value={fmtDate(user.created_at)} />
-          <Row label="Дата закінчення" value={fmtDate(user.expires_at)} />
+        <div style={{
+        display: "grid",
+        gap: 10,
+        fontSize: 13,
+        color: "rgba(255,255,255,0.7)",
+        marginBottom: 24,
+        background: "rgba(255,255,255,0.02)",
+        padding: 16,
+        borderRadius: 14
+      }}>
+          <Row label={t("txt_1401")} value={user.key} mono />
+          <Row label={t("txt_1402")} value={user.mac_id ? `${user.mac_name || "Mac"} · ${user.mac_id.slice(0, 16)}...` : t("txt_1403")} />
+          <Row label={t("txt_1404")} value={user.version} />
+          <Row label={t("txt_1405")} value={user.active ? t("txt_1406") : t("txt_1407")} />
+          <Row label={t("txt_1408")} value={fmtDate(user.created_at)} />
+          <Row label={t("txt_1409")} value={fmtDate(user.expires_at)} />
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10, marginBottom: 24 }}>
-          <button data-testid="action-extend" disabled={busy} onClick={() => doAction("extend", { days: 30 })} className="ghost-btn" style={{ background: "rgba(40,200,64,0.08)", borderColor: "rgba(40,200,64,0.2)", color: "#28C840" }}>
-            <Clock size={14} /> +30 днів
-          </button>
-          <button data-testid="action-cancel" disabled={busy} onClick={() => doAction("cancel")} className="ghost-btn" style={{ background: "rgba(255,95,87,0.08)", borderColor: "rgba(255,95,87,0.2)", color: "#FF5F57" }}>
-            Скасувати ліцензію
-          </button>
+        <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+        gap: 10,
+        marginBottom: 24
+      }}>
+          <button data-testid="action-extend" disabled={busy} onClick={() => doAction("extend", {
+          days: 30
+        })} className="ghost-btn" style={{
+          background: "rgba(40,200,64,0.08)",
+          borderColor: "rgba(40,200,64,0.2)",
+          color: "#28C840"
+        }}>
+            <Clock size={14} />{t("txt_1410")}</button>
+          <button data-testid="action-cancel" disabled={busy} onClick={() => doAction("cancel")} className="ghost-btn" style={{
+          background: "rgba(255,95,87,0.08)",
+          borderColor: "rgba(255,95,87,0.2)",
+          color: "#FF5F57"
+        }}>{t("txt_1411")}</button>
           <button data-testid="action-regen" disabled={busy} onClick={() => doAction("regen_key")} className="ghost-btn">
-            <RefreshCw size={14} /> Новий ключ
-          </button>
-          <button data-testid="action-reset-mac" disabled={busy} onClick={() => doAction("reset_mac")} className="ghost-btn">
-            Скинути Mac ID
-          </button>
-          <button
-            data-testid="action-block"
-            disabled={busy}
-            onClick={() => doAction(user.is_blocked ? "unblock" : "block")}
-            className="ghost-btn"
-            style={{ borderColor: user.is_blocked ? "rgba(40,200,64,0.4)" : "rgba(255,95,87,0.4)", color: user.is_blocked ? "#28C840" : "#FF5F57", background: user.is_blocked ? "rgba(40,200,64,0.05)" : "rgba(255,95,87,0.05)" }}
-          >
-            {user.is_blocked ? "Розблокувати" : "Заблокувати користувача"}
+            <RefreshCw size={14} />{t("txt_1412")}</button>
+          <button data-testid="action-reset-mac" disabled={busy} onClick={() => doAction("reset_mac")} className="ghost-btn">{t("txt_1413")}</button>
+          <button data-testid="action-block" disabled={busy} onClick={() => doAction(user.is_blocked ? "unblock" : "block")} className="ghost-btn" style={{
+          borderColor: user.is_blocked ? "rgba(40,200,64,0.4)" : "rgba(255,95,87,0.4)",
+          color: user.is_blocked ? "#28C840" : "#FF5F57",
+          background: user.is_blocked ? "rgba(40,200,64,0.05)" : "rgba(255,95,87,0.05)"
+        }}>
+            {user.is_blocked ? t("txt_1414") : t("txt_1415")}
           </button>
         </div>
 
         <div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 8, fontWeight: 600 }}>Нотатки адміністратора</div>
-          <textarea
-            data-testid="user-notes-textarea"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            style={{
-              width: "100%",
-              padding: 12,
-              background: "rgba(0,0,0,0.5)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 12,
-              color: "#fff",
-              fontSize: 13,
-              fontFamily: "inherit",
-              resize: "vertical",
-              outline: "none",
-            }}
-          />
-          <button
-            data-testid="save-notes-btn"
-            onClick={() => doAction("save_notes", { notes })}
-            className="cta-btn"
-            style={{ marginTop: 10, padding: "8px 20px", borderRadius: 10, height: 38 }}
-            disabled={busy}
-          >
-            Зберегти нотатки
-          </button>
+          <div style={{
+          fontSize: 12,
+          color: "rgba(255,255,255,0.4)",
+          marginBottom: 8,
+          fontWeight: 600
+        }}>{t("txt_1416")}</div>
+          <textarea data-testid="user-notes-textarea" value={notes} onChange={e => setNotes(e.target.value)} rows={3} style={{
+          width: "100%",
+          padding: 12,
+          background: "rgba(0,0,0,0.5)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 12,
+          color: "#fff",
+          fontSize: 13,
+          fontFamily: "inherit",
+          resize: "vertical",
+          outline: "none"
+        }} />
+          <button data-testid="save-notes-btn" onClick={() => doAction("save_notes", {
+          notes
+        })} className="cta-btn" style={{
+          marginTop: 10,
+          padding: "8px 20px",
+          borderRadius: 10,
+          height: 38
+        }} disabled={busy}>{t("txt_1417")}</button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
-
-function Row({ label, value, mono }) {
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: 6 }}>
-      <span style={{ color: "rgba(255,255,255,0.4)" }}>{label}</span>
-      <span style={{ color: "#fff", fontFamily: mono ? "monospace" : "inherit", textAlign: "right", wordBreak: "break-all" }}>{value || "—"}</span>
-    </div>
-  );
+function Row({
+  label,
+  value,
+  mono
+}) {
+  return <div style={{
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    borderBottom: "1px solid rgba(255,255,255,0.03)",
+    paddingBottom: 6
+  }}>
+      <span style={{
+      color: "rgba(255,255,255,0.4)"
+    }}>{label}</span>
+      <span style={{
+      color: "#fff",
+      fontFamily: mono ? "monospace" : "inherit",
+      textAlign: "right",
+      wordBreak: "break-all"
+    }}>{value || "—"}</span>
+    </div>;
 }
-
-function ManualKeyGen({ onCreated }) {
+function ManualKeyGen({
+  onCreated
+}) {
   const [email, setEmail] = useState("");
   const [days, setDays] = useState(30);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState(null);
-
   const submit = async () => {
     if (!email) return;
     setBusy(true);
     try {
-      const r = await api.post("/api/admin/generate-key", { email, days });
+      const r = await api.post("/api/admin/generate-key", {
+        email,
+        days
+      });
       setResult(r.data);
-      toast.success("Новий ліцензійний ключ успішно створено", { style: { background: "rgba(40,200,64,0.15)", border: "1px solid rgba(40,200,64,0.4)", color: "#fff" }});
+      toast.success(t("txt_1418"), {
+        style: {
+          background: "rgba(40,200,64,0.15)",
+          border: "1px solid rgba(40,200,64,0.4)",
+          color: "#fff"
+        }
+      });
       onCreated();
     } catch (e) {
-      toast.error("Сталася помилка при створенні ключа", { style: { background: "rgba(255,95,87,0.15)", border: "1px solid rgba(255,95,87,0.4)", color: "#fff" }});
+      toast.error(t("txt_1419"), {
+        style: {
+          background: "rgba(255,95,87,0.15)",
+          border: "1px solid rgba(255,95,87,0.4)",
+          color: "#fff"
+        }
+      });
     } finally {
       setBusy(false);
     }
   };
-
   const copyKey = () => {
     if (result && result.key) {
       navigator.clipboard.writeText(result.key);
-      toast.success("Ключ скопійовано", { duration: 2000 });
+      toast.success(t("txt_1420"), {
+        duration: 2000
+      });
     }
   };
-
-  return (
-    <div style={{ padding: "4px 0" }}>
-      <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
-        <input
-          data-testid="gen-email-input"
-          type="email"
-          placeholder="Введіть email користувача..."
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "12px 14px",
-            background: "rgba(0,0,0,0.5)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 12,
-            color: "#fff",
-            fontSize: 13,
-            outline: "none",
-          }}
-        />
-        <div style={{ display: "flex", gap: 8 }}>
-          <select
-            data-testid="gen-days-select"
-            value={days}
-            onChange={(e) => setDays(Number(e.target.value))}
-            style={{
-              padding: "12px 14px",
-              background: "rgba(0,0,0,0.5)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 12,
-              color: "#fff",
-              fontSize: 13,
-              outline: "none",
-              flex: 1,
-              cursor: "pointer",
-            }}
-          >
-            <option value={30}>30 днів (Місяць)</option>
-            <option value={90}>90 днів (Квартал)</option>
-            <option value={180}>180 днів (Півроку)</option>
-            <option value={365}>365 днів (Рік)</option>
-          </select>
-          <button 
-            data-testid="gen-submit-btn" 
-            disabled={busy || !email} 
-            onClick={submit} 
-            className="cta-btn"
-            style={{ padding: "0 24px", borderRadius: 12, height: 43 }}
-          >
-            {busy ? <Loader2 size={14} className="spin" /> : <KeyRound size={14} />} 
-            Створити
-          </button>
-        </div>
-      </div>
-
-      {result && (
-        <div
-          data-testid="gen-result"
-          style={{
-            marginTop: 16,
-            padding: 16,
-            background: "linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(157,76,221,0.03) 100%)",
-            border: "1px solid rgba(0,229,255,0.2)",
-            borderRadius: 12,
-            display: "flex",
-            flexDirection: "column",
-            gap: 10
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ключ для {result.email}</span>
-            <span style={{ fontSize: 10, background: "rgba(40,200,64,0.15)", color: "#28C840", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>до {fmtDate(result.expires_at)}</span>
-          </div>
-          
-          <div style={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "center", 
-            background: "rgba(0,0,0,0.4)", 
-            padding: "10px 14px", 
-            borderRadius: 10,
-            border: "1px dashed rgba(0,229,255,0.25)" 
-          }}>
-            <div style={{ fontFamily: "monospace", fontSize: 15, fontWeight: 700, color: "#00E5FF", letterSpacing: "0.05em" }}>
-              {result.key}
-            </div>
-            <button 
-              onClick={copyKey}
-              className="ghost-btn" 
-              style={{ padding: "4px 10px", borderRadius: 6, background: "rgba(255,255,255,0.06)", border: "none", fontSize: 11 }}
-            >
-              Копіювати
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function VersionUpload({ fileRef, onUploaded }) {
-  const [version, setVersion] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    const f = fileRef.current?.files?.[0];
-    if (!f || !version) {
-      toast.error("Введи версію і вибери файл");
-      return;
-    }
-    const fd = new FormData();
-    fd.append("version", version);
-    fd.append("file", f);
-    setBusy(true);
-    try {
-      await api.post("/api/admin/version", fd, { headers: { "Content-Type": "multipart/form-data" } });
-      toast.success("Нову версію успішно завантажено!");
-      onUploaded();
-      setVersion("");
-      if (fileRef.current) fileRef.current.value = "";
-    } catch {
-      toast.error("Помилка завантаження файлу версії.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
-      <input
-        data-testid="version-input"
-        placeholder="1.0.0"
-        value={version}
-        onChange={(e) => setVersion(e.target.value)}
-        style={{
+  return <div style={{
+    padding: "4px 0"
+  }}>
+      <div style={{
+      display: "flex",
+      gap: 12,
+      flexDirection: "column"
+    }}>
+        <input data-testid="gen-email-input" type="email" placeholder={t("txt_1421")} value={email} onChange={e => setEmail(e.target.value)} style={{
+        width: "100%",
+        padding: "12px 14px",
+        background: "rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 12,
+        color: "#fff",
+        fontSize: 13,
+        outline: "none"
+      }} />
+        <div style={{
+        display: "flex",
+        gap: 8
+      }}>
+          <select data-testid="gen-days-select" value={days} onChange={e => setDays(Number(e.target.value))} style={{
           padding: "12px 14px",
           background: "rgba(0,0,0,0.5)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -1721,62 +2556,211 @@ function VersionUpload({ fileRef, onUploaded }) {
           color: "#fff",
           fontSize: 13,
           outline: "none",
-          width: "100%",
-        }}
-      />
-      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <button data-testid="version-pick-btn" onClick={() => fileRef.current?.click()} className="ghost-btn" style={{ padding: "0 16px", borderRadius: 12, height: 43, background: "rgba(255,255,255,0.03)" }}>
-          Обрати файл
-        </button>
-        <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, flex: 1, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-          {fileRef.current?.files?.[0]?.name || "Файл не обрано..."}
-        </span>
-        <button data-testid="version-upload-btn" onClick={submit} disabled={busy || !version} className="cta-btn" style={{ padding: "0 20px", borderRadius: 12, height: 43 }}>
-          {busy ? <Loader2 size={14} className="spin" /> : <Upload size={14} />} Завантажити
-        </button>
+          flex: 1,
+          cursor: "pointer"
+        }}>
+            <option value={30}>{t("txt_1422")}</option>
+            <option value={90}>{t("txt_1423")}</option>
+            <option value={180}>{t("txt_1424")}</option>
+            <option value={365}>{t("txt_1425")}</option>
+          </select>
+          <button data-testid="gen-submit-btn" disabled={busy || !email} onClick={submit} className="cta-btn" style={{
+          padding: "0 24px",
+          borderRadius: 12,
+          height: 43
+        }}>
+            {busy ? <Loader2 size={14} className="spin" /> : <KeyRound size={14} />}{t("txt_1426")}</button>
+        </div>
       </div>
-    </div>
-  );
-}
 
+      {result && <div data-testid="gen-result" style={{
+      marginTop: 16,
+      padding: 16,
+      background: "linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(157,76,221,0.03) 100%)",
+      border: "1px solid rgba(0,229,255,0.2)",
+      borderRadius: 12,
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }}>
+          <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+            <span style={{
+          fontSize: 11,
+          color: "rgba(255,255,255,0.5)",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em"
+        }}>{t("txt_1427")}{result.email}</span>
+            <span style={{
+          fontSize: 10,
+          background: "rgba(40,200,64,0.15)",
+          color: "#28C840",
+          padding: "2px 8px",
+          borderRadius: 4,
+          fontWeight: 700
+        }}>{t("txt_1428")}{fmtDate(result.expires_at)}</span>
+          </div>
+          
+          <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "rgba(0,0,0,0.4)",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: "1px dashed rgba(0,229,255,0.25)"
+      }}>
+            <div style={{
+          fontFamily: "monospace",
+          fontSize: 15,
+          fontWeight: 700,
+          color: "#00E5FF",
+          letterSpacing: "0.05em"
+        }}>
+              {result.key}
+            </div>
+            <button onClick={copyKey} className="ghost-btn" style={{
+          padding: "4px 10px",
+          borderRadius: 6,
+          background: "rgba(255,255,255,0.06)",
+          border: "none",
+          fontSize: 11
+        }}>{t("txt_1429")}</button>
+          </div>
+        </div>}
+    </div>;
+}
+function VersionUpload({
+  fileRef,
+  onUploaded
+}) {
+  const [version, setVersion] = useState("");
+  const [busy, setBusy] = useState(false);
+  const submit = async () => {
+    const f = fileRef.current?.files?.[0];
+    if (!f || !version) {
+      toast.error(t("txt_1430"));
+      return;
+    }
+    const fd = new FormData();
+    fd.append("version", version);
+    fd.append("file", f);
+    setBusy(true);
+    try {
+      await api.post("/api/admin/version", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      toast.success(t("txt_1431"));
+      onUploaded();
+      setVersion("");
+      if (fileRef.current) fileRef.current.value = "";
+    } catch {
+      toast.error(t("txt_1432"));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return <div style={{
+    display: "flex",
+    gap: 8,
+    flexDirection: "column"
+  }}>
+      <input data-testid="version-input" placeholder="1.0.0" value={version} onChange={e => setVersion(e.target.value)} style={{
+      padding: "12px 14px",
+      background: "rgba(0,0,0,0.5)",
+      border: "1px solid rgba(255,255,255,0.1)",
+      borderRadius: 12,
+      color: "#fff",
+      fontSize: 13,
+      outline: "none",
+      width: "100%"
+    }} />
+      <div style={{
+      display: "flex",
+      gap: 8,
+      alignItems: "center",
+      flexWrap: "wrap"
+    }}>
+        <button data-testid="version-pick-btn" onClick={() => fileRef.current?.click()} className="ghost-btn" style={{
+        padding: "0 16px",
+        borderRadius: 12,
+        height: 43,
+        background: "rgba(255,255,255,0.03)"
+      }}>{t("txt_1433")}</button>
+        <span style={{
+        color: "rgba(255,255,255,0.4)",
+        fontSize: 12,
+        flex: 1,
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        whiteSpace: "nowrap"
+      }}>
+          {fileRef.current?.files?.[0]?.name || t("txt_1434")}
+        </span>
+        <button data-testid="version-upload-btn" onClick={submit} disabled={busy || !version} className="cta-btn" style={{
+        padding: "0 20px",
+        borderRadius: 12,
+        height: 43
+      }}>
+          {busy ? <Loader2 size={14} className="spin" /> : <Upload size={14} />}{t("txt_1435")}</button>
+      </div>
+    </div>;
+}
 function fmtDate(iso) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("uk-UA", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("uk-UA", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 }
 function fmtDateTime(iso) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("uk-UA", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleString("uk-UA", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
-
-function LeafletGlowMap({ activeMap, mapRef }) {
+function LeafletGlowMap({
+  activeMap,
+  mapRef
+}) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersGroupRef = useRef(null);
-
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     // Initialize map
     const map = L.map(mapContainerRef.current, {
-      center: [48.3794, 31.1656], // Default centered on Ukraine/Eastern Europe
+      center: [48.3794, 31.1656],
+      // Default centered on Ukraine/Eastern Europe
       zoom: 3,
       minZoom: 1.5,
       maxZoom: 18,
       zoomControl: false,
-      attributionControl: false,
+      attributionControl: false
     });
-
     mapInstanceRef.current = map;
     if (mapRef) {
       mapRef.current = map;
     }
 
     // Add zoom control in bottom right
-    L.control.zoom({ position: "bottomright" }).addTo(map);
+    L.control.zoom({
+      position: "bottomright"
+    }).addTo(map);
 
     // Add CartoDB Dark Matter tiles (sleek, high resolution dark map with all borders, oblasts and details)
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 20,
+      maxZoom: 20
     }).addTo(map);
 
     // Create markers layer group
@@ -1797,19 +2781,14 @@ function LeafletGlowMap({ activeMap, mapRef }) {
     const map = mapInstanceRef.current;
     const markersGroup = markersGroupRef.current;
     if (!map || !markersGroup) return;
-
     markersGroup.clearLayers();
-
     if (!activeMap || activeMap.length === 0) return;
-
-    activeMap.forEach((spot) => {
+    activeMap.forEach(spot => {
       const lat = parseFloat(spot.lat);
       const lon = parseFloat(spot.lon);
       if (isNaN(lat) || isNaN(lon)) return;
-
       const isSuspicious = spot.suspicious;
       const markerColor = isSuspicious ? "#FF5F57" : "#00E5FF";
-
       const customIcon = L.divIcon({
         className: `custom-glow-marker ${isSuspicious ? "suspicious" : ""}`,
         html: `
@@ -1820,7 +2799,6 @@ function LeafletGlowMap({ activeMap, mapRef }) {
         iconSize: [24, 24],
         iconAnchor: [12, 12]
       });
-
       const popupContent = `
         <div class="map-popup-card">
           <div class="map-popup-header">
@@ -1840,21 +2818,26 @@ function LeafletGlowMap({ activeMap, mapRef }) {
           </div>
         </div>
       `;
-
-      const marker = L.marker([lat, lon], { icon: customIcon });
+      const marker = L.marker([lat, lon], {
+        icon: customIcon
+      });
       marker.bindPopup(popupContent, {
         closeButton: false,
         className: "custom-leaflet-popup"
       });
-
       markersGroup.addLayer(marker);
     });
-
   }, [activeMap]);
-
-  return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <div ref={mapContainerRef} style={{ width: "100%", height: "100%", background: "#060609" }} />
+  return <div style={{
+    position: "relative",
+    width: "100%",
+    height: "100%"
+  }}>
+      <div ref={mapContainerRef} style={{
+      width: "100%",
+      height: "100%",
+      background: "#060609"
+    }} />
       <style>{`
         .custom-glow-marker {
           position: relative;
@@ -1961,20 +2944,16 @@ function LeafletGlowMap({ activeMap, mapRef }) {
           font-weight: 600;
         }
       `}</style>
-    </div>
-  );
+    </div>;
 }
 
 // Simple Markdown Preview renderer for CMS Editor
 function formatMarkdownPreview(text) {
   if (!text) return "";
-  
+
   // Escapes HTML tags
-  let html = text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  
+  let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   // Format code blocks (```lang ... ```)
   html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
     return `<div style="position: relative; border-radius: 12px; overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.08); font-family: monospace;">
@@ -1999,6 +2978,5 @@ function formatMarkdownPreview(text) {
 
   // Format links ([text](url))
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">$1</a>');
-
   return html;
 }
