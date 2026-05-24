@@ -1507,7 +1507,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             fontSize: 14.5,
             marginBottom: 24
           }}>{t("txt_1194")}</p>
-            <a href="https://t.me/atlas_support" target="_blank" rel="noreferrer" style={{
+            <a href="https://t.me/ATLAS_Support_Hub_bot" target="_blank" rel="noreferrer" style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 8,

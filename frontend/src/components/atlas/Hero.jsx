@@ -60,15 +60,6 @@ export default function Hero({ onCta }) {
           <div className="hero-sphere-canvas-container">
             <EnergySphere />
           </div>
-          <div className="pulse-ring" style={{ width: "100%", height: "100%", zIndex: 2 }} />
-          <div
-            className="pulse-ring"
-            style={{ width: "100%", height: "100%", animationDelay: "1.4s", zIndex: 2 }}
-          />
-          <div
-            className="pulse-ring"
-            style={{ width: "100%", height: "100%", animationDelay: "2.8s", zIndex: 2 }}
-          />
         </div>
 
         <h1
@@ -79,6 +70,7 @@ export default function Hero({ onCta }) {
             lineHeight: 1.02,
             letterSpacing: "-0.04em",
             fontWeight: 700,
+            fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
             margin: 0,
             background:
               "linear-gradient(120deg, #ffffff 0%, #d4dcff 35%, #b8f0ff 70%, #ffffff 100%)",
@@ -110,10 +102,12 @@ export default function Hero({ onCta }) {
           className="reveal in-view delay-1"
           style={{
             marginTop: 24,
-            fontSize: "clamp(1rem, 1.5vw, 1.2rem)",
-            color: "rgba(255,255,255,0.72)",
-            maxWidth: 640,
+            fontSize: 17,
+            fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
+            letterSpacing: "-0.43px",
             lineHeight: 1.55,
+            color: "rgba(255,255,255,0.72)",
+            maxWidth: 600,
             fontWeight: 400,
           }}
         >

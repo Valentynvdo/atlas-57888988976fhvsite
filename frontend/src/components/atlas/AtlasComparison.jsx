@@ -1,205 +1,565 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
-import { Zap, Bot, Brain, Server, Fingerprint, Network } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import {
+  Bot,
+  Zap,
+  Cpu,
+  Server,
+  Fingerprint,
+  BrainCircuit,
+  ScanFace,
+  Activity,
+} from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const getComparisonData = (t) => [
+  {
+    id: "intelligence",
+    label: t("atlas_v2.comparison.tabs.intelligence"),
+    icon: <BrainCircuit size={16} />,
+    normal: [
+      { i: <Cpu />, t: t("atlas_v2.comparison.items.intelligence_n1") },
+      {
+        i: <BrainCircuit />,
+        t: t("atlas_v2.comparison.items.intelligence_n2"),
+      },
+      { i: <Bot />, t: t("atlas_v2.comparison.items.intelligence_n3") },
+    ],
+    atlas: [
+      { i: <Cpu />, t: t("atlas_v2.comparison.items.intelligence_a1") },
+      { i: <Fingerprint />, t: t("atlas_v2.comparison.items.intelligence_a2") },
+      { i: <Zap />, t: t("atlas_v2.comparison.items.intelligence_a3") },
+    ],
+  },
+  {
+    id: "vision",
+    label: t("atlas_v2.comparison.tabs.vision"),
+    icon: <ScanFace size={16} />,
+    normal: [
+      { i: <Server />, t: t("atlas_v2.comparison.items.vision_n1") },
+      { i: <ScanFace />, t: t("atlas_v2.comparison.items.vision_n2") },
+      { i: <BrainCircuit />, t: t("atlas_v2.comparison.items.vision_n3") },
+    ],
+    atlas: [
+      { i: <Server />, t: t("atlas_v2.comparison.items.vision_a1") },
+      { i: <ScanFace />, t: t("atlas_v2.comparison.items.vision_a2") },
+      { i: <BrainCircuit />, t: t("atlas_v2.comparison.items.vision_a3") },
+    ],
+  },
+  {
+    id: "infrastructure",
+    label: t("atlas_v2.comparison.tabs.infrastructure"),
+    icon: <Activity size={16} />,
+    normal: [
+      {
+        i: <Fingerprint />,
+        t: t("atlas_v2.comparison.items.infrastructure_n1"),
+      },
+      { i: <Activity />, t: t("atlas_v2.comparison.items.infrastructure_n2") },
+      { i: <Server />, t: t("atlas_v2.comparison.items.infrastructure_n3") },
+    ],
+    atlas: [
+      {
+        i: <Fingerprint />,
+        t: t("atlas_v2.comparison.items.infrastructure_a1"),
+      },
+      { i: <Activity />, t: t("atlas_v2.comparison.items.infrastructure_a2") },
+      { i: <Server />, t: t("atlas_v2.comparison.items.infrastructure_a3") },
+    ],
+  },
+];
+
 export default function AtlasComparison() {
-  const {
-    t
-  } = useTranslation();
-  return <section id="comparison" className="section-container" style={{
-    position: "relative",
-    perspective: 1000,
-    overflow: "hidden"
-  }}>
-      {/* Background Cinematic Glows */}
-      <div style={{ position: "absolute", top: "20%", right: "10%", width: "600px", height: "600px", background: "radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 60%)", filter: "blur(80px)", mixBlendMode: "screen", pointerEvents: "none", zIndex: 0 }} className="float" />
-      <div style={{ position: "absolute", bottom: "10%", left: "5%", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(157,76,221,0.1) 0%, transparent 60%)", filter: "blur(80px)", mixBlendMode: "screen", pointerEvents: "none", zIndex: 0, animationDelay: "-3s" }} className="float" />
+  const { t } = useTranslation();
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-      <div style={{ width: "100%", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
-        
-        {/* Big Statement Header */}
-        <div className="reveal" style={{ textAlign: "center", marginBottom: 60 }}>
-          <h2 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", color: "#fff", margin: 0, lineHeight: 1.1 }}>{t("txt_1056")}</h2>
-          <p className="shimmer-text" style={{ fontSize: "clamp(1.2rem, 2vw, 1.5rem)", fontWeight: 500, marginTop: 16, background: "linear-gradient(90deg, #00E5FF 0%, #9D4CDD 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", WebkitTextFillColor: "transparent" }}>{t("txt_1057")}</p>
+  // Initial reveal animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".vs-divider",
+        { height: 0, opacity: 0 },
+        {
+          height: "100%",
+          opacity: 1,
+          duration: 1.5,
+          ease: "power3.inOut",
+          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
+        },
+      );
+
+      gsap.fromTo(
+        ".comp-card-left",
+        { x: -50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
+        },
+      );
+
+      gsap.fromTo(
+        ".comp-card-right",
+        { x: 50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
+        },
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  // Card replacement effect
+  const handleTabChange = (index) => {
+    if (index === activeIndex) return;
+
+    // Animate out
+    gsap.to(".comp-list-item", {
+      y: -20,
+      opacity: 0,
+      stagger: 0.05,
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => {
+        setActiveIndex(index);
+        // Animate in
+        gsap.fromTo(
+          ".comp-list-item",
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.5,
+            ease: "power3.out",
+          },
+        );
+      },
+    });
+  };
+
+  const comparisonData = getComparisonData(t);
+  const activeData = comparisonData[activeIndex];
+
+  return (
+    <section
+      id="comparison"
+      className="section-container"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+      }}
+      ref={sectionRef}
+    >
+      {/* Background glows */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20%",
+          right: "5%",
+          width: "600px",
+          height: "600px",
+          background:
+            "radial-gradient(circle, rgba(157,76,221,0.15) 0%, transparent 60%)",
+          filter: "blur(80px)",
+          mixBlendMode: "screen",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          left: "5%",
+          width: "500px",
+          height: "500px",
+          background:
+            "radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 60%)",
+          filter: "blur(80px)",
+          mixBlendMode: "screen",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 1200,
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        {/* Large Statement */}
+        <div
+          className="reveal"
+          style={{ textAlign: "center", marginBottom: 60 }}
+        >
+          <h2
+            style={{
+              fontSize: "clamp(2rem, 5vw, 4rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              fontFamily: "var(--sf-display, -apple-system, sans-serif)",
+              color: "#fff",
+              margin: 0,
+              lineHeight: 1.1,
+            }}
+          >
+            {t("atlas_v2.comparison.title")}
+          </h2>
+          <p
+            className="gradient-text"
+            style={{
+              fontSize: "clamp(1.2rem, 2.5vw, 2.5rem)",
+              fontWeight: 600,
+              marginTop: 16,
+              fontFamily: "var(--sf-display, -apple-system, sans-serif)",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            {t("atlas_v2.comparison.subtitle")}
+          </p>
         </div>
 
-        {/* Hero Numbers in Bento */}
-        <div className="bento-grid reveal delay-1" style={{ marginBottom: 40, gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
-          {[
-            { v: t("txt_1058"), l: t("txt_1059"), color: "#00E5FF" },
-            { v: "24/7", l: t("txt_1060"), color: "#9D4CDD" },
-            { v: t("txt_1061"), l: t("txt_1062"), color: "#FF6B9A" },
-            { v: t("txt_1063"), l: t("txt_1064"), color: "#007AFF" }
-          ].map((stat, i) => (
-            <article key={i} className="bento-card" style={{ textAlign: "center", padding: "24px 16px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-              <div style={{ fontSize: "clamp(2rem, 3vw, 2.5rem)", fontWeight: 800, color: stat.color }}>{stat.v}</div>
-              <div style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 8, fontWeight: 600 }}>{stat.l}</div>
-            </article>
-          ))}
+        {/* Premium Tabs */}
+        <div
+          className="reveal delay-1"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 12,
+            marginBottom: 40,
+            flexWrap: "wrap",
+          }}
+        >
+          {comparisonData.map((tab, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(idx)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "12px 24px",
+                  borderRadius: 30,
+                  background: isActive
+                    ? "rgba(255,255,255,0.1)"
+                    : "rgba(255,255,255,0.03)",
+                  border: isActive
+                    ? "1px solid rgba(255,255,255,0.2)"
+                    : "1px solid rgba(255,255,255,0.05)",
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  fontFamily: "var(--sf-text, sans-serif)",
+                  fontWeight: 600,
+                  fontSize: 15,
+                  boxShadow: isActive ? "0 4px 20px rgba(0,0,0,0.2)" : "none",
+                }}
+              >
+                <div style={{ color: isActive ? "#00E5FF" : "inherit" }}>
+                  {tab.icon}
+                </div>
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Categories Grid */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
-          <ComparisonCategory title={t("txt_1065")} icon={<Fingerprint size={28} color="#00E5FF" />} delay="delay-1" normalBullets={[t("txt_1066"), t("txt_1067"), t("txt_1068")]} atlasBullets={[t("txt_1069"), t("txt_1070"), t("txt_1071"), t("txt_1072")]} visualType="radar" accent="#00E5FF" />
-          <ComparisonCategory title={t("txt_1073")} icon={<Brain size={28} color="#9D4CDD" />} delay="delay-2" normalBullets={[t("txt_1074"), t("txt_1075"), t("txt_1076")]} atlasBullets={[t("txt_1077"), t("txt_1078"), t("txt_1079"), t("txt_1080")]} visualType="code" accent="#9D4CDD" />
-          <ComparisonCategory title={t("txt_1081")} icon={<Server size={28} color="#FF6B9A" />} delay="delay-3" normalBullets={[t("txt_1082"), t("txt_1083"), t("txt_1084")]} atlasBullets={[t("txt_1085"), t("txt_1086"), t("txt_1087"), t("txt_1088")]} visualType="network" accent="#FF6B9A" />
+        {/* The Beautiful Visual Comparison */}
+        <div
+          className="vs-container"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
+            gap: "clamp(20px, 4vw, 40px)",
+            alignItems: "stretch",
+            position: "relative",
+          }}
+        >
+          {/* LEFT: Normal AI */}
+          <div
+            className="comp-card-left bento-card"
+            style={{
+              padding: "clamp(30px, 4vw, 50px)",
+              display: "flex",
+              flexDirection: "column",
+              background: "rgba(20, 20, 20, 0.4)",
+              border: "1px solid rgba(255,255,255,0.05)",
+              filter: "grayscale(30%) opacity(0.8)",
+              transition: "all 0.5s ease",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 40,
+                color: "rgba(255,255,255,0.4)",
+              }}
+            >
+              <Bot size={28} />
+              <h3
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 600,
+                  margin: 0,
+                  letterSpacing: "-0.02em",
+                  fontFamily: "var(--sf-display, sans-serif)",
+                }}
+              >
+                {t("atlas_v2.comparison.normal_ai")}
+              </h3>
+            </div>
+
+            <div
+              className="comp-list"
+              style={{ display: "flex", flexDirection: "column", gap: 32 }}
+            >
+              {activeData.normal.map((item, i) => (
+                <CompItem
+                  key={`norm-${activeIndex}-${i}`}
+                  icon={item.i}
+                  text={item.t}
+                  dim
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* CENTER DIVIDER */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
+            <div
+              className="vs-divider"
+              style={{
+                width: 1,
+                background:
+                  "linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "#000",
+                border: "1px solid rgba(255,255,255,0.1)",
+                padding: "10px 16px",
+                borderRadius: 20,
+                fontSize: 12,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.5)",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+              }}
+            >
+              VS
+            </div>
+          </div>
+
+          {/* RIGHT: ATLAS */}
+          <div
+            className="comp-card-right bento-card"
+            style={{
+              padding: "clamp(30px, 4vw, 50px)",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* Inner Glow */}
+            <div
+              style={{
+                position: "absolute",
+                top: -100,
+                right: -100,
+                width: 300,
+                height: 300,
+                background:
+                  "radial-gradient(circle, rgba(0,229,255,0.2), transparent 70%)",
+                filter: "blur(40px)",
+              }}
+            />
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 40,
+                color: "#00E5FF",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <Zap size={28} fill="#00E5FF" />
+              <h3
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  margin: 0,
+                  letterSpacing: "-0.02em",
+                  fontFamily: "var(--sf-display, sans-serif)",
+                }}
+              >
+                ATLAS
+              </h3>
+            </div>
+
+            <div
+              className="comp-list"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 32,
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              {activeData.atlas.map((item, i) => (
+                <CompItem
+                  key={`atlas-${activeIndex}-${i}`}
+                  icon={item.i}
+                  text={item.t}
+                  active
+                />
+              ))}
+            </div>
+
+            {/* Micro visual at the bottom */}
+            <div
+              style={{
+                marginTop: "auto",
+                paddingTop: 50,
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: 2,
+                  background: "rgba(255,255,255,0.05)",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: "30%",
+                    background:
+                      "linear-gradient(90deg, transparent, #00E5FF, transparent)",
+                    animation: "sweep 2s infinite",
+                  }}
+                />
+              </div>
+              <span
+                style={{
+                  fontSize: 10,
+                  color: "#00E5FF",
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {t("atlas_v2.comparison.system_active")}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-      
       <style>{`
-        .comp-cat-grid {
-          display: grid;
-          grid-template-columns: 1fr 1.5fr;
-          gap: 24px;
+        @keyframes sweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(400%); }
         }
         @media (max-width: 900px) {
-          .comp-cat-grid {
-            grid-template-columns: 1fr;
+          .vs-container {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .vs-divider {
+            display: none;
           }
         }
-        
-        .animated-border-box {
-          position: relative;
-          background: rgba(10,10,10,0.8);
-          background-clip: padding-box;
-          border: 1px solid transparent;
-        }
-        .animated-border-box::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 32px;
-          padding: 1px;
-          background: linear-gradient(145deg, rgba(0,229,255,0.5), rgba(157,76,221,0.2), transparent 50%);
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-          pointer-events: none;
-        }
-        
-        .mini-visual {
-          width: 80px;
-          height: 80px;
-          border-radius: 16px;
-          background: rgba(0,0,0,0.4);
-          border: 1px solid rgba(255,255,255,0.1);
-          display: grid;
-          place-items: center;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        @keyframes radar-spin {
-          to { transform: rotate(360deg); }
-        }
-        .radar-sweep {
-          position: absolute;
-          width: 50%;
-          height: 50%;
-          bottom: 50%;
-          right: 50%;
-          background: linear-gradient(45deg, rgba(0,229,255,1) 0%, transparent 70%);
-          transform-origin: bottom right;
-          animation: radar-spin 2s linear infinite;
-        }
-        
-        @keyframes code-scroll {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
-        }
-        
-        @keyframes pulse-node {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
       `}</style>
-    </section>;
+    </section>
+  );
 }
-function ComparisonCategory({
-  title,
-  icon,
-  normalBullets,
-  atlasBullets,
-  delay,
-  visualType,
-  accent
-}) {
-  const { t } = useTranslation();
-  return <div className={`reveal ${delay}`} style={{
-    display: "flex",
-    flexDirection: "column",
-    gap: 20
-  }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16, paddingLeft: 8 }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, background: `linear-gradient(135deg, ${accent}22, transparent)`, display: "grid", placeItems: "center", border: `1px solid ${accent}44` }}>
-          {icon}
-        </div>
-        <h3 style={{ margin: 0, fontSize: "2rem", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{title}</h3>
+
+function CompItem({ icon, text, active, dim }) {
+  return (
+    <div
+      className="comp-list-item"
+      style={{ display: "flex", alignItems: "center", gap: 16 }}
+    >
+      <div
+        style={{
+          width: 48,
+          height: 48,
+          flexShrink: 0,
+          borderRadius: 12,
+          background: active
+            ? "rgba(0, 229, 255, 0.05)"
+            : "rgba(255, 255, 255, 0.02)",
+          border: active
+            ? "1px solid rgba(0, 229, 255, 0.15)"
+            : "1px solid rgba(255, 255, 255, 0.05)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: active ? "#00E5FF" : dim ? "rgba(255,255,255,0.3)" : "#fff",
+        }}
+      >
+        {icon}
       </div>
-      
-      <div className="comp-cat-grid">
-        {/* Left: Normal AI (Dim, boring) */}
-        <article className="bento-card" style={{ padding: "32px", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.4)", fontWeight: 600, marginBottom: 24, textTransform: "uppercase", fontSize: "0.8rem", letterSpacing: "0.1em" }}>
-            <Bot size={16} />{t("txt_1089")}
-          </div>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 20 }}>
-            {normalBullets.map((b, i) => <li key={i} style={{ color: "rgba(255,255,255,0.45)", fontSize: "1rem", display: "flex", gap: 16, alignItems: "flex-start", lineHeight: 1.5 }}>
-                <span style={{ color: "rgba(255,255,255,0.1)", marginTop: 2 }}>—</span>
-                {b}
-              </li>)}
-          </ul>
-        </article>
-        
-        {/* Right: ATLAS (Premium, glowing) */}
-        <article className="bento-card animated-border-box" style={{ padding: "32px 40px", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, borderRadius: "50%", background: `radial-gradient(circle, ${accent}33, transparent 70%)`, filter: "blur(40px)", pointerEvents: "none" }} />
-          
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", position: "relative", zIndex: 1 }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, color: accent, fontWeight: 700, marginBottom: 24, textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.1em" }}>
-                <Zap size={16} fill={accent} />{t("txt_1090")}
-              </div>
-              
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 20 }}>
-                {atlasBullets.map((b, i) => <li key={i} style={{ color: "#fff", fontSize: "1.1rem", fontWeight: 500, display: "flex", gap: 16, alignItems: "center", lineHeight: 1.4 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: accent, boxShadow: `0 0 12px ${accent}` }} />
-                    {b}
-                  </li>)}
-              </ul>
-            </div>
-            
-            {/* Mini Visual Widget */}
-            <div className="mini-visual" style={{ borderColor: `${accent}44` }}>
-              {visualType === "radar" && <>
-                  <div style={{ width: "100%", height: "100%", border: `1px solid ${accent}44`, borderRadius: "50%", position: "absolute" }} />
-                  <div style={{ width: "50%", height: "50%", border: `1px solid ${accent}66`, borderRadius: "50%", position: "absolute" }} />
-                  <div className="radar-sweep" style={{ background: `linear-gradient(45deg, ${accent} 0%, transparent 70%)` }} />
-                  <div style={{ width: 6, height: 6, background: "#fff", borderRadius: "50%", position: "absolute", top: "30%", left: "60%", boxShadow: "0 0 8px #fff", animation: "pulse-node 2s infinite" }} />
-                </>}
-              {visualType === "code" && <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%", padding: 12, overflow: "hidden" }}>
-                  <div style={{ animation: "code-scroll 4s linear infinite", display: "flex", flexDirection: "column", gap: 6 }}>
-                    <div style={{ height: 4, width: "80%", background: `${accent}88`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "60%", background: `${accent}cc`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "90%", background: `${accent}55`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "40%", background: `${accent}`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "70%", background: `${accent}66`, borderRadius: 2 }} />
-                    {/* Duplicate */}
-                    <div style={{ height: 4, width: "80%", background: `${accent}88`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "60%", background: `${accent}cc`, borderRadius: 2 }} />
-                    <div style={{ height: 4, width: "90%", background: `${accent}55`, borderRadius: 2 }} />
-                  </div>
-                </div>}
-              {visualType === "network" && <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                  <Network size={28} color={`${accent}66`} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
-                  <div style={{ position: "absolute", top: "20%", left: "20%", width: 8, height: 8, background: accent, borderRadius: "50%", animation: "pulse-node 1.5s infinite 0.2s" }} />
-                  <div style={{ position: "absolute", top: "70%", left: "30%", width: 6, height: 6, background: "#fff", borderRadius: "50%", animation: "pulse-node 2s infinite 0.5s" }} />
-                  <div style={{ position: "absolute", top: "40%", left: "80%", width: 7, height: 7, background: accent, borderRadius: "50%", animation: "pulse-node 1.8s infinite 0.8s" }} />
-                </div>}
-            </div>
-          </div>
-        </article>
+      <div
+        style={{
+          fontSize: "1.05rem",
+          fontWeight: active ? 600 : 500,
+          color: dim ? "rgba(255,255,255,0.4)" : "#fff",
+          fontFamily: "var(--sf-text, sans-serif)",
+          lineHeight: 1.4,
+        }}
+      >
+        {text}
       </div>
-    </div>;
+    </div>
+  );
 }

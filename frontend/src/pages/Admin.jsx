@@ -93,6 +93,20 @@ function AdminPanel({
   const [isDocModalOpen, setIsDocModalOpen] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState("edit");
   const [liveContent, setLiveContent] = useState("");
+  
+  // Нові стани для кандидатів
+  const [candidates, setCandidates] = useState([
+    {
+      _id: "test-1",
+      name: "Валентин Тестер",
+      contact: "@tester_pro",
+      portfolio: "https://github.com/atlas-tester",
+      experience: "Маю 5 років досвіду в розробці. Вмію будувати архітектуру, делегувати задачі AI та робити рев'ю.",
+      status: "new",
+      created_at: new Date().toISOString()
+    }
+  ]);
+  const [loadingCandidates, setLoadingCandidates] = useState(false);
   const refresh = useCallback(async () => {
     try {
       const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([api.get("/api/admin/stats"), api.get("/api/admin/users", {
@@ -110,6 +124,15 @@ function AdminPanel({
       setActiveMap(am.data);
       setAdminLogs(al.data);
       setCustomDocs(cd.data);
+      
+      try {
+        const cands = await api.get("/api/admin/job-applications");
+        if (cands.data && cands.data.length > 0) {
+          setCandidates(cands.data);
+        }
+      } catch (e) {
+        console.warn("Failed to fetch candidates, using mock data", e);
+      }
     } catch (err) {
       console.error("Admin refresh error", err);
     }
@@ -2102,6 +2125,62 @@ function AdminPanel({
               </div>;
         })()}
 
+        {/* Tab: Careers / Candidates */}
+        {activeTab === "careers" && (
+          <div className="fade-in">
+            <h3 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 800 }}>{t("atlas_v2.admin.candidates_title") || "Заявки кандидатів"}</h3>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 24 }}>
+              {t("atlas_v2.admin.candidates_desc") || "Люди, які подали заявку на приєднання до команди ATLAS."}
+            </div>
+
+            <div className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)", textAlign: "left" }}>
+                    <th style={{ padding: "12px 16px" }}>{t("atlas_v2.admin.col_date") || "Дата"}</th>
+                    <th style={{ padding: "12px 16px" }}>{t("atlas_v2.admin.col_name") || "Ім'я"}</th>
+                    <th style={{ padding: "12px 16px" }}>{t("atlas_v2.admin.col_contact") || "Контакт"}</th>
+                    <th style={{ padding: "12px 16px" }}>{t("atlas_v2.admin.col_portfolio") || "Портфоліо"}</th>
+                    <th style={{ padding: "12px 16px" }}>{t("atlas_v2.admin.col_exp") || "Відповіді / Досвід"}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {candidates.map((c, idx) => (
+                    <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", verticalAlign: "top" }}>
+                      <td style={{ padding: "16px", color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
+                        {new Date(c.created_at).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: "16px", fontWeight: 600 }}>{c.name}</td>
+                      <td style={{ padding: "16px", color: "#00E5FF" }}>{c.contact}</td>
+                      <td style={{ padding: "16px" }}>
+                        <a href={c.portfolio} target="_blank" rel="noreferrer" style={{ color: "#9D4CDD", textDecoration: "none", wordBreak: "break-all" }}>
+                          {c.portfolio}
+                        </a>
+                      </td>
+                      <td style={{ padding: "16px", color: "rgba(255,255,255,0.8)", maxWidth: 300 }}>
+                        {c.experience && <div style={{marginBottom: 8}}>{c.experience}</div>}
+                        {c.answers && Object.entries(c.answers).map(([k, v]) => (
+                          <div key={k} style={{ marginBottom: 8 }}>
+                            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>{k}</div>
+                            <div style={{ fontSize: 13 }}>{v}</div>
+                          </div>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                  {candidates.length === 0 && (
+                    <tr>
+                      <td colSpan={5} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
+                        {t("atlas_v2.admin.no_candidates") || "Немає заявок"}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         </main>
 
         {/* Right Sidebar Navigation Menu */}
@@ -2135,6 +2214,7 @@ function AdminPanel({
           <SidebarButton icon={<Radio size={16} />} label={t("txt_1395")} active={activeTab === "broadcast"} onClick={() => setActiveTab("broadcast")} />
           <SidebarButton icon={<FileText size={16} />} label={t("txt_1396")} active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
           <SidebarButton icon={<BookOpen size={16} />} label={t("txt_1397")} active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
+          <SidebarButton icon={<Users size={16} />} label={t("atlas_v2.admin.candidates_tab") || "Кандидати"} active={activeTab === "careers"} onClick={() => setActiveTab("careers")} />
           
           <div style={{
           marginTop: "auto",

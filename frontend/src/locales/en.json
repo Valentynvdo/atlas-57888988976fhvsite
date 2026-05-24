@@ -632,5 +632,164 @@
     "title": "Coming soon to your Mac.",
     "desc": "Atlas is currently learning. We are preparing a private beta program for early macOS users — and we will let you know as soon as it is available.",
     "btn": "Understood"
+  },
+  "atlas_v2": {
+    "awareness": {
+      "eyebrow": "Absolute Consciousness",
+      "badge": "Atlas Vision",
+      "title_1": "remembers that",
+      "title_2": "what is important to you",
+      "desc": "Atlas recognizes you by face, remembers your addresses, preferences and names of your guests, ensuring a completely personalized experience - no questions asked.",
+      "stat1_title": "Recognition",
+      "stat1_val": "Face & Voice",
+      "stat2_title": "Addresses",
+      "stat2_val": "Home · Work",
+      "stat3_title": "Contacts",
+      "stat3_val": "Family · Friends",
+      "stat4_title": "Likes",
+      "stat4_val": "Always at hand"
+    },
+    "interactions": {
+      "eyebrow": "Seamless Control",
+      "title": "Always Connected.",
+      "desc": "Control your Mac locally with your voice or remotely from anywhere in the world via a secure Telegram bot.",
+      "voice_title": "Local Voice",
+      "voice_desc": "Atlas constantly listens to the space in the background. No clicks or activation — just say what you need, and the system will react instantly.",
+      "tg_title": "Remote Access",
+      "tg_desc": "Control your computer via the official Telegram bot. Atlas will execute the command on your Mac, even if you are on another continent."
+    },
+    "comparison": {
+      "title": "This is not just a chatbot.",
+      "subtitle": "ATLAS is an autonomous AI operating system.",
+      "normal_ai": "Normal AI",
+      "system_active": "System Active",
+      "tabs": {
+        "intelligence": "Intelligence",
+        "vision": "Perception",
+        "infrastructure": "Infrastructure"
+      },
+      "items": {
+        "intelligence_n1": "Limited by pre-programmed skills",
+        "intelligence_n2": "Every chat is a blank slate",
+        "intelligence_n3": "Always waits for a command",
+        "intelligence_a1": "Writes its own code",
+        "intelligence_a2": "Has deep long-term memory",
+        "intelligence_a3": "Acts autonomously and proactively",
+        "vision_n1": "Disconnected from your system",
+        "vision_n2": "Only analyzes uploaded files",
+        "vision_n3": "Forgets you after closing",
+        "vision_a1": "Sees and understands your screen",
+        "vision_a2": "Recognizes your face (FaceID)",
+        "vision_a3": "Perceives context in real-time",
+        "infrastructure_n1": "Sends data to third-party servers",
+        "infrastructure_n2": "Slow API connection",
+        "infrastructure_n3": "Single heavy model for everything",
+        "infrastructure_a1": "100% local privacy",
+        "infrastructure_a2": "Minimal latency < 300ms",
+        "infrastructure_a3": "Smart cascade of local neural networks"
+      }
+    },
+    "mockups": {
+      "commands": [
+        "\"Atlas, close all work windows\"",
+        "\"Atlas, find the investor presentation\"",
+        "\"Atlas, translate this text to English\"",
+        "\"Atlas, open the latest project code\""
+      ],
+      "telegram": [
+        {
+          "req": "Turn on background music for concentration",
+          "res": "🎵 Got it. Started 'Deep Focus' playlist on Spotify."
+        },
+        {
+          "req": "Put Mac to sleep",
+          "res": "✅ Done. Mac successfully locked."
+        },
+        {
+          "req": "Find all logs from yesterday",
+          "res": "📂 Found 3 files. Should I send them here?"
+        }
+      ],
+      "telegram_ui": {
+        "bot": "bot",
+        "message": "Message..."
+      }
+    },
+    "careers": {
+      "footer_link": "Team (Join us)",
+      "back_home": "Back to Home",
+      "title": "Join the ATLAS Team",
+      "philosophy": "Just like in top IT companies (e.g. Google), working via AI agents is the new standard. Our ideal candidate must know how to delegate tasks to AI, read generated code, understand architecture, and act more as an architect/reviewer than just a coder. Working side-by-side with AI is normal for us.",
+      "success_title": "Application successfully submitted!",
+      "success_desc": "We will review your application within 3-5 days and contact you via Telegram/Email.",
+      "error_message": "An error occurred. Please try again later.",
+      "roles": {
+        "title": "Roles we are looking for",
+        "ai_engineer": "AI Engineer",
+        "ai_engineer_tags": "Python, RAG, Agents, LLM",
+        "prompt_architect": "Prompt Architect",
+        "prompt_architect_tags": "Prompt Eng, Claude, ChatGPT",
+        "macos_dev": "macOS Developer",
+        "macos_dev_tags": "Swift, SwiftUI, C++",
+        "ui_designer": "UI/UX Designer",
+        "ui_designer_tags": "Figma, Glassmorphism, Animations",
+        "qa_reviewer": "QA Reviewer",
+        "qa_reviewer_tags": "Testing, Code Review, AI Quality"
+      },
+      "stats": {
+        "applied": "12 people applied this week",
+        "countries": "Team from 8 countries"
+      },
+      "steps": {
+        "step_1": "Personal Data",
+        "step_2": "AI Experience",
+        "step_3": "Practice",
+        "step_4": "Motivation",
+        "next": "Next",
+        "prev": "Back"
+      },
+      "form": {
+        "name": "Full Name",
+        "name_ph": "E.g. Valentin Vdovicenko",
+        "contact": "Telegram or Email",
+        "contact_ph": "@username or email@example.com",
+        "portfolio": "Link to Github or Portfolio",
+        "portfolio_ph": "https://github.com/...",
+        "timezone": "Timezone / Country",
+        "timezone_ph": "GMT+2, Ukraine",
+        "availability": "Availability",
+        "avail_full": "Full-time",
+        "avail_part": "Part-time",
+        "avail_free": "Freelance",
+        "avail_intern": "Internship",
+        
+        "tools": "Which AI tools do you use?",
+        "tools_ph": "Cursor, Copilot, Claude, ChatGPT? Describe your approach.",
+        "weakness": "Name one weakness of AI agents you faced personally:",
+        "weakness_ph": "Your personal experience when AI failed or hallucinated...",
+        
+        "practical": "Write a prompt for AI to write an AppleScript that opens Safari:",
+        "practical_ph": "Your ideal prompt...",
+        "source": "How did you hear about Atlas?",
+        "source_ph": "Twitter, recommendation, search...",
+        
+        "motivation": "Why do you want to join the ATLAS team?",
+        "motivation_ph": "Tell us about yourself and your motivation (min 100 characters)",
+        "char_count": "chars (min 100)",
+        
+        "submit": "Submit Application"
+      }
+    },
+    "admin": {
+      "candidates_tab": "Candidates",
+      "candidates_title": "Candidate Applications",
+      "candidates_desc": "People who applied to join the ATLAS team.",
+      "col_date": "Date",
+      "col_name": "Name",
+      "col_contact": "Contact",
+      "col_portfolio": "Portfolio",
+      "col_exp": "Experience/Knowledge",
+      "no_candidates": "No applications"
+    }
   }
 }

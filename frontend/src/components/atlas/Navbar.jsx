@@ -74,9 +74,10 @@ export default function Navbar({ onCta }) {
             />
             <span
               style={{
+                fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
                 fontWeight: 700,
-                letterSpacing: "-0.02em",
-                fontSize: 18,
+                letterSpacing: "-0.43px",
+                fontSize: 17,
               }}
             >
               Atlas AI

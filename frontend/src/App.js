@@ -3,9 +3,12 @@ import "./App.css";
 import CustomCursor from "./components/CustomCursor";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
+import LenisScroll from "./components/LenisScroll";
+import useBentoGlow from "./hooks/useBentoGlow";
 
 import Navbar from "./components/atlas/Navbar";
 import Hero from "./components/atlas/Hero";
+import AtlasInteractions from "./components/atlas/AtlasInteractions";
 import AtlasComparison from "./components/atlas/AtlasComparison";
 import AtlasLiveThought from "./components/atlas/AtlasLiveThought";
 import LivingIntelligence from "./components/atlas/LivingIntelligence";
@@ -28,12 +31,14 @@ const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Contacts = lazy(() => import("./pages/Contacts"));
+const Careers = lazy(() => import("./pages/Careers"));
 
 const MANIFEST_URL = `${window.location.origin}/tonconnect-manifest.json`;
 
 function Landing() {
   const navigate = useNavigate();
   const rootRef = useScrollReveal();
+  useBentoGlow();
 
   return (
     <div className="App" ref={rootRef} data-testid="atlas-landing">
@@ -44,6 +49,7 @@ function Landing() {
       <MacOSControl />
       <SmartConcierge />
       <AbsoluteAwareness />
+      <AtlasInteractions />
       <AtlasComparison />
       <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
@@ -79,6 +85,7 @@ function AppRouter() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/contacts" element={<Contacts />} />
+        <Route path="/careers" element={<Careers />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/dashboard"
@@ -104,13 +111,15 @@ function AppRouter() {
 function App() {
   return (
     <TonConnectUIProvider manifestUrl={MANIFEST_URL}>
-      <div className="grain-overlay" />
-      <BrowserRouter>
-        <AuthProvider>
-          <CustomCursor />
-          <AppRouter />
-        </AuthProvider>
-      </BrowserRouter>
+      <LenisScroll>
+        <div className="grain-overlay" />
+        <BrowserRouter>
+          <AuthProvider>
+            <CustomCursor />
+            <AppRouter />
+          </AuthProvider>
+        </BrowserRouter>
+      </LenisScroll>
     </TonConnectUIProvider>
   );
 }

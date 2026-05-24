@@ -701,3 +701,12 @@ async def delete_custom_doc(doc_id: str, admin: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+# ── Job Applications Endpoints ────────────────────────────────────────────────
+
+@router.get("/job-applications")
+async def get_job_applications(_=Depends(require_admin)):
+    """Returns all job applications."""
+    applications = await db.job_applications.find({}).sort("created_at", -1).to_list(1000)
+    return applications
+
+

@@ -6,7 +6,8 @@ export default function Footer() {
   const links = [
     { label: t("footer.privacy"), path: "/privacy" },
     { label: t("footer.terms"), path: "/terms" },
-    { label: t("footer.contacts"), path: "/contacts" }
+    { label: t("footer.contacts"), path: "/contacts" },
+    { label: t("atlas_v2.careers.footer_link") || "Careers", path: "/careers" }
   ];
 
   return (

@@ -45,7 +45,8 @@ export default function FinalCTA({ onCta }) {
               fontSize: "clamp(2rem, 5.5vw, 4.5rem)",
               lineHeight: 1.05,
               letterSpacing: "-0.04em",
-              fontWeight: 600,
+              fontWeight: 700,
+              fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
               maxWidth: 900,
               margin: "16px auto 0",
               background:
@@ -62,10 +63,12 @@ export default function FinalCTA({ onCta }) {
             style={{
               marginTop: 20,
               color: "rgba(255,255,255,0.7)",
-              fontSize: "clamp(1rem, 1.4vw, 1.2rem)",
-              maxWidth: 620,
+              fontSize: 17,
+              fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
+              letterSpacing: "-0.43px",
+              lineHeight: 1.55,
+              maxWidth: 560,
               margin: "20px auto 0",
-              lineHeight: 1.6,
             }}
           >
             {t("final_cta.desc")}
