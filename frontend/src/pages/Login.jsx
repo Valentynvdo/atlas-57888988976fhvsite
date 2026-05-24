@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
 import { useAuth } from "../lib/auth";
 import api from "../lib/api";
 
 export default function Login() {
+  const { t } = useTranslation();
   const { user, loading, refresh } = useAuth();
   const navigate = useNavigate();
 
@@ -35,11 +37,11 @@ export default function Login() {
     try {
       if (tab === "forgot_password") {
         await api.post("/api/auth/forgot-password", { email });
-        setSuccess("📩 Інструкції та код скидання відправлені на ваш email.");
+        setSuccess(t("login.success_reset"));
         setTab("reset_password");
       } else if (tab === "reset_password") {
         await api.post("/api/auth/reset-password", { email, code, new_password: password });
-        setSuccess("✅ Пароль успішно змінено. Тепер ви можете увійти.");
+        setSuccess(t("login.success_changed"));
         setTab("login");
         setPassword("");
       } else if (tab === "login") {
@@ -47,7 +49,7 @@ export default function Login() {
         await refresh();
       } else {
         await api.post("/api/auth/register", { email, password, name });
-        setSuccess("🎉 Ви успішно зареєстровані! Налаштування особистого кабінету...");
+        setSuccess(t("login.success_registered"));
         await new Promise((resolve) => setTimeout(resolve, 1500));
         await refresh();
       }
@@ -55,7 +57,7 @@ export default function Login() {
       console.error(err);
       setError(
         err.response?.data?.detail || 
-        "Сталася помилка при авторизації. Перевірте з'єднання."
+        t("login.error_generic")
       );
     } finally {
       setFormLoading(false);
@@ -122,7 +124,7 @@ export default function Login() {
           e.currentTarget.style.transform = "none";
         }}
       >
-        <span style={{ fontSize: 14 }}>←</span> На головну
+        <span style={{ fontSize: 14 }}>←</span> {t("login.back_home").replace("← ", "")}
       </button>
 
       <div
@@ -153,7 +155,7 @@ export default function Login() {
           Atlas AI
         </h1>
         <p style={{ color: "rgba(255,255,255,0.6)", marginTop: 8, marginBottom: 28, fontSize: 14 }}>
-          Особистий кабінет клієнта та система управління ліцензіями
+          {t("login.subtitle")}
         </p>
 
         {/* Beautiful Tabs */}
@@ -182,7 +184,7 @@ export default function Login() {
                 boxShadow: tab === "login" ? "0 2px 8px rgba(0,0,0,0.2)" : "none"
               }}
             >
-              Увійти
+              {t("login.tab_login")}
             </button>
             <button
               onClick={() => { setTab("register"); setError(""); setSuccess(""); }}
@@ -200,25 +202,27 @@ export default function Login() {
                 boxShadow: tab === "register" ? "0 2px 8px rgba(0,0,0,0.2)" : "none"
               }}
             >
-              Реєстрація
+              {t("login.tab_register")}
             </button>
           </div>
         )}
 
         {tab === "forgot_password" && (
           <div style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>Відновлення пароля</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>{t("login.recover_title")}</h2>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0 }}>
-              Введіть email, і ми надішлемо вам код відновлення.
+              {t("login.recover_desc")}
             </p>
           </div>
         )}
 
         {tab === "reset_password" && (
           <div style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>Введіть код</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 8 }}>{t("login.enter_code_title")}</h2>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0 }}>
-              Перевірте пошту <b>{email}</b> та введіть 6-значний код і новий пароль.
+              <Trans i18nKey="login.enter_code_desc" values={{ email }}>
+                Перевірте пошту <b>{email}</b> та введіть 6-значний код і новий пароль.
+              </Trans>
             </p>
           </div>
         )}
@@ -264,11 +268,11 @@ export default function Login() {
           {tab === "register" && (
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
-                Ім'я
+                {t("login.name_label")}
               </label>
               <input
                 type="text"
-                placeholder="Іван Франко"
+                placeholder={t("login.name_placeholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 style={{
@@ -291,7 +295,7 @@ export default function Login() {
 
           <div style={{ marginBottom: 16 }}>
             <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
-              Електронна пошта
+              {t("login.email_label")}
             </label>
             <input
               type="email"
@@ -320,7 +324,7 @@ export default function Login() {
           {tab === "reset_password" && (
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
-                Код відновлення (6 цифр)
+                {t("login.code_label")}
               </label>
               <input
                 type="text"
@@ -352,7 +356,7 @@ export default function Login() {
             <div style={{ marginBottom: 8, position: "relative" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
                 <label style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>
-                  {tab === "reset_password" ? "Новий пароль" : "Пароль"}
+                  {tab === "reset_password" ? t("login.new_password_label") : t("login.password_label")}
                 </label>
                 {tab === "login" && (
                   <button
@@ -360,7 +364,7 @@ export default function Login() {
                     onClick={() => { setTab("forgot_password"); setError(""); setSuccess(""); }}
                     style={{ background: "none", border: "none", color: "#007aff", fontSize: 13, cursor: "pointer", padding: 0 }}
                   >
-                    Забули пароль?
+                    {t("login.forgot_password")}
                   </button>
                 )}
               </div>
@@ -368,7 +372,7 @@ export default function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   required
-                  placeholder={tab === "register" ? "Мінімум 6 символів" : "••••••••"}
+                  placeholder={tab === "register" ? t("login.pass_placeholder_reg") : "••••••••"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
@@ -403,7 +407,7 @@ export default function Login() {
                     padding: 6,
                   }}
                 >
-                  {showPassword ? "Сховати" : "Показати"}
+                  {showPassword ? t("login.hide") : t("login.show")}
                 </button>
               </div>
             </div>
@@ -430,8 +434,8 @@ export default function Login() {
               onMouseLeave={(e) => { if (!formLoading) { e.currentTarget.style.transform = "none"; } }}
             >
               {formLoading ? (
-                <span>Завантаження...</span>
-              ) : tab === "login" ? "Увійти" : tab === "forgot_password" ? "Отримати код" : tab === "reset_password" ? "Зберегти новий пароль" : "Створити акаунт"}
+                <span>{t("login.btn_loading")}</span>
+              ) : tab === "login" ? t("login.tab_login") : tab === "forgot_password" ? t("login.btn_get_code") : tab === "reset_password" ? t("login.btn_save_pass") : t("login.btn_create")}
             </button>
           </div>
           
@@ -442,7 +446,7 @@ export default function Login() {
                 onClick={() => { setTab("login"); setError(""); setSuccess(""); }}
                 style={{ background: "none", border: "none", color: "rgba(255,255,255,0.6)", fontSize: 13, cursor: "pointer", padding: "4px 8px" }}
               >
-                Повернутися до входу
+                {t("login.back_to_login")}
               </button>
             </div>
           )}
@@ -452,7 +456,7 @@ export default function Login() {
         {isDev && (
           <div style={{ marginTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 20 }}>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-              DEV режим
+              {t("login.dev_mode")}
             </p>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -474,7 +478,7 @@ export default function Login() {
         )}
 
         <p style={{ marginTop: 24, color: "rgba(255,255,255,0.35)", fontSize: 11, lineHeight: 1.5 }}>
-          Вся інформація шифрується та передається через захищене з'єднання.
+          {t("login.encryption_info")}
         </p>
       </div>
     </div>
