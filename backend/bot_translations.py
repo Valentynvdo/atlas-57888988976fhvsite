@@ -7,82 +7,76 @@ TEXTS = {
             "🤖 Я — Атлас, Ваш цифровий помічник. Я тут, щоб допомогти Вам із будь-якими питаннями щодо використання Atlas AI на macOS.\n\n"
             "👇 Чим я можу допомогти сьогодні? Оберіть категорію або напишіть своє питання:"
         ),
-        "btn_install": "💻 Встановлення та налаштування",
-        "btn_bugs": "⚠️ Помилки та технічні проблеми",
-        "btn_billing": "💳 Підписка та оплата",
-        "btn_general": "ℹ️ Загальні питання",
-        "btn_support": "💬 Зв'язатись з підтримкою",
+        "btn_install": "💻 Встановлення",
+        "btn_bugs": "⚠️ Тех. проблеми",
+        "btn_billing": "💳 Підписка",
+        "btn_general": "ℹ️ Загальне",
+        "btn_support": "💬 Оператор",
         "btn_lang": "🇺🇸 English",
         "faq_install": (
             "🔧 **ВСТАНОВЛЕННЯ ТА НАЛАШТУВАННЯ:**\n\n"
             "**Q: Як встановити Atlas AI?**\n"
-            "A: Завантажте актуальну версію з офіційного сайту. Відкрийте завантажений файл .dmg, перетягніть Atlas AI до папки «Програми». Запустіть і дотримуйтесь інструкцій першого налаштування.\n\n"
-            "**Q: Які версії macOS підтримуються?**\n"
-            "A: macOS 12 Monterey та новіші (Ventura, Sonoma, Sequoia). Рекомендується використовувати останню версію macOS.\n\n"
-            "**Q: Додаток не відкривається після встановлення — що робити?**\n"
-            "A: Перейдіть у «Системні налаштування» → «Конфіденційність і безпека» → натисніть «Все одно відкрити» для Atlas AI. Якщо не допомогло — перевстановіть додаток.\n\n"
+            "A: Відкрийте Terminal на вашому Mac і виконайте команду:\n`curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash`\nПісля завантаження введіть Ваш ліцензійний ключ для активації.\n\n"
+            "**Q: Які системні вимоги?**\n"
+            "A: macOS 13 Ventura або новіша версія, Apple Silicon або Intel. Рекомендується мінімум 8 ГБ RAM (бажано 16 ГБ).\n\n"
+            "**Q: Додаток не має доступу до мікрофона?**\n"
+            "A: Перейдіть у «Системні параметри» → «Конфіденційність і безпека» → увімкніть доступ для мікрофона та «Спеціальні можливості» (Accessibility) для Atlas AI.\n\n"
             "**Q: Скільки місця займає Atlas AI?**\n"
-            "A: Додаток займає близько 84 МБ на диску."
+            "A: Додаток займає близько 1.5 ГБ на диску."
         ),
         "faq_bugs": (
             "⚠️ **ТЕХНІЧНІ ПРОБЛЕМИ:**\n\n"
             "**Q: Atlas AI зависає або не відповідає — що робити?**\n"
             "A: Примусово завершіть процес (Cmd+Option+Esc), перезапустіть додаток. Якщо проблема повторюється — перезавантажте Mac і спробуйте знову.\n\n"
-            "**Q: Atlas AI не бачить мої файли — чому?**\n"
-            "A: Надайте додатку доступ до диска: «Системні налаштування» → «Конфіденційність і безпека» → «Повний доступ до диска» → увімкніть Atlas AI.\n\n"
-            "**Q: Помилка «Додаток пошкоджено» при запуску?**\n"
-            "A: Відкрийте Термінал і введіть: `xattr -cr /Applications/AtlasAI.app` — потім спробуйте запустити знову.\n\n"
-            "**Q: Як оновити Atlas AI до нової версії?**\n"
-            "A: Завантажте актуальну версію з офіційного сайту та замініть стару. Всі налаштування збережуться.\n\n"
-            "**Q: Atlas AI споживає багато оперативної пам'яті — це нормально?**\n"
-            "A: ШІ-асистенти вимагають ресурсів для роботи. Рекомендується мати мінімум 8 ГБ RAM. Закрийте зайві вкладки та програми для покращення роботи."
+            "**Q: Не працюють автономні агенти?**\n"
+            "A: Переконайтеся, що Ваш Mac підключено до інтернету. Автономним дослідникам потрібен інтернет для аналізу сторінок та виконання запитів.\n\n"
+            "**Q: Як перенести ліцензію на інший Mac?**\n"
+            "A: У Вашому кабінеті на сайті (Dashboard) натисніть «Перенести на інший Mac». Atlas на поточному пристрої зупиниться, і Ви зможете ввести ключ на новому Mac."
         ),
         "faq_billing": (
             "💳 **ПІДПИСКА ТА ОПЛАТА:**\n\n"
-            "**Q: Atlas AI безкоштовний?**\n"
-            "A: Atlas AI має безкоштовну версію з базовими можливостями. Для повного доступу до всіх ШІ-функцій доступна преміум підписка.\n\n"
+            "**Q: Чи є безкоштовна версія Atlas AI?**\n"
+            "A: Ні, Atlas AI — це професійний преміум-продукт. Ви можете обрати Місячний ($28.99), Квартальний ($74.99) або Річний ($249.99) тарифний план.\n\n"
             "**Q: Як скасувати підписку?**\n"
-            "A: Ви можете скасувати підписку в будь-який момент через свій особистий кабінет на сайті в розділі «Підписка».\n\n"
-            "**Q: Чи є пробний безкоштовний період?**\n"
-            "A: Так, ми надаємо безкоштовний пробний період на 14 днів для тестування преміум функцій."
+            "A: Ви можете скасувати авто-поновлення підписки в будь-який момент через свій особистий кабінет на сайті (Dashboard). Додаток працюватиме до кінця оплаченого періоду.\n\n"
+            "**Q: Які є способи оплати?**\n"
+            "A: Ми приймаємо банківські картки, а також підтримуємо оплату криптовалютою TON (завдяки інтеграції TON Connect)."
         ),
         "faq_general": (
             "ℹ️ **ЗАГАЛЬНІ ПИТАННЯ:**\n\n"
-            "**Q: Чи зберігаються мої дані на серверах Atlas AI?**\n"
-            "A: Ми не зберігаємо Ваші особисті файли. Atlas AI обробляє дані локально або використовує зашифровані канали для передачі запитів до ШІ-моделей. Згідно з нашою Політикою конфіденційності, ваші дані ніколи не використовуються для навчання моделей.\n\n"
-            "**Q: Atlas AI безпечно використовувати для робочих файлів?**\n"
-            "A: Так. Atlas AI розроблений з дотриманням стандартів безпеки macOS. Додаток встановлюється у захищену директорію і вимагає Вашого дозволу на доступ до кожної папки.\n\n"
+            "**Q: Чи зберігаються мої дані в хмарі?**\n"
+            "A: Atlas AI використовує гібридну архітектуру. Уся Ваша когнітивна пам'ять та особисті вподобання зберігаються суто локально. Згідно з нашою Політикою конфіденційності, ваші дані ніколи не використовуються для навчання.\n\n"
+            "**Q: Як працює віддалений контроль?**\n"
+            "A: У Вашому кабінеті (Dashboard) є кнопка «Підключити Telegram-бота». Це дозволить Вам відправляти команди до Вашого Atlas AI на Mac прямо зі смартфона.\n\n"
             "**Q: Чи Atlas AI працює без інтернету?**\n"
-            "A: Частково. Базові функції автоматизації працюють офлайн, проте для розпізнавання тексту та складних ШІ-запитів потрібне підключення до мережі.\n\n"
-            "**Q: На яких мовах працює Atlas AI?**\n"
-            "A: Інтерфейс додатку доступний українською та англійською мовами. ШІ розуміє запити будь-якою мовою.\n\n"
+            "A: Базові функції автоматизації можуть працювати офлайн, проте для повноцінної роботи LLM, нових скілів та глибоких досліджень потрібне постійне підключення до мережі.\n\n"
             "**Q: Як зв'язатись із живою підтримкою?**\n"
-            "A: Натисніть кнопку «Зв'язатись з підтримкою» нижче, і я з'єднаю Вас з оператором."
+            "A: Натисніть кнопку «Оператор» нижче, і я з'єднаю Вас із нашою командою."
         ),
         "tpl_complaint_tech": (
-            "🛠 Дякуємо, що повідомили нас про цю ситуацію. Нам шкода, що Ви зіткнулися з цією технічною проблемою. Ми розуміємо, наскільки це важливо для Вас.\n\n"
-            "Будь ласка, спробуйте наступне: 1) Перезапустіть додаток; 2) Перевірте наявність оновлень на сайті. Якщо проблема залишається — наша команда вже отримала повідомлення і зв'яжеться з Вами найближчим часом.\n\n"
-            "Чи є ще щось, з чим я можу допомогти?"
+            "🛠 Дякуємо, що повідомили нас. Нам дуже шкода, що Ви зіткнулися з цією проблемою.\n\n"
+            "Будь ласка, спробуйте перезапустити додаток або перевірте налаштування приватності (Accessibility). Якщо це не допомогло — наша команда вже отримала Ваш запит і зв'яжеться з Вами.\n\n"
+            "Чи потрібна допомога оператора?"
         ),
         "tpl_complaint_feature": (
-            "💡 Дякуємо за Ваш відгук — він дуже цінний для нас. Ми передамо Ваше зауваження команді розробки для розгляду.\n\n"
-            "Ваш запит зафіксовано. ✅"
+            "💡 Дякуємо за відгук! Ми постійно розвиваємо Atlas AI, і Ваші ідеї дуже цінні. Ми передамо Ваше зауваження команді розробки.\n\n"
+            "Ваш запит успішно зафіксовано. ✅"
         ),
         "tpl_complaint_service": (
-            "😔 Перш за все, дозвольте принести щирі вибачення за незручності. Ми цінуємо кожного користувача і хочемо вирішити цю ситуацію якнайшвидше.\n\n"
-            "Я передаю Вашу ситуацію безпосередньо до команди підтримки. Очікуйте відповідь протягом 24 годин. Дякуємо за Ваше терпіння."
+            "😔 Приносимо щирі вибачення за можливі незручності. Ми цінуємо кожного клієнта і зробимо все можливе для швидкого вирішення.\n\n"
+            "Я вже передав інформацію оператору підтримки. Очікуйте на відповідь."
         ),
         "tpl_refund": (
-            "💸 Розуміємо Вашу ситуацію. Для обробки запиту на повернення коштів, будь ласка, надайте оператору: дату оплати, email, який використовувався під час покупки, та опис проблеми.\n\n"
-            "Ваш запит буде розглянуто протягом 3-5 робочих днів."
+            "💸 Для обробки запиту на повернення коштів або скасування підписки, будь ласка, надайте оператору: дату оплати, email від акаунту та короткий опис причини.\n\n"
+            "Натисніть кнопку «Оператор» нижче, щоб залишити ці дані."
         ),
         "support_prompt": (
-            "👤 Розумію, що Вам потрібна допомога живого оператора. Передаю Ваш запит прямо зараз.\n\n"
-            "Щоб прискорити обробку, будь ласка, коротко опишіть єдиним повідомленням:\n"
-            "1. Яка у Вас проблема або питання?\n"
-            "2. Яка версія macOS у Вас встановлена?\n"
-            "3. Як давно виникла ця ситуація?\n\n"
-            "Оператор отримає Ваше повідомлення і зв'яжеться з Вами найближчим часом. Дякуємо за терпіння! 🙏"
+            "👤 Я з'єднаю Вас із живим оператором підтримки.\n\n"
+            "Будь ласка, опишіть Вашу ситуацію одним повідомленням:\n"
+            "1. Суть питання або проблеми\n"
+            "2. Який у Вас Mac та версія macOS\n"
+            "3. Ваш email акаунту (якщо стосується підписки)\n\n"
+            "Оператор отримає повідомлення і відповість Вам найближчим часом. 🙏"
         ),
         "support_received": "✅ Ваш запит надіслано оператору! Ми зв'яжемося з Вами найближчим часом.",
         "choose_action": "Оберіть дію нижче:",
@@ -93,82 +87,76 @@ TEXTS = {
             "🤖 I am Atlas, your digital assistant. I am here to help you with any questions regarding the use of Atlas AI on macOS.\n\n"
             "👇 How can I help you today? Choose a category or write your question:"
         ),
-        "btn_install": "💻 Installation & Setup",
-        "btn_bugs": "⚠️ Bugs & Technical Issues",
-        "btn_billing": "💳 Subscription & Billing",
-        "btn_general": "ℹ️ General Questions",
-        "btn_support": "💬 Contact Support",
+        "btn_install": "💻 Installation",
+        "btn_bugs": "⚠️ Tech Issues",
+        "btn_billing": "💳 Subscription",
+        "btn_general": "ℹ️ General",
+        "btn_support": "💬 Operator",
         "btn_lang": "🇺🇦 Українська",
         "faq_install": (
             "🔧 **INSTALLATION & SETUP:**\n\n"
             "**Q: How to install Atlas AI?**\n"
-            "A: Download the latest version from the official website. Open the downloaded .dmg file and drag Atlas AI to the Applications folder. Launch it and follow the initial setup instructions.\n\n"
-            "**Q: Which macOS versions are supported?**\n"
-            "A: macOS 12 Monterey and newer (Ventura, Sonoma, Sequoia). We recommend using the latest macOS version.\n\n"
-            "**Q: The app doesn't open after installation — what should I do?**\n"
-            "A: Go to System Settings → Privacy & Security → click 'Open Anyway' for Atlas AI. If it doesn't help, reinstall the app.\n\n"
+            "A: Open Terminal on your Mac and run:\n`curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash`\nOnce downloaded, enter your license key to activate.\n\n"
+            "**Q: What are the system requirements?**\n"
+            "A: macOS 13 Ventura or newer, Apple Silicon or Intel. Minimum 8 GB of RAM is required (16 GB recommended).\n\n"
+            "**Q: App doesn't have microphone access?**\n"
+            "A: Go to System Settings → Privacy & Security → enable Microphone and Accessibility access for Atlas AI.\n\n"
             "**Q: How much space does Atlas AI take?**\n"
-            "A: The application takes about 84 MB of disk space."
+            "A: The application requires about 1.5 GB of disk space."
         ),
         "faq_bugs": (
             "⚠️ **TECHNICAL ISSUES:**\n\n"
             "**Q: Atlas AI freezes or doesn't respond — what to do?**\n"
             "A: Force quit the process (Cmd+Option+Esc) and restart the app. If the problem persists, restart your Mac and try again.\n\n"
-            "**Q: Atlas AI doesn't see my files — why?**\n"
-            "A: Grant the app disk access: System Settings → Privacy & Security → Full Disk Access → toggle Atlas AI on.\n\n"
-            "**Q: Error 'App is damaged' on launch?**\n"
-            "A: Open Terminal and type: `xattr -cr /Applications/AtlasAI.app` — then try launching again.\n\n"
-            "**Q: How to update Atlas AI to a new version?**\n"
-            "A: Download the latest version from the official site and replace the old one. All settings will be saved.\n\n"
-            "**Q: Atlas AI consumes a lot of RAM — is it normal?**\n"
-            "A: AI assistants require resources to operate. It is recommended to have at least 8 GB of RAM. Close unnecessary tabs and apps for better performance."
+            "**Q: Autonomous agents are not working?**\n"
+            "A: Make sure your Mac is connected to the internet. Autonomous researchers require an internet connection to analyze pages and execute queries.\n\n"
+            "**Q: How to transfer my license to another Mac?**\n"
+            "A: In your Dashboard on the website, click «Transfer to another Mac». Atlas will stop working on the current device, and you can enter the key on your new Mac."
         ),
         "faq_billing": (
             "💳 **SUBSCRIPTION & BILLING:**\n\n"
-            "**Q: Is Atlas AI free?**\n"
-            "A: Atlas AI has a free version with basic features. For full access to all AI features, a premium subscription is available.\n\n"
-            "**Q: How to cancel the subscription?**\n"
-            "A: You can cancel your subscription at any time via your personal dashboard on the website in the 'Subscription' section.\n\n"
-            "**Q: Is there a free trial period?**\n"
-            "A: Yes, we provide a 14-day free trial period to test premium features."
+            "**Q: Is there a free version of Atlas AI?**\n"
+            "A: No, Atlas AI is a professional premium product. You can choose from Monthly ($28.99), Quarterly ($74.99), or Yearly ($249.99) plans.\n\n"
+            "**Q: How to cancel my subscription?**\n"
+            "A: You can cancel auto-renewal at any time via your personal Dashboard. The app will continue working until the end of the paid period.\n\n"
+            "**Q: What payment methods do you accept?**\n"
+            "A: We accept credit cards and cryptocurrency via TON Connect."
         ),
         "faq_general": (
             "ℹ️ **GENERAL QUESTIONS:**\n\n"
-            "**Q: Are my data stored on Atlas AI servers?**\n"
-            "A: We do not store your personal files. Atlas AI processes data locally or uses encrypted channels to send requests to AI models. According to our Privacy Policy, your data is never used to train models.\n\n"
-            "**Q: Is Atlas AI safe to use for work files?**\n"
-            "A: Yes. Atlas AI is developed in compliance with macOS security standards. The app is installed in a secure directory and requires your permission to access each folder.\n\n"
+            "**Q: Is my data stored in the cloud?**\n"
+            "A: Atlas AI uses a hybrid architecture. All your cognitive memory and personal preferences are stored strictly locally. According to our Privacy Policy, your data is never used to train models.\n\n"
+            "**Q: How does remote control work?**\n"
+            "A: In your Dashboard, there is a «Connect Telegram Bot» button. It allows you to send commands to your Atlas AI on Mac directly from your smartphone.\n\n"
             "**Q: Does Atlas AI work offline?**\n"
-            "A: Partially. Basic automation features work offline, but text recognition and complex AI queries require an internet connection.\n\n"
-            "**Q: What languages does Atlas AI support?**\n"
-            "A: The app interface is available in Ukrainian and English. The AI understands queries in any language.\n\n"
+            "A: Basic automation features can work offline, but full LLM capabilities, new skills, and deep research require a stable internet connection.\n\n"
             "**Q: How to contact live support?**\n"
-            "A: Click the 'Contact Support' button below, and I will connect you with an operator."
+            "A: Click the «Operator» button below, and I will connect you with our team."
         ),
         "tpl_complaint_tech": (
-            "🛠 Thank you for reporting this to us. We are sorry you encountered this technical issue. We understand how important this is to you.\n\n"
-            "Please try the following: 1) Restart the app; 2) Check for updates on the website. If the problem persists, our team has already received the report and will contact you shortly.\n\n"
-            "Is there anything else I can help with?"
+            "🛠 Thank you for reporting this. We are very sorry you encountered this issue.\n\n"
+            "Please try restarting the app or checking your Privacy settings (Accessibility). If that didn't help, our team has already received your request and will contact you.\n\n"
+            "Do you need operator assistance?"
         ),
         "tpl_complaint_feature": (
-            "💡 Thank you for your feedback — it is very valuable to us. We will forward your comment to the development team for consideration.\n\n"
-            "Your request has been recorded. ✅"
+            "💡 Thank you for your feedback! We are constantly developing Atlas AI, and your ideas are very valuable. We will pass your comment to the development team.\n\n"
+            "Your request has been successfully recorded. ✅"
         ),
         "tpl_complaint_service": (
-            "😔 First of all, please accept our sincere apologies for the inconvenience. We value every user and want to resolve this situation as quickly as possible.\n\n"
-            "I am forwarding your situation directly to the support team. Expect a response within 24 hours. Thank you for your patience."
+            "😔 Please accept our sincere apologies for any inconvenience. We value every customer and will do our best to resolve this quickly.\n\n"
+            "I have already forwarded the information to a support operator. Please wait for a reply."
         ),
         "tpl_refund": (
-            "💸 We understand your situation. To process a refund request, please provide the operator with: the date of payment, the email used during purchase, and a description of the problem.\n\n"
-            "Your request will be reviewed within 3-5 business days."
+            "💸 To process a refund request or cancel your subscription, please provide the operator with: payment date, account email, and a brief description of the reason.\n\n"
+            "Click the «Operator» button below to leave these details."
         ),
         "support_prompt": (
-            "👤 I understand you need help from a live operator. I am forwarding your request right now.\n\n"
-            "To speed up processing, please briefly describe in a single message:\n"
-            "1. What is your problem or question?\n"
-            "2. What macOS version do you have installed?\n"
-            "3. How long has this situation been occurring?\n\n"
-            "The operator will receive your message and contact you shortly. Thank you for your patience! 🙏"
+            "👤 I will connect you with a live support operator.\n\n"
+            "Please describe your situation in a single message:\n"
+            "1. The nature of your question or problem\n"
+            "2. Your Mac model and macOS version\n"
+            "3. Your account email (if regarding subscription)\n\n"
+            "The operator will receive your message and reply as soon as possible. 🙏"
         ),
         "support_received": "✅ Your request has been sent to the operator! We will contact you shortly.",
         "choose_action": "Choose an action below:",

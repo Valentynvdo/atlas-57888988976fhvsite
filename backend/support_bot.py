@@ -83,14 +83,18 @@ def create_bot_and_dispatcher():
     # ── /start ──────────────────────────────
     @_dp.message(Command("start"))
     async def cmd_start(message: types.Message, state: FSMContext):
-        await state.clear()
-        lang = get_lang(message.from_user)
+        await state.set_state(None)
+        data = await state.get_data()
+        lang = data.get("lang")
+        if not lang:
+            lang = get_lang(message.from_user)
+            await state.update_data(lang=lang)
         await message.answer(TEXTS[lang]["welcome"], reply_markup=main_keyboard(lang))
 
     # ── /lang (switch language) ──────────────
     @_dp.message(Command("lang"))
     async def cmd_lang(message: types.Message, state: FSMContext):
-        await state.clear()
+        await state.set_state(None)
         data = await state.get_data()
         current = data.get("lang", get_lang(message.from_user))
         new_lang = "en" if current == "uk" else "uk"
@@ -100,14 +104,15 @@ def create_bot_and_dispatcher():
     # ── /help ────────────────────────────────
     @_dp.message(Command("help"))
     async def cmd_help(message: types.Message, state: FSMContext):
-        await state.clear()
-        lang = get_lang(message.from_user)
+        await state.set_state(None)
+        data = await state.get_data()
+        lang = data.get("lang", get_lang(message.from_user))
         await message.answer(TEXTS[lang]["welcome"], reply_markup=main_keyboard(lang))
 
     # ── FAQ callbacks ────────────────────────
     @_dp.callback_query(F.data.in_({"faq_install", "faq_bugs", "faq_billing", "faq_general"}))
     async def process_faq(cb: types.CallbackQuery, state: FSMContext):
-        await state.clear()
+        await state.set_state(None)
         data = await state.get_data()
         lang = data.get("lang", get_lang(cb.from_user))
         key  = cb.data  # e.g. "faq_install"
@@ -117,7 +122,7 @@ def create_bot_and_dispatcher():
     # ── Language switch callback ─────────────
     @_dp.callback_query(F.data == "switch_lang")
     async def process_switch_lang(cb: types.CallbackQuery, state: FSMContext):
-        await state.clear()
+        await state.set_state(None)
         data = await state.get_data()
         current = data.get("lang", get_lang(cb.from_user))
         new_lang = "en" if current == "uk" else "uk"
@@ -137,7 +142,7 @@ def create_bot_and_dispatcher():
     # ── Back to menu ─────────────────────────
     @_dp.callback_query(F.data == "back_menu")
     async def back_menu(cb: types.CallbackQuery, state: FSMContext):
-        await state.clear()
+        await state.set_state(None)
         data = await state.get_data()
         lang = data.get("lang", get_lang(cb.from_user))
         await cb.message.answer(TEXTS[lang]["choose_action"], reply_markup=main_keyboard(lang))
@@ -150,7 +155,7 @@ def create_bot_and_dispatcher():
         lang = data.get("lang", get_lang(message.from_user))
         await message.answer(TEXTS[lang]["support_received"], reply_markup=main_keyboard(lang))
         await notify_admin(_bot, message.from_user, "Запит оператора", "Звернення до живої підтримки", message.text or "")
-        await state.clear()
+        await state.set_state(None)
 
     # ── Free-text handler ────────────────────
     @_dp.message(F.text)
