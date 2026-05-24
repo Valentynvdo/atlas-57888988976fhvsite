@@ -805,7 +805,7 @@ export default function Dashboard() {
       {confirmTransfer && (
         <Confirm
           title={t("dashboard.confirm_transfer_title")}
-          message=t("dashboard.confirm_transfer_msg")
+          message={t("dashboard.confirm_transfer_msg")}
           onCancel={() => setConfirmTransfer(false)}
           onConfirm={transferLicense}
           busy={busy}
