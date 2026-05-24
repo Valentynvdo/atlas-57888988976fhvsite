@@ -27,9 +27,24 @@ export default function AbsoluteAwareness() {
         flexDirection: "column",
         justifyContent: "center"
       }}>
-          <div className="section-eyebrow">{t("txt_1044")}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <div className="section-eyebrow" style={{ marginBottom: 0 }}>{t("txt_1044")}</div>
+            <div style={{
+              padding: "6px 10px",
+              borderRadius: 8,
+              background: "rgba(0, 229, 255, 0.1)",
+              border: "1px solid rgba(0, 229, 255, 0.2)",
+              fontSize: 10,
+              color: "#00E5FF",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              fontWeight: 700
+            }}>
+              Atlas Vision
+            </div>
+          </div>
           <h2 data-testid="awareness-title" style={{
-          marginTop: 16,
+          marginTop: 0,
           fontSize: "clamp(2rem, 4.6vw, 4rem)",
           lineHeight: 1.05,
           letterSpacing: "-0.03em",
@@ -218,23 +233,5 @@ function FaceIDOrb() {
         background: "#9D4CDD",
         boxShadow: "0 0 12px #9D4CDD"
       }} />{t("txt_1055")}</div>
-
-      <div style={{
-      position: "absolute",
-      right: 24,
-      top: 24,
-      padding: "8px 12px",
-      borderRadius: 10,
-      background: "rgba(0,0,0,0.4)",
-      backdropFilter: "blur(12px)",
-      border: "1px solid rgba(255,255,255,0.08)",
-      fontSize: 11,
-      color: "rgba(255,255,255,0.65)",
-      letterSpacing: "0.1em",
-      textTransform: "uppercase",
-      fontWeight: 600
-    }}>
-        Atlas Vision
-      </div>
     </div>;
 }
