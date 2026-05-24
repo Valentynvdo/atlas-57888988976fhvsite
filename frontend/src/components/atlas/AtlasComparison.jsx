@@ -201,6 +201,7 @@ function ComparisonCategory({
   delay,
   visualType
 }) {
+  const { t } = useTranslation();
   return <div className={`reveal ${delay}`} style={{
     display: "flex",
     flexDirection: "column",

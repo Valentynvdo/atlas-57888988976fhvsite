@@ -113,6 +113,7 @@ export default function AbsoluteAwareness() {
     </section>;
 }
 function FaceIDOrb() {
+  const { t } = useTranslation();
   return <div className="glass" style={{
     position: "absolute",
     inset: 0,

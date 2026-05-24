@@ -788,7 +788,7 @@ export default function Dashboard() {
               💬 {t("dashboard.open_chat")}
             </a>
           </div>
-          <FAQ items={FAQ_ITEMS} t={t} />
+          <FAQ t={t} />
         </section>
       </main>
 
@@ -907,30 +907,29 @@ function Confirm({ title, message, onCancel, onConfirm, busy, danger }) {
   );
 }
 
-const FAQ_ITEMS = [
-  {
-    q: t("dashboard.faq_q1"),
-    a: t("dashboard.faq_a1"),
-  },
-  {
-    q: t("dashboard.faq_q2"),
-    a: t("dashboard.faq_a2"),
-  },
-  {
-    q: t("dashboard.faq_q3"),
-    a: t("dashboard.faq_a3"),
-  },
-  {
-    q: t("dashboard.faq_q4"),
-    a: t("dashboard.faq_a4"),
-  },
-  {
-    q: t("dashboard.faq_q5"),
-    a: t("dashboard.faq_a5"),
-  },
-];
-
-function FAQ({ items, t }) {
+function FAQ({ t }) {
+  const FAQ_ITEMS = [
+    {
+      q: t("dashboard.faq_q1"),
+      a: t("dashboard.faq_a1"),
+    },
+    {
+      q: t("dashboard.faq_q2"),
+      a: t("dashboard.faq_a2"),
+    },
+    {
+      q: t("dashboard.faq_q3"),
+      a: t("dashboard.faq_a3"),
+    },
+    {
+      q: t("dashboard.faq_q4"),
+      a: t("dashboard.faq_a4"),
+    },
+    {
+      q: t("dashboard.faq_q5"),
+      a: t("dashboard.faq_a5"),
+    },
+  ];
   const [open, setOpen] = useState(null);
   return (
     <div data-testid="faq-list" style={{ display: "grid", gap: 8 }}>

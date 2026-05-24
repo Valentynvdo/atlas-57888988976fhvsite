@@ -1,49 +1,50 @@
 import { useTranslation } from "react-i18next";
 import { Command, AppWindow, ShieldCheck, Mic, Trash2, Camera } from "lucide-react";
-const cards = [{
-  icon: <Command size={24} />,
-  accent: "#007AFF",
-  title: t("txt_1001"),
-  headline: t("txt_1002"),
-  desc: t("txt_1003"),
-  extras: [{
-    icon: <Mic size={14} />,
-    label: t("txt_1004")
-  }, {
-    icon: <Command size={14} />,
-    label: t("txt_1005")
-  }]
-}, {
-  icon: <AppWindow size={24} />,
-  accent: "#9D4CDD",
-  title: t("txt_1006"),
-  headline: t("txt_1007"),
-  desc: t("txt_1008"),
-  extras: [{
-    icon: <AppWindow size={14} />,
-    label: "Multi-app"
-  }, {
-    icon: <Command size={14} />,
-    label: "Workflow"
-  }]
-}, {
-  icon: <ShieldCheck size={24} />,
-  accent: "#00E5FF",
-  title: t("txt_1009"),
-  headline: t("txt_1010"),
-  desc: t("txt_1011"),
-  extras: [{
-    icon: <Camera size={14} />,
-    label: t("txt_1012")
-  }, {
-    icon: <Trash2 size={14} />,
-    label: t("txt_1013")
-  }]
-}];
 export default function MacOSControl() {
   const {
     t
   } = useTranslation();
+  
+  const cards = [{
+    icon: <Command size={24} />,
+    accent: "#007AFF",
+    title: t("txt_1001"),
+    headline: t("txt_1002"),
+    desc: t("txt_1003"),
+    extras: [{
+      icon: <Mic size={14} />,
+      label: t("txt_1004")
+    }, {
+      icon: <Command size={14} />,
+      label: t("txt_1005")
+    }]
+  }, {
+    icon: <AppWindow size={24} />,
+    accent: "#9D4CDD",
+    title: t("txt_1006"),
+    headline: t("txt_1007"),
+    desc: t("txt_1008"),
+    extras: [{
+      icon: <AppWindow size={14} />,
+      label: "Multi-app"
+    }, {
+      icon: <Command size={14} />,
+      label: "Workflow"
+    }]
+  }, {
+    icon: <ShieldCheck size={24} />,
+    accent: "#00E5FF",
+    title: t("txt_1009"),
+    headline: t("txt_1010"),
+    desc: t("txt_1011"),
+    extras: [{
+      icon: <Camera size={14} />,
+      label: t("txt_1012")
+    }, {
+      icon: <Trash2 size={14} />,
+      label: t("txt_1013")
+    }]
+  }];
   return <section id="macos" data-testid="macos-section" className="section-container" style={{
     position: "relative"
   }}>
