@@ -109,9 +109,8 @@ async def get_current_user(
 
 
 async def require_admin(request: Request, user: dict = Depends(get_current_user)) -> dict:
-    admin_email = await _admin_email()
-    if not admin_email or user["email"].lower() != admin_email:
-        raise HTTPException(status_code=404, detail="Not found")
+    if not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin required")
     pin_token = request.headers.get("X-Admin-Pin") or request.cookies.get("atlas_admin_pin")
     if not pin_token:
         raise HTTPException(status_code=403, detail="Admin PIN required")
@@ -128,8 +127,7 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
     return user
 
 async def require_super_admin(request: Request, user: dict = Depends(require_admin)) -> dict:
-    admin_email = await _admin_email()
-    if not admin_email or user["email"].lower() != admin_email:
+    if not user.get("is_super_admin"):
         raise HTTPException(status_code=403, detail="Super Admin required")
     return user
 import hashlib
@@ -364,7 +362,23 @@ async def login(body: dict, response: Response):
     })
 
     _set_session_cookie(response, token)
-    return {"ok": True, "token": token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name"), "is_admin": user.get("is_admin", False), "is_super_admin": user.get("is_super_admin", False)}}
+    
+    pin_token = None
+    if user.get("is_admin"):
+        pin_token = secrets.token_urlsafe(32)
+        pin_expires = datetime.now(timezone.utc) + PIN_TTL
+        await db.admin_pin_sessions.insert_one({
+            "token": pin_token,
+            "user_id": user["user_id"],
+            "expires_at": pin_expires.isoformat()
+        })
+        response.set_cookie(
+            key="atlas_admin_pin", value=pin_token,
+            max_age=int(PIN_TTL.total_seconds()),
+            httponly=True, secure=True, samesite="lax", path="/"
+        )
+        
+    return {"ok": True, "token": token, "pin_token": pin_token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name"), "is_admin": user.get("is_admin", False), "is_super_admin": user.get("is_super_admin", False)}}
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -548,8 +562,7 @@ async def logout(request: Request, response: Response):
 
 @router.post("/admin/pin")
 async def submit_admin_pin(body: dict, request: Request, response: Response, user: dict = Depends(get_current_user)):
-    admin_email = await _admin_email()
-    if not admin_email or user["email"].lower() != admin_email:
+    if not user.get("is_super_admin"):
         raise HTTPException(status_code=404, detail="Not found")
     ip = (request.client.host if request.client else "unknown")
     lock = await db.admin_pin_lock.find_one({"ip": ip})
