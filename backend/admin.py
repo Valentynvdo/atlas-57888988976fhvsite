@@ -617,31 +617,6 @@ async def get_active_map(_=Depends(require_admin)):
             "suspicious": bool(l.get("suspicious", False))
         })
         
-    # Include active licenses that might not have recent API logs
-    active_licenses = await db.licenses.find({"active": True}).to_list(1000)
-    import random
-    for lic in active_licenses:
-        kp = lic.get("key", "")[:8] if lic.get("key") else "unknown"
-        if kp in seen:
-            continue
-        seen.add(kp)
-        
-        # Add slight variation to default coordinates
-        lat_offset = random.uniform(-0.03, 0.03)
-        lon_offset = random.uniform(-0.03, 0.03)
-        
-        spots.append({
-            "key_prefix": kp,
-            "ip": "Unknown",
-            "country": "Ukraine",
-            "region": "Kyiv",
-            "city": "Kyiv",
-            "lat": 50.4501 + lat_offset,
-            "lon": 30.5234 + lon_offset,
-            "ts": lic.get("created_at") or datetime.now(timezone.utc).isoformat(),
-            "suspicious": False
-        })
-
     return spots
 
 
