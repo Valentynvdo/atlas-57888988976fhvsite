@@ -111,6 +111,11 @@ async def get_current_user(
 async def require_admin(request: Request, user: dict = Depends(get_current_user)) -> dict:
     if not user.get("is_admin"):
         raise HTTPException(status_code=403, detail="Admin required")
+        
+    # Subadmins bypass the PIN check completely
+    if not user.get("is_super_admin"):
+        return user
+        
     pin_token = request.headers.get("X-Admin-Pin") or request.cookies.get("atlas_admin_pin")
     if not pin_token:
         raise HTTPException(status_code=403, detail="Admin PIN required")
