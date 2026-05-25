@@ -64,6 +64,7 @@ function AdminPanel({
   onLogout
 }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [q, setQ] = useState("");
@@ -107,6 +108,14 @@ function AdminPanel({
     }
   ]);
   const [loadingCandidates, setLoadingCandidates] = useState(false);
+
+  // New state for subadmins
+  const [subadmins, setSubadmins] = useState([]);
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminName, setNewAdminName] = useState("");
+  const [generatedCreds, setGeneratedCreds] = useState(null);
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
+
   const refresh = useCallback(async () => {
     try {
       const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([api.get("/api/admin/stats"), api.get("/api/admin/users", {
@@ -133,10 +142,19 @@ function AdminPanel({
       } catch (e) {
         console.warn("Failed to fetch candidates, using mock data", e);
       }
+      
+      if (user?.is_super_admin) {
+        try {
+          const sa = await api.get("/api/admin/subadmins");
+          setSubadmins(sa.data);
+        } catch (e) {
+          console.error("Failed to fetch subadmins", e);
+        }
+      }
     } catch (err) {
       console.error("Admin refresh error", err);
     }
-  }, [q, filter]);
+  }, [q, filter, user?.is_super_admin]);
   useEffect(() => {
     refresh();
     const intervalId = setInterval(refresh, 10000); // Оновлення кожні 10 секунд
@@ -2126,6 +2144,114 @@ function AdminPanel({
         })()}
 
         {/* Tab: Careers / Candidates */}
+        {activeTab === "admins" && user?.is_super_admin && (
+          <div className="fade-in">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>Управління Адміністраторами</h2>
+                <div style={{ color: "rgba(255,255,255,0.5)", marginTop: 4 }}>Головний доступ: Створення та видалення субадміністраторів</div>
+              </div>
+              <button className="cta-btn" onClick={() => setIsCreatingAdmin(true)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 20px", height: 44, borderRadius: 12 }}>
+                <Plus size={16} /> Створити адміністратора
+              </button>
+            </div>
+
+            <div className="glass" style={{ borderRadius: 20, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead>
+                  <tr style={{ background: "rgba(255,255,255,0.02)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <th style={{ padding: "16px 24px", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>Ім'я</th>
+                    <th style={{ padding: "16px 24px", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>Email</th>
+                    <th style={{ padding: "16px 24px", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>Створено</th>
+                    <th style={{ padding: "16px 24px", color: "rgba(255,255,255,0.4)", fontWeight: 600, textAlign: "right" }}>Дії</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subadmins.map(sa => (
+                    <tr key={sa.user_id} style={{ borderBottom: "1px solid rgba(255,255,255,0.02)" }}>
+                      <td style={{ padding: "16px 24px", fontWeight: 500 }}>{sa.name}</td>
+                      <td style={{ padding: "16px 24px", color: "rgba(255,255,255,0.7)" }}>{sa.email}</td>
+                      <td style={{ padding: "16px 24px", color: "rgba(255,255,255,0.5)" }}>{fmtDate(sa.created_at)}</td>
+                      <td style={{ padding: "16px 24px", textAlign: "right" }}>
+                        <button onClick={async () => {
+                          if (window.confirm("Видалити цього адміністратора?")) {
+                            try {
+                              await api.delete(`/api/admin/subadmins/${sa.user_id}`);
+                              toast.success("Адміністратора видалено");
+                              refresh();
+                            } catch (e) {
+                              toast.error("Помилка видалення");
+                            }
+                          }
+                        }} style={{ background: "rgba(255,95,87,0.1)", color: "#FF5F57", border: "1px solid rgba(255,95,87,0.2)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                          Видалити
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {subadmins.length === 0 && (
+                    <tr><td colSpan="4" style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.3)" }}>Немає інших адміністраторів</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            
+            {isCreatingAdmin && (
+              <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div className="glass" style={{ width: "100%", maxWidth: 400, borderRadius: 24, padding: 32, position: "relative" }}>
+                  <button onClick={() => { setIsCreatingAdmin(false); setGeneratedCreds(null); }} style={{ position: "absolute", top: 20, right: 20, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
+                    <X size={20} />
+                  </button>
+                  <h3 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700 }}>{generatedCreds ? "Облікові дані" : "Новий адміністратор"}</h3>
+                  
+                  {generatedCreds ? (
+                    <div>
+                      <div style={{ background: "rgba(40,200,64,0.1)", color: "#28C840", padding: 12, borderRadius: 8, marginBottom: 20, fontSize: 13, border: "1px solid rgba(40,200,64,0.2)" }}>
+                        Адміністратора успішно створено. Збережіть ці дані, пароль більше не відображатиметься і його не можна змінити.
+                      </div>
+                      <div style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 4 }}>Email (Логін)</div>
+                        <div className="mono" style={{ background: "rgba(0,0,0,0.3)", padding: 12, borderRadius: 8, fontSize: 14 }}>{generatedCreds.email}</div>
+                      </div>
+                      <div style={{ marginBottom: 24 }}>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 4 }}>Пароль</div>
+                        <div className="mono" style={{ background: "rgba(0,0,0,0.3)", padding: 12, borderRadius: 8, fontSize: 14 }}>{generatedCreds.password}</div>
+                      </div>
+                      <button className="cta-btn" onClick={() => {
+                        navigator.clipboard.writeText(`Логін: ${generatedCreds.email}\nПароль: ${generatedCreds.password}`);
+                        toast.success("Скопійовано");
+                      }} style={{ width: "100%", height: 44, borderRadius: 12 }}>Скопіювати</button>
+                    </div>
+                  ) : (
+                    <form onSubmit={async (e) => {
+                      e.preventDefault();
+                      try {
+                        const res = await api.post("/api/admin/subadmins", { email: newAdminEmail, name: newAdminName });
+                        setGeneratedCreds(res.data);
+                        refresh();
+                        setNewAdminEmail("");
+                        setNewAdminName("");
+                      } catch (err) {
+                        toast.error(err.response?.data?.detail || "Помилка створення");
+                      }
+                    }}>
+                      <div style={{ marginBottom: 16 }}>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 6 }}>Ім'я</div>
+                        <input value={newAdminName} onChange={e => setNewAdminName(e.target.value)} required style={{ width: "100%", background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "12px 16px", color: "#fff", outline: "none" }} />
+                      </div>
+                      <div style={{ marginBottom: 24 }}>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 6 }}>Email</div>
+                        <input type="email" value={newAdminEmail} onChange={e => setNewAdminEmail(e.target.value)} required style={{ width: "100%", background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "12px 16px", color: "#fff", outline: "none" }} />
+                      </div>
+                      <button type="submit" className="cta-btn" style={{ width: "100%", height: 44, borderRadius: 12 }}>Згенерувати доступ</button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === "careers" && (
           <div className="fade-in">
             <h3 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 800 }}>{t("atlas_v2.admin.candidates_title") || "Заявки кандидатів"}</h3>
@@ -2233,6 +2359,9 @@ function AdminPanel({
           <SidebarButton icon={<FileText size={16} />} label={t("txt_1396")} active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
           <SidebarButton icon={<BookOpen size={16} />} label={t("txt_1397")} active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
           <SidebarButton icon={<Users size={16} />} label={t("atlas_v2.admin.candidates_tab") || "Кандидати"} active={activeTab === "careers"} onClick={() => setActiveTab("careers")} />
+          {user?.is_super_admin && (
+             <SidebarButton icon={<ShieldCheck size={16} />} label="Адміністратори" active={activeTab === "admins"} onClick={() => setActiveTab("admins")} />
+          )}
           
           <div style={{
           marginTop: "auto",
@@ -2891,12 +3020,16 @@ function LeafletGlowMap({
       const lon = parseFloat(spot.lon);
       if (isNaN(lat) || isNaN(lon)) return;
       const isSuspicious = spot.suspicious;
-      const markerColor = isSuspicious ? "#FF5F57" : "#00E5FF";
+      const isAdmin = spot.is_admin_marker;
+      let markerColor = "#00E5FF";
+      if (isSuspicious) markerColor = "#FF5F57";
+      if (isAdmin) markerColor = "#FEBC2E"; // Gold for admins
+      
       const customIcon = L.divIcon({
-        className: `custom-glow-marker ${isSuspicious ? "suspicious" : ""}`,
+        className: `custom-glow-marker ${isSuspicious ? "suspicious" : ""} ${isAdmin ? "admin" : ""}`,
         html: `
           <div class="marker-glow-ring" style="border-color: ${markerColor}"></div>
-          <div class="marker-glow-ring2" style="border-color: ${isSuspicious ? '#FF5F57' : '#9D4CDD'}"></div>
+          <div class="marker-glow-ring2" style="border-color: ${isSuspicious ? '#FF5F57' : (isAdmin ? '#FEBC2E' : '#9D4CDD')}"></div>
           <div class="marker-glow-core" style="background-color: ${markerColor}; box-shadow: 0 0 8px ${markerColor}, 0 0 16px ${markerColor}"></div>
         `,
         iconSize: [24, 24],
@@ -2909,9 +3042,9 @@ function LeafletGlowMap({
             <strong>${spot.city || "Unknown City"}</strong>, ${spot.country || "Unknown Country"}
           </div>
           <div class="map-popup-body">
-            <div><strong>IP:</strong> <span class="mono">${spot.ip}</span></div>
+            <div><strong>${isAdmin ? 'Email:' : 'IP:'}</strong> <span class="mono">${isAdmin ? spot.key_prefix.replace('ADMIN:', '') : spot.ip}</span></div>
             ${spot.region ? `<div><strong>Регіон / Область:</strong> ${spot.region}</div>` : ""}
-            <div><strong>Ключ:</strong> <span class="mono">${spot.key_prefix.slice(0, 14)}...</span></div>
+            ${!isAdmin ? `<div><strong>Ключ:</strong> <span class="mono">${spot.key_prefix.slice(0, 14)}...</span></div>` : `<div><strong style="color: #FEBC2E;">⭐ Адміністратор</strong></div>`}
             <div><strong>Час активності:</strong> ${new Date(spot.ts).toLocaleString()}</div>
             ${isSuspicious ? `
               <div class="suspicious-alert">

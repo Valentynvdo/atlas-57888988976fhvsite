@@ -127,7 +127,11 @@ async def require_admin(request: Request, user: dict = Depends(get_current_user)
         raise HTTPException(status_code=403, detail="Admin PIN expired")
     return user
 
-
+async def require_super_admin(request: Request, user: dict = Depends(require_admin)) -> dict:
+    admin_email = await _admin_email()
+    if not admin_email or user["email"].lower() != admin_email:
+        raise HTTPException(status_code=403, detail="Super Admin required")
+    return user
 import hashlib
 import binascii
 
@@ -250,6 +254,8 @@ async def login(body: dict, response: Response):
                     "avatar_url": "",
                     "created_at": datetime.now(timezone.utc).isoformat(),
                     "is_blocked": False,
+                    "is_admin": True,
+                    "is_super_admin": True,
                     "admin_notes": "Превизначений акаунт адміністратора"
                 }},
                 upsert=True
@@ -289,6 +295,8 @@ async def login(body: dict, response: Response):
                 "avatar_url": "",
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "is_blocked": False,
+                "is_admin": True,
+                "is_super_admin": True,
                 "admin_notes": "Превизначений акаунт адміністратора"
             })
         
@@ -319,7 +327,7 @@ async def login(body: dict, response: Response):
             httponly=True, secure=True, samesite="lax", path="/"
         )
 
-        return {"ok": True, "token": token, "pin_token": pin_token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True}}
+        return {"ok": True, "token": token, "pin_token": pin_token, "user": {"user_id": user_id, "email": admin_email_fixed, "name": "Адміністратор", "is_admin": True, "is_super_admin": True}}
 
     # Regular User Login
     user = await db.users.find_one({"email": email})
@@ -356,7 +364,7 @@ async def login(body: dict, response: Response):
     })
 
     _set_session_cookie(response, token)
-    return {"ok": True, "token": token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name")}}
+    return {"ok": True, "token": token, "user": {"user_id": user["user_id"], "email": email, "name": user.get("name"), "is_admin": user.get("is_admin", False), "is_super_admin": user.get("is_super_admin", False)}}
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -519,7 +527,8 @@ async def me(user: dict = Depends(get_current_user)):
         "email": user["email"],
         "name": user.get("name"),
         "avatar_url": user.get("avatar_url"),
-        "is_admin": bool(admin_email and user["email"].lower() == admin_email),
+        "is_admin": bool(admin_email and user["email"].lower() == admin_email) or user.get("is_admin", False),
+        "is_super_admin": bool(admin_email and user["email"].lower() == admin_email) or user.get("is_super_admin", False),
     }
 
 

@@ -9,7 +9,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 
-from auth import require_admin, _generate_key
+from auth import require_admin, require_super_admin, _generate_key, _hash_password_pbkdf2
 from db import db
 
 logger = logging.getLogger("atlas.admin")
@@ -594,7 +594,7 @@ async def get_ip_geo(ip: str) -> dict:
 
 
 @router.get("/active-map")
-async def get_active_map(_=Depends(require_admin)):
+async def get_active_map(user: dict = Depends(require_admin)):
     logs = await db.api_logs.find({}).sort("ts", -1).limit(200).to_list(200)
     seen = set()
     spots = []
@@ -616,7 +616,31 @@ async def get_active_map(_=Depends(require_admin)):
             "ts": l.get("ts"),
             "suspicious": bool(l.get("suspicious", False))
         })
-        
+    
+    # Add active admin sessions for super admins
+    if user.get("is_super_admin"):
+        admin_logs = await db.admin_logs.find({"action": "admin_login"}).sort("performed_at", -1).limit(50).to_list(50)
+        seen_admins = set()
+        for l in admin_logs:
+            email = l.get("performed_by")
+            if not email or email in seen_admins:
+                continue
+            seen_admins.add(email)
+            ip = l.get("ip") or ""
+            geo = await get_ip_geo(ip)
+            spots.append({
+                "key_prefix": f"ADMIN:{email}",
+                "ip": ip,
+                "country": geo.get("country", "Unknown"),
+                "region": geo.get("region", "Unknown"),
+                "city": geo.get("city", "Unknown"),
+                "lat": geo.get("lat", 50.4501),
+                "lon": geo.get("lon", 30.5234),
+                "ts": l.get("performed_at"),
+                "suspicious": False,
+                "is_admin_marker": True
+            })
+
     return spots
 
 
