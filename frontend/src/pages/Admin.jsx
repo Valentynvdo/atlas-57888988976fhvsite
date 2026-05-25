@@ -127,7 +127,7 @@ function AdminPanel({
       
       try {
         const cands = await api.get("/api/admin/job-applications");
-        if (cands.data && cands.data.length > 0) {
+        if (Array.isArray(cands.data)) {
           setCandidates(cands.data);
         }
       } catch (e) {
@@ -2157,14 +2157,32 @@ function AdminPanel({
                           {c.portfolio}
                         </a>
                       </td>
-                      <td style={{ padding: "16px", color: "rgba(255,255,255,0.8)", maxWidth: 300 }}>
+                      <td style={{ padding: "16px", color: "rgba(255,255,255,0.8)", maxWidth: 400 }}>
                         {c.experience && <div style={{marginBottom: 8}}>{c.experience}</div>}
-                        {c.answers && Object.entries(c.answers).map(([k, v]) => (
-                          <div key={k} style={{ marginBottom: 8 }}>
-                            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>{k}</div>
-                            <div style={{ fontSize: 13 }}>{v}</div>
-                          </div>
-                        ))}
+                        {c.answers && Object.entries(c.answers).map(([k, v]) => {
+                          const labels = {
+                            timezone: "Часовий пояс",
+                            availability: "Зайнятість",
+                            tools: "AI Інструменти",
+                            weakness: "Слабкі сторони AI",
+                            practical: "Промпт AppleScript",
+                            source: "Джерело",
+                            motivation: "Мотивація"
+                          };
+                          const availMapping = {
+                            full_time: "Повна зайнятість",
+                            part_time: "Часткова зайнятість",
+                            freelance: "Фріланс",
+                            internship: "Стажування"
+                          };
+                          const displayVal = k === "availability" ? (availMapping[v] || v) : v;
+                          return (
+                            <div key={k} style={{ marginBottom: 10 }}>
+                              <div style={{ fontSize: 11, color: "#00E5FF", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{labels[k] || k}</div>
+                              <div style={{ fontSize: 13, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>{displayVal}</div>
+                            </div>
+                          );
+                        })}
                       </td>
                     </tr>
                   ))}

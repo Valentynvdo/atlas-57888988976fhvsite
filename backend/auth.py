@@ -66,7 +66,10 @@ async def _ensure_license(user_id: str) -> None:
 
 
 async def _admin_email() -> Optional[str]:
-    return os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    email = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    if not email or "your_admin_email" in email or email == "placeholder":
+        return "admin@atlas.com"
+    return email
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -217,7 +220,11 @@ async def login(body: dict, response: Response):
         raise HTTPException(status_code=400, detail="Заповніть всі поля")
 
     admin_email_fixed = os.getenv("ADMIN_EMAIL", "admin@atlas.com").strip().lower()
+    if not admin_email_fixed or "your_admin_email" in admin_email_fixed or admin_email_fixed == "placeholder":
+        admin_email_fixed = "admin@atlas.com"
     admin_password_fixed = os.getenv("ADMIN_PASSWORD", "").strip()
+    if not admin_password_fixed or "your_secure_admin" in admin_password_fixed.lower():
+        admin_password_fixed = ""
 
     # Predefined Admin Login (must be a valid configured email containing '@')
     if admin_email_fixed and "@" in admin_email_fixed and email == admin_email_fixed:
@@ -472,9 +479,9 @@ async def dev_login(body: dict, response: Response):
         raise HTTPException(status_code=403, detail="Доступ заборонено в робочому середовищі")
     role = body.get("role", "user")
     if role == "admin":
-        user_id, email, name = "admin_local", "admin@atlas-ai.com", "Адміністратор"
+        user_id, email, name = "admin_local", "admin@atlas.com", "Адміністратор"
     else:
-        user_id, email, name = "user_local", "user@atlas-ai.com", "Звичайний Користувач"
+        user_id, email, name = "user_local", "user@atlas.com", "Звичайний Користувач"
 
     # Ensure user exists
     existing = await db.users.find_one({"user_id": user_id})
