@@ -51,6 +51,10 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    if (user?.is_admin) {
+      navigate("/x7k9m-admin", { replace: true });
+      return;
+    }
     loadLicense();
     api.get("/api/me/download").then((r) => setDownloadInfo(r.data)).catch(() => {});
     api.get("/api/billing/packages").then((r) => setPackages(r.data)).catch(() => {});
