@@ -41,16 +41,18 @@ async def admin_stats(_=Depends(require_admin)):
     today = now.replace(hour=0, minute=0, second=0, microsecond=0)
     month_start = today.replace(day=1)
 
-    # Active licenses (active=true, even if expires_at is None; if expires_at is set, must be > now)
+    all_licenses = await db.licenses.find({}, {"_id": 0}).to_list(10000)
+    all_users = await db.users.find({}, {"_id": 0}).to_list(10000)
+    all_txs = await db.payment_transactions.find({"payment_status": "paid"}, {"_id": 0, "amount": 1, "created_at": 1, "currency": 1}).to_list(10000)
+
+    # Active licenses
     active_count = 0
     inactive_count = 0
     expiring_soon = 0
-    all_licenses = await db.licenses.find({}, {"_id": 0}).to_list(10000)
     for lic in all_licenses:
         is_active = lic.get("active")
         exp = _parse_dt(lic.get("expires_at"))
         
-        # If it has an expiration date in the past, it is not active
         if exp and exp <= now:
             is_active = False
 
@@ -62,62 +64,60 @@ async def admin_stats(_=Depends(require_admin)):
             inactive_count += 1
 
     # New users today
-    users_today = await db.users.count_documents({
-        "created_at": {"$gte": today.isoformat()},
-    })
-    total_users = await db.users.count_documents({})
+    total_users = len(all_users)
+    users_today = 0
+    for u in all_users:
+        cat = _parse_dt(u.get("created_at"))
+        if cat and cat >= today:
+            users_today += 1
 
-    # Churn this month: licenses that expired (expires_at < now and was active in past month)
+    # Churn this month
     churn = 0
     for lic in all_licenses:
         exp = _parse_dt(lic.get("expires_at"))
         if exp and month_start <= exp < now and not lic.get("active"):
             churn += 1
 
-    # Revenue (sum of paid tx this month)
-    paid_tx = await db.payment_transactions.find(
-        {"payment_status": "paid", "created_at": {"$gte": month_start.isoformat()}},
-        {"_id": 0, "amount": 1, "currency": 1},
-    ).to_list(10000)
-    monthly_revenue = round(sum((t.get("amount") or 0) for t in paid_tx), 2)
+    # Revenue
+    monthly_revenue = 0.0
+    for t in all_txs:
+        cat = _parse_dt(t.get("created_at"))
+        if cat and cat >= month_start:
+            monthly_revenue += float(t.get("amount") or 0.0)
+    
+    monthly_revenue = round(monthly_revenue, 2)
     yearly_forecast = round(monthly_revenue * 12, 2)
 
-    # 12-month growth (count of users, active users, revenue, churn by month)
+    # 12-month growth
     growth = []
     for i in range(11, -1, -1):
         m_start = (now.replace(day=1) - timedelta(days=i * 30))
         m_start = m_start.replace(hour=0, minute=0, second=0, microsecond=0)
         m_end = m_start + timedelta(days=31)
         
-        # New users registered
-        cnt = await db.users.count_documents({
-            "created_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()},
-        })
-        
-        # Active users in that month (estimated by active licenses)
-        active_cnt = await db.licenses.count_documents({
-            "created_at": {"$lt": m_end.isoformat()},
-            "expires_at": {"$gt": m_start.isoformat()},
-            "active": True
-        })
-        
-        # Revenue in that month
-        txs = await db.payment_transactions.find(
-            {"payment_status": "paid", "created_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()}}
-        ).to_list(1000)
-        rev = round(sum(t.get("amount") or 0 for t in txs), 2)
-        
-        # Churn in that month
-        churn_cnt = await db.licenses.count_documents({
-            "expires_at": {"$gte": m_start.isoformat(), "$lt": m_end.isoformat()},
-            "active": False
-        })
+        cnt = 0
+        for u in all_users:
+            cat = _parse_dt(u.get("created_at"))
+            if cat and m_start <= cat < m_end:
+                cnt += 1
+                
+        active_cnt = 0
+        churn_cnt = 0
+        for lic in all_licenses:
+            cat = _parse_dt(lic.get("created_at"))
+            exp = _parse_dt(lic.get("expires_at"))
+            if cat and cat < m_end and exp and exp > m_start and lic.get("active"):
+                active_cnt += 1
+            if exp and m_start <= exp < m_end and not lic.get("active"):
+                churn_cnt += 1
+                
+        rev = sum(float(t.get("amount") or 0.0) for t in all_txs if _parse_dt(t.get("created_at")) and m_start <= _parse_dt(t.get("created_at")) < m_end)
         
         growth.append({
             "month": m_start.strftime("%Y-%m"),
             "users": cnt,
             "active": active_cnt,
-            "revenue": rev,
+            "revenue": round(rev, 2),
             "churn": churn_cnt
         })
 
@@ -142,11 +142,18 @@ async def list_users(
 ):
     """Returns enriched users joined with licenses."""
     users = await db.users.find({}, {"_id": 0}).to_list(10000)
+    licenses = await db.licenses.find({}, {"_id": 0}).to_list(10000)
+    all_stats = await db.atlas_stats.find({}, {"_id": 0}).to_list(10000)
+    
+    lic_map = {l.get("user_id"): l for l in licenses if l.get("user_id")}
+    stats_map = {s.get("license_id"): s for s in all_stats if s.get("license_id")}
+
     now = datetime.now(timezone.utc)
     out = []
     for u in users:
-        lic = await db.licenses.find_one({"user_id": u["user_id"]}, {"_id": 0}) or {}
-        stats = await db.atlas_stats.find_one({"license_id": lic.get("license_id")}, {"_id": 0}) or {}
+        lic = lic_map.get(u["user_id"], {})
+        stat = stats_map.get(lic.get("license_id"), {})
+        
         exp = _parse_dt(lic.get("expires_at"))
         is_active = bool(lic.get("active") and exp and exp > now)
         row = {
@@ -160,7 +167,7 @@ async def list_users(
             "key": lic.get("key"),
             "mac_id": lic.get("mac_id"),
             "mac_name": lic.get("mac_name"),
-            "version": stats.get("version", "—"),
+            "version": stat.get("version", "—"),
             "active": is_active,
             "expires_at": exp.isoformat() if exp else None,
         }
