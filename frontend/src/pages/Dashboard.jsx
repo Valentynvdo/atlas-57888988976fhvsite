@@ -934,7 +934,7 @@ function FAQ({ t }) {
   const [open, setOpen] = useState(null);
   return (
     <div data-testid="faq-list" style={{ display: "grid", gap: 8 }}>
-      {items.map((it, i) => (
+      {FAQ_ITEMS.map((it, i) => (
         <div
           key={i}
           style={{
