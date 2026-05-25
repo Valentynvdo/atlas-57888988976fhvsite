@@ -716,3 +716,64 @@ async def get_job_applications(_=Depends(require_admin)):
     return applications
 
 
+# ── Sub-Admins Management Endpoints ──────────────────────────────────────────
+
+@router.get("/subadmins")
+async def list_subadmins(_=Depends(require_super_admin)):
+    users = await db.users.find({"is_admin": True}).to_list(1000)
+    return [
+        {
+            "user_id": u["user_id"],
+            "email": u["email"],
+            "name": u.get("name"),
+            "created_at": u.get("created_at"),
+            "is_super_admin": u.get("is_super_admin", False)
+        }
+        for u in users if not u.get("is_super_admin")
+    ]
+
+@router.post("/subadmins")
+async def create_subadmin(body: dict, _=Depends(require_super_admin)):
+    email = body.get("email", "").strip().lower()
+    name = body.get("name", "").strip()
+    if not email or "@" not in email:
+        raise HTTPException(400, "Invalid email")
+    
+    existing = await db.users.find_one({"email": email})
+    if existing:
+        raise HTTPException(400, "User with this email already exists")
+
+    import secrets
+    password = secrets.token_urlsafe(12)
+    salt = secrets.token_hex(16)
+    hashed = _hash_password_pbkdf2(password, salt)
+    user_id = f"admin_{uuid.uuid4().hex[:12]}"
+
+    await db.users.insert_one({
+        "user_id": user_id,
+        "email": email,
+        "name": name or "Sub-Administrator",
+        "password_hash": hashed,
+        "password_salt": salt,
+        "provider": "email",
+        "avatar_url": "",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "is_blocked": False,
+        "is_admin": True,
+        "is_super_admin": False,
+        "admin_notes": "Створено головним адміністратором"
+    })
+    
+    return {"ok": True, "email": email, "password": password, "user_id": user_id}
+
+@router.delete("/subadmins/{user_id}")
+async def delete_subadmin(user_id: str, _=Depends(require_super_admin)):
+    target = await db.users.find_one({"user_id": user_id})
+    if not target or target.get("is_super_admin"):
+        raise HTTPException(400, "Cannot delete this user")
+    
+    await db.users.delete_one({"user_id": user_id})
+    # Also delete their active sessions so they are logged out immediately
+    await db.user_sessions.delete_many({"user_id": user_id})
+    
+    return {"ok": True}
