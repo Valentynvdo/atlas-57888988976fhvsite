@@ -22,6 +22,7 @@ import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { useTranslation, Trans } from "react-i18next";
+import "./DashboardBento.css";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -207,7 +208,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div data-testid="dashboard-page" style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: "Inter, sans-serif" }}>
+    <div data-testid="dashboard-page" className="dashboard-wrapper">
       <Toaster theme="dark" position="top-center" />
 
       {/* Header */}
@@ -303,9 +304,9 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="dashboard-main" style={{ maxWidth: "100%", padding: "40px 5% 80px", display: "flex", flexDirection: "column", gap: "24px" }}>
+      <main className="dashboard-main bento-grid">
         {/* ----- Block 1: License Key ----- */}
-        <section data-testid="key-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", border: "1px solid rgba(0, 229, 255, 0.2)", boxShadow: "0 8px 32px rgba(0, 229, 255, 0.08)" }}>
+        <section data-testid="key-block" className="bento-item col-span-8" style={{ borderColor: "rgba(0, 229, 255, 0.2)" }}>
           <SectionHeader title={t("dashboard.license_block_title")} eyebrow={t("dashboard.license_block_eyebrow")} />
           <div
             style={{
@@ -369,7 +370,7 @@ export default function Dashboard() {
         </section>
 
         {/* ----- Block 2: Telegram Bot ----- */}
-        <section data-testid="telegram-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", border: "1px solid rgba(0, 136, 204, 0.3)", boxShadow: "0 8px 32px rgba(0, 136, 204, 0.1)" }}>
+        <section data-testid="telegram-block" className="bento-item col-span-4" style={{ background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", borderColor: "rgba(0, 136, 204, 0.3)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
             <SectionHeader title={t("dashboard.tg_block_title")} eyebrow={t("dashboard.tg_block_eyebrow")} />
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)", display: "grid", placeItems: "center", color: "#fff", boxShadow: "0 4px 15px rgba(0, 136, 204, 0.4)" }}>
@@ -425,7 +426,7 @@ export default function Dashboard() {
         </section>
 
         {/* ----- Block 3: Download ----- */}
-        <section data-testid="download-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+        <section data-testid="download-block" className="bento-item col-span-6">
           <SectionHeader title={t("dashboard.download_title")} eyebrow={t("dashboard.download_eyebrow")} />
           <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>{t("dashboard.download_desc")}</div>
@@ -446,7 +447,7 @@ export default function Dashboard() {
         </section>
 
         {/* ----- Block 4: Subscription ----- */}
-        <section data-testid="subscription-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+        <section data-testid="subscription-block" className="bento-item col-span-6">
           {/* Header with macOS Dots */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
             <SectionHeader title={t("dashboard.sub_title")} eyebrow={t("dashboard.sub_eyebrow")} />
@@ -549,7 +550,7 @@ export default function Dashboard() {
               <Sparkles size={18} color="#00E5FF" /> {t("dashboard.choose_plan")}
             </h3>
 
-            <div className="three-col">
+            <div className="pricing-grid">
               {(packages.length > 0 ? packages : [
                 { id: "atlas_monthly", amount: 28.99, days: 30, label: "Atlas AI · Місяць" },
                 { id: "atlas_quarterly", amount: 74.99, days: 90, label: "Atlas AI · 3 місяці" },
@@ -734,7 +735,7 @@ export default function Dashboard() {
         </section>
 
         {/* ----- Block 5: Stats ----- */}
-        <section data-testid="stats-block" className="glass" style={{ ...blockStyle, padding: "36px 40px" }}>
+        <section data-testid="stats-block" className="bento-item col-span-6">
           <SectionHeader title={t("dashboard.stats_title")} eyebrow={t("dashboard.stats_eyebrow")} />
           {license.mac_id && license.stats ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16 }}>
@@ -762,7 +763,7 @@ export default function Dashboard() {
           )}
         </section>
 
-        <section data-testid="support-block" className="glass" style={{ ...blockStyle, padding: "36px 40px", background: "linear-gradient(135deg, rgba(0,136,204,0.06) 0%, rgba(0,0,0,0.2) 100%)", border: "1px solid rgba(0,136,204,0.2)" }}>
+        <section data-testid="support-block" className="bento-item col-span-12" style={{ background: "linear-gradient(135deg, rgba(0,136,204,0.06) 0%, rgba(0,0,0,0.2) 100%)", borderColor: "rgba(0, 136, 204, 0.3)" }}>
           <SectionHeader title={t("dashboard.support_title")} eyebrow={t("dashboard.support_eyebrow")} />
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 24 }}>
             {t("dashboard.support_desc")}
@@ -828,10 +829,10 @@ const blockStyle = {
 function SectionHeader({ title, eyebrow }) {
   return (
     <div style={{ marginBottom: 20 }}>
-      <div style={{ color: "#00E5FF", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 600 }}>
+      <div className="section-eyebrow">
         {eyebrow}
       </div>
-      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 6, letterSpacing: "-0.01em" }}>{title}</h2>
+      <h2 className="section-title">{title}</h2>
     </div>
   );
 }
