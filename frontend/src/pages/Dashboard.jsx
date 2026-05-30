@@ -6,19 +6,18 @@ import {
   Copy,
   Eye,
   EyeOff,
-  Download,
   ChevronDown,
-  ArrowRightLeft,
-  Sparkles,
   Loader2,
   AlertTriangle,
   Settings,
   Check,
-  Wallet,
-  Zap,
+  Clock,
+  Users,
+  Sparkles,
+  ArrowRightLeft,
   MessageSquare,
+  Lock,
 } from "lucide-react";
-import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { useTranslation, Trans } from "react-i18next";
@@ -37,10 +36,11 @@ export default function Dashboard() {
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmTransfer, setConfirmTransfer] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [tonPrices, setTonPrices] = useState(null);
-  const [tonBusy, setTonBusy] = useState(false);
-  const [tonConnectUI] = useTonConnectUI();
-  const tonWallet = useTonWallet();
+  // Waitlist state
+  const [waitlist, setWaitlist] = useState(null);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistPlan, setWaitlistPlan] = useState("atlas_quarterly");
+  const [waitlistReason, setWaitlistReason] = useState("");
 
   const loadLicense = useCallback(async () => {
     try {
@@ -51,21 +51,29 @@ export default function Dashboard() {
     }
   }, []);
 
+  const loadWaitlist = useCallback(async () => {
+    try {
+      const r = await api.get("/api/billing/waitlist/status");
+      setWaitlist(r.data);
+    } catch (err) {
+      console.error("Failed to load waitlist", err);
+    }
+  }, []);
+
   useEffect(() => {
     if (user?.is_admin) {
       navigate("/x7k9m-admin", { replace: true });
       return;
     }
     loadLicense();
+    loadWaitlist();
     api.get("/api/me/download").then((r) => setDownloadInfo(r.data)).catch(() => {});
     api.get("/api/billing/packages").then((r) => setPackages(r.data)).catch(() => {});
-    // Load live TON prices
-    api.get("/api/billing/ton-price").then((r) => setTonPrices(r.data)).catch(() => {});
-
     // Polling every 15 seconds for real-time updates
     const intervalId = setInterval(loadLicense, 15000);
     return () => clearInterval(intervalId);
-  }, [loadLicense]);
+  }, [loadLicense, loadWaitlist]);
+
 
   // Handle Stripe redirect (?session_id=…) — poll for status
   useEffect(() => {
@@ -110,57 +118,20 @@ export default function Dashboard() {
     return { label: t("dashboard.status_inactive"), color: "#FF5F57", bg: "rgba(255,95,87,0.1)" };
   }, [license]);
 
-  const payWithTon = async (packageId = "atlas_monthly") => {
-    if (!tonWallet) {
-      // Connect wallet first
-      tonConnectUI.openModal();
-      return;
-    }
-    if (!tonPrices) {
-      toast.error(t("dashboard.loading_prices"));
-      return;
-    }
-    const pkg = tonPrices.packages.find((p) => p.id === packageId);
-    if (!pkg) return;
-
-    setTonBusy(true);
+  const joinWaitlist = async () => {
+    setWaitlistLoading(true);
     try {
-      // Send TON transaction
-      const result = await tonConnectUI.sendTransaction({
-        validUntil: Math.floor(Date.now() / 1000) + 300, // 5 min
-        messages: [{
-          address: pkg.receiver,
-          amount: pkg.ton_nano, // in nanotons
-        }],
+      const r = await api.post("/api/billing/waitlist/join", {
+        plan: waitlistPlan,
+        reason: waitlistReason,
+        name: user?.name || "",
       });
-
-      // Get wallet address
-      const walletAddress = tonWallet.account?.address || "";
-
-      // Verify on backend
-      toast.loading(t("dashboard.verifying_tx"), { id: "ton-verify" });
-      const verify = await api.post("/api/billing/ton-verify", {
-        wallet_address: walletAddress,
-        ton_amount: pkg.ton_amount,
-        package_id: packageId,
-        tx_hash: result?.boc || "",
-      });
-
-      toast.dismiss("ton-verify");
-      toast.success(`✅ ${verify.data.message}`);
-      await loadLicense();
-      // Refresh TON prices
-      api.get("/api/billing/ton-price").then((r) => setTonPrices(r.data)).catch(() => {});
+      setWaitlist({ in_waitlist: true, position: r.data.position, status: r.data.status, plan: waitlistPlan });
+      toast.success(t("dashboard.waitlist_joined"));
     } catch (e) {
-      toast.dismiss("ton-verify");
-      if (e?.message?.includes("User rejecte")) {
-        toast.error(t("dashboard.tx_cancelled"));
-      } else {
-        const msg = e?.response?.data?.detail || t("dashboard.payment_error");
-        toast.error(msg);
-      }
+      toast.error(e?.response?.data?.detail || t("dashboard.waitlist_error"));
     } finally {
-      setTonBusy(false);
+      setWaitlistLoading(false);
     }
   };
 
@@ -425,313 +396,183 @@ export default function Dashboard() {
           </a>
         </section>
 
-        {/* ----- Block 3: Download ----- */}
-        <section data-testid="download-block" className="bento-item col-span-6">
+        {/* ----- Block 3: Download (Blurred) ----- */}
+        <section data-testid="download-block" className="bento-item col-span-6" style={{ position: "relative" }}>
           <SectionHeader title={t("dashboard.download_title")} eyebrow={t("dashboard.download_eyebrow")} />
-          <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
-            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>{t("dashboard.download_desc")}</div>
-            <code style={{ display: "block", color: "#00E5FF", fontFamily: "'Source Code Pro', monospace", fontSize: 14, wordBreak: "break-all" }}>
-              curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash
-            </code>
+          {/* Blurred content */}
+          <div style={{ filter: "blur(6px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 }}>
+            <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>{t("dashboard.download_desc")}</div>
+              <code style={{ display: "block", color: "#00E5FF", fontFamily: "monospace", fontSize: 14 }}>
+                curl -fsSL https://atlas-assistant.online/install | bash
+              </code>
+            </div>
+            <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.8)", paddingLeft: 20, lineHeight: 1.8, fontSize: 14.5 }}>
+              <li style={{ marginBottom: 8 }}>{t("dashboard.download_step1")}</li>
+              <li style={{ marginBottom: 8 }}>{t("dashboard.download_step2")}</li>
+              <li style={{ marginBottom: 8 }}>{t("dashboard.download_step3")}</li>
+              <li>{t("dashboard.download_step4")}</li>
+            </ol>
           </div>
-          <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: 16 }}>
-            {t("dashboard.download_reqs")}
+          {/* Overlay */}
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 28,
+            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)",
+            display: "flex", flexDirection: "column", alignItems: "center",
+            justifyContent: "center", padding: 32, textAlign: "center",
+          }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: "50%",
+              background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
+              display: "grid", placeItems: "center", marginBottom: 16,
+            }}>
+              <Lock size={24} color="#00E5FF" />
+            </div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
+              {t("dashboard.download_locked_title")}
+            </div>
+            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, maxWidth: 280 }}>
+              {t("dashboard.download_locked_desc")}
+            </div>
           </div>
-
-          <ol style={{ marginTop: 24, color: "rgba(255,255,255,0.8)", paddingLeft: 20, lineHeight: 1.8, fontSize: 14.5 }}>
-            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step1")}</li>
-            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step2")}</li>
-            <li style={{ marginBottom: 8 }}>{t("dashboard.download_step3")}</li>
-            <li>{t("dashboard.download_step4")}</li>
-          </ol>
         </section>
 
-        {/* ----- Block 4: Subscription ----- */}
-        <section data-testid="subscription-block" className="bento-item col-span-6">
-          {/* Header with macOS Dots */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-            <SectionHeader title={t("dashboard.sub_title")} eyebrow={t("dashboard.sub_eyebrow")} />
-            <div className="mac-dots">
-              <span></span><span></span><span></span>
-            </div>
+
+        {/* ----- Block 4: Waitlist ----- */}
+        <section data-testid="waitlist-block" className="bento-item col-span-6">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
+            <SectionHeader title={t("dashboard.waitlist_title")} eyebrow={t("dashboard.waitlist_eyebrow")} />
+            <div className="mac-dots"><span></span><span></span><span></span></div>
           </div>
 
-          {/* Current Plan Summary Card */}
-          <div style={{
-            background: "rgba(255, 255, 255, 0.02)",
-            border: "1px solid rgba(255, 255, 255, 0.06)",
-            borderRadius: 20,
-            padding: 24,
-            marginBottom: 40,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 20
-          }}>
-            <div>
-              <div style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>
-                {t("dashboard.current_status")}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "6px 12px",
-                  borderRadius: 999,
-                  background: status.bg,
-                  border: `1px solid ${status.color}33`,
-                  color: status.color,
-                  fontWeight: 600,
-                  fontSize: 15,
-                }} data-testid="subscription-status">
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: status.color, boxShadow: `0 0 10px ${status.color}` }} />
-                  {status.label}
+          {waitlist?.in_waitlist ? (
+            // Already in waitlist — show status
+            <>
+              {/* Status card */}
+              <div style={{
+                padding: 24, borderRadius: 20, marginBottom: 24,
+                background: waitlist.status === "approved" ? "rgba(40,200,64,0.06)" : "rgba(0,229,255,0.05)",
+                border: `1px solid ${waitlist.status === "approved" ? "rgba(40,200,64,0.25)" : "rgba(0,229,255,0.2)"}`,
+              }}>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
+                  {t("dashboard.waitlist_your_status")}
                 </div>
-                {license.days_left !== undefined && (
-                  <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, fontWeight: 500 }}>
-                    {t("dashboard.days_left", { days: license.days_left })}
-                  </span>
-                )}
-              </div>
-              {license.expires_at && (
-                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, marginTop: 8 }}>
-                  {t("dashboard.expires_at", { date: fmtDate(license.expires_at) })}
-                </div>
-              )}
-            </div>
-
-            <div style={{ display: "flex", gap: 12 }}>
-              {license.status === "active" && (
-                <button
-                  data-testid="cancel-btn"
-                  onClick={() => setConfirmCancel(true)}
-                  className="ghost-btn"
-                  style={{ padding: "10px 20px", fontSize: 13 }}
-                >
-                  {t("dashboard.cancel_autorenew")}
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* TON Wallet Status */}
-          <div style={{ marginBottom: 24, padding: "14px 18px", borderRadius: 14, background: tonWallet ? "rgba(40,200,64,0.06)" : "rgba(255,255,255,0.03)", border: `1px solid ${tonWallet ? "rgba(40,200,64,0.2)" : "rgba(255,255,255,0.08)"}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Wallet size={18} color={tonWallet ? "#28C840" : "rgba(255,255,255,0.4)"} />
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: tonWallet ? "#28C840" : "rgba(255,255,255,0.6)" }}>
-                  {tonWallet ? t("dashboard.wallet_connected") : t("dashboard.wallet_not_connected")}
-                </div>
-                {tonWallet?.account?.address && (
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
-                    {tonWallet.account.address.slice(0, 12)}...{tonWallet.account.address.slice(-8)}
-                  </div>
-                )}
-                {tonPrices && (
-                  <div style={{ fontSize: 11, color: "rgba(0,229,255,0.7)", marginTop: 2 }}>
-                    {t("dashboard.ton_live_price", { price: tonPrices.ton_usd_price.toFixed(3) })}
-                  </div>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={() => tonConnectUI.openModal()}
-              style={{ padding: "8px 16px", borderRadius: 999, background: tonWallet ? "rgba(255,255,255,0.05)" : "rgba(0,122,255,0.15)", border: `1px solid ${tonWallet ? "rgba(255,255,255,0.1)" : "rgba(0,122,255,0.4)"}`, color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
-            >
-              <Wallet size={13} /> {tonWallet ? t("dashboard.change_wallet") : t("dashboard.connect_wallet")}
-            </button>
-          </div>
-
-          {/* Pricing Section Grid */}
-          <div style={{ marginTop: 24 }}>
-            <h3 style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 24, display: "flex", alignItems: "center", gap: 8 }}>
-              <Sparkles size={18} color="#00E5FF" /> {t("dashboard.choose_plan")}
-            </h3>
-
-            <div className="pricing-grid">
-              {(packages.length > 0 ? packages : [
-                { id: "atlas_monthly", amount: 28.99, days: 30, label: "Atlas AI · Місяць" },
-                { id: "atlas_quarterly", amount: 74.99, days: 90, label: "Atlas AI · 3 місяці" },
-                { id: "atlas_yearly", amount: 249.99, days: 365, label: "Atlas AI · Рік" }
-              ]).map((p) => {
-                const isPopular = p.id === "atlas_quarterly";
-                const isYearly = p.id === "atlas_yearly";
-                
-                // Calculate monthly cost equivalent
-                const monthlyCost = (p.amount / (p.days / 30)).toFixed(2);
-                
-                // Features based on plan
-                const features = {
-                                    atlas_monthly: [
-                    t("dashboard.feature_1"),
-                    t("dashboard.feature_2"),
-                    t("dashboard.feature_3"),
-                    t("dashboard.feature_4"),
-                    t("dashboard.feature_5")
-                  ],
-                                    atlas_quarterly: [
-                    t("dashboard.feature_q1"),
-                    t("dashboard.feature_q2"),
-                    t("dashboard.feature_q3"),
-                    t("dashboard.feature_q4"),
-                    t("dashboard.feature_q5")
-                  ],
-                                    atlas_yearly: [
-                    t("dashboard.feature_y1"),
-                    t("dashboard.feature_y2"),
-                    t("dashboard.feature_y3"),
-                    t("dashboard.feature_y4"),
-                    t("dashboard.feature_y5")
-                  ]
-                }[p.id] || [];
-
-                return (
-                  <div
-                    key={p.id}
-                    data-testid={`package-${p.id}`}
-                    style={{
-                      borderRadius: 24,
-                      padding: 32,
-                      background: isPopular 
-                        ? "linear-gradient(180deg, rgba(0, 122, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)" 
-                        : "rgba(255, 255, 255, 0.02)",
-                      border: isPopular 
-                        ? "1px solid rgba(0, 122, 255, 0.4)" 
-                        : "1px solid rgba(255, 255, 255, 0.06)",
-                      boxShadow: isPopular ? "0 0 30px rgba(0, 122, 255, 0.15)" : "none",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      position: "relative",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "translateY(-6px)";
-                      e.currentTarget.style.borderColor = isPopular ? "rgba(0, 229, 255, 0.6)" : "rgba(255,255,255,0.18)";
-                      e.currentTarget.style.boxShadow = isPopular 
-                        ? "0 20px 40px rgba(0, 122, 255, 0.25)" 
-                        : "0 12px 30px rgba(0, 229, 255, 0.08)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.borderColor = isPopular ? "rgba(0, 122, 255, 0.4)" : "rgba(255, 255, 255, 0.06)";
-                      e.currentTarget.style.boxShadow = isPopular ? "0 0 30px rgba(0, 122, 255, 0.15)" : "none";
-                    }}
-                  >
-                    {/* Badge */}
-                    {isPopular && (
-                      <span style={{
-                        position: "absolute",
-                        top: -12,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        background: "linear-gradient(90deg, #007AFF, #00E5FF)",
-                        color: "#fff",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        padding: "4px 12px",
-                        borderRadius: 99,
-                        letterSpacing: "0.08em",
-                        boxShadow: "0 0 15px rgba(0, 229, 255, 0.4)"
-                      }}>
-                        {t("dashboard.popular_choice")}
-                      </span>
-                    )}
-
-                    {isYearly && (
-                      <span style={{
-                        position: "absolute",
-                        top: -12,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        background: "linear-gradient(90deg, #28C840, #00E5FF)",
-                        color: "#000",
-                        fontSize: 11,
-                        fontWeight: 800,
-                        textTransform: "uppercase",
-                        padding: "4px 12px",
-                        borderRadius: 99,
-                        letterSpacing: "0.08em",
-                        boxShadow: "0 0 15px rgba(40, 200, 64, 0.4)"
-                      }}>
-                        {t("dashboard.save_30")}
-                      </span>
-                    )}
-
+                {waitlist.status === "approved" ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: 28 }}>🎉</span>
                     <div>
-                      {/* Plan Header */}
-                      <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 8 }}>
-                        {p.id === "atlas_monthly" ? t("dashboard.plan_monthly") : p.id === "atlas_quarterly" ? t("dashboard.plan_quarterly") : t("dashboard.plan_yearly")}
-                      </div>
-                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginBottom: 20 }}>
-                        {p.id === "atlas_monthly" ? t("dashboard.plan_desc_monthly") : p.id === "atlas_quarterly" ? t("dashboard.plan_desc_quarterly") : t("dashboard.plan_desc_yearly")}
-                      </div>
-
-                      {/* Plan Price */}
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 28 }}>
-                        <span style={{ fontSize: 36, fontWeight: 800, color: "#fff" }}>${p.amount}</span>
-                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
-                          / {p.days === 30 ? t("dashboard.per_month") : p.days === 90 ? t("dashboard.per_quarter") : t("dashboard.per_year")}
-                        </span>
-                      </div>
-
-                      {p.days > 30 && (
-                        <div style={{ fontSize: 12, color: "rgba(0, 229, 255, 0.85)", fontWeight: 500, marginTop: -20, marginBottom: 24 }}>
-                          {t("dashboard.equiv_monthly", { cost: monthlyCost })}
-                        </div>
-                      )}
-
-                      {/* Features List */}
-                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 24, marginBottom: 32 }}>
-                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 14 }}>
-                          {features.map((feat, idx) => (
-                            <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "rgba(255,255,255,0.75)" }}>
-                              <Check size={14} color="#00E5FF" style={{ marginTop: 2, flexShrink: 0 }} />
-                              <span>{feat}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: "#28C840" }}>{t("dashboard.waitlist_approved")}</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>{t("dashboard.waitlist_approved_desc")}</div>
                     </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
+                      <span style={{ fontSize: 40, fontWeight: 800, color: "#00E5FF" }}>#{waitlist.position}</span>
+                      <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>{t("dashboard.waitlist_in_queue")}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <Clock size={14} color="rgba(255,255,255,0.4)" />
+                      <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+                        {t("dashboard.waitlist_total_queue", { total: waitlist.total || "..." })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-                    {/* Action Button */}
-                    {/* TON price display */}
-                    {tonPrices && (() => {
-                      const tp = tonPrices.packages.find(x => x.id === p.id);
-                      return tp ? (
-                        <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(0,229,255,0.05)", border: "1px solid rgba(0,229,255,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{t("dashboard.ton_price")}</span>
-                          <span style={{ fontSize: 14, fontWeight: 700, color: "#00E5FF" }}>{tp.ton_amount} TON</span>
-                        </div>
-                      ) : null;
-                    })()}
+              {/* Plan badge */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, padding: "12px 16px", borderRadius: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <Sparkles size={16} color="#00E5FF" />
+                <div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginBottom: 2 }}>{t("dashboard.waitlist_selected_plan")}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+                    {waitlist.plan === "atlas_monthly" ? t("waitlist.plan_monthly") : waitlist.plan === "atlas_quarterly" ? t("waitlist.plan_quarterly") : t("waitlist.plan_yearly")}
+                  </div>
+                </div>
+              </div>
+
+              {/* Telegram community */}
+              <a
+                href="https://t.me/AtlasAICommunity"
+                target="_blank" rel="noreferrer"
+                style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "14px 20px", borderRadius: 14, textDecoration: "none",
+                  background: "linear-gradient(135deg, rgba(0,136,204,0.15), rgba(0,162,237,0.1))",
+                  border: "1px solid rgba(0,136,204,0.3)",
+                  color: "#fff", fontSize: 14, fontWeight: 500,
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <MessageSquare size={16} color="#00a2ed" />
+                {t("dashboard.waitlist_tg_community")}
+              </a>
+            </>
+          ) : (
+            // Not yet in waitlist — show join form
+            <>
+              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
+                {t("dashboard.waitlist_desc")}
+              </p>
+
+              {/* Plan selector */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 10, fontWeight: 500 }}>{t("dashboard.waitlist_choose_plan")}</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+                  {[
+                    { id: "atlas_monthly", label: t("waitlist.plan_monthly"), price: "$28.99" },
+                    { id: "atlas_quarterly", label: t("waitlist.plan_quarterly"), price: "$74.99" },
+                    { id: "atlas_yearly", label: t("waitlist.plan_yearly"), price: "$249.99" },
+                  ].map(p => (
                     <button
-                      onClick={() => payWithTon(p.id)}
-                      disabled={tonBusy}
-                      className="cta-btn"
+                      key={p.id}
+                      onClick={() => setWaitlistPlan(p.id)}
                       style={{
-                        width: "100%",
-                        padding: "12px 20px",
-                        fontSize: 14,
-                        justifyContent: "center",
-                        borderRadius: 14,
-                        background: isPopular ? "rgba(0, 122, 255, 0.15)" : "rgba(255,255,255,0.04)",
-                        border: isPopular ? "1px solid rgba(0, 122, 255, 0.4)" : "1px solid rgba(255,255,255,0.12)"
+                        padding: "12px 8px", borderRadius: 12, cursor: "pointer",
+                        background: waitlistPlan === p.id ? "rgba(0,122,255,0.15)" : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${waitlistPlan === p.id ? "rgba(0,122,255,0.5)" : "rgba(255,255,255,0.08)"}`,
+                        color: "#fff", fontSize: 12, fontWeight: 500, textAlign: "center",
+                        transition: "all 0.2s",
                       }}
                     >
-                      {tonBusy ? <Loader2 size={16} className="spin" /> : (
-                        <>{!tonWallet ? <><Wallet size={14} /> {t("dashboard.connect_wallet")}</> : <><Zap size={14} /> {t("dashboard.pay_ton")}</>}</>
-                      )}
+                      <div style={{ fontWeight: 600 }}>{p.label}</div>
+                      <div style={{ color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{p.price}</div>
                     </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reason textarea */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 8 }}>
+                  {t("dashboard.waitlist_reason_label")}
+                </div>
+                <textarea
+                  value={waitlistReason}
+                  onChange={e => setWaitlistReason(e.target.value)}
+                  placeholder={t("dashboard.waitlist_reason_placeholder")}
+                  rows={3}
+                  style={{
+                    width: "100%", borderRadius: 12, padding: "12px 16px",
+                    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                    color: "#fff", fontSize: 14, resize: "vertical", fontFamily: "inherit",
+                    outline: "none", boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <button
+                data-testid="join-waitlist-btn"
+                onClick={joinWaitlist}
+                disabled={waitlistLoading}
+                className="cta-btn"
+                style={{ width: "100%", justifyContent: "center", padding: "14px", fontSize: 15, borderRadius: 14 }}
+              >
+                {waitlistLoading ? <Loader2 size={16} className="spin" /> : <><Users size={16} /> {t("dashboard.waitlist_join_btn")}</>}
+              </button>
+            </>
+          )}
         </section>
 
         {/* ----- Block 5: Stats ----- */}

@@ -777,3 +777,92 @@ async def delete_subadmin(user_id: str, _=Depends(require_super_admin)):
     await db.user_sessions.delete_many({"user_id": user_id})
     
     return {"ok": True}
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Waitlist management
+# ──────────────────────────────────────────────────────────────────────────────
+
+@router.get("/waitlist")
+async def get_waitlist(_=Depends(require_admin)):
+    """Get all waitlist entries sorted by registration date."""
+    entries = await db.waitlist.find({}).sort("registered_at", 1).to_list(10000)
+    total = len(entries)
+    approved = sum(1 for e in entries if e.get("status") == "approved")
+    pending = sum(1 for e in entries if e.get("status") == "pending")
+    rejected = sum(1 for e in entries if e.get("status") == "rejected")
+    return {
+        "total": total,
+        "approved": approved,
+        "pending": pending,
+        "rejected": rejected,
+        "entries": entries,
+    }
+
+
+@router.patch("/waitlist/{entry_id}/approve")
+async def approve_waitlist_entry(entry_id: str, body: dict = {}, _=Depends(require_admin)):
+    """Approve a waitlist entry and optionally activate their license."""
+    entry = await db.waitlist.find_one({"_id": entry_id})
+    if not entry:
+        raise HTTPException(404, "Waitlist entry not found")
+
+    now = datetime.now(timezone.utc)
+    plan_days = {"atlas_monthly": 30, "atlas_quarterly": 90, "atlas_yearly": 365}
+    days = plan_days.get(entry.get("plan", "atlas_monthly"), 30)
+
+    # Update waitlist status
+    await db.waitlist.update_one(
+        {"_id": entry_id},
+        {"$set": {"status": "approved", "approved_at": now.isoformat()}}
+    )
+
+    # Activate the user's license
+    lic = await db.licenses.find_one({"user_id": entry["user_id"]})
+    if lic:
+        expires = now + timedelta(days=days)
+        await db.licenses.update_one(
+            {"license_id": lic["license_id"]},
+            {"$set": {
+                "active": True,
+                "expires_at": expires.isoformat(),
+                "auto_renew": False,
+                "waitlist_approved": True,
+                "approved_at": now.isoformat(),
+            }}
+        )
+
+    # Update user record
+    await db.users.update_one(
+        {"user_id": entry["user_id"]},
+        {"$set": {"waitlist_status": "approved", "waitlist_approved_at": now.isoformat()}}
+    )
+
+    logger.info("Waitlist approved: email=%s plan=%s days=%s", entry.get("email"), entry.get("plan"), days)
+    return {"ok": True, "days_granted": days, "message": f"Access granted for {days} days"}
+
+
+@router.patch("/waitlist/{entry_id}/reject")
+async def reject_waitlist_entry(entry_id: str, _=Depends(require_admin)):
+    """Reject a waitlist entry."""
+    entry = await db.waitlist.find_one({"_id": entry_id})
+    if not entry:
+        raise HTTPException(404, "Waitlist entry not found")
+
+    await db.waitlist.update_one(
+        {"_id": entry_id},
+        {"$set": {"status": "rejected", "rejected_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    await db.users.update_one(
+        {"user_id": entry["user_id"]},
+        {"$set": {"waitlist_status": "rejected"}}
+    )
+    return {"ok": True}
+
+
+@router.delete("/waitlist/{entry_id}")
+async def delete_waitlist_entry(entry_id: str, _=Depends(require_super_admin)):
+    """Delete a waitlist entry (super admin only)."""
+    await db.waitlist.delete_one({"_id": entry_id})
+    return {"ok": True}
+

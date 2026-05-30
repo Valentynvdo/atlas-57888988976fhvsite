@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./App.css";
 import CustomCursor from "./components/CustomCursor";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import LenisScroll from "./components/LenisScroll";
 import useBentoGlow from "./hooks/useBentoGlow";
 
@@ -17,6 +16,7 @@ import SmartConcierge from "./components/atlas/SmartConcierge";
 import AbsoluteAwareness from "./components/atlas/AbsoluteAwareness";
 import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
+import WaitlistSection from "./components/atlas/WaitlistSection";
 import useScrollReveal from "./components/atlas/useScrollReveal";
 
 import { AuthProvider } from "./lib/auth";
@@ -33,7 +33,7 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Contacts = lazy(() => import("./pages/Contacts"));
 const Careers = lazy(() => import("./pages/Careers"));
 
-const MANIFEST_URL = `${window.location.origin}/tonconnect-manifest.json`;
+
 
 function Landing() {
   const navigate = useNavigate();
@@ -51,6 +51,7 @@ function Landing() {
       <AbsoluteAwareness />
       <AtlasInteractions />
       <AtlasComparison />
+      <WaitlistSection onCta={() => navigate("/login")} />
       <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
     </div>
@@ -110,17 +111,15 @@ function AppRouter() {
 
 function App() {
   return (
-    <TonConnectUIProvider manifestUrl={MANIFEST_URL}>
-      <LenisScroll>
-        <div className="grain-overlay" />
-        <BrowserRouter>
-          <AuthProvider>
-            <CustomCursor />
-            <AppRouter />
-          </AuthProvider>
-        </BrowserRouter>
-      </LenisScroll>
-    </TonConnectUIProvider>
+    <LenisScroll>
+      <div className="grain-overlay" />
+      <BrowserRouter>
+        <AuthProvider>
+          <CustomCursor />
+          <AppRouter />
+        </AuthProvider>
+      </BrowserRouter>
+    </LenisScroll>
   );
 }
 

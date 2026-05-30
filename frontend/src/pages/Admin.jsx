@@ -81,7 +81,9 @@ function AdminPanel({
   const mapRef = useRef(null);
 
   // Нові стани для розширених преміум-фіч
-  const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, analytics, map, users, health, broadcast, logs, docs_cms
+  const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, analytics, map, users, health, broadcast, logs, docs_cms, waitlist
+  const [waitlistData, setWaitlistData] = useState(null);
+  const [waitlistBusy, setWaitlistBusy] = useState(null);
   const [detailedStats, setDetailedStats] = useState(null);
   const [healthMetrics, setHealthMetrics] = useState(null);
   const [activeMap, setActiveMap] = useState([]);
@@ -150,6 +152,12 @@ function AdminPanel({
         } catch (e) {
           console.error("Failed to fetch subadmins", e);
         }
+      }
+      try {
+        const wl = await api.get("/api/admin/waitlist");
+        setWaitlistData(wl.data);
+      } catch (e) {
+        console.warn("Failed to fetch waitlist", e);
       }
     } catch (err) {
       console.error("Admin refresh error", err);
@@ -2252,6 +2260,152 @@ function AdminPanel({
           </div>
         )}
 
+        {/* Tab: Waitlist (Early Access Queue) */}
+        {activeTab === "waitlist" && (
+          <div className="fade-in">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 800 }}>Черга запису на ранній доступ</h3>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+                  Список користувачів, що записались в чергу на бета-тестування Atlas AI
+                </div>
+              </div>
+              {waitlistData && (
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  {[
+                    { label: "Всього", value: waitlistData.total, color: "#00E5FF" },
+                    { label: "Очікують", value: waitlistData.pending, color: "#FEBC2E" },
+                    { label: "Схвалено", value: waitlistData.approved, color: "#28C840" },
+                    { label: "Відхилено", value: waitlistData.rejected, color: "#FF5F57" },
+                  ].map((s, i) => (
+                    <div key={i} style={{
+                      padding: "12px 20px", borderRadius: 16,
+                      background: "rgba(255,255,255,0.03)",
+                      border: `1px solid ${s.color}33`,
+                      textAlign: "center", minWidth: 90,
+                    }}>
+                      <div style={{ fontSize: 24, fontWeight: 800, color: s.color }}>{s.value}</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="glass" style={{ padding: 0, borderRadius: 20, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
+              {!waitlistData ? (
+                <div style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
+                  <Loader2 size={28} className="spin" />
+                </div>
+              ) : waitlistData.entries?.length === 0 ? (
+                <div style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: 15 }}>
+                  Поки що ніхто не записався. Список поповниться після реєстрації перших користувачів.
+                </div>
+              ) : (
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      {["#", "Ім'я / Email", "Тариф", "Країна", "Дата запису", "Статус", "Дії"].map((h, i) => (
+                        <th key={i} style={{ padding: "14px 16px", textAlign: "left", fontWeight: 600, color: "rgba(255,255,255,0.5)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em" }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {waitlistData.entries.map((entry, idx) => (
+                      <tr key={entry._id} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", transition: "background 0.2s" }}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      >
+                        <td style={{ padding: "14px 16px", color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>#{idx + 1}</td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ fontWeight: 600, color: "#fff" }}>{entry.name || "—"}</div>
+                          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>{entry.email}</div>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <span style={{
+                            padding: "4px 10px", borderRadius: 6,
+                            background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)",
+                            color: "#00E5FF", fontSize: 12, fontWeight: 600,
+                          }}>
+                            {entry.plan === "atlas_monthly" ? "Місячний" : entry.plan === "atlas_quarterly" ? "Квартальний" : "Річний"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "14px 16px", color: "rgba(255,255,255,0.7)" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span>{entry.country_code && entry.country_code !== "XX" ? `${entry.country_code}` : "🌍"}</span>
+                            <span>{entry.country || "Unknown"}</span>
+                          </div>
+                          {entry.city && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>{entry.city}</div>}
+                        </td>
+                        <td style={{ padding: "14px 16px", color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
+                          {entry.registered_at ? new Date(entry.registered_at).toLocaleDateString("uk-UA", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <span style={{
+                            padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700,
+                            background: entry.status === "approved" ? "rgba(40,200,64,0.12)" : entry.status === "rejected" ? "rgba(255,95,87,0.1)" : "rgba(254,188,46,0.1)",
+                            border: `1px solid ${entry.status === "approved" ? "rgba(40,200,64,0.3)" : entry.status === "rejected" ? "rgba(255,95,87,0.3)" : "rgba(254,188,46,0.3)"}`,
+                            color: entry.status === "approved" ? "#28C840" : entry.status === "rejected" ? "#FF5F57" : "#FEBC2E",
+                          }}>
+                            {entry.status === "approved" ? "✓ Схвалено" : entry.status === "rejected" ? "✗ Відхилено" : "⏳ Очікує"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          {entry.status === "pending" && (
+                            <div style={{ display: "flex", gap: 8 }}>
+                              <button
+                                disabled={waitlistBusy === entry._id}
+                                onClick={async () => {
+                                  setWaitlistBusy(entry._id);
+                                  try {
+                                    await api.patch(`/api/admin/waitlist/${entry._id}/approve`);
+                                    toast.success("Доступ надано!");
+                                    refresh();
+                                  } catch (e) {
+                                    toast.error("Помилка схвалення");
+                                  } finally { setWaitlistBusy(null); }
+                                }}
+                                style={{
+                                  padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 600,
+                                  background: "rgba(40,200,64,0.12)", border: "1px solid rgba(40,200,64,0.3)",
+                                  color: "#28C840", display: "flex", alignItems: "center", gap: 4,
+                                }}
+                              >
+                                {waitlistBusy === entry._id ? <Loader2 size={12} className="spin" /> : <ShieldCheck size={12} />} Схвалити
+                              </button>
+                              <button
+                                disabled={waitlistBusy === entry._id}
+                                onClick={async () => {
+                                  setWaitlistBusy(entry._id);
+                                  try {
+                                    await api.patch(`/api/admin/waitlist/${entry._id}/reject`);
+                                    toast.success("Відхилено");
+                                    refresh();
+                                  } catch { toast.error("Помилка"); } finally { setWaitlistBusy(null); }
+                                }}
+                                style={{
+                                  padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 600,
+                                  background: "rgba(255,95,87,0.1)", border: "1px solid rgba(255,95,87,0.3)",
+                                  color: "#FF5F57", display: "flex", alignItems: "center", gap: 4,
+                                }}
+                              >
+                                <ShieldOff size={12} /> Відхилити
+                              </button>
+                            </div>
+                          )}
+                          {entry.status !== "pending" && (
+                            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>—</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        )}
+
         {activeTab === "careers" && (
           <div className="fade-in">
             <h3 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 800 }}>{t("atlas_v2.admin.candidates_title") || "Заявки кандидатів"}</h3>
@@ -2359,6 +2513,8 @@ function AdminPanel({
           <SidebarButton icon={<FileText size={16} />} label={t("txt_1396")} active={activeTab === "logs"} onClick={() => setActiveTab("logs")} />
           <SidebarButton icon={<BookOpen size={16} />} label={t("txt_1397")} active={activeTab === "docs_cms"} onClick={() => setActiveTab("docs_cms")} />
           <SidebarButton icon={<Users size={16} />} label={t("atlas_v2.admin.candidates_tab") || "Кандидати"} active={activeTab === "careers"} onClick={() => setActiveTab("careers")} />
+          <SidebarButton icon={<Clock size={16} />} label="Черга запису" active={activeTab === "waitlist"} onClick={() => setActiveTab("waitlist")} />
+
           {user?.is_super_admin && (
              <SidebarButton icon={<ShieldCheck size={16} />} label="Адміністратори" active={activeTab === "admins"} onClick={() => setActiveTab("admins")} />
           )}
