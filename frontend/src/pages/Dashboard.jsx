@@ -39,7 +39,6 @@ export default function Dashboard() {
   // Waitlist state
   const [waitlist, setWaitlist] = useState(null);
   const [waitlistLoading, setWaitlistLoading] = useState(false);
-  const [waitlistPlan, setWaitlistPlan] = useState("atlas_quarterly");
   const [waitlistReason, setWaitlistReason] = useState("");
 
   const loadLicense = useCallback(async () => {
@@ -122,11 +121,11 @@ export default function Dashboard() {
     setWaitlistLoading(true);
     try {
       const r = await api.post("/api/billing/waitlist/join", {
-        plan: waitlistPlan,
+        plan: "early_access",
         reason: waitlistReason,
         name: user?.name || "",
       });
-      setWaitlist({ in_waitlist: true, position: r.data.position, status: r.data.status, plan: waitlistPlan });
+      setWaitlist({ in_waitlist: true, position: r.data.position, status: r.data.status, plan: "early_access" });
       toast.success(t("dashboard.waitlist_joined"));
     } catch (e) {
       toast.error(e?.response?.data?.detail || t("dashboard.waitlist_error"));

@@ -2327,7 +2327,7 @@ function AdminPanel({
                             background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)",
                             color: "#00E5FF", fontSize: 12, fontWeight: 600,
                           }}>
-                            {entry.plan === "atlas_monthly" ? "Місячний" : entry.plan === "atlas_quarterly" ? "Квартальний" : "Річний"}
+                            {entry.plan === "early_access" ? "Ранній доступ" : (entry.plan === "atlas_monthly" ? "Місячний" : entry.plan === "atlas_quarterly" ? "Квартальний" : "Річний")}
                           </span>
                         </td>
                         <td style={{ padding: "14px 16px", color: "rgba(255,255,255,0.7)" }}>
