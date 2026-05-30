@@ -17,27 +17,34 @@ export default function Privacy() {
       position: "absolute",
       top: 28,
       left: 28,
-      background: "rgba(255,255,255,0.06)",
-      border: "1px solid rgba(255,255,255,0.1)",
+      background: "transparent",
+      border: "none",
       color: "rgba(255,255,255,0.6)",
-      borderRadius: 999,
-      padding: "8px 16px",
-      fontSize: 13,
+      padding: "10px 0",
+      fontSize: 14,
       cursor: "pointer",
       display: "inline-flex",
       alignItems: "center",
       gap: 6,
-      zIndex: 10
+      zIndex: 10,
+      transition: "all 0.2s ease"
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.color = "#fff";
+      e.currentTarget.style.transform = "translateX(-4px)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)";
+      e.currentTarget.style.transform = "none";
     }}>
-        <ArrowLeft size={14} />{t("txt_1195")}</button>
+        <span style={{ fontSize: 14 }}>←</span> {t("txt_1195").replace("← ", "")}</button>
 
-      <div className="glass" style={{
+      <div style={{
       maxWidth: "100%",
       width: "100%",
       margin: "0 auto",
       padding: "40px 5%",
-      borderRadius: 24,
-      border: "1px solid rgba(255,255,255,0.08)"
+      background: "transparent"
     }}>
         <div style={{
         display: "flex",
@@ -105,10 +112,9 @@ export default function Privacy() {
         }].map((item, i) => <div key={i} style={{
           display: "flex",
           gap: 14,
-          background: "rgba(255,255,255,0.02)",
-          padding: 16,
-          borderRadius: 14,
-          border: "1px solid rgba(255,255,255,0.04)"
+          background: "transparent",
+          padding: "16px 0",
+          border: "none"
         }}>
               <div style={{
             color: "#00E5FF",

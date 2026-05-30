@@ -17,27 +17,34 @@ export default function Contacts() {
       position: "absolute",
       top: 28,
       left: 28,
-      background: "rgba(255,255,255,0.06)",
-      border: "1px solid rgba(255,255,255,0.1)",
+      background: "transparent",
+      border: "none",
       color: "rgba(255,255,255,0.6)",
-      borderRadius: 999,
-      padding: "8px 16px",
-      fontSize: 13,
+      padding: "10px 0",
+      fontSize: 14,
       cursor: "pointer",
       display: "inline-flex",
       alignItems: "center",
       gap: 6,
-      zIndex: 10
+      zIndex: 10,
+      transition: "all 0.2s ease"
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.color = "#fff";
+      e.currentTarget.style.transform = "translateX(-4px)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)";
+      e.currentTarget.style.transform = "none";
     }}>
-        <ArrowLeft size={14} />{t("txt_1230")}</button>
+        <span style={{ fontSize: 14 }}>←</span> {t("txt_1230").replace("← ", "")}</button>
 
-      <div className="glass" style={{
+      <div style={{
       maxWidth: "100%",
       width: "100%",
       margin: "0 auto",
       padding: "40px 5%",
-      borderRadius: 24,
-      border: "1px solid rgba(255,255,255,0.08)"
+      background: "transparent"
     }}>
         <div style={{
         display: "flex",
@@ -101,22 +108,22 @@ export default function Contacts() {
         }].map((item, i) => <a key={i} href={item.href} target={item.href.startsWith("http") ? "_blank" : "_self"} rel="noreferrer" style={{
           textDecoration: "none",
           color: "#fff",
-          padding: "24px 20px",
-          borderRadius: 16,
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.06)",
+          padding: "24px 0",
+          background: "transparent",
+          border: "none",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
           display: "flex",
           flexDirection: "column",
           gap: 12,
           transition: "all 0.3s ease"
         }} onMouseEnter={e => {
-          e.currentTarget.style.transform = "translateY(-4px)";
-          e.currentTarget.style.borderColor = "rgba(0,229,255,0.3)";
-          e.currentTarget.style.background = "rgba(0,229,255,0.02)";
+          e.currentTarget.style.transform = "translateX(8px)";
+          e.currentTarget.style.borderBottomColor = "rgba(0,229,255,0.6)";
+          e.currentTarget.style.background = "transparent";
         }} onMouseLeave={e => {
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
-          e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+          e.currentTarget.style.transform = "translateX(0)";
+          e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.06)";
+          e.currentTarget.style.background = "transparent";
         }}>
               <div style={{
             width: 40,

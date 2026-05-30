@@ -135,30 +135,36 @@ export default function SmartConcierge() {
           // Make the first card span 2 rows/cols for bento effect on desktop
           const isLarge = i === 0;
           return (
-          <article key={i} data-card data-testid={`concierge-card-${i}`} className={`bento-card ${isLarge ? 'bento-col-2 bento-row-2' : ''}`} style={{
+          <article key={i} data-card data-testid={`concierge-card-${i}`} className={`group ${isLarge ? 'bento-col-2 bento-row-2' : ''}`} style={{
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            position: "relative",
+            padding: "40px 32px",
+            borderRadius: 32,
+            background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%)",
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+            transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
           }}>
+            {/* Top ambient glow */}
             <div style={{
-          position: "absolute",
-          top: -60,
-          left: -60,
-          width: 220,
-          height: 220,
-          borderRadius: "50%",
-          background: item.grad,
-          filter: "blur(60px)",
-          opacity: 0.35,
-          pointerEvents: "none"
-        }} />
+              position: "absolute",
+              top: 0,
+              left: "20%",
+              right: "20%",
+              height: 1,
+              background: `linear-gradient(90deg, transparent, ${item.glow}55, transparent)`,
+              opacity: 0.5
+            }} />
 
             <div className="concierge-icon" style={{
-          width: 60,
-          height: 60,
-          borderRadius: 18,
+          width: 56,
+          height: 56,
+          borderRadius: 14,
           display: "grid",
           placeItems: "center",
-          background: "transparent",
+          background: `linear-gradient(135deg, ${item.glow}22, ${item.glow}05)`,
+          border: `1px solid ${item.glow}33`,
           marginBottom: 24,
           color: "#fff",
           position: "relative",

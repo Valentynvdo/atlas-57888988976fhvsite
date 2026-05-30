@@ -77,25 +77,28 @@ export default function MacOSControl() {
       </div>
 
       <div className="bento-grid" style={{ marginTop: 64 }}>
-        {cards.map((c, i) => <article key={i} data-testid={`macos-card-${i}`} className={`bento-card reveal delay-${i + 1}`} style={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: 380,
-        display: "flex",
-        flexDirection: "column"
-      }}>
-            {/* Accent corner glow */}
+        {cards.map((c, i) => <article key={i} data-testid={`macos-card-${i}`} className={`group reveal delay-${i + 1}`} style={{
+            position: "relative",
+            minHeight: 380,
+            display: "flex",
+            flexDirection: "column",
+            padding: "40px 32px",
+            borderRadius: 32,
+            background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%)",
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+            transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+          }}>
+            {/* Top ambient glow */}
             <div style={{
-          position: "absolute",
-          top: -80,
-          right: -80,
-          width: 220,
-          height: 220,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${c.accent}33, transparent 70%)`,
-          filter: "blur(20px)",
-          pointerEvents: "none"
-        }} />
+              position: "absolute",
+              top: 0,
+              left: "20%",
+              right: "20%",
+              height: 1,
+              background: `linear-gradient(90deg, transparent, ${c.accent}55, transparent)`,
+              opacity: 0.5
+            }} />
 
             {/* Mac window mockup top */}
             <div style={{
@@ -123,13 +126,15 @@ export default function MacOSControl() {
             <div style={{
           width: 56,
           height: 56,
-          borderRadius: 16,
+          borderRadius: 14,
           display: "grid",
           placeItems: "center",
-          background: "transparent",
-          border: "none",
+          background: `linear-gradient(135deg, ${c.accent}22, ${c.accent}05)`,
+          border: `1px solid ${c.accent}33`,
           color: c.accent,
-          marginBottom: 24
+          marginBottom: 24,
+          position: "relative",
+          zIndex: 1
         }}>
               {c.icon}
             </div>

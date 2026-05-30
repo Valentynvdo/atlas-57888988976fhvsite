@@ -184,8 +184,10 @@ export default function BentoFeatures() {
         }}
       >
         {scripts.map((script, i) => (
-          <div
+          <article
             key={i}
+            data-card 
+            data-testid={`features-card-${i}`}
             className="script-card group"
             style={{
               display: "flex",
@@ -193,20 +195,10 @@ export default function BentoFeatures() {
               position: "relative",
               padding: "40px 32px",
               borderRadius: 32,
-              background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 100%)",
-              borderTop: "1px solid rgba(255,255,255,0.06)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
+              background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%)",
+              borderTop: "1px solid rgba(255,255,255,0.05)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
               transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = `radial-gradient(140% 100% at 50% 0%, ${script.accent}15 0%, transparent 100%)`;
-              e.currentTarget.style.borderTop = `1px solid ${script.accent}33`;
-              e.currentTarget.style.transform = "translateY(-4px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 100%)";
-              e.currentTarget.style.borderTop = "1px solid rgba(255,255,255,0.06)";
-              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
             {/* Top ambient glow */}

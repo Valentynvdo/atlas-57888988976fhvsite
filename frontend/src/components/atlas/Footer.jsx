@@ -21,7 +21,17 @@ export default function Footer() {
       }}
     >
       <div
-        className="footer-container"
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "48px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 24,
+          borderTop: "1px solid rgba(255, 255, 255, 0.05)"
+        }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <img
@@ -39,26 +49,18 @@ export default function Footer() {
           </span>
         </div>
 
-        <div
-          style={{
-            fontSize: 13,
-            color: "rgba(255,255,255,0.5)",
-          }}
-        >
-          © {new Date().getFullYear()} Atlas AI. {t("footer.created_with_care")}
-        </div>
-
-        <div style={{ display: "flex", gap: 24 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px 24px" }}>
           {links.map((link) => (
             <Link
               key={link.label}
               to={link.path}
               data-testid={`footer-link-${link.label}`}
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: "rgba(255,255,255,0.6)",
                 textDecoration: "none",
                 transition: "color 0.3s ease",
+                whiteSpace: "nowrap"
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={(e) =>
@@ -68,6 +70,16 @@ export default function Footer() {
               {link.label}
             </Link>
           ))}
+        </div>
+
+        <div
+          style={{
+            fontSize: 13,
+            color: "rgba(255,255,255,0.4)",
+            marginTop: 8
+          }}
+        >
+          © {new Date().getFullYear()} Atlas AI. {t("footer.created_with_care")}
         </div>
       </div>
     </footer>
