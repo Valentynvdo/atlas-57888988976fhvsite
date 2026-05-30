@@ -48,33 +48,35 @@
         <script type="application/ld+json">
         {
           "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "Atlas AI",
-          "url": "https://atlas-assistant.online/",
-          "author": {
-            "@type": "Person",
-            "name": "Валентин Вдовіченко"
-          }
-        }
-        </script>
-        <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": "Atlas AI",
-          "operatingSystem": "macOS",
-          "applicationCategory": "UtilitiesApplication",
-          "description": "Автономний ШІ-асистент нового покоління для macOS, що інтегрується з системою, підтримує створення автономних скілів, обробку голосу, віддалене керування через Telegram та має локальну базу знань."
-        }
-        </script>
-        <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Валентин Вдовіченко",
-          "jobTitle": "AI Developer",
-          "url": "https://atlas-assistant.online/",
-          "knowsAbout": ["Artificial Intelligence", "Python", "React", "macOS Development", "Software Architecture"]
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": "https://atlas-assistant.online/#website",
+              "url": "https://atlas-assistant.online/",
+              "name": "Atlas AI",
+              "publisher": { "@id": "https://atlas-assistant.online/#person" }
+            },
+            {
+              "@type": "SoftwareApplication",
+              "name": "Atlas AI",
+              "operatingSystem": "macOS",
+              "applicationCategory": "UtilitiesApplication",
+              "description": "Автономний ШІ-асистент нового покоління для macOS, що інтегрується з системою, підтримує створення автономних скілів, обробку голосу, віддалене керування через Telegram та має локальну базу знань.",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "Person",
+              "@id": "https://atlas-assistant.online/#person",
+              "name": "Валентин Вдовіченко",
+              "jobTitle": "CEO & Founder of Atlas AI",
+              "url": "https://atlas-assistant.online/",
+              "knowsAbout": ["Artificial Intelligence", "Python", "React", "macOS Development", "Software Architecture"]
+            }
+          ]
         }
         </script>
         
