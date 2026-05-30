@@ -395,21 +395,6 @@ from fastapi import BackgroundTasks
 import random
 
 def _send_reset_email_sync(to_email: str, reset_code: str):
-    smtp_server = os.getenv("SMTP_SERVER")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_pass = os.getenv("SMTP_PASSWORD")
-    smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@atlas-assistant.online")
-
-    if not smtp_server or not smtp_user or not smtp_pass:
-        logger.warning(f"SMTP not configured. Would have sent reset code {reset_code} to {to_email}")
-        return
-
-    msg = MIMEMultipart()
-    msg['From'] = smtp_from
-    msg['To'] = to_email
-    msg['Subject'] = "Відновлення пароля Atlas AI"
-
     body = f"""
 Ви запитали відновлення пароля для вашого акаунта Atlas AI.
 
@@ -418,21 +403,42 @@ def _send_reset_email_sync(to_email: str, reset_code: str):
 Цей код дійсний протягом 15 хвилин.
 Якщо ви не робили цей запит, проігноруйте це повідомлення.
     """
-    msg.attach(MIMEText(body, 'plain'))
 
     # Always log the code before sending (useful if SMTP fails, e.g. on Render Free tier)
     logger.info(f"🔑 RESET CODE FOR {to_email}: {reset_code} 🔑")
 
+    resend_api_key = os.getenv("RESEND_API_KEY")
+    if not resend_api_key:
+        logger.warning(f"RESEND_API_KEY not configured. Would have sent reset code {reset_code} to {to_email}")
+        return
+
+    import httpx
+
+    # If SMTP_FROM is not set, use onboarding@resend.dev (Resend's testing email for free accounts)
+    from_email = os.getenv("SMTP_FROM", "Atlas AI Support <onboarding@resend.dev>")
+
+    payload = {
+        "from": from_email,
+        "to": [to_email],
+        "subject": "Відновлення пароля Atlas AI",
+        "text": body
+    }
+
+    headers = {
+        "Authorization": f"Bearer {resend_api_key}",
+        "Content-Type": "application/json"
+    }
+
     try:
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
-        server.login(smtp_user, smtp_pass)
-        text = msg.as_string()
-        server.sendmail(smtp_from, to_email, text)
-        server.quit()
-        logger.info(f"Reset email sent to {to_email}")
+        # Use a synchronous HTTP client since this is run in BackgroundTasks which might be async/sync
+        with httpx.Client() as client:
+            resp = client.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=10.0)
+            if resp.status_code >= 400:
+                logger.error(f"Failed to send reset email via Resend: {resp.text}")
+            else:
+                logger.info(f"Reset email sent successfully to {to_email} via Resend")
     except Exception as e:
-        logger.error(f"Failed to send reset email: {e}")
+        logger.error(f"Failed to send reset email via Resend API: {e}")
 
 @router.post("/forgot-password")
 async def forgot_password(body: dict, background_tasks: BackgroundTasks):
