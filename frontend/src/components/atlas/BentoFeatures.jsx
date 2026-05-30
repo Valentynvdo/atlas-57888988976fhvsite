@@ -1,103 +1,132 @@
 import React, { useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { Sparkles, Activity, Cpu, ShieldCheck, Zap, Globe } from "lucide-react";
+import { Terminal, Code, Cpu, Search, Contact, Eye, Heart, Lock, Zap, BrainCircuit } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BentoFeatures() {
-  const { t } = useTranslation();
   const sectionRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate individual bento cards on scroll
-      gsap.utils.toArray(".bento-reveal").forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { opacity: 0, y: 40, scale: 0.97 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            delay: i * 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 88%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
+      // Reveal header
+      gsap.fromTo(
+        ".bento-heading",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".bento-heading",
+            start: "top 80%",
+          },
+        }
+      );
 
-      // Staggered word reveal for the section heading
-      const heading = sectionRef.current?.querySelector(".bento-heading");
-      if (heading) {
-        const words = heading.textContent.split(" ").filter(Boolean);
-        heading.innerHTML = words
-          .map((w) => `<span class="bento-word" style="display:inline-block;opacity:0;transform:translateY(20px)">${w}&nbsp;</span>`)
-          .join("");
-
-        gsap.to(".bento-word", {
+      // Stagger reveal the cards
+      gsap.fromTo(
+        ".script-card",
+        { opacity: 0, y: 40 },
+        {
           opacity: 1,
           y: 0,
           stagger: 0.1,
-          duration: 0.7,
-          ease: "power2.out",
+          duration: 0.8,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: heading,
+            trigger: ".script-container",
             start: "top 85%",
           },
-        });
-      }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const cards = [
+  const scripts = [
     {
-      icon: <Cpu className="w-8 h-8 text-blue-400" />,
-      accent: "#007AFF",
-      tier: "8 / 12",
-      title: "Точність Neural Engine",
-      desc: "Відчуйте неперевершену швидкість завдяки нашій передовій архітектурі. Створено для виконання складних операцій без втрати жодного кадру.",
-      colSpan: "span 8",
-      rowSpan: "span 2",
-      large: true,
-    },
-    {
-      icon: <Activity className="w-7 h-7 text-purple-400" />,
-      accent: "#9D4CDD",
-      tier: "4 / 12",
-      title: "Телеметрія в реальному часі",
-      desc: "Кожна метрика системи фіксується та візуалізується миттєво, у реальному часі.",
-      colSpan: "span 4",
-      rowSpan: "span 2",
-      large: false,
-    },
-    {
-      icon: <Sparkles className="w-7 h-7 text-cyan-300" />,
+      file: "active_app_applescript_helper.py",
+      title: "Керування та AppleScript",
+      desc: "Пряме керування macOS: взаємодія з активними вікнами (Finder, Safari, Xcode, Terminal) та автоматизація дій через AppleScript.",
+      status: "Працює локально",
+      icon: <Terminal size={24} color="#00E5FF" />,
       accent: "#00E5FF",
-      tier: "6 / 12",
-      title: "120 Гц",
-      subtitle: "Підтримка ProMotion",
-      colSpan: "span 6",
-      rowSpan: "span 1",
-      metric: true,
     },
     {
-      icon: <ShieldCheck className="w-7 h-7 text-green-300" />,
+      file: "evolution.py · plan.md",
+      title: "Автономна Само-Еволюція",
+      desc: "Унікальний цикл самовдосконалення: асистент аналізує свої помилки, пише нові скіли, проводить тестування та оновлює свій код.",
+      status: "Працює локально",
+      icon: <Code size={24} color="#9D4CDD" />,
+      accent: "#9D4CDD",
+    },
+    {
+      file: "semantic_memory.py",
+      title: "Асоціативна Пам'ять",
+      desc: "Зберігає контекст розмов, важливі факти про користувача та вибудовує довготривалу семантичну пам'ять у локальному JSON.",
+      status: "Працює локально",
+      icon: <BrainCircuit size={24} color="#007AFF" />,
+      accent: "#007AFF",
+    },
+    {
+      file: "autonomous_researcher.py",
+      title: "Автономний Дослідник",
+      desc: "Самостійно шукає інформацію в мережі, агрегує джерела, перевіряє факти (fact_checker.py) та готує аналітичні звіти.",
+      status: "Працює локально",
+      icon: <Search size={24} color="#00E5FF" />,
+      accent: "#00E5FF",
+    },
+    {
+      file: "apple_notes_connector.py · contacts_connector.py",
+      title: "Нотатки та Контакти",
+      desc: "Глибока інтеграція з базою контактів macOS, читання та запис у Apple Notes, а також аналіз історії викликів.",
+      status: "Працює локально",
+      icon: <Contact size={24} color="#9D4CDD" />,
+      accent: "#9D4CDD",
+    },
+    {
+      file: "proactive_watcher.py",
+      title: "Проактивний Наглядач",
+      desc: "Стежить за файловою системою, новими файлами та подіями на екрані, щоб вчасно пропонувати автоматизацію рутинних завдань.",
+      status: "Працює локально",
+      icon: <Eye size={24} color="#007AFF" />,
+      accent: "#007AFF",
+    },
+    {
+      file: "emotion_recognition.py · sarcasm_detector.py",
+      title: "Емоційний Інтелект",
+      desc: "Визначає настрій користувача, аналізує рівень стресу, розпізнає сарказм та підлаштовує стиль відповідей.",
+      status: "Незабаром",
+      icon: <Heart size={24} color="#FF6B9A" />,
+      accent: "#FF6B9A",
+    },
+    {
+      file: "eye_strain_reminder.py · sleep_advisor.py",
+      title: "Турбота про Здоров'я",
+      desc: "Стежить за часом безперервної роботи, нагадує про перерви для очей та аналізує графік сну відповідно до активності.",
+      status: "Незабаром",
+      icon: <Heart size={24} color="#FF6B9A" />,
+      accent: "#FF6B9A",
+    },
+    {
+      file: "vision_handler.py",
+      title: "Зорове Сприйняття",
+      desc: "Аналізує інтерфейс та вміст екрана користувача, розпізнає активні області та розуміє візуальний контекст роботи.",
+      status: "Працює локально",
+      icon: <Eye size={24} color="#00E5FF" />,
+      accent: "#00E5FF",
+    },
+    {
+      file: "privacy_guard.py · security_manager.py",
+      title: "Конфіденційність та Безпека",
+      desc: "Захищає конфіденційні дані, блокує небезпечні команди, фільтрує витік токенів та паролів, шифрує логи розмов.",
+      status: "Працює локально",
+      icon: <Lock size={24} color="#28C840" />,
       accent: "#28C840",
-      tier: "6 / 12",
-      title: "99.9%",
-      subtitle: "Гарантія безвідмовної роботи",
-      colSpan: "span 6",
-      rowSpan: "span 1",
-      metric: true,
     },
   ];
 
@@ -105,17 +134,17 @@ export default function BentoFeatures() {
     <section
       ref={sectionRef}
       className="section-container"
-      style={{ padding: "120px 5%" }}
+      style={{ padding: "120px 5%", position: "relative" }}
     >
       {/* Section heading */}
-      <div style={{ textAlign: "center", marginBottom: 64 }}>
+      <div style={{ textAlign: "center", marginBottom: 80 }}>
         <div className="section-eyebrow" style={{ marginBottom: 16 }}>
-          Створено інакше
+          Автоматизація macOS
         </div>
         <h2
           className="bento-heading gradient-text"
           style={{
-            fontSize: "clamp(2rem, 5vw, 4rem)",
+            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
             fontWeight: 700,
             fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
             letterSpacing: "-0.04em",
@@ -123,209 +152,140 @@ export default function BentoFeatures() {
             margin: 0,
           }}
         >
-          Спроектовано для досконалості
+          Реальні дії
+          <br />
+          у реальному світі.
         </h2>
         <p
           style={{
-            marginTop: 20,
-            fontSize: 17,
+            marginTop: 24,
+            fontSize: 20,
             letterSpacing: "-0.43px",
             lineHeight: 1.55,
-            color: "rgba(255,255,255,0.6)",
-            maxWidth: 520,
-            margin: "20px auto 0",
+            color: "rgba(255,255,255,0.7)",
+            maxWidth: 680,
+            margin: "24px auto 0",
             fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
           }}
         >
-          Кожен компонент спроектовано для бездоганної роботи — система, що думає зі швидкістю думки.
+          Атлас автоматизує вашу роботу на Mac. Він взаємодіє з операційною системою, керує даними та програмами, забезпечуючи максимальну продуктивність.
         </p>
       </div>
 
-      {/* Bento Grid */}
-      <div className="bento-container">
-        {cards.map((card, i) => (
+      {/* Floating Scripts Grid */}
+      <div 
+        className="script-container"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+          gap: 32,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        {scripts.map((script, i) => (
           <div
             key={i}
-            className="bento-card bento-reveal"
+            className="script-card group"
             style={{
-              gridColumn: card.colSpan,
-              gridRow: card.rowSpan,
               display: "flex",
               flexDirection: "column",
-              justifyContent: card.metric ? "center" : "space-between",
-              minHeight: card.large ? 340 : card.metric ? 140 : 260,
               position: "relative",
-              overflow: "hidden",
+              padding: "40px 32px",
+              borderRadius: 32,
+              background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 100%)",
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
+              transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `radial-gradient(140% 100% at 50% 0%, ${script.accent}15 0%, transparent 100%)`;
+              e.currentTarget.style.borderTop = `1px solid ${script.accent}33`;
+              e.currentTarget.style.transform = "translateY(-4px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 100%)";
+              e.currentTarget.style.borderTop = "1px solid rgba(255,255,255,0.06)";
+              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            {/* Accent glow */}
-            <div
-              style={{
-                position: "absolute",
-                top: -80,
-                right: -80,
-                width: 220,
-                height: 220,
-                borderRadius: "50%",
-                background: `radial-gradient(circle, ${card.accent}22, transparent 70%)`,
-                filter: "blur(20px)",
-                pointerEvents: "none",
-              }}
-            />
+            {/* Top ambient glow */}
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: "20%",
+              right: "20%",
+              height: 1,
+              background: `linear-gradient(90deg, transparent, ${script.accent}55, transparent)`,
+              opacity: 0.5
+            }} />
 
-            {card.metric ? (
-              /* Metric card layout */
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 16,
-                    display: "grid",
-                    placeItems: "center",
-                    background: `linear-gradient(135deg, ${card.accent}22, ${card.accent}08)`,
-                    border: `1px solid ${card.accent}44`,
-                    flexShrink: 0,
-                  }}
-                >
-                  {card.icon}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "var(--sf-display, -apple-system, sans-serif)",
-                      fontSize: 28,
-                      fontWeight: 700,
-                      letterSpacing: "-0.8px",
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {card.title}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      letterSpacing: "0.12px",
-                      color: "rgba(255,255,255,0.5)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.15em",
-                      marginTop: 4,
-                    }}
-                  >
-                    {card.subtitle}
-                  </div>
-                </div>
+            {/* Header: Status & Script Name */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ 
+                  fontFamily: "var(--sf-text, monospace)", 
+                  fontSize: 12, 
+                  color: script.accent,
+                  background: `linear-gradient(90deg, ${script.accent}15, transparent)`,
+                  padding: "6px 14px",
+                  borderRadius: 8,
+                  borderLeft: `2px solid ${script.accent}`,
+                  letterSpacing: "0.02em"
+                }}>
+                  {script.file}
+                </span>
               </div>
-            ) : (
-              /* Feature card layout */
-              <>
-                <div>
-                  <div
-                    style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: 14,
-                      display: "grid",
-                      placeItems: "center",
-                      background: `linear-gradient(135deg, ${card.accent}22, ${card.accent}08)`,
-                      border: `1px solid ${card.accent}44`,
-                      marginBottom: 20,
-                    }}
-                  >
-                    {card.icon}
-                  </div>
-                  <h3
-                    style={{
-                      fontFamily: "var(--sf-display, -apple-system, sans-serif)",
-                      fontSize: card.large ? 28 : 22,
-                      fontWeight: 700,
-                      letterSpacing: card.large ? "-0.8px" : "-0.7px",
-                      lineHeight: 1.2,
-                      marginBottom: 12,
-                    }}
-                  >
-                    {card.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--sf-text, -apple-system, sans-serif)",
-                      fontSize: 15,
-                      letterSpacing: "0px",
-                      lineHeight: 1.55,
-                      color: "rgba(255,255,255,0.6)",
-                      maxWidth: card.large ? 480 : "100%",
-                    }}
-                  >
-                    {card.desc}
-                  </p>
-                </div>
+              <div style={{
+                fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: script.status === "Працює локально" ? "rgba(255,255,255,0.4)" : script.accent,
+                display: "flex",
+                alignItems: "center",
+                gap: 6
+              }}>
+                {script.status === "Працює локально" && <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff", opacity: 0.3 }} />}
+                {script.status}
+              </div>
+            </div>
 
-                {/* Bottom visual */}
-                {card.large && (
-                  <div
-                    style={{
-                      marginTop: 28,
-                      borderRadius: 14,
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      height: 80,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 12,
-                      transition: "transform 0.5s cubic-bezier(0.25,1,0.5,1)",
-                    }}
-                    className="hover:[transform:scale(1.02)]"
-                  >
-                    {[35, 55, 70, 45, 80, 60, 50, 75].map((h, j) => (
-                      <div
-                        key={j}
-                        style={{
-                          width: 4,
-                          height: h,
-                          borderRadius: 4,
-                          background: `linear-gradient(180deg, ${card.accent}, ${card.accent}44)`,
-                          opacity: 0.7 + (j % 3) * 0.1,
-                          animation: `barPulse ${1.5 + j * 0.2}s ease-in-out infinite alternate`,
-                        }}
-                      />
-                    ))}
-                    <style>{`
-                      @keyframes barPulse {
-                        0% { transform: scaleY(0.7); opacity: 0.5; }
-                        100% { transform: scaleY(1); opacity: 1; }
-                      }
-                    `}</style>
-                  </div>
-                )}
+            {/* Title & Icon */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                display: "grid",
+                placeItems: "center",
+                background: `linear-gradient(135deg, ${script.accent}22, ${script.accent}05)`,
+                border: `1px solid ${script.accent}33`,
+              }}>
+                {script.icon}
+              </div>
+              <h3 style={{
+                fontSize: 22,
+                fontWeight: 600,
+                margin: 0,
+                color: "#fff",
+                letterSpacing: "-0.02em",
+                fontFamily: "var(--sf-display, sans-serif)"
+              }}>
+                {script.title}
+              </h3>
+            </div>
 
-                {!card.large && (
-                  <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 8 }}>
-                    {[75, 52, 88].map((w, j) => (
-                      <div
-                        key={j}
-                        style={{
-                          height: 4,
-                          borderRadius: 4,
-                          background: "rgba(255,255,255,0.08)",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <div
-                          style={{
-                            height: "100%",
-                            width: `${w}%`,
-                            borderRadius: 4,
-                            background: `linear-gradient(90deg, ${card.accent}, ${card.accent}88)`,
-                            transition: "width 1.5s ease",
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
+            {/* Description */}
+            <p style={{
+              fontSize: 16,
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.6,
+              margin: 0,
+              fontFamily: "var(--sf-text, sans-serif)",
+            }}>
+              {script.desc}
+            </p>
           </div>
         ))}
       </div>

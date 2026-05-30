@@ -303,8 +303,8 @@ export default function AtlasComparison() {
               padding: "clamp(30px, 4vw, 50px)",
               display: "flex",
               flexDirection: "column",
-              background: "rgba(20, 20, 20, 0.4)",
-              border: "1px solid rgba(255,255,255,0.05)",
+              background: "transparent",
+              border: "none",
               filter: "grayscale(30%) opacity(0.8)",
               transition: "all 0.5s ease",
             }}

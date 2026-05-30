@@ -105,18 +105,12 @@ export default function WaitlistSection({ onCta }) {
           style={{
             borderRadius: 28,
             padding: "clamp(32px, 6vw, 56px) clamp(20px, 5vw, 48px)",
-            background: "linear-gradient(135deg, rgba(0,122,255,0.08) 0%, rgba(157,76,221,0.06) 50%, rgba(0,229,255,0.04) 100%)",
-            border: "1px solid rgba(0,122,255,0.2)",
             position: "relative",
             overflow: "hidden",
+            background: "transparent"
           }}
         >
-          {/* Background glow */}
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "radial-gradient(ellipse at 30% 50%, rgba(0,122,255,0.12) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(157,76,221,0.1) 0%, transparent 60%)",
-            pointerEvents: "none",
-          }} />
+          {/* Background glow removed to keep it floating */}
 
           <div style={{ position: "relative", zIndex: 1, display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ flex: "1 1 320px" }}>

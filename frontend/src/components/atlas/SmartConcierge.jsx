@@ -158,9 +158,9 @@ export default function SmartConcierge() {
           borderRadius: 18,
           display: "grid",
           placeItems: "center",
-          background: item.grad,
+          background: "transparent",
+          marginBottom: 24,
           color: "#fff",
-          boxShadow: `0 12px 32px ${item.glow}`,
           position: "relative",
           zIndex: 1
         }}>

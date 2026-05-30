@@ -1,13 +1,11 @@
-import { useTranslation } from "react-i18next";
-import { ScanFace, MapPin, Users, Heart } from "lucide-react";
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { ScanFace, MapPin, Users, Heart } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AbsoluteAwareness() {
-  const { t } = useTranslation();
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -45,15 +43,14 @@ export default function AbsoluteAwareness() {
       id="awareness"
       data-testid="awareness-section"
       className="section-container"
-      style={{ position: "relative" }}
+      style={{ position: "relative", padding: "120px 5%" }}
       ref={sectionRef}
     >
-      <div className="bento-container" style={{ gap: 24 }}>
-        {/* Text Section (Left on Desktop) */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 80, alignItems: "center", maxWidth: 1400, margin: "0 auto" }}>
+        {/* Text Section */}
         <article
-          className="bento-card reveal delay-1"
+          className="reveal delay-1"
           style={{
-            gridColumn: "span 7",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -68,23 +65,23 @@ export default function AbsoluteAwareness() {
             }}
           >
             <div className="section-eyebrow" style={{ marginBottom: 0 }}>
-              {t("atlas_v2.awareness.eyebrow")}
+              Абсолютна Свідомість
             </div>
             <div
               style={{
                 padding: "6px 10px",
                 borderRadius: 8,
-                background: "rgba(0, 229, 255, 0.1)",
-                border: "1px solid rgba(0, 229, 255, 0.2)",
+                background: "rgba(157, 76, 221, 0.1)",
+                border: "1px solid rgba(157, 76, 221, 0.2)",
                 fontSize: 10,
-                color: "#00E5FF",
+                color: "#E5B3FF",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 fontWeight: 700,
                 fontFamily: "var(--sf-text, -apple-system, sans-serif)",
               }}
             >
-              {t("atlas_v2.awareness.badge")}
+              Atlas Vision
             </div>
           </div>
           <h2
@@ -92,145 +89,131 @@ export default function AbsoluteAwareness() {
             data-testid="awareness-title"
             style={{
               marginTop: 0,
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontSize: "clamp(2.5rem, 5vw, 4rem)",
               lineHeight: 1.05,
               letterSpacing: "-0.04em",
               fontWeight: 700,
               fontFamily: "var(--sf-display, -apple-system, sans-serif)",
             }}
           >
-            {t("atlas_v2.awareness.title_1")}
+            Пам'ятає те,
             <br />
-            {t("atlas_v2.awareness.title_2")}
+            що важливо для вас
           </h2>
           <p
             style={{
               marginTop: 24,
               color: "rgba(255,255,255,0.7)",
-              fontSize: 17,
+              fontSize: 18,
               letterSpacing: "-0.43px",
               fontFamily: "var(--sf-text, -apple-system, sans-serif)",
-              lineHeight: 1.55,
-              maxWidth: 520,
+              lineHeight: 1.6,
+              maxWidth: 560,
             }}
           >
-            {t("atlas_v2.awareness.desc")}
+            Атлас впізнає вас в обличчя, пам'ятає ваші адреси, вподобання та імена ваших гостей, забезпечуючи абсолютно персоналізований досвід — без зайвих запитань.
           </p>
 
           <div
             style={{
-              marginTop: 40,
+              marginTop: 48,
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: 16,
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 40,
             }}
           >
             {[
               {
-                icon: <ScanFace size={20} color="#00E5FF" />,
-                title: t("atlas_v2.awareness.stat1_title"),
-                value: t("atlas_v2.awareness.stat1_val"),
+                icon: <ScanFace size={24} color="#00E5FF" />,
+                title: "Розпізнавання",
+                value: "Обличчя та Голос",
               },
               {
-                icon: <MapPin size={20} color="#007AFF" />,
-                title: t("atlas_v2.awareness.stat2_title"),
-                value: t("atlas_v2.awareness.stat2_val"),
+                icon: <MapPin size={24} color="#007AFF" />,
+                title: "Адреси",
+                value: "Дім · Робота",
               },
               {
-                icon: <Users size={20} color="#9D4CDD" />,
-                title: t("atlas_v2.awareness.stat3_title"),
-                value: t("atlas_v2.awareness.stat3_val"),
+                icon: <Users size={24} color="#9D4CDD" />,
+                title: "Контакти",
+                value: "Сім'я · Друзі",
               },
               {
-                icon: <Heart size={20} color="#FF6B9A" />,
-                title: t("atlas_v2.awareness.stat4_title"),
-                value: t("atlas_v2.awareness.stat4_val"),
+                icon: <Heart size={24} color="#FF6B9A" />,
+                title: "Вподобання",
+                value: "Завжди під рукою",
               },
             ].map((m, i) => (
               <div
                 key={i}
                 data-testid={`awareness-stat-${i}`}
                 style={{
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.05)",
-                  borderRadius: 18,
-                  padding: 16,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12
                 }}
               >
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 10,
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                    display: "grid",
-                    placeItems: "center",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    marginBottom: 10,
-                  }}
-                >
-                  {m.icon}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.5)",
-                    fontWeight: 600,
-                    fontFamily: "var(--sf-text, -apple-system, sans-serif)",
-                  }}
-                >
-                  {m.title}
-                </div>
-                <div
-                  style={{
-                    marginTop: 4,
-                    fontSize: 15,
-                    fontWeight: 600,
-                    fontFamily: "var(--sf-text, -apple-system, sans-serif)",
-                  }}
-                >
-                  {m.value}
+                {m.icon}
+                <div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.5)",
+                      fontWeight: 600,
+                      marginBottom: 4
+                    }}
+                  >
+                    {m.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      color: "#fff"
+                    }}
+                  >
+                    {m.value}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </article>
 
-        {/* Biometric visual (Right on Desktop) */}
+        {/* Biometric visual */}
         <article
-          className="bento-card reveal"
+          className="reveal"
           style={{
-            gridColumn: "span 5",
             position: "relative",
             aspectRatio: "1 / 1",
-            minHeight: 350,
-            maxHeight: 500,
+            minHeight: 400,
+            maxHeight: 600,
             margin: "auto 0",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            overflow: "hidden",
           }}
           data-testid="awareness-visual"
         >
-          {/* Accent corner glow inside the right bento card */}
           <div
             style={{
               position: "absolute",
-              top: -80,
-              right: -80,
-              width: 220,
-              height: 220,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, rgba(157,76,221,0.22), transparent 70%)`,
-              filter: "blur(20px)",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "120%",
+              height: "120%",
+              background: `radial-gradient(circle, rgba(157,76,221,0.15), transparent 60%)`,
+              filter: "blur(40px)",
               pointerEvents: "none",
+              zIndex: 0
             }}
           />
-          <FaceIDOrb />
+          <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
+            <FaceIDOrb />
+          </div>
         </article>
       </div>
     </section>
@@ -238,34 +221,19 @@ export default function AbsoluteAwareness() {
 }
 
 function FaceIDOrb() {
-  const { t } = useTranslation();
   return (
     <div
-      className="glass"
       style={{
         position: "absolute",
         inset: 0,
-        borderRadius: 32,
         padding: 0,
-        overflow: "hidden",
       }}
     >
-      {/* Ambient glow */}
-      <div
-        style={{
-          position: "absolute",
-          inset: -40,
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(157,76,221,0.25), transparent 60%)",
-          filter: "blur(20px)",
-        }}
-      />
-
       {/* Center orb */}
       <div
         style={{
           position: "absolute",
-          inset: "12% 12%",
+          inset: "15% 15%",
           borderRadius: "50%",
           background:
             "radial-gradient(circle at 35% 30%, #2a2a3a 0%, #0a0a14 60%, #050510 100%)",
@@ -289,10 +257,6 @@ function FaceIDOrb() {
             <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.6" />
             <stop offset="100%" stopColor="#9D4CDD" stopOpacity="0.6" />
           </linearGradient>
-          <radialGradient id="dotGrad">
-            <stop offset="0%" stopColor="#00E5FF" />
-            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
-          </radialGradient>
         </defs>
 
         {/* Animated rings */}
@@ -318,32 +282,6 @@ function FaceIDOrb() {
             />
           </circle>
         ))}
-
-        {/* Face dot pattern */}
-        {Array.from({ length: 60 }).map((_, i) => {
-          const angle = (i / 60) * Math.PI * 2;
-          const radius = 16 + (i % 3) * 2;
-          const cx = 50 + Math.cos(angle) * radius;
-          const cy = 50 + Math.sin(angle) * radius;
-          return (
-            <circle
-              key={i}
-              cx={cx}
-              cy={cy}
-              r="0.6"
-              fill="#00E5FF"
-              opacity="0.7"
-            >
-              <animate
-                attributeName="opacity"
-                values="0.2;1;0.2"
-                dur={`${2 + (i % 4)}s`}
-                repeatCount="indefinite"
-                begin={`${i * 0.05}s`}
-              />
-            </circle>
-          );
-        })}
 
         {/* Center FaceID icon */}
         <g transform="translate(50,50)">
@@ -374,25 +312,22 @@ function FaceIDOrb() {
         </g>
       </svg>
 
-      {/* Bottom badge */}
+      {/* Floating badge */}
       <div
         style={{
           position: "absolute",
-          left: 24,
-          bottom: 24,
-          width: 110,
-          height: 110,
-          padding: 16,
+          left: "10%",
+          bottom: "10%",
+          padding: "16px 24px",
           borderRadius: 24,
-          background: "rgba(0,0,0,0.4)",
+          background: "rgba(0,0,0,0.6)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
+          alignItems: "center",
+          gap: 16
         }}
       >
         <div
@@ -400,43 +335,24 @@ function FaceIDOrb() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: 32,
-            height: 32,
-            borderRadius: 10,
-            background: "rgba(157,76,221,0.15)",
-            border: "1px solid rgba(157,76,221,0.3)",
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            background: "#9D4CDD",
+            boxShadow: "0 0 12px #9D4CDD",
           }}
-        >
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: "#9D4CDD",
-              boxShadow: "0 0 12px #9D4CDD",
-            }}
-          />
-        </div>
+        />
         <div
           style={{
-            fontSize: 13,
-            fontFamily: "var(--sf-text, -apple-system, sans-serif)",
+            fontSize: 14,
             color: "rgba(255,255,255,0.9)",
             fontWeight: 600,
             lineHeight: 1.3,
           }}
         >
-          Recognition
+          Розпізнавання
           <br />
-          <span
-            style={{
-              color: "rgba(255,255,255,0.5)",
-              fontSize: 11,
-              fontWeight: 500,
-            }}
-          >
-            is active
-          </span>
+          <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>активоване</span>
         </div>
       </div>
     </div>

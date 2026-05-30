@@ -126,10 +126,9 @@ export default function MacOSControl() {
           borderRadius: 16,
           display: "grid",
           placeItems: "center",
-          background: `linear-gradient(135deg, ${c.accent}33, ${c.accent}11)`,
-          border: `1px solid ${c.accent}55`,
+          background: "transparent",
+          border: "none",
           color: c.accent,
-          boxShadow: `0 0 32px ${c.accent}33`,
           marginBottom: 24
         }}>
               {c.icon}

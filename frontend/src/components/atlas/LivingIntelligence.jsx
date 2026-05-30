@@ -89,10 +89,7 @@ export default function LivingIntelligence() {
               <div
                 key={i}
                 style={{
-                  padding: "16px",
-                  borderRadius: 16,
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.05)",
+                  padding: "0",
                   display: "flex",
                   flexDirection: "column",
                   gap: 12,
