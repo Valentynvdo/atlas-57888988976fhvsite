@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import CustomCursor from "./components/CustomCursor";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
@@ -74,9 +74,16 @@ const PageLoader = () => (
 
 function AppRouter() {
   const location = useLocation();
+
+  // Force scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   if (location.hash?.includes("session_id=")) {
     return <AuthCallback />;
   }
+
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>

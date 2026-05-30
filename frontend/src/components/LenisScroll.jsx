@@ -16,13 +16,15 @@ export default function LenisScroll({ children }) {
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    const rafCallback = (time) => {
       lenis.raf(time * 1000);
-    });
+    };
+    gsap.ticker.add(rafCallback);
     
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      gsap.ticker.remove(rafCallback);
       lenis.destroy();
     };
   }, []);

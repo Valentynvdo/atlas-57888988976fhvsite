@@ -13,7 +13,7 @@ export default function useScrollReveal() {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting || entry.boundingClientRect.top <= 0) {
             entry.target.classList.add("in-view");
             io.unobserve(entry.target);
           }
