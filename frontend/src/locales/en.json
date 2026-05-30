@@ -864,6 +864,11 @@
     "alloc_infra": "Infrastructure & AI Models",
     "contact_btn": "Contact Founder",
     "progress_label": "Round Filling",
-    "progress_status": "Active Phase"
+    "progress_status": "Active Phase",
+    "fomo_hard_cap": "Hard Cap: $150,000. Overcommitments will be placed on the Series A waitlist.",
+    "fomo_tranche_1": "Early Backer Tranche (Valuation: $2M)",
+    "fomo_tranche_2": "Standard Tranche (Valuation: $4M)",
+    "fomo_remaining": "Only $42,500 remaining at this valuation",
+    "fomo_filled": "5% Filled"
   }
 }

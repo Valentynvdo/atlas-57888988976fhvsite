@@ -31,7 +31,7 @@ export default function Investors() {
       
       // Progress bar animation
       gsap.to(".progress-fill", {
-        width: "35%", // Visual representation, e.g. 35% filled
+        width: "5%", // Visual representation, e.g. 5% filled
         duration: 1.5,
         delay: 0.5,
         ease: "power3.out"
@@ -167,17 +167,25 @@ export default function Investors() {
                 </div>
                 <h2 style={{ fontSize: 24, fontWeight: 600 }}>{t("investors_page.goal_title")}</h2>
               </div>
-              <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 32 }}>
+              <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 16 }}>
                 {t("investors_page.goal_desc")}
               </p>
+              
+              <div style={{ padding: "12px 16px", background: "rgba(255,60,60,0.1)", border: "1px solid rgba(255,60,60,0.2)", borderRadius: 12, color: "#ff8080", fontSize: 14, marginBottom: 32, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ display: "block", width: 8, height: 8, borderRadius: "50%", background: "#ff4d4d", boxShadow: "0 0 10px #ff4d4d" }} />
+                {t("investors_page.fomo_hard_cap")}
+              </div>
               
               <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 16, padding: "24px", border: "1px solid rgba(255,255,255,0.05)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
                   <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>{t("investors_page.progress_label")}</span>
                   <span style={{ color: "#00E5FF", fontSize: 14, fontWeight: 600 }}>{t("investors_page.progress_status")}</span>
                 </div>
-                <div style={{ height: 8, background: "rgba(255,255,255,0.1)", borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: 8, background: "rgba(255,255,255,0.1)", borderRadius: 4, overflow: "hidden", marginBottom: 8 }}>
                   <div className="progress-fill" style={{ width: "0%", height: "100%", background: "linear-gradient(90deg, #007AFF, #00E5FF)", borderRadius: 4 }} />
+                </div>
+                <div style={{ textAlign: "right", fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+                  {t("investors_page.fomo_filled")}
                 </div>
               </div>
             </div>
@@ -188,6 +196,56 @@ export default function Investors() {
               </div>
               <div style={{ fontSize: 18, color: "rgba(255,255,255,0.5)", marginTop: 8 }}>
                 Target Seed Capital
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FOMO Valuation Tranches Card */}
+        <div 
+          className="investor-reveal"
+          style={{
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 32,
+            padding: "40px",
+            marginBottom: 32,
+            position: "relative",
+            overflow: "hidden"
+          }}
+        >
+          <div style={{ position: "absolute", top: -50, left: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(157,76,221,0.1) 0%, transparent 70%)", filter: "blur(30px)" }} />
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 24, position: "relative", zIndex: 1 }}>
+            <h3 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>Valuation Tranches</h3>
+            
+            {/* Tranche 1 (Active) */}
+            <div style={{ background: "rgba(0, 229, 255, 0.05)", border: "1px solid rgba(0, 229, 255, 0.2)", borderRadius: 20, padding: "24px", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", right: -20, top: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(0,229,255,0.2) 0%, transparent 70%)", filter: "blur(20px)" }} />
+              
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+                <div>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0, 229, 255, 0.1)", color: "#00E5FF", padding: "4px 12px", borderRadius: 999, fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+                    <span style={{ display: "block", width: 6, height: 6, borderRadius: "50%", background: "#00E5FF", boxShadow: "0 0 8px #00E5FF" }} />
+                    Active Now
+                  </div>
+                  <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 4 }}>{t("investors_page.fomo_tranche_1")}</div>
+                  <div style={{ color: "#E5B3FF", fontSize: 14, fontWeight: 500 }}>
+                    {t("investors_page.fomo_remaining")}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tranche 2 (Upcoming) */}
+            <div style={{ background: "rgba(255, 255, 255, 0.02)", border: "1px dashed rgba(255, 255, 255, 0.1)", borderRadius: 20, padding: "24px", opacity: 0.6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 4, color: "rgba(255,255,255,0.8)" }}>{t("investors_page.fomo_tranche_2")}</div>
+                  <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>
+                    Opens after Tranche 1 is filled
+                  </div>
+                </div>
               </div>
             </div>
           </div>

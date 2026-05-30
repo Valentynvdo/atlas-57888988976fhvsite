@@ -864,6 +864,11 @@
     "alloc_infra": "Інфраструктура та AI Моделі",
     "contact_btn": "Зв'язатись із Засновником",
     "progress_label": "Заповнення раунду",
-    "progress_status": "Активна фаза"
+    "progress_status": "Активна фаза",
+    "fomo_hard_cap": "Hard Cap: $150,000. Заявки понад цю суму переносяться у Waitlist на Series A.",
+    "fomo_tranche_1": "Early Backer Tranche (Оцінка: $2M)",
+    "fomo_tranche_2": "Standard Tranche (Оцінка: $4M)",
+    "fomo_remaining": "Залишилося лише $42,500 за цією оцінкою",
+    "fomo_filled": "Заповнено на 5%"
   }
 }
