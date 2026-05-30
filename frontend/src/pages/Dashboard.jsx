@@ -178,6 +178,8 @@ export default function Dashboard() {
     );
   }
 
+  const hasAccess = license?.status === "active";
+
   return (
     <div data-testid="dashboard-page" className="dashboard-wrapper">
       <Toaster theme="dark" position="top-center" />
@@ -277,71 +279,95 @@ export default function Dashboard() {
 
       <main className="dashboard-main bento-grid">
         {/* ----- Block 1: License Key ----- */}
-        <section data-testid="key-block" className="bento-item col-span-8" style={{ borderColor: "rgba(0, 229, 255, 0.2)" }}>
+        <section data-testid="key-block" className="bento-item col-span-8" style={{ borderColor: "rgba(0, 229, 255, 0.2)", position: "relative" }}>
           <SectionHeader title={t("dashboard.license_block_title")} eyebrow={t("dashboard.license_block_eyebrow")} />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: 24,
-              borderRadius: 16,
-              background: "rgba(0,0,0,0.6)",
-              border: "1px solid rgba(0, 229, 255, 0.2)",
-              fontFamily: "'Source Code Pro', monospace",
-              fontSize: 22,
-              fontWeight: 700,
-              color: "#00E5FF",
-              letterSpacing: "0.06em",
-              filter: keyHidden ? "blur(8px)" : "none",
-              transition: "filter 0.3s ease",
-              userSelect: keyHidden ? "none" : "text",
-              wordBreak: "break-all",
-              boxShadow: "inset 0 2px 10px rgba(0,0,0,0.5)"
-            }}
-            data-testid="license-key-value"
-          >
-            {license.key}
-          </div>
-          <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
-            <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="cta-btn" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-              {keyHidden ? <Eye size={16} /> : <EyeOff size={16} />} {keyHidden ? t("dashboard.show_key") : t("dashboard.hide_key")}
-            </button>
-            <button data-testid="copy-key-btn" onClick={copyKey} className="cta-btn" style={{ background: "rgba(0, 229, 255, 0.15)", border: "1px solid rgba(0, 229, 255, 0.3)", color: "#00E5FF" }}>
-              <Copy size={16} /> {t("dashboard.copy_btn")}
-            </button>
-            {license.mac_id && (
-              <button
-                data-testid="transfer-btn"
-                onClick={() => setConfirmTransfer(true)}
-                className="ghost-btn"
-                style={{ fontSize: 14 }}
-              >
-                <ArrowRightLeft size={16} /> {t("dashboard.transfer_btn")}
+          <div style={!hasAccess ? { filter: "blur(6px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 } : {}}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: 24,
+                borderRadius: 16,
+                background: "rgba(0,0,0,0.6)",
+                border: "1px solid rgba(0, 229, 255, 0.2)",
+                fontFamily: "'Source Code Pro', monospace",
+                fontSize: 22,
+                fontWeight: 700,
+                color: "#00E5FF",
+                letterSpacing: "0.06em",
+                filter: keyHidden ? "blur(8px)" : "none",
+                transition: "filter 0.3s ease",
+                userSelect: keyHidden ? "none" : "text",
+                wordBreak: "break-all",
+                boxShadow: "inset 0 2px 10px rgba(0,0,0,0.5)"
+              }}
+              data-testid="license-key-value"
+            >
+              {hasAccess ? license.key : "XXXX-XXXX-XXXX-XXXX-XXXX"}
+            </div>
+            <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
+              <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="cta-btn" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                {keyHidden ? <Eye size={16} /> : <EyeOff size={16} />} {keyHidden ? t("dashboard.show_key") : t("dashboard.hide_key")}
               </button>
-            )}
+              <button data-testid="copy-key-btn" onClick={copyKey} className="cta-btn" style={{ background: "rgba(0, 229, 255, 0.15)", border: "1px solid rgba(0, 229, 255, 0.3)", color: "#00E5FF" }}>
+                <Copy size={16} /> {t("dashboard.copy_btn")}
+              </button>
+              {license.mac_id && (
+                <button
+                  data-testid="transfer-btn"
+                  onClick={() => setConfirmTransfer(true)}
+                  className="ghost-btn"
+                  style={{ fontSize: 14 }}
+                >
+                  <ArrowRightLeft size={16} /> {t("dashboard.transfer_btn")}
+                </button>
+              )}
+            </div>
+            <div
+              style={{
+                marginTop: 24,
+                fontSize: 14,
+                fontWeight: 500,
+                color: license.mac_id ? "#28C840" : "rgba(255,255,255,0.5)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+              data-testid="activation-status"
+            >
+              {license.mac_id ? <Check size={16} /> : <AlertTriangle size={16} />}
+              {license.mac_id
+                ? `${t("dashboard.activated_on")} ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
+                : t("dashboard.not_activated")}
+            </div>
           </div>
-          <div
-            style={{
-              marginTop: 24,
-              fontSize: 14,
-              fontWeight: 500,
-              color: license.mac_id ? "#28C840" : "rgba(255,255,255,0.5)",
-              display: "flex",
-              alignItems: "center",
-              gap: 8
-            }}
-            data-testid="activation-status"
-          >
-            {license.mac_id ? <Check size={16} /> : <AlertTriangle size={16} />}
-            {license.mac_id
-              ? `${t("dashboard.activated_on")} ${license.mac_name || "Mac"} · ${license.mac_id.slice(0, 8)}…`
-              : t("dashboard.not_activated")}
-          </div>
+          {!hasAccess && (
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: 28,
+              background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              justifyContent: "center", padding: 32, textAlign: "center", zIndex: 2,
+            }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%",
+                background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
+                display: "grid", placeItems: "center", marginBottom: 16,
+              }}>
+                <Lock size={24} color="#00E5FF" />
+              </div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
+                {t("dashboard.download_locked_title")}
+              </div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, maxWidth: 280 }}>
+                {t("dashboard.download_locked_desc")}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* ----- Block 2: Telegram Bot ----- */}
-        <section data-testid="telegram-block" className="bento-item col-span-4" style={{ background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", borderColor: "rgba(0, 136, 204, 0.3)" }}>
+        <section data-testid="telegram-block" className="bento-item col-span-4" style={{ background: "linear-gradient(135deg, rgba(0, 136, 204, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%)", borderColor: "rgba(0, 136, 204, 0.3)", position: "relative" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
             <SectionHeader title={t("dashboard.tg_block_title")} eyebrow={t("dashboard.tg_block_eyebrow")} />
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)", display: "grid", placeItems: "center", color: "#fff", boxShadow: "0 4px 15px rgba(0, 136, 204, 0.4)" }}>
@@ -349,58 +375,79 @@ export default function Dashboard() {
             </div>
           </div>
           
-          <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: 15, lineHeight: 1.6, marginBottom: 28 }}>
-            {t("dashboard.tg_desc")}
-          </p>
+          <div style={!hasAccess ? { filter: "blur(6px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 } : {}}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: 15, lineHeight: 1.6, marginBottom: 28 }}>
+              {t("dashboard.tg_desc")}
+            </p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
-            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>1</div>
-              <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                <Trans i18nKey="dashboard.tg_step_1">Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.</Trans>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
+              <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>1</div>
+                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+                  <Trans i18nKey="dashboard.tg_step_1">Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.</Trans>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>2</div>
+                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+                  <Trans i18nKey="dashboard.tg_step_2">Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.</Trans>
+                </div>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>2</div>
-              <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                <Trans i18nKey="dashboard.tg_step_2">Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.</Trans>
-              </div>
-            </div>
+
+            <a
+              href={`https://t.me/Atlas_aimac_bot?start=ACT_${encodeURIComponent(license.key || "pending")}`}
+              target="_blank"
+              rel="noreferrer"
+              className="cta-btn"
+              style={{
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
+                border: "none",
+                boxShadow: "0 6px 20px rgba(0, 136, 204, 0.4)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                padding: "16px 32px",
+                borderRadius: 16,
+                fontSize: 16,
+                fontWeight: 600,
+                width: "100%",
+                maxWidth: 340,
+                cursor: "pointer",
+                transition: "all 0.3s ease"
+              }}
+            >
+              <MessageSquare size={18} /> {t("dashboard.tg_btn")}
+            </a>
           </div>
-
-          <a
-            href={`https://t.me/Atlas_aimac_bot?start=ACT_${encodeURIComponent(license.key)}`}
-            target="_blank"
-            rel="noreferrer"
-            className="cta-btn"
-            style={{
-              textDecoration: "none",
-              background: "linear-gradient(135deg, #0088cc 0%, #00a2ed 100%)",
-              border: "none",
-              boxShadow: "0 6px 20px rgba(0, 136, 204, 0.4)",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              padding: "16px 32px",
-              borderRadius: 16,
-              fontSize: 16,
-              fontWeight: 600,
-              width: "100%",
-              maxWidth: 340,
-              cursor: "pointer",
-              transition: "all 0.3s ease"
-            }}
-          >
-            <MessageSquare size={18} /> {t("dashboard.tg_btn")}
-          </a>
+          {!hasAccess && (
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: 28,
+              background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              justifyContent: "center", padding: 32, textAlign: "center", zIndex: 2,
+            }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%",
+                background: "rgba(0,136,204,0.1)", border: "1px solid rgba(0,136,204,0.25)",
+                display: "grid", placeItems: "center", marginBottom: 16,
+              }}>
+                <Lock size={24} color="#00a2ed" />
+              </div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
+                {t("dashboard.download_locked_title")}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* ----- Block 3: Download (Blurred) ----- */}
         <section data-testid="download-block" className="bento-item col-span-6" style={{ position: "relative" }}>
           <SectionHeader title={t("dashboard.download_title")} eyebrow={t("dashboard.download_eyebrow")} />
-          {/* Blurred content */}
-          <div style={{ filter: "blur(6px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 }}>
+          {/* Content */}
+          <div style={!hasAccess ? { filter: "blur(6px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 } : {}}>
             <div style={{ marginTop: 16, padding: "16px", borderRadius: "12px", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
               <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 8 }}>{t("dashboard.download_desc")}</div>
               <code style={{ display: "block", color: "#00E5FF", fontFamily: "monospace", fontSize: 14 }}>
@@ -415,26 +462,28 @@ export default function Dashboard() {
             </ol>
           </div>
           {/* Overlay */}
-          <div style={{
-            position: "absolute", inset: 0, borderRadius: 28,
-            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)",
-            display: "flex", flexDirection: "column", alignItems: "center",
-            justifyContent: "center", padding: 32, textAlign: "center",
-          }}>
+          {!hasAccess && (
             <div style={{
-              width: 56, height: 56, borderRadius: "50%",
-              background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
-              display: "grid", placeItems: "center", marginBottom: 16,
+              position: "absolute", inset: 0, borderRadius: 28,
+              background: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              justifyContent: "center", padding: 32, textAlign: "center", zIndex: 2,
             }}>
-              <Lock size={24} color="#00E5FF" />
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%",
+                background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
+                display: "grid", placeItems: "center", marginBottom: 16,
+              }}>
+                <Lock size={24} color="#00E5FF" />
+              </div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
+                {t("dashboard.download_locked_title")}
+              </div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, maxWidth: 280 }}>
+                {t("dashboard.download_locked_desc")}
+              </div>
             </div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
-              {t("dashboard.download_locked_title")}
-            </div>
-            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, maxWidth: 280 }}>
-              {t("dashboard.download_locked_desc")}
-            </div>
-          </div>
+          )}
         </section>
 
 
