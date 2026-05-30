@@ -420,6 +420,9 @@ def _send_reset_email_sync(to_email: str, reset_code: str):
     """
     msg.attach(MIMEText(body, 'plain'))
 
+    # Always log the code before sending (useful if SMTP fails, e.g. on Render Free tier)
+    logger.info(f"🔑 RESET CODE FOR {to_email}: {reset_code} 🔑")
+
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
