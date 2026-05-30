@@ -47,13 +47,13 @@ function Landing() {
       <Navbar onCta={() => navigate("/login")} />
       <Hero onCta={() => navigate("/login")} />
       <AtlasLiveThought />
+      <TechInfrastructure />
       <LivingIntelligence />
       <MacOSControl />
       <SmartConcierge />
       <AbsoluteAwareness />
       <AtlasInteractions />
       <AtlasComparison />
-      <TechInfrastructure />
       <WaitlistSection onCta={() => navigate("/login")} />
       <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
