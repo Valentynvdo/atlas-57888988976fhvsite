@@ -121,7 +121,7 @@ export default function Investors() {
         </div>
       </header>
 
-      <main style={{ padding: "100px 5% 120px", maxWidth: 1400, margin: "0 auto", position: "relative", zIndex: 1 }}>
+      <main style={{ padding: "100px 3vw 120px", maxWidth: "100%", margin: "0 auto", position: "relative", zIndex: 1, overflowX: "hidden" }}>
         
         {/* HERO SECTION */}
         <div className="hero-reveal" style={{ textAlign: "center", maxWidth: 1000, margin: "0 auto 120px" }}>
