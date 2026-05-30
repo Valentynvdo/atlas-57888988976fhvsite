@@ -25,7 +25,7 @@
   margin: 0 auto;
 }
 
-.bento-grid {
+.dashboard-bento-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 24px;
@@ -73,7 +73,7 @@
   .col-span-8, .col-span-4, .col-span-6 { grid-column: span 12; }
 }
 
-.section-eyebrow {
+.dashboard-eyebrow {
   color: #00E5FF;
   font-size: 11px;
   letter-spacing: 0.2em;
@@ -103,19 +103,19 @@
   backdrop-filter: blur(10px);
 }
 
-.mac-dots {
+.dashboard-mac-dots {
   display: flex;
   gap: 8px;
 }
 
-.mac-dots span {
+.dashboard-mac-dots span {
   width: 12px;
   height: 12px;
   border-radius: 50%;
 }
-.mac-dots span:nth-child(1) { background: #FF5F57; }
-.mac-dots span:nth-child(2) { background: #FEBC2E; }
-.mac-dots span:nth-child(3) { background: #28C840; }
+.dashboard-mac-dots span:nth-child(1) { background: #FF5F57; }
+.dashboard-mac-dots span:nth-child(2) { background: #FEBC2E; }
+.dashboard-mac-dots span:nth-child(3) { background: #28C840; }
 
 .pricing-grid {
   display: grid;

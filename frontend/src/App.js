@@ -77,7 +77,20 @@ function AppRouter() {
 
   // Force scroll to top on route change
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    
+    // Give DOM a tick to render new components, then refresh ScrollTrigger
+    const timeout = setTimeout(() => {
+      import("gsap/ScrollTrigger").then((module) => {
+        module.default.refresh();
+      });
+    }, 100);
+
+    return () => clearTimeout(timeout);
   }, [location.pathname]);
 
   if (location.hash?.includes("session_id=")) {

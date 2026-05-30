@@ -14,6 +14,8 @@ export default function LenisScroll({ children }) {
       touchMultiplier: 1.1,
     });
 
+    window.lenis = lenis; // Expose globally for route changes
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const rafCallback = (time) => {
@@ -26,6 +28,7 @@ export default function LenisScroll({ children }) {
     return () => {
       gsap.ticker.remove(rafCallback);
       lenis.destroy();
+      if (window.lenis === lenis) delete window.lenis;
     };
   }, []);
 

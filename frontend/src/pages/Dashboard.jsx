@@ -276,7 +276,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="dashboard-main bento-grid">
+      <main className="dashboard-main dashboard-bento-grid">
         {/* ----- Block 1: License Key ----- */}
         <section data-testid="key-block" className="bento-item col-span-8" style={{ borderColor: "rgba(0, 229, 255, 0.2)", position: "relative" }}>
           <SectionHeader title={t("dashboard.license_block_title")} eyebrow={t("dashboard.license_block_eyebrow")} />
@@ -486,7 +486,7 @@ export default function Dashboard() {
         <section data-testid="waitlist-block" className="bento-item col-span-6">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
             <SectionHeader title={t("dashboard.waitlist_title")} eyebrow={t("dashboard.waitlist_eyebrow")} />
-            <div className="mac-dots"><span></span><span></span><span></span></div>
+            <div className="dashboard-mac-dots"><span></span><span></span><span></span></div>
           </div>
 
           {waitlist?.in_waitlist ? (
@@ -679,7 +679,7 @@ const blockStyle = {
 function SectionHeader({ title, eyebrow }) {
   return (
     <div style={{ marginBottom: 20 }}>
-      <div className="section-eyebrow">
+      <div className="dashboard-eyebrow">
         {eyebrow}
       </div>
       <h2 className="section-title">{title}</h2>
