@@ -420,7 +420,7 @@ If you did not request this, please ignore this message.
     payload = {
         "from": from_email,
         "to": [to_email],
-        "subject": "Відновлення пароля Atlas AI",
+        "subject": "Password Reset - Atlas AI",
         "text": body
     }
 
