@@ -2312,7 +2312,7 @@ function AdminPanel({
                     display: "inline-flex", gap: 8, alignItems: "center", cursor: "pointer"
                   }}
                 >
-                  <Check size={16} /> Надати доступ всім очікуючим ({waitlistData.pending})
+                  <ShieldCheck size={16} /> Надати доступ всім очікуючим ({waitlistData.pending})
                 </button>
               </div>
             )}
