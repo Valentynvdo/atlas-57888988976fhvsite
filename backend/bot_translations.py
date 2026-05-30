@@ -9,7 +9,7 @@ TEXTS = {
         ),
         "btn_install": "💻 Встановлення",
         "btn_bugs": "⚠️ Тех. проблеми",
-        "btn_billing": "💳 Підписка",
+        "btn_billing": "🎟 Ранній доступ",
         "btn_general": "ℹ️ Загальне",
         "btn_support": "💬 Оператор",
         "btn_lang": "🇺🇸 English",
@@ -34,13 +34,13 @@ TEXTS = {
             "A: У Вашому кабінеті на сайті (Dashboard) натисніть «Перенести на інший Mac». Atlas на поточному пристрої зупиниться, і Ви зможете ввести ключ на новому Mac. 💻➡️💻"
         ),
         "faq_billing": (
-            "💳 **ПІДПИСКА ТА ОПЛАТА:**\n\n"
-            "**Q: Які є тарифні плани? 💎**\n"
-            "A: Atlas AI — це професійний преміум-продукт. Ви можете обрати Місячний ($28.99), Квартальний ($74.99) або Річний ($249.99) тарифний план. 🏆\n\n"
-            "**Q: Як скасувати підписку? ❌**\n"
-            "A: Ви можете скасувати авто-поновлення підписки в будь-який момент через свій особистий кабінет на сайті (Dashboard). Додаток працюватиме до кінця оплаченого періоду. 📅\n\n"
-            "**Q: Які є способи оплати? 💳**\n"
-            "A: Ми приймаємо банківські картки, а також підтримуємо оплату криптовалютою TON (завдяки інтеграції TON Connect). 💰"
+            "🎟 **РАННІЙ ДОСТУП ТА ЧЕРГА:**\n\n"
+            "**Q: Як отримати доступ до Atlas AI? 🚀**\n"
+            "A: Наразі Atlas AI знаходиться в стадії закритого бета-тестування. Ви можете записатися в чергу на сайті. Коли підійде ваша черга, ви отримаєте ліцензійний ключ від адміністратора. 🏆\n\n"
+            "**Q: Скільки це коштує? 💎**\n"
+            "A: На етапі раннього доступу ми не приймаємо оплату. Ви записуєтесь у чергу, і після схвалення адміністратором отримуєте безкоштовний тестовий період. 📅\n\n"
+            "**Q: Скільки часу чекати на схвалення? ⏳**\n"
+            "A: Швидкість схвалення залежить від загальної кількості запитів. Ми поступово відкриваємо доступ новим користувачам для забезпечення стабільної роботи серверів. 🚀"
         ),
         "faq_general": (
             "ℹ️ **ЗАГАЛЬНІ ПИТАННЯ:**\n\n"
@@ -67,7 +67,7 @@ TEXTS = {
             "Я вже передав інформацію оператору підтримки. Очікуйте на відповідь. ⏳"
         ),
         "tpl_refund": (
-            "💸 Для обробки запиту на повернення коштів або скасування підписки, будь ласка, надайте оператору: дату оплати, email від акаунту та короткий опис причини. 📝\n\n"
+            "🎟 Для перевірки статусу вашої заявки в черзі, будь ласка, надайте оператору email від вашого акаунту. 📝\n\n"
             "Натисніть кнопку «Оператор» нижче, щоб залишити ці дані. 👇"
         ),
         "support_prompt": (
@@ -75,7 +75,7 @@ TEXTS = {
             "Будь ласка, опишіть Вашу ситуацію одним повідомленням: 📝\n"
             "1. Суть питання або проблеми ❓\n"
             "2. Який у Вас Mac та версія macOS 💻\n"
-            "3. Ваш email акаунту (якщо стосується підписки) 📧\n\n"
+            "3. Ваш email акаунту (якщо стосується доступу/черги) 📧\n\n"
             "Оператор отримає повідомлення і відповість Вам найближчим часом. 🙏"
         ),
         "support_received": "✅ Ваш запит надіслано оператору! Ми зв'яжемося з Вами найближчим часом. ⏳",
@@ -89,7 +89,7 @@ TEXTS = {
         ),
         "btn_install": "💻 Installation",
         "btn_bugs": "⚠️ Tech Issues",
-        "btn_billing": "💳 Subscription",
+        "btn_billing": "🎟 Early Access",
         "btn_general": "ℹ️ General",
         "btn_support": "💬 Operator",
         "btn_lang": "🇺🇦 Українська",
@@ -114,13 +114,13 @@ TEXTS = {
             "A: In your Dashboard on the website, click «Transfer to another Mac». Atlas will stop working on the current device, and you can enter the key on your new Mac. 💻➡️💻"
         ),
         "faq_billing": (
-            "💳 **SUBSCRIPTION & BILLING:**\n\n"
-            "**Q: What subscription plans do you offer? 💎**\n"
-            "A: Atlas AI is a professional premium product. You can choose from Monthly ($28.99), Quarterly ($74.99), or Yearly ($249.99) plans. 🏆\n\n"
-            "**Q: How to cancel my subscription? ❌**\n"
-            "A: You can cancel auto-renewal at any time via your personal Dashboard. The app will continue working until the end of the paid period. 📅\n\n"
-            "**Q: What payment methods do you accept? 💳**\n"
-            "A: We accept credit cards and cryptocurrency via TON Connect. 💰"
+            "🎟 **EARLY ACCESS & WAITLIST:**\n\n"
+            "**Q: How to get access to Atlas AI? 🚀**\n"
+            "A: Atlas AI is currently in closed beta. You can join the waitlist on our website. Once approved by the administrator, you will receive a license key. 🏆\n\n"
+            "**Q: How much does it cost? 💎**\n"
+            "A: During the early access phase, we do not accept payments. You simply join the waitlist, and upon approval, you receive a free trial period. 📅\n\n"
+            "**Q: How long does approval take? ⏳**\n"
+            "A: Approval speed depends on the total queue volume. We are gradually granting access to new users to ensure server stability. 🚀"
         ),
         "faq_general": (
             "ℹ️ **GENERAL QUESTIONS:**\n\n"
@@ -147,7 +147,7 @@ TEXTS = {
             "I have already forwarded the information to a support operator. Please wait for a reply. ⏳"
         ),
         "tpl_refund": (
-            "💸 To process a refund request or cancel your subscription, please provide the operator with: payment date, account email, and a brief description of the reason. 📝\n\n"
+            "🎟 To check your waitlist status, please provide the operator with your account email. 📝\n\n"
             "Click the «Operator» button below to leave these details. 👇"
         ),
         "support_prompt": (
@@ -155,7 +155,7 @@ TEXTS = {
             "Please describe your situation in a single message: 📝\n"
             "1. The nature of your question or problem ❓\n"
             "2. Your Mac model and macOS version 💻\n"
-            "3. Your account email (if regarding subscription) 📧\n\n"
+            "3. Your account email (if regarding waitlist access) 📧\n\n"
             "The operator will receive your message and reply as soon as possible. 🙏"
         ),
         "support_received": "✅ Your request has been sent to the operator! We will contact you shortly. ⏳",
