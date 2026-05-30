@@ -225,36 +225,57 @@ export default function Login() {
         {/* Error message */}
         {error && (
           <div style={{
-            background: "rgba(255,69,58,0.1)",
-            border: "1px solid rgba(255,69,58,0.2)",
+            background: "radial-gradient(140% 100% at 50% 0%, rgba(255,69,58,0.08) 0%, transparent 100%)",
+            border: "1px solid rgba(255,69,58,0.15)",
+            borderTop: "1px solid rgba(255,69,58,0.3)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
             color: "#ff453a",
-            padding: "12px 16px",
-            borderRadius: 12,
-            marginBottom: 20,
-            fontSize: 13,
-            textAlign: "left",
-            lineHeight: 1.4,
-            backdropFilter: "blur(10px)"
+            padding: "16px 20px",
+            borderRadius: 16,
+            marginBottom: 24,
+            fontSize: 14,
+            fontWeight: 500,
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            backdropFilter: "blur(12px)"
           }}>
-            ⚠️ {error}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {error}
           </div>
         )}
 
         {/* Success message */}
         {success && (
           <div style={{
-            background: "rgba(48,209,88,0.1)",
-            border: "1px solid rgba(48,209,88,0.2)",
+            background: "radial-gradient(140% 100% at 50% 0%, rgba(48,209,88,0.08) 0%, transparent 100%)",
+            border: "1px solid rgba(48,209,88,0.15)",
+            borderTop: "1px solid rgba(48,209,88,0.3)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
             color: "#30d158",
-            padding: "12px 16px",
-            borderRadius: 12,
-            marginBottom: 20,
-            fontSize: 13,
-            textAlign: "left",
-            lineHeight: 1.4,
-            backdropFilter: "blur(10px)"
+            padding: "16px 20px",
+            borderRadius: 16,
+            marginBottom: 24,
+            fontSize: 14,
+            fontWeight: 500,
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            backdropFilter: "blur(12px)"
           }}>
-            ✅ {success}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            {success.replace(/✅|📩/g, "").trim()}
           </div>
         )}
 
