@@ -165,7 +165,7 @@
     "waitlist_approved": "Доступ надано!",
     "waitlist_approved_desc": "Твою ліцензію активовано. Завантажи Atlas AI з розділу Завантаження.",
     "waitlist_in_queue": "у черзі",
-    "waitlist_total_queue": "Всього {total} осіб у черзі",
+    "waitlist_total_queue": "Всього {{total}} осіб у черзі",
     "waitlist_selected_plan": "Твій обраний тариф",
     "waitlist_tg_community": "Приєднатись до @AtlasAICommunity",
     "waitlist_choose_plan": "Обери бажаний тарифний план",

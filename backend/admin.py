@@ -820,10 +820,16 @@ async def approve_waitlist_entry(entry_id: str, body: dict = {}, _=Depends(requi
     # Activate the user's license
     lic = await db.licenses.find_one({"user_id": entry["user_id"]})
     if lic:
+        import secrets
+        alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+        groups = ["".join(secrets.choice(alphabet) for _ in range(4)) for _ in range(4)]
+        new_key = "ATLAS-" + "-".join(groups)
+
         expires = now + timedelta(days=days)
         await db.licenses.update_one(
             {"license_id": lic["license_id"]},
             {"$set": {
+                "key": lic.get("key") or new_key,
                 "active": True,
                 "expires_at": expires.isoformat(),
                 "auto_renew": False,

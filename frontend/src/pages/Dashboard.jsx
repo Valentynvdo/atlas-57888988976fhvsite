@@ -304,7 +304,7 @@ export default function Dashboard() {
               }}
               data-testid="license-key-value"
             >
-              {hasAccess ? license.key : "XXXX-XXXX-XXXX-XXXX-XXXX"}
+              {hasAccess && license?.key ? license.key : "XXXX-XXXX-XXXX-XXXX-XXXX"}
             </div>
             <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
               <button data-testid="toggle-key-btn" onClick={() => setKeyHidden((v) => !v)} className="cta-btn" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
@@ -383,15 +383,11 @@ export default function Dashboard() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
               <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                 <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>1</div>
-                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                  <Trans i18nKey="dashboard.tg_step_1">Натисніть кнопку <strong>«Підключити Telegram-бота»</strong> нижче для переходу до <span style={{ color: "#00E5FF", fontWeight: 600 }}>@Atlas_aimac_bot</span>.</Trans>
-                </div>
+                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: t("dashboard.tg_step_1") }} />
               </div>
               <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                 <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, color: "#00E5FF", flexShrink: 0 }}>2</div>
-                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                  <Trans i18nKey="dashboard.tg_step_2">Натисніть <strong>«Запустити» (Start)</strong> в Telegram. Бот автоматично зчитає ваш унікальний код активації.</Trans>
-                </div>
+                <div style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: t("dashboard.tg_step_2") }} />
               </div>
             </div>
 
@@ -531,15 +527,7 @@ export default function Dashboard() {
               </div>
 
               {/* Plan badge */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, padding: "12px 16px", borderRadius: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <Sparkles size={16} color="#00E5FF" />
-                <div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginBottom: 2 }}>{t("dashboard.waitlist_selected_plan")}</div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
-                    {waitlist.plan === "atlas_monthly" ? t("waitlist.plan_monthly") : waitlist.plan === "atlas_quarterly" ? t("waitlist.plan_quarterly") : t("waitlist.plan_yearly")}
-                  </div>
-                </div>
-              </div>
+
 
               {/* Telegram community */}
               <a
@@ -564,33 +552,6 @@ export default function Dashboard() {
               <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
                 {t("dashboard.waitlist_desc")}
               </p>
-
-              {/* Plan selector */}
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 10, fontWeight: 500 }}>{t("dashboard.waitlist_choose_plan")}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
-                  {[
-                    { id: "atlas_monthly", label: t("waitlist.plan_monthly"), price: "$28.99" },
-                    { id: "atlas_quarterly", label: t("waitlist.plan_quarterly"), price: "$74.99" },
-                    { id: "atlas_yearly", label: t("waitlist.plan_yearly"), price: "$249.99" },
-                  ].map(p => (
-                    <button
-                      key={p.id}
-                      onClick={() => setWaitlistPlan(p.id)}
-                      style={{
-                        padding: "12px 8px", borderRadius: 12, cursor: "pointer",
-                        background: waitlistPlan === p.id ? "rgba(0,122,255,0.15)" : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${waitlistPlan === p.id ? "rgba(0,122,255,0.5)" : "rgba(255,255,255,0.08)"}`,
-                        color: "#fff", fontSize: 12, fontWeight: 500, textAlign: "center",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      <div style={{ fontWeight: 600 }}>{p.label}</div>
-                      <div style={{ color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{p.price}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               {/* Reason textarea */}
               <div style={{ marginBottom: 20 }}>

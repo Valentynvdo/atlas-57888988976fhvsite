@@ -165,7 +165,7 @@
     "waitlist_approved": "Access Granted!",
     "waitlist_approved_desc": "Your license has been activated. Download Atlas AI from the Download section.",
     "waitlist_in_queue": "in queue",
-    "waitlist_total_queue": "{total} people in queue total",
+    "waitlist_total_queue": "{{total}} people in queue total",
     "waitlist_selected_plan": "Your Selected Plan",
     "waitlist_tg_community": "Join @AtlasAICommunity on Telegram",
     "waitlist_choose_plan": "Select your preferred plan",

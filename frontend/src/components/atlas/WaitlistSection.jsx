@@ -68,7 +68,7 @@ export default function WaitlistSection({ onCta }) {
     }
     setJoinLoading(true);
     try {
-      await api.post("/api/billing/waitlist/join", { plan: selectedPlan });
+      await api.post("/api/billing/waitlist/join", { plan: "early_access" });
       setJoined(true);
       navigate("/dashboard");
     } catch (e) {
@@ -244,98 +244,7 @@ export default function WaitlistSection({ onCta }) {
           )}
         </div>
 
-        {/* Plan Cards */}
-        <div className="reveal" style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-          gap: 24, marginBottom: 48,
-        }}>
-          {PLANS.map((plan) => {
-            const isSelected = selectedPlan === plan.id;
-            const extras = FEATURES_EXTRA[plan.id] || [];
-            const monthly = (plan.amount / (plan.id === "atlas_monthly" ? 1 : plan.id === "atlas_quarterly" ? 3 : 12)).toFixed(2);
-
-            return (
-              <div
-                key={plan.id}
-                data-testid={`plan-${plan.id}`}
-                onClick={() => setSelectedPlan(plan.id)}
-                style={{
-                  borderRadius: 28, padding: "36px 28px",
-                  background: isSelected ? plan.color : "rgba(255,255,255,0.02)",
-                  border: `2px solid ${isSelected ? plan.borderColor : "rgba(255,255,255,0.06)"}`,
-                  position: "relative", cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: isSelected ? `0 0 32px ${plan.borderColor.replace("0.3", "0.15").replace("0.45", "0.2").replace("0.4", "0.15")}` : "none",
-                  transform: isSelected ? "translateY(-4px)" : "none",
-                }}
-              >
-                {plan.popular && (
-                  <div style={{
-                    position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
-                    background: "linear-gradient(90deg, #007AFF, #00E5FF)",
-                    color: "#fff", fontSize: 11, fontWeight: 700, textTransform: "uppercase",
-                    padding: "5px 16px", borderRadius: 999, letterSpacing: "0.1em",
-                    whiteSpace: "nowrap", boxShadow: "0 0 16px rgba(0,229,255,0.4)",
-                  }}>
-                    {t("waitlist.popular_badge")}
-                  </div>
-                )}
-
-                {plan.badge_key && !plan.popular && (
-                  <div style={{
-                    position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
-                    background: "linear-gradient(90deg, #28C840, #00E5FF)",
-                    color: "#000", fontSize: 11, fontWeight: 800, textTransform: "uppercase",
-                    padding: "5px 16px", borderRadius: 999, letterSpacing: "0.1em",
-                    whiteSpace: "nowrap",
-                  }}>
-                    {t(plan.badge_key)}
-                  </div>
-                )}
-
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{plan.icon}</div>
-                <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
-                  {t(plan.period_key)}
-                </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontSize: 40, fontWeight: 800, color: "#fff" }}>${plan.amount}</span>
-                  <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>{t(plan.per_key)}</span>
-                </div>
-                {plan.id !== "atlas_monthly" && (
-                  <div style={{ fontSize: 12, color: "rgba(0,229,255,0.8)", marginBottom: 24, fontWeight: 500 }}>
-                    ≈ ${monthly} {t("waitlist.per_month")}
-                  </div>
-                )}
-
-                <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 24, marginTop: plan.id === "atlas_monthly" ? 24 : 0 }}>
-                  {FEATURES_ALL.map((feat, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 12 }}>
-                      <Check size={14} color="#00E5FF" style={{ marginTop: 2, flexShrink: 0 }} />
-                      <span style={{ fontSize: 13, color: "rgba(255,255,255,0.75)" }}>{feat}</span>
-                    </div>
-                  ))}
-                  {extras.map((feat, i) => (
-                    <div key={`ex-${i}`} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 12 }}>
-                      <Star size={14} color="#FFD700" style={{ marginTop: 2, flexShrink: 0 }} />
-                      <span style={{ fontSize: 13, color: "rgba(255,215,0,0.85)", fontWeight: 500 }}>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {isSelected && (
-                  <div style={{
-                    marginTop: 20, padding: "8px 14px", borderRadius: 10,
-                    background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
-                    fontSize: 12, color: "#00E5FF", fontWeight: 600, textAlign: "center",
-                  }}>
-                    ✓ {t("waitlist.plan_selected")}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {/* Plan Cards removed by user request (just waitlist queue) */}
 
         {/* CTA */}
         <div className="reveal" style={{ textAlign: "center" }}>

@@ -54,10 +54,9 @@ async def _ensure_license(user_id: str) -> None:
     existing = await db.licenses.find_one({"user_id": user_id})
     if existing:
         return
-    key = _generate_key()
     await db.licenses.insert_one({
         "license_id": f"lic_{uuid.uuid4().hex[:12]}",
-        "user_id": user_id, "key": key,
+        "user_id": user_id, "key": None,
         "mac_id": None, "mac_name": None,
         "active": False, "created_at": datetime.now(timezone.utc).isoformat(),
         "expires_at": None, "stripe_customer_id": None,
