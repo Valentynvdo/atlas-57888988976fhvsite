@@ -17,6 +17,7 @@ import AbsoluteAwareness from "./components/atlas/AbsoluteAwareness";
 import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
 import WaitlistSection from "./components/atlas/WaitlistSection";
+import TechInfrastructure from "./components/atlas/TechInfrastructure";
 import useScrollReveal from "./components/atlas/useScrollReveal";
 
 import { AuthProvider } from "./lib/auth";
@@ -32,6 +33,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Contacts = lazy(() => import("./pages/Contacts"));
 const Careers = lazy(() => import("./pages/Careers"));
+const Investors = lazy(() => import("./pages/Investors"));
 
 
 
@@ -51,6 +53,7 @@ function Landing() {
       <AbsoluteAwareness />
       <AtlasInteractions />
       <AtlasComparison />
+      <TechInfrastructure />
       <WaitlistSection onCta={() => navigate("/login")} />
       <FinalCTA onCta={() => navigate("/login")} />
       <Footer />
@@ -107,6 +110,7 @@ function AppRouter() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/investors" element={<Investors />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/dashboard"

@@ -201,6 +201,7 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "contacts": "Contacts",
+    "investors": "Investors",
     "created_with_care": "Created with care for macOS."
   },
   "txt_1001": "Manage your Mac",
@@ -845,5 +846,24 @@
     "benefit_1": "Priority access at launch",
     "benefit_2": "Join founding community",
     "benefit_3": "Instant Telegram notification"
+  },
+  "tech_infra": {
+    "powered_by": "Powered by modern infrastructure"
+  },
+  "investors_page": {
+    "title": "Join the Future of AI",
+    "subtitle": "Atlas is raising a Pre-seed / Seed round of $150,000 to scale globally. Become a part of the intelligence revolution.",
+    "goal_title": "Investment Goal",
+    "goal_amount": "$150,000",
+    "goal_desc": "We are collecting funds across multiple investment platforms and angel syndicates to fuel our growth.",
+    "what_we_offer_title": "What We Offer",
+    "what_we_offer_desc": "We are ready to share equity and issue Atlas shares for early investors. Become a co-owner of the next-gen AI agent.",
+    "allocation_title": "Capital Allocation",
+    "alloc_dev": "R&D and Product Development",
+    "alloc_mkt": "Marketing & Global Expansion",
+    "alloc_infra": "Infrastructure & AI Models",
+    "contact_btn": "Contact Founder",
+    "progress_label": "Round Filling",
+    "progress_status": "Active Phase"
   }
 }
