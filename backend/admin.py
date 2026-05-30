@@ -800,6 +800,48 @@ async def get_waitlist(_=Depends(require_admin)):
     }
 
 
+@router.post("/waitlist/approve-all")
+async def approve_all_waitlist(body: dict = {}, _=Depends(require_admin)):
+    """Approve all pending waitlist entries."""
+    pending_entries = await db.waitlist.find({"status": "pending"}).to_list(1000)
+    now = datetime.now(timezone.utc)
+    count = 0
+
+    import secrets
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    plan_days = {"atlas_monthly": 30, "atlas_quarterly": 90, "atlas_yearly": 365, "early_access": 30}
+
+    for entry in pending_entries:
+        days = plan_days.get(entry.get("plan", "early_access"), 30)
+        
+        # Update waitlist status
+        await db.waitlist.update_one(
+            {"_id": entry["_id"]},
+            {"$set": {"status": "approved", "approved_at": now.isoformat()}}
+        )
+
+        # Activate the user's license
+        lic = await db.licenses.find_one({"user_id": entry["user_id"]})
+        if lic:
+            groups = ["".join(secrets.choice(alphabet) for _ in range(4)) for _ in range(4)]
+            new_key = "ATLAS-" + "-".join(groups)
+
+            expires = now + timedelta(days=days)
+            await db.licenses.update_one(
+                {"license_id": lic["license_id"]},
+                {"$set": {
+                    "key": lic.get("key") or new_key,
+                    "active": True,
+                    "expires_at": expires.isoformat(),
+                    "auto_renew": False,
+                    "waitlist_approved": True,
+                }}
+            )
+        count += 1
+
+    return {"ok": True, "approved_count": count}
+
+
 @router.patch("/waitlist/{entry_id}/approve")
 async def approve_waitlist_entry(entry_id: str, body: dict = {}, _=Depends(require_admin)):
     """Approve a waitlist entry and optionally activate their license."""

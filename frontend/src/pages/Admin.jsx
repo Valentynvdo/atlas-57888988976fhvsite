@@ -2292,6 +2292,31 @@ function AdminPanel({
               )}
             </div>
 
+            {waitlistData && waitlistData.pending > 0 && (
+              <div style={{ marginBottom: 24, display: "flex", justifyContent: "flex-end" }}>
+                <button
+                  onClick={async () => {
+                    if (!window.confirm(`Ви впевнені, що хочете надати доступ ВСІМ (${waitlistData.pending}) користувачам у черзі?`)) return;
+                    try {
+                      const r = await api.post("/api/admin/waitlist/approve-all");
+                      toast.success(`Надано доступ ${r.data.approved_count} користувачам!`);
+                      refresh();
+                    } catch (e) {
+                      toast.error("Помилка при схваленні всіх");
+                    }
+                  }}
+                  className="cta-btn"
+                  style={{
+                    background: "rgba(40,200,64,0.15)", border: "1px solid rgba(40,200,64,0.3)",
+                    color: "#28C840", borderRadius: 12, padding: "10px 20px", fontSize: 14,
+                    display: "inline-flex", gap: 8, alignItems: "center", cursor: "pointer"
+                  }}
+                >
+                  <Check size={16} /> Надати доступ всім очікуючим ({waitlistData.pending})
+                </button>
+              </div>
+            )}
+
             <div className="glass" style={{ padding: 0, borderRadius: 20, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
               {!waitlistData ? (
                 <div style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
