@@ -371,7 +371,7 @@ export default function Investors() {
             Ready to secure your allocation?
           </h2>
           <a 
-            href="mailto:contact@atlas-assistant.online"
+            href="mailto:support@atlas-assistant.online"
             style={{
               display: "inline-flex",
               alignItems: "center",
