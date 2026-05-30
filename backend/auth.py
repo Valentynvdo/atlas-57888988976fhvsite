@@ -400,7 +400,7 @@ def _send_reset_email_sync(to_email: str, reset_code: str):
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER")
     smtp_pass = os.getenv("SMTP_PASSWORD")
-    smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@atlas-ai.com")
+    smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@atlas-assistant.online")
 
     if not smtp_server or not smtp_user or not smtp_pass:
         logger.warning(f"SMTP not configured. Would have sent reset code {reset_code} to {to_email}")

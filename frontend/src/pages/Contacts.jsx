@@ -91,8 +91,8 @@ export default function Contacts() {
         }, {
           icon: <Mail size={20} />,
           label: t("txt_1235"),
-          value: "support@atlas-ai.com",
-          href: "mailto:support@atlas-ai.com"
+          value: "support@atlas-assistant.online",
+          href: "mailto:support@atlas-assistant.online"
         }, {
           icon: <Navigation size={20} />,
           label: t("txt_1236"),
