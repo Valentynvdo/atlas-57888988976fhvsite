@@ -135,6 +135,10 @@ def _build_where(filter_dict: dict) -> tuple:
                         params.append(str(v))
                         phs.append(f"${len(params)}")
                     conditions.append(f"{cast_sql} IN ({', '.join(phs)})")
+                elif op == "$regex" and op_val:
+                    # Support for simple prefix regex like "^code"
+                    params.append(str(op_val).lstrip('^') + '%')
+                    conditions.append(f"{cast_sql} LIKE ${len(params)}")
         elif value is None:
             cleaned_key = _clean_key(key)
             conditions.append(f"(data->>'{cleaned_key}' IS NULL OR data->'{cleaned_key}' = 'null'::jsonb)")
