@@ -174,11 +174,11 @@ export default function Dashboard() {
       </header>
 
       {/* MAIN CONTENT */}
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 24px" }}>
+      <main style={{ width: "100%", padding: "80px 5%" }}>
         
         {!hasAccess ? (
           /* FOMO WAITLIST EXPERIENCE */
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ textAlign: "center", paddingTop: 40 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ textAlign: "center", paddingTop: 40, maxWidth: 1200, margin: "0 auto" }}>
             
             {waitlist?.in_waitlist ? (
               <>
@@ -206,7 +206,7 @@ export default function Dashboard() {
             )}
 
             {/* FOMO Teaser */}
-            <div style={{ marginTop: 100, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 40, opacity: 0.4, pointerEvents: "none" }}>
+            <div style={{ marginTop: 100, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, opacity: 0.4, pointerEvents: "none" }}>
               <FeatureTeaser icon={<BrainCircuit size={32}/>} title="Autonomous Actions" desc="Atlas controls your macOS directly." />
               <FeatureTeaser icon={<Terminal size={32}/>} title="Generative Skills" desc="Write custom skills in plain English." />
               <FeatureTeaser icon={<Activity size={32}/>} title="Live Telemetry" desc="Real-time mood and memory analysis." />
@@ -217,32 +217,32 @@ export default function Dashboard() {
         ) : (
 
           /* COMMAND CENTER FOR ACTIVE USERS */
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} style={{ maxWidth: 1600, margin: "0 auto" }}>
             
             {/* BIG LICENSE & SYNC STATUS */}
-            <div style={{ textAlign: "center", marginBottom: 80 }}>
+            <div style={{ textAlign: "center", marginBottom: 100 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", borderRadius: 30, background: "rgba(40, 200, 64, 0.1)", border: "1px solid rgba(40, 200, 64, 0.2)", color: "#28C840", fontSize: 13, marginBottom: 40 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840", boxShadow: "0 0 10px #28C840" }} />
                 Real-time Sync Active
               </div>
-              <div style={{ fontSize: "64px", fontWeight: 200, letterSpacing: "0.02em", fontFamily: "'Source Code Pro', monospace", color: keyHidden ? "rgba(255,255,255,0.2)" : "#fff", filter: keyHidden ? "blur(12px)" : "none", transition: "all 0.4s", cursor: "pointer", userSelect: keyHidden ? "none" : "all" }} onClick={() => setKeyHidden(!keyHidden)}>
+              <div style={{ fontSize: "6vw", fontWeight: 200, letterSpacing: "0.02em", fontFamily: "'Source Code Pro', monospace", color: keyHidden ? "rgba(255,255,255,0.2)" : "#fff", filter: keyHidden ? "blur(12px)" : "none", transition: "all 0.4s", cursor: "pointer", userSelect: keyHidden ? "none" : "all", wordBreak: "break-all" }} onClick={() => setKeyHidden(!keyHidden)}>
                 {license.key}
               </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 30 }}>
-                <button onClick={() => setKeyHidden(!keyHidden)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "10px 20px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center" }}>
-                  {keyHidden ? <Eye size={16}/> : <EyeOff size={16}/>} {keyHidden ? "Reveal" : "Hide"}
+              <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 16, marginTop: 40 }}>
+                <button onClick={() => setKeyHidden(!keyHidden)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                  {keyHidden ? <Eye size={18}/> : <EyeOff size={18}/>} {keyHidden ? "Reveal" : "Hide"}
                 </button>
-                <button onClick={copyKey} style={{ background: "#00E5FF", border: "none", color: "#000", padding: "10px 20px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center" }}>
-                  <Copy size={16}/> Copy Key
+                <button onClick={copyKey} style={{ background: "#00E5FF", border: "none", color: "#000", padding: "12px 24px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                  <Copy size={18}/> Copy Key
                 </button>
-                <a href="https://atlas-assistant.online/install" target="_blank" rel="noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "10px 20px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center" }}>
-                  <Download size={16}/> Download App
+                <a href="https://atlas-assistant.online/install" target="_blank" rel="noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                  <Download size={18}/> Download App
                 </a>
               </div>
             </div>
 
             {/* LIVE TELEMETRY & TERMINAL */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40, marginBottom: 80 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))", gap: 60, marginBottom: 100 }}>
               
               {/* Terminal */}
               <div>
@@ -286,21 +286,21 @@ export default function Dashboard() {
             </div>
 
             {/* SKILL SANDBOX & VIRALITY */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))", gap: 60 }}>
               
               {/* Generative Sandbox */}
               <div>
-                <div style={{ fontSize: 24, fontWeight: 300, marginBottom: 16 }}>Generative Sandbox</div>
-                <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 20 }}>Ask Atlas to write a custom skill for you. It will be generated and tested locally.</p>
+                <div style={{ fontSize: 32, fontWeight: 300, marginBottom: 16 }}>Generative Sandbox</div>
+                <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 20, fontSize: 16 }}>Ask Atlas to write a custom skill for you. It will be generated and tested locally.</p>
                 <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 4 }}>
                   <textarea 
                     value={skillPrompt} onChange={e => setSkillPrompt(e.target.value)}
                     placeholder='e.g. "Every Friday at 18:00, close Xcode and open Safari with a movie list..."'
-                    style={{ width: "100%", background: "transparent", border: "none", color: "#fff", padding: 20, fontSize: 15, minHeight: 120, outline: "none", resize: "none" }}
+                    style={{ width: "100%", background: "transparent", border: "none", color: "#fff", padding: 24, fontSize: 16, minHeight: 140, outline: "none", resize: "none" }}
                   />
-                  <div style={{ display: "flex", justifyContent: "flex-end", padding: 8 }}>
-                    <button onClick={generateSkill} disabled={generatingSkill} style={{ background: "#fff", color: "#000", border: "none", padding: "10px 24px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", gap: 8, alignItems: "center" }}>
-                      {generatingSkill ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />} 
+                  <div style={{ display: "flex", justifyContent: "flex-end", padding: 12 }}>
+                    <button onClick={generateSkill} disabled={generatingSkill} style={{ background: "#fff", color: "#000", border: "none", padding: "12px 24px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                      {generatingSkill ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />} 
                       Generate Skill
                     </button>
                   </div>
@@ -309,28 +309,31 @@ export default function Dashboard() {
 
               {/* Web3 & Referral */}
               <div>
-                <div style={{ fontSize: 24, fontWeight: 300, marginBottom: 16 }}>Crypto & Virality</div>
+                <div style={{ fontSize: 32, fontWeight: 300, marginBottom: 16 }}>Crypto & Virality</div>
                 
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 24, marginBottom: 20 }}>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, marginBottom: 20 }}>
                   <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>Payment History</div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: 16 }}>
                     <div>
-                      <div style={{ fontSize: 16 }}>License Activation</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Card / TON</div>
+                      <div style={{ fontSize: 18, marginBottom: 4 }}>License Activation</div>
+                      <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>Card / TON</div>
                     </div>
-                    <div style={{ color: "#28C840" }}>Success</div>
+                    <div style={{ color: "#28C840", fontWeight: 500, fontSize: 16 }}>Success</div>
                   </div>
                 </div>
 
-                <div style={{ background: "linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%)", border: "1px solid rgba(0, 229, 255, 0.3)", borderRadius: 16, padding: 24 }}>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12 }}>
-                    <LinkIcon color="#00E5FF" size={24} />
-                    <div style={{ fontSize: 18, fontWeight: 500 }}>Share Your Skill</div>
+                <div style={{ background: "linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%)", border: "1px solid rgba(0, 229, 255, 0.3)", borderRadius: 16, padding: 28 }}>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
+                    <LinkIcon color="#00E5FF" size={28} />
+                    <div style={{ fontSize: 20, fontWeight: 500 }}>Share Your Skill</div>
                   </div>
-                  <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, marginBottom: 20 }}>
+                  <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, marginBottom: 24, lineHeight: 1.6 }}>
                     Share your custom skill script with friends. If they activate Atlas, you both get a discount on renewals.
                   </p>
-                  <button onClick={copyReferral} style={{ width: "100%", background: "transparent", border: "1px solid #00E5FF", color: "#00E5FF", padding: "12px", borderRadius: 10, fontWeight: 600, cursor: "pointer" }}>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText(window.location.origin + "/invite/" + (user?.user_id?.substring(0,8) || "atlas"));
+                    toast.success("Referral Link Copied!");
+                  }} style={{ width: "100%", background: "transparent", border: "1px solid #00E5FF", color: "#00E5FF", padding: "14px", borderRadius: 10, fontWeight: 600, cursor: "pointer", fontSize: 15 }}>
                     Copy Referral Link
                   </button>
                 </div>

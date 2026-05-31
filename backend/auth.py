@@ -171,6 +171,7 @@ async def register(body: dict, response: Response):
     email = (body.get("email") or "").strip().lower()
     password = body.get("password") or ""
     name = (body.get("name") or "").strip()
+    invite_code = (body.get("invite_code") or "").strip()
 
     if not email or "@" not in email:
         raise HTTPException(status_code=400, detail="Некоректний email")
@@ -200,6 +201,7 @@ async def register(body: dict, response: Response):
         "created_at": datetime.now(timezone.utc).isoformat(),
         "is_blocked": False,
         "admin_notes": "",
+        "invited_by": invite_code,
     })
 
     await _ensure_license(user_id)

@@ -17,6 +17,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [inviteCodeInput, setInviteCodeInput] = useState(localStorage.getItem("atlas_invite_code") || "");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -48,7 +49,12 @@ export default function Login() {
         await api.post("/api/auth/login", { email, password });
         await refresh();
       } else {
-        await api.post("/api/auth/register", { email, password, name });
+        const payload = { email, password, name };
+        if (inviteCodeInput.trim()) payload.invite_code = inviteCodeInput.trim();
+
+        await api.post("/api/auth/register", payload);
+        localStorage.removeItem("atlas_invite_code");
+        
         setSuccess(t("login.success_registered"));
         await new Promise((resolve) => setTimeout(resolve, 1500));
         await refresh();
@@ -426,6 +432,34 @@ export default function Login() {
                   {showPassword ? t("login.hide") : t("login.show")}
                 </button>
               </div>
+            </div>
+          )}
+
+          {tab === "register" && (
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>
+                Referral Code (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. a1b2c3d4"
+                value={inviteCodeInput}
+                onChange={(e) => setInviteCodeInput(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "14px 16px",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 12,
+                  color: "#fff",
+                  fontSize: 15,
+                  boxSizing: "border-box",
+                  outline: "none",
+                  transition: "all 0.2s"
+                }}
+                onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.3)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+              />
             </div>
           )}
           

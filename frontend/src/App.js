@@ -36,6 +36,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const Investors = lazy(() => import("./pages/Investors"));
 const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const InviteHandler = lazy(() => import("./pages/InviteHandler"));
 
 
 
@@ -115,6 +116,7 @@ function AppRouter() {
         <Route path="/investors" element={<Investors />} />
         <Route path="/blog" element={<BlogList />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/invite/:code" element={<InviteHandler />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/dashboard"
