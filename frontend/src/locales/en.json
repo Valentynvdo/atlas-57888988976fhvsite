@@ -811,7 +811,7 @@
     "section_eyebrow": "Early Access",
     "section_title": "Atlas AI is Ready. Be First.",
     "section_desc": "Join the waitlist now and lock in your plan at launch pricing. Access granted in batches as we scale.",
-    "already_joined": "{count} people already registered",
+    "already_joined": "{{count}} people already registered",
     "launch_badge": "Pre-Launch Campaign",
     "launch_title": "We Are Raising Our First Round",
     "launch_desc": "Atlas AI is production-ready. We are now onboarding our first beta users to demonstrate user demand to investors and scale the infrastructure. Join the waitlist to be part of the founding wave.",
