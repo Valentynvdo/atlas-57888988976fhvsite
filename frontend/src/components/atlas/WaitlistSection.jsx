@@ -313,8 +313,9 @@ export default function WaitlistSection({ onCta }) {
               <div>
                 <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{t("waitlist.plan_quarterly", "Квартальний")}</div>
                 <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
-                  $69.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_quarter", "/ 3 місяці")}</span>
+                  $23.33 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
                 </div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>Billed $69.99 / 3 mos</div>
               </div>
 
               {/* Divider (visible on desktop) */}
@@ -326,8 +327,9 @@ export default function WaitlistSection({ onCta }) {
                   {t("waitlist.plan_yearly", "Річний")} <span style={{ color: "#00E5FF", marginLeft: 6 }}>(-30%)</span>
                 </div>
                 <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
-                  $239.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_year", "/ рік")}</span>
+                  $19.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
                 </div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>Billed $239.99 / year</div>
               </div>
             </div>
 
