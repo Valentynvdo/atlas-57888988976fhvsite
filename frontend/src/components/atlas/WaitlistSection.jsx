@@ -288,13 +288,8 @@ export default function WaitlistSection({ onCta }) {
           {/* Projected Pricing */}
           <div style={{ marginTop: 64, display: "flex", justifyContent: "center" }}>
             <div style={{
-              background: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 24,
-              padding: "32px 48px",
               textAlign: "center",
-              maxWidth: 400,
-              boxShadow: "0 16px 40px rgba(0,0,0,0.2)"
+              maxWidth: 400
             }}>
               <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 12 }}>
                 {t("waitlist.projected_pricing", "Прогнозована ціна")}
