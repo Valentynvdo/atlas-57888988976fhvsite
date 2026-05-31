@@ -4,7 +4,7 @@ import {
   ArrowLeft, Target, TrendingUp, Mail, Shield, Terminal, Cpu, CheckCircle2, EyeOff, Activity, LineChart, ServerOff, Zap
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
