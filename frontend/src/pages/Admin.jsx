@@ -447,6 +447,56 @@ function AdminPanel({
                   <VersionUpload fileRef={fileRef} onUploaded={refresh} />
                 </section>
               </div>
+
+              {/* Compilation Instructions Block */}
+              <div style={{ marginTop: 24 }}>
+                <section className="glass" style={{
+                  padding: 24,
+                  borderRadius: 20,
+                  border: "1px solid rgba(255,255,255,0.04)"
+                }}>
+                  <h3 style={{
+                    margin: "0 0 16px",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8
+                  }}>
+                    <BookOpen size={18} color="#FEBC2E" /> Інструкція зі збірки оновлення (PyInstaller)
+                  </h3>
+                  <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: "1.6" }}>
+                    <p style={{ margin: "0 0 12px" }}><b>Як це виправити за 3 кроки:</b></p>
+                    <p style={{ margin: "0 0 4px" }}><b>1. Встанови відсутній модуль у твоє віртуальне середовище:</b><br />
+                    Переконайся, що в Терміналі зліва написано <code>(.venv)</code>, і введи:</p>
+                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px" }}><code>pip install psutil</code></pre>
+                    
+                    <p style={{ margin: "0 0 4px" }}><b>2. Перевір, чи є інші "забуті" модулі:</b><br />
+                    Оскільки раніше ми бачили помилку з pyaudio, краще встановити і його зараз:</p>
+                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px" }}><code>pip install pyaudio</code></pre>
+                    
+                    <p style={{ margin: "0 0 4px" }}><b>3. Запусти перезбірку проекту:</b><br />
+                    Використовуй команду з прапорцем <code>--noconfirm</code>, щоб Xcode/PyInstaller не питав про видалення папки dist знову:</p>
+                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px", color: "#00E5FF" }}><code>python3 -m PyInstaller --clean --noconfirm atlas.spec</code></pre>
+                    
+                    <div style={{ background: "rgba(255,255,255,0.03)", padding: 12, borderRadius: 8, marginBottom: 16 }}>
+                      <b style={{ color: "#fff" }}>Що робить команда:</b>
+                      <ul style={{ margin: "8px 0 0", paddingLeft: 20 }}>
+                        <li style={{ marginBottom: 4 }}><code>python3 -m PyInstaller</code> — запускає PyInstaller з оточення Python 3.9 (бере з <code>.venv</code>).</li>
+                        <li style={{ marginBottom: 4 }}><code>--clean</code> — повністю очищає кеш попередніх збірок.</li>
+                        <li style={{ marginBottom: 4 }}><code>--noconfirm</code> — автоматично погоджується на видалення старої папки <code>dist/Atlas.app</code>.</li>
+                        <li><code>atlas.spec</code> — файл-інструкція для збірки Atlas AI.</li>
+                      </ul>
+                    </div>
+
+                    <p style={{ margin: "0 0 4px" }}><b>Що робити після збірки:</b><br />
+                    Коли побачиш напис <i style={{ color: "#28C840" }}>Build complete!</i>, запусти файл для перевірки через Термінал командою:</p>
+                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px", color: "#FEBC2E" }}><code>~/Desktop/atlas_ai/dist/Atlas.app/Contents/MacOS/Atlas</code></pre>
+                    
+                    <p style={{ margin: 0 }}>Якщо вискочить інша помилка <code>ModuleNotFoundError</code> — доставляй цей модуль через <code>pip</code> і знову запускай збірку. Як тільки з'являться логи роботи Атласа — програма успішно скомпільована!</p>
+                  </div>
+                </section>
+              </div>
             </div>}
 
           {/* Tab: Financial Analytics */}
