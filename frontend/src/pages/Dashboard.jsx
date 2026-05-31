@@ -141,9 +141,9 @@ export default function Dashboard() {
     try {
       const res = await api.post("/api/me/telegram", { telegram_bot_token: telegramConfig.token });
       setTelegramConfig({ token: res.data.telegram_bot_token, username: res.data.telegram_bot_username });
-      toast.success("Telegram Bot збережено!");
+      toast.success(t("telegram_success"));
     } catch (err) {
-      toast.error(err.response?.data?.detail || "Помилка збереження токена");
+      toast.error(err.response?.data?.detail || t("telegram_error"));
     } finally {
       setTelegramSaving(false);
     }
@@ -384,10 +384,8 @@ export default function Dashboard() {
 
             {/* TELEGRAM BOT SECTION */}
             <div style={{ marginTop: 60, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 32 }}>
-              <div style={{ fontSize: 24, fontWeight: 300, marginBottom: 12 }}>Налаштування Telegram Бота</div>
-              <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 24, fontSize: 15, maxWidth: 800 }}>
-                Для керування Atlas AI з телефону, створіть власного бота через <a href="https://t.me/BotFather" target="_blank" rel="noreferrer" style={{color: "#00E5FF"}}>@BotFather</a> та вставте його API Token сюди. Ваш локальний Atlas AI автоматично підключиться до нього.
-              </p>
+              <div style={{ fontSize: 24, fontWeight: 300, marginBottom: 12 }}>{t("telegram_settings_title")}</div>
+              <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 24, fontSize: 15, maxWidth: 800 }} dangerouslySetInnerHTML={{ __html: t("telegram_settings_desc") }} />
               
               <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: 300 }}>
@@ -395,7 +393,7 @@ export default function Dashboard() {
                     type="text" 
                     value={telegramConfig.token} 
                     onChange={e => setTelegramConfig({...telegramConfig, token: e.target.value})}
-                    placeholder="Наприклад: 1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ..."
+                    placeholder={t("telegram_placeholder")}
                     style={{ width: "100%", padding: 14, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, color: "#fff", outline: "none", fontFamily: "monospace" }}
                   />
                 </div>
@@ -404,18 +402,18 @@ export default function Dashboard() {
                   disabled={telegramSaving}
                   style={{ background: "#00E5FF", color: "#000", border: "none", padding: "14px 28px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}
                 >
-                  {telegramSaving ? <Loader2 size={18} className="animate-spin" /> : "Зберегти Token"}
+                  {telegramSaving ? <Loader2 size={18} className="animate-spin" /> : t("telegram_btn_save")}
                 </button>
               </div>
 
               {telegramConfig.username && (
                 <div style={{ marginTop: 24, padding: 16, background: "rgba(40, 200, 64, 0.1)", border: "1px solid rgba(40, 200, 64, 0.3)", borderRadius: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
-                    <div style={{ fontSize: 13, color: "#28C840", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 4 }}>Бот Підключено</div>
+                    <div style={{ fontSize: 13, color: "#28C840", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 4 }}>{t("telegram_bot_connected")}</div>
                     <div style={{ fontSize: 16, fontWeight: 500 }}>@{telegramConfig.username}</div>
                   </div>
                   <a href={`https://t.me/${telegramConfig.username}`} target="_blank" rel="noreferrer" style={{ background: "#fff", color: "#000", textDecoration: "none", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
-                    Перейти до бота
+                    {t("telegram_go_to_bot")}
                   </a>
                 </div>
               )}

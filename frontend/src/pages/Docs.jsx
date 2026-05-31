@@ -665,6 +665,36 @@ export default function Docs() {
             </div>
           </section>
 
+          {/* Telegram Setup Section */}
+          <section ref={el => sectionsRef.current.telegram_setup = el} style={{
+          scrollMarginTop: 100,
+          marginBottom: 80
+        }}>
+            <SectionTitle eyebrow={t("docs_telegram_eyebrow")} title={t("docs_telegram_title")} desc={t("docs_telegram_desc")} />
+            
+            <div style={{
+            padding: 24,
+            borderRadius: 16,
+            background: "rgba(0, 229, 255, 0.03)",
+            border: "1px solid rgba(0, 229, 255, 0.15)",
+            marginBottom: 16
+          }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step1")}</h3>
+              <ul style={{ color: "rgba(255,255,255,0.7)", paddingLeft: 20, lineHeight: 1.6, marginBottom: 20 }}>
+                <li dangerouslySetInnerHTML={{ __html: t("docs_telegram_step1_l1") }} />
+                <li dangerouslySetInnerHTML={{ __html: t("docs_telegram_step1_l2") }} />
+                <li>{t("docs_telegram_step1_l3")}</li>
+                <li>{t("docs_telegram_step1_l4")}</li>
+              </ul>
+              
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step2")}</h3>
+              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 20 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step2_desc") }} />
+              
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step3")}</h3>
+              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step3_desc") }} />
+            </div>
+          </section>
+
           {/* 2. Quick Start SDK Section */}
           <section ref={el => sectionsRef.current.quickstart = el} style={{
           scrollMarginTop: 100,
@@ -1115,7 +1145,9 @@ main();`} />
               color: "#00E5FF",
               marginBottom: 8
             }}>{t("txt_1154")}</div>
-              <CodeBlock lang="bash" code="curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash" />
+              <p style={{ color: "#fff", fontSize: 14 }}>
+                Завантажте <b>Atlas.dmg</b> у вашому особистому кабінеті, відкрийте файл та перетягніть Atlas в папку "Програми".
+              </p>
               <p style={{
               fontSize: 13,
               color: "rgba(255,255,255,0.5)",
@@ -1466,6 +1498,12 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
             <Accordion q="Як працює офлайн розпізнавання Vosk?">
               <div>
                 <p>{t("txt_1192")}</p>
+              </div>
+            </Accordion>
+
+            <Accordion q={t("faq_q6") || "Як налаштувати Telegram бота для віддаленого доступу?"}>
+              <div>
+                <p>{t("faq_a6")}</p>
               </div>
             </Accordion>
           </section>

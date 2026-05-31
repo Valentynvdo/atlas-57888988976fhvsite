@@ -244,7 +244,7 @@ export default function MacOSControl() {
                   fontWeight: 700,
                   marginBottom: 12
                 }}>
-                  Безпека & Приватність
+                  {t("macos_privacy_badge")}
                 </div>
                 
                 <h3 style={{
@@ -254,7 +254,7 @@ export default function MacOSControl() {
                   marginBottom: 12,
                   color: "#fff"
                 }}>
-                  Абсолютна приватність (End-to-End)
+                  {t("macos_privacy_title")}
                 </h3>
                 
                 <p style={{
@@ -263,16 +263,14 @@ export default function MacOSControl() {
                   lineHeight: 1.6,
                   marginBottom: 16,
                   fontWeight: 400
-                }}>
-                  Тепер повідомлення йдуть напряму: <strong style={{color: "#fff"}}>Ваш телефон → Сервери Telegram → Ваш Mac</strong>. Немає жодного проміжного бекенду, який би читав, зберігав чи маршрутизував ваші команди. 
-                </p>
+                }} dangerouslySetInnerHTML={{ __html: t("macos_privacy_p1") }} />
                 
                 <p style={{
                   fontSize: 15,
                   color: "rgba(255,255,255,0.6)",
                   lineHeight: 1.6
                 }}>
-                  Оскільки Atlas має доступ до файлів, екрану та управління комп'ютером, така децентралізована архітектура з використанням власного бота — це безпрецедентний рівень безпеки та захисту ваших даних.
+                  {t("macos_privacy_p2")}
                 </p>
               </div>
             </div>
