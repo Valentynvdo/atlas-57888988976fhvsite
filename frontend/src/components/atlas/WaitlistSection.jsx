@@ -284,6 +284,30 @@ export default function WaitlistSection({ onCta }) {
               </div>
             ))}
           </div>
+
+          {/* Projected Pricing */}
+          <div style={{ marginTop: 64, display: "flex", justifyContent: "center" }}>
+            <div style={{
+              background: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 24,
+              padding: "32px 48px",
+              textAlign: "center",
+              maxWidth: 400,
+              boxShadow: "0 16px 40px rgba(0,0,0,0.2)"
+            }}>
+              <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 12 }}>
+                {t("waitlist.projected_pricing", "Прогнозована ціна")}
+              </div>
+              <div style={{ fontSize: 48, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 8 }}>
+                $28.99 <span style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
+              </div>
+              <div style={{ marginTop: 16, fontSize: 14, color: "#00E5FF", fontWeight: 500 }}>
+                {t("waitlist.discount_notice", "Учасники черги отримають пожиттєву знижку")}
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
