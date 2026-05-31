@@ -201,6 +201,7 @@ export default function Navbar({ onCta }) {
 
           <button
             className="burger-btn"
+            aria-label="Toggle mobile menu"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
               background: "transparent",
