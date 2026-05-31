@@ -352,6 +352,12 @@ async def update_version_link(body: dict, admin: dict = Depends(require_admin)):
     if not version or not url:
         raise HTTPException(400, "version and url required")
         
+    import re
+    drive_match = re.search(r"drive\.google\.com/file/d/([^/]+)/", url)
+    if drive_match:
+        file_id = drive_match.group(1)
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        
     safe = version.replace("/", "_")
     
     await db.app_config.update_one(
