@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [liveThought, setLiveThought] = useState(null);
   const [keyHidden, setKeyHidden] = useState(true);
+  const [appVersion, setAppVersion] = useState(null);
   
   // Modals & States
   const [showPwdModal, setShowPwdModal] = useState(false);
@@ -45,6 +46,12 @@ export default function Dashboard() {
       setStats(rStats.data);
       const rThought = await api.get("/api/atlas/thought");
       setLiveThought(rThought.data);
+      try {
+        const rVer = await api.get("/api/atlas/version");
+        setAppVersion(rVer.data);
+      } catch (e) {
+        console.error("Failed to load version", e);
+      }
     } catch (err) {
       console.error("Failed to load dashboard data", err);
     }
@@ -235,8 +242,8 @@ export default function Dashboard() {
                 <button onClick={copyKey} style={{ background: "#00E5FF", border: "none", color: "#000", padding: "12px 24px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
                   <Copy size={18}/> Copy Key
                 </button>
-                <a href="https://atlas-assistant.online/install" target="_blank" rel="noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
-                  <Download size={18}/> Download App
+                <a href={appVersion?.url || "#"} target="_blank" rel="noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                  <Download size={18}/> Завантажити macOS App (v{appVersion?.version || "1.0"})
                 </a>
               </div>
             </div>
