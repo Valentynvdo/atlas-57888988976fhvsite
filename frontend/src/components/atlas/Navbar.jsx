@@ -115,7 +115,16 @@ export default function Navbar({ onCta }) {
           <div className="navbar-actions">
             <button
               onClick={() => {
-                i18n.changeLanguage(i18n.language === 'uk' ? 'en' : 'uk');
+                const currentPath = window.location.pathname;
+                const isEn = currentPath.startsWith('/en');
+                let newPath = currentPath;
+                if (isEn) {
+                  newPath = currentPath.replace(/^\/en/, '') || '/';
+                } else {
+                  newPath = `/en${currentPath === '/' ? '' : currentPath}`;
+                }
+                const searchAndHash = window.location.search + window.location.hash;
+                navigate(newPath + searchAndHash);
               }}
               style={{
                 background: "none",
@@ -269,7 +278,16 @@ export default function Navbar({ onCta }) {
 
           <button
             onClick={() => {
-              i18n.changeLanguage(i18n.language === 'uk' ? 'en' : 'uk');
+              const currentPath = window.location.pathname;
+              const isEn = currentPath.startsWith('/en');
+              let newPath = currentPath;
+              if (isEn) {
+                newPath = currentPath.replace(/^\/en/, '') || '/';
+              } else {
+                newPath = `/en${currentPath === '/' ? '' : currentPath}`;
+              }
+              const searchAndHash = window.location.search + window.location.hash;
+              navigate(newPath + searchAndHash);
               setIsMobileMenuOpen(false);
             }}
             style={{

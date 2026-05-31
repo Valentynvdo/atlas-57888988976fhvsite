@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import CustomCursor from "./components/CustomCursor";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 import LenisScroll from "./components/LenisScroll";
 import useBentoGlow from "./hooks/useBentoGlow";
 
@@ -78,6 +80,78 @@ const PageLoader = () => (
   </div>
 );
 
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/docs" element={<Docs />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/contacts" element={<Contacts />} />
+      <Route path="/careers" element={<Careers />} />
+      <Route path="/investors" element={<Investors />} />
+      <Route path="/blog" element={<BlogList />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
+      <Route path="/invite/:code" element={<InviteHandler />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/x7k9m-admin"
+        element={
+          <ProtectedRoute adminOnly>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
+}
+
+function LanguageWrapper({ children }) {
+  const { i18n } = useTranslation();
+  const location = useLocation();
+
+  useEffect(() => {
+    const isEn = location.pathname.startsWith("/en");
+    const targetLang = isEn ? "en" : "uk";
+    
+    if (i18n.language !== targetLang) {
+      i18n.changeLanguage(targetLang);
+    }
+  }, [location.pathname, i18n]);
+
+  const isEn = i18n.language === "en";
+  const title = isEn 
+    ? "Atlas AI — Autonomous AI Assistant for macOS" 
+    : "Atlas AI — Автономний ШІ Асистент для macOS";
+  const desc = isEn
+    ? "Autonomous next-generation AI assistant built for your comfort and maximum productivity. Download for macOS."
+    : "Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS.";
+
+  return (
+    <>
+      <Helmet>
+        <html lang={isEn ? "en" : "uk"} />
+        <title>{title}</title>
+        <meta name="description" content={desc} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={desc} />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={desc} />
+      </Helmet>
+      {children}
+    </>
+  );
+}
+
 function AppRouter() {
   const location = useLocation();
 
@@ -105,36 +179,12 @@ function AppRouter() {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/docs" element={<Docs />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/contacts" element={<Contacts />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/investors" element={<Investors />} />
-        <Route path="/blog" element={<BlogList />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="/invite/:code" element={<InviteHandler />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/x7k9m-admin"
-          element={
-            <ProtectedRoute adminOnly>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <LanguageWrapper>
+        <Routes>
+          <Route path="/en/*" element={<AppRoutes />} />
+          <Route path="/*" element={<AppRoutes />} />
+        </Routes>
+      </LanguageWrapper>
     </Suspense>
   );
 }
