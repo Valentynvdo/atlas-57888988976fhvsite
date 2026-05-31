@@ -23,6 +23,8 @@ export default function Dashboard() {
   const [liveThought, setLiveThought] = useState(null);
   const [keyHidden, setKeyHidden] = useState(true);
   const [appVersion, setAppVersion] = useState(null);
+  const [telegramConfig, setTelegramConfig] = useState({ token: "", username: "" });
+  const [telegramSaving, setTelegramSaving] = useState(false);
   
   // Modals & States
   const [showPwdModal, setShowPwdModal] = useState(false);
@@ -51,6 +53,12 @@ export default function Dashboard() {
         setAppVersion(rVer.data);
       } catch (e) {
         console.error("Failed to load version", e);
+      }
+      try {
+        const rTg = await api.get("/api/me/telegram");
+        setTelegramConfig({ token: rTg.data.telegram_bot_token || "", username: rTg.data.telegram_bot_username || "" });
+      } catch (e) {
+        console.error("Failed to load telegram config", e);
       }
     } catch (err) {
       console.error("Failed to load dashboard data", err);
@@ -126,6 +134,19 @@ export default function Dashboard() {
       toast.success("Скіл успішно згенеровано і відправлено в Sandbox!");
       setSkillPrompt("");
     }, 2000);
+  };
+
+  const saveTelegramConfig = async () => {
+    setTelegramSaving(true);
+    try {
+      const res = await api.post("/api/me/telegram", { telegram_bot_token: telegramConfig.token });
+      setTelegramConfig({ token: res.data.telegram_bot_token, username: res.data.telegram_bot_username });
+      toast.success("Telegram Bot збережено!");
+    } catch (err) {
+      toast.error(err.response?.data?.detail || "Помилка збереження токена");
+    } finally {
+      setTelegramSaving(false);
+    }
   };
 
   const copyReferral = () => {
@@ -359,6 +380,45 @@ export default function Dashboard() {
                 </div>
               </div>
 
+            </div>
+
+            {/* TELEGRAM BOT SECTION */}
+            <div style={{ marginTop: 60, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 32 }}>
+              <div style={{ fontSize: 24, fontWeight: 300, marginBottom: 12 }}>Налаштування Telegram Бота</div>
+              <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 24, fontSize: 15, maxWidth: 800 }}>
+                Для керування Atlas AI з телефону, створіть власного бота через <a href="https://t.me/BotFather" target="_blank" rel="noreferrer" style={{color: "#00E5FF"}}>@BotFather</a> та вставте його API Token сюди. Ваш локальний Atlas AI автоматично підключиться до нього.
+              </p>
+              
+              <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ flex: 1, minWidth: 300 }}>
+                  <input 
+                    type="text" 
+                    value={telegramConfig.token} 
+                    onChange={e => setTelegramConfig({...telegramConfig, token: e.target.value})}
+                    placeholder="Наприклад: 1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ..."
+                    style={{ width: "100%", padding: 14, background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, color: "#fff", outline: "none", fontFamily: "monospace" }}
+                  />
+                </div>
+                <button 
+                  onClick={saveTelegramConfig} 
+                  disabled={telegramSaving}
+                  style={{ background: "#00E5FF", color: "#000", border: "none", padding: "14px 28px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}
+                >
+                  {telegramSaving ? <Loader2 size={18} className="animate-spin" /> : "Зберегти Token"}
+                </button>
+              </div>
+
+              {telegramConfig.username && (
+                <div style={{ marginTop: 24, padding: 16, background: "rgba(40, 200, 64, 0.1)", border: "1px solid rgba(40, 200, 64, 0.3)", borderRadius: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <div style={{ fontSize: 13, color: "#28C840", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 4 }}>Бот Підключено</div>
+                    <div style={{ fontSize: 16, fontWeight: 500 }}>@{telegramConfig.username}</div>
+                  </div>
+                  <a href={`https://t.me/${telegramConfig.username}`} target="_blank" rel="noreferrer" style={{ background: "#fff", color: "#000", textDecoration: "none", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                    Перейти до бота
+                  </a>
+                </div>
+              )}
             </div>
 
           </motion.div>

@@ -188,6 +188,96 @@ export default function MacOSControl() {
                 </span>)}
             </div>
           </article>)}
+        
+        {/* PRIVACY HIGHLIGHT BLOCK (Full width) */}
+        <article data-testid={`macos-privacy-card`} className={`group reveal delay-4 bento-col-3`} style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            padding: "40px 32px",
+            borderRadius: 32,
+            background: "radial-gradient(100% 100% at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 100%)",
+            borderTop: "1px solid rgba(0,229,255,0.2)",
+            border: "1px solid rgba(0,229,255,0.1)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
+            transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+            marginTop: 8
+          }}>
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: "20%",
+              right: "20%",
+              height: 1,
+              background: `linear-gradient(90deg, transparent, #00E5FF, transparent)`,
+              opacity: 0.8
+            }} />
+            
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 24 }}>
+              <div style={{
+                width: 56,
+                height: 56,
+                borderRadius: 14,
+                display: "grid",
+                placeItems: "center",
+                background: `linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,229,255,0.05))`,
+                border: `1px solid rgba(0,229,255,0.3)`,
+                color: "#00E5FF",
+                flexShrink: 0
+              }}>
+                <ShieldCheck size={28} />
+              </div>
+              
+              <div>
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  background: "rgba(0,229,255,0.1)",
+                  border: "1px solid rgba(0,229,255,0.2)",
+                  fontSize: 11,
+                  color: "#00E5FF",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  fontWeight: 700,
+                  marginBottom: 12
+                }}>
+                  Безпека & Приватність
+                </div>
+                
+                <h3 style={{
+                  fontSize: 24,
+                  fontWeight: 600,
+                  letterSpacing: "-0.02em",
+                  marginBottom: 12,
+                  color: "#fff"
+                }}>
+                  Абсолютна приватність (End-to-End)
+                </h3>
+                
+                <p style={{
+                  fontSize: 16,
+                  color: "rgba(255,255,255,0.8)",
+                  lineHeight: 1.6,
+                  marginBottom: 16,
+                  fontWeight: 400
+                }}>
+                  Тепер повідомлення йдуть напряму: <strong style={{color: "#fff"}}>Ваш телефон → Сервери Telegram → Ваш Mac</strong>. Немає жодного проміжного бекенду, який би читав, зберігав чи маршрутизував ваші команди. 
+                </p>
+                
+                <p style={{
+                  fontSize: 15,
+                  color: "rgba(255,255,255,0.6)",
+                  lineHeight: 1.6
+                }}>
+                  Оскільки Atlas має доступ до файлів, екрану та управління комп'ютером, така децентралізована архітектура з використанням власного бота — це безпрецедентний рівень безпеки та захисту ваших даних.
+                </p>
+              </div>
+            </div>
+          </article>
+
       </div>
     </section>;
 }
