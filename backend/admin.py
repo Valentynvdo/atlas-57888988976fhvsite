@@ -337,10 +337,40 @@ async def get_version(_=Depends(require_admin)):
     cfg = await db.app_config.find_one({"_id": "atlas_version"}, {"_id": 0}) or {}
     return {
         "version": cfg.get("version", "0.9.0"),
-        "url": cfg.get("url", "/downloads/atlas.dmg"),
-        "size_mb": cfg.get("size_mb", 84),
+        "url": cfg.get("url", "/downloads/atlas-latest.dmg"),
+        "size_mb": cfg.get("size_mb", 1500),
         "released_at": cfg.get("released_at"),
     }
+
+
+@router.post("/version/link")
+async def update_version_link(body: dict, admin: dict = Depends(require_admin)):
+    version = body.get("version", "").strip()
+    url = body.get("url", "").strip()
+    size_mb = float(body.get("size_mb") or 0.0)
+    
+    if not version or not url:
+        raise HTTPException(400, "version and url required")
+        
+    safe = version.replace("/", "_")
+    
+    await db.app_config.update_one(
+        {"_id": "atlas_version"},
+        {"$set": {
+            "version": safe,
+            "url": url,
+            "size_mb": round(size_mb, 1),
+            "released_at": datetime.now(timezone.utc).isoformat(),
+        }},
+        upsert=True,
+    )
+    await db.admin_logs.insert_one({
+        "action": "update_version_link",
+        "performed_by": admin["email"],
+        "performed_at": datetime.now(timezone.utc).isoformat(),
+        "details": {"version": safe, "size_mb": size_mb, "url": url},
+    })
+    return {"version": safe, "url": url, "size_mb": size_mb}
 
 
 @router.post("/version")
@@ -357,8 +387,8 @@ async def upload_version(
     is_tar = file.filename.endswith(".tar.gz") or file.filename.endswith(".tgz")
     ext = ".tar.gz" if is_tar else ".dmg"
 
-    # Always save as atlas-latest.tar.gz (for secure download endpoint)
-    dest_latest = UPLOAD_DIR / "atlas-latest.tar.gz"
+    # Always save as atlas-latest.dmg (for secure download endpoint)
+    dest_latest = UPLOAD_DIR / "atlas-latest.dmg"
     dest_versioned = UPLOAD_DIR / f"atlas-{safe}{ext}"
 
     size = 0
@@ -368,13 +398,9 @@ async def upload_version(
             size += len(chunk)
             f.write(chunk)
 
-    # Copy to atlas-latest.tar.gz for the secure download system
+    # Copy to atlas-latest.dmg for the secure download system
     import shutil as _shutil
-    if ext == ".tar.gz":
-        _shutil.copy2(dest_versioned, dest_latest)
-    else:
-        # DMG upload: keep as versioned, latest remains tar.gz
-        pass
+    _shutil.copy2(dest_versioned, dest_latest)
 
     size_mb = round(size / (1024 * 1024), 1)
     url = f"/downloads/atlas-{safe}{ext}"

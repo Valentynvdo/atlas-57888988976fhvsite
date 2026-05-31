@@ -85,6 +85,7 @@ async def validate_key(body: dict, request: Request, background_tasks: Backgroun
         "expires_at": exp.isoformat(),
         "days_left": days_left,
         "message": "OK",
+        "telegram_bot_token": user.get("telegram_bot_token", "") if user else ""
     }
 
 
@@ -371,7 +372,7 @@ async def request_download_token(body: dict, request: Request):
     cutoff = (now - timedelta(minutes=30)).isoformat()
     await db.download_tokens.delete_many({"created_at": {"$lt": cutoff}})
 
-    server_base = os.getenv("BACKEND_URL", "https://atlas-site-2p2d.onrender.com")
+    server_base = os.getenv("BACKEND_URL", "https://atlas-backend-zhgz.onrender.com")
     return {
         "token": token,
         "download_url": f"{server_base}/api/atlas/download/{token}",
@@ -403,13 +404,33 @@ async def download_atlas(token: str, request: Request):
     )
 
     # Find the atlas package file
-    pkg_path = UPLOAD_DIR / "atlas-latest.tar.gz"
+    pkg_path = UPLOAD_DIR / "atlas-latest.dmg"
     if not pkg_path.exists():
         raise HTTPException(status_code=503, detail="Файл пакету ще не завантажено адміністратором")
 
     return FileResponse(
         path=str(pkg_path),
-        media_type="application/gzip",
-        filename="atlas-latest.tar.gz",
-        headers={"Content-Disposition": "attachment; filename=atlas-latest.tar.gz"}
+        media_type="application/x-apple-diskimage",
+        filename="atlas-latest.dmg",
+        headers={"Content-Disposition": "attachment; filename=atlas-latest.dmg"}
     )
+
+
+@router.get("/version")
+async def get_public_version():
+    """Public endpoint for the auto-updater to check the latest version."""
+    cfg = await db.app_config.find_one({"_id": "atlas_version"}, {"_id": 0}) or {}
+    server_base = os.getenv("BACKEND_URL", "https://atlas-backend-zhgz.onrender.com")
+    url_path = cfg.get("url", "/downloads/atlas-latest.dmg")
+    if url_path.startswith("http://") or url_path.startswith("https://"):
+        final_url = url_path
+    else:
+        final_url = f"{server_base}{url_path}"
+
+    return {
+        "version": cfg.get("version", "0.9.0"),
+        "url": final_url,
+        "size_mb": cfg.get("size_mb", 1500),
+        "released_at": cfg.get("released_at"),
+    }
+

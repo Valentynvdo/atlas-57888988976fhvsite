@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Atlas AI — Official Installer for macOS
-# Usage: curl -fsSL https://atlas-site-2p2d.onrender.com/install | bash
+# Usage: curl -fsSL https://atlas-assistant.online/install | bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 set -euo pipefail
 
-ATLAS_SERVER="https://atlas-site-2p2d.onrender.com"
+ATLAS_SERVER="https://atlas-assistant.online"
 INSTALL_DIR="/Library/Application Support/Atlas"
 LAUNCH_AGENT_DIR="/Library/LaunchAgents"
 LAUNCH_AGENT_ID="com.atlas.ai"

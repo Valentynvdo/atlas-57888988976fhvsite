@@ -187,6 +187,8 @@ async def register(body: dict, response: Response):
         inviter = await db.users.find_one({"user_id": {"$regex": f"^{invite_code}"}})
         if not inviter:
             raise HTTPException(status_code=400, detail="Недійсний реферальний код")
+        if inviter.get("invite_used"):
+            raise HTTPException(status_code=400, detail="Цей реферальний код вже було використано")
 
     existing = await db.users.find_one({"email": email})
     if existing:
@@ -208,7 +210,15 @@ async def register(body: dict, response: Response):
         "is_blocked": False,
         "admin_notes": "",
         "invited_by": invite_code,
+        "invite_used": False,  # This new user can also invite exactly 1 person
     })
+
+    if invite_code and inviter:
+        # Mark the inviter's code as used
+        await db.users.update_one(
+            {"user_id": inviter["user_id"]},
+            {"$set": {"invite_used": True}}
+        )
 
     await _ensure_license(user_id)
 

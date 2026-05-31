@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Atlas AI — Official Uninstaller for macOS
-# Usage: curl -fsSL https://atlas-site-2p2d.onrender.com/uninstall | bash
+# Usage: curl -fsSL https://atlas-assistant.online/uninstall | bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 set -euo pipefail
@@ -150,5 +150,5 @@ echo -e "${BOLD}${GREEN}  ✔ Atlas AI успішно видалено з ваш
 echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo ""
 echo -e "  Дякуємо, що користувалися Atlas AI!"
-echo -e "  Ви завжди можете повернутися: ${CYAN}https://atlas-site-2p2d.onrender.com${RESET}"
+echo -e "  Ви завжди можете повернутися: ${CYAN}https://atlas-assistant.online${RESET}"
 echo ""

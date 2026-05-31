@@ -952,5 +952,12 @@
   "awareness_s4_val": "Завжди під рукою",
   "awareness_badge_title": "Розпізнавання",
   "awareness_badge_val": "активоване",
-  "dashboard_download_app": "Завантажити macOS App (v{{version}})"
+  "dashboard_download_app": "Завантажити macOS App (v{{version}})",
+  "admin_ver_err": "Введіть версію та посилання",
+  "admin_ver_success": "Посилання успішно оновлено!",
+  "admin_ver_err2": "Помилка оновлення посилання",
+  "admin_ver_ph": "1.0.1",
+  "admin_ver_size": "Розмір (МБ)",
+  "admin_ver_link": "Пряме посилання (Google Drive...)",
+  "admin_ver_btn": "Зберегти посилання"
 }

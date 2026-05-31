@@ -126,3 +126,51 @@ async def regenerate_key(user: dict = Depends(get_current_user)):
         {"$set": {"key": new_key, "mac_id": None, "mac_name": None}},
     )
     return {"key": new_key}
+
+
+@router.get("/me/telegram")
+async def get_telegram_config(user: dict = Depends(get_current_user)):
+    """Fetch user's current telegram bot config."""
+    db_user = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "telegram_bot_token": db_user.get("telegram_bot_token", ""),
+        "telegram_bot_username": db_user.get("telegram_bot_username", ""),
+    }
+
+
+@router.post("/me/telegram")
+async def update_telegram_config(body: dict, user: dict = Depends(get_current_user)):
+    """Update user's telegram bot token. Validates token via Telegram API."""
+    token = (body.get("telegram_bot_token") or "").strip()
+    
+    bot_username = ""
+    if token:
+        import httpx
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                r = await client.get(f"https://api.telegram.org/bot{token}/getMe")
+                if r.status_code == 200:
+                    data = r.json()
+                    if data.get("ok"):
+                        bot_username = data.get("result", {}).get("username", "")
+                else:
+                    raise HTTPException(status_code=400, detail="Невірний Telegram Bot Token.")
+        except httpx.RequestError:
+            raise HTTPException(status_code=500, detail="Помилка з'єднання з Telegram API.")
+    
+    await db.users.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {
+            "telegram_bot_token": token,
+            "telegram_bot_username": bot_username
+        }}
+    )
+    
+    return {
+        "ok": True,
+        "telegram_bot_token": token,
+        "telegram_bot_username": bot_username
+    }
+

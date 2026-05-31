@@ -951,6 +951,13 @@
   "awareness_s4_title": "Preferences",
   "awareness_s4_val": "Always at hand",
   "awareness_badge_title": "Recognition",
-  "awareness_badge_val": "activated",
-  "dashboard_download_app": "Download macOS App (v{{version}})"
+  "awareness_badge_val": "active",
+  "dashboard_download_app": "Download macOS App (v{{version}})",
+  "admin_ver_err": "Enter version and link",
+  "admin_ver_success": "Link successfully updated!",
+  "admin_ver_err2": "Error updating link",
+  "admin_ver_ph": "1.0.1",
+  "admin_ver_size": "Size (MB)",
+  "admin_ver_link": "Direct link (Google Drive...)",
+  "admin_ver_btn": "Save link"
 }

@@ -3047,34 +3047,32 @@ function ManualKeyGen({
     </div>;
 }
 function VersionUpload({
-  fileRef,
   onUploaded
 }) {
   const { t } = useTranslation();
   const [version, setVersion] = useState("");
+  const [url, setUrl] = useState("");
+  const [sizeMb, setSizeMb] = useState("");
   const [busy, setBusy] = useState(false);
   const submit = async () => {
-    const f = fileRef.current?.files?.[0];
-    if (!f || !version) {
-      toast.error(t("txt_1430"));
+    if (!url || !version) {
+      toast.error(t("admin_ver_err"));
       return;
     }
-    const fd = new FormData();
-    fd.append("version", version);
-    fd.append("file", f);
     setBusy(true);
     try {
-      await api.post("/api/admin/version", fd, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+      await api.post("/api/admin/version/link", {
+        version,
+        url,
+        size_mb: parseFloat(sizeMb) || 0
       });
-      toast.success(t("txt_1431"));
+      toast.success(t("admin_ver_success"));
       onUploaded();
       setVersion("");
-      if (fileRef.current) fileRef.current.value = "";
+      setUrl("");
+      setSizeMb("");
     } catch {
-      toast.error(t("txt_1432"));
+      toast.error(t("admin_ver_err2"));
     } finally {
       setBusy(false);
     }
@@ -3084,45 +3082,45 @@ function VersionUpload({
     gap: 8,
     flexDirection: "column"
   }}>
-      <input data-testid="version-input" placeholder="1.0.0" value={version} onChange={e => setVersion(e.target.value)} style={{
-      padding: "12px 14px",
-      background: "rgba(0,0,0,0.5)",
-      border: "1px solid rgba(255,255,255,0.1)",
-      borderRadius: 12,
-      color: "#fff",
-      fontSize: 13,
-      outline: "none",
-      width: "100%"
-    }} />
-      <div style={{
-      display: "flex",
-      gap: 8,
-      alignItems: "center",
-      flexWrap: "wrap"
-    }}>
-        <button data-testid="version-pick-btn" onClick={() => fileRef.current?.click()} className="ghost-btn" style={{
-        padding: "0 16px",
+      <div style={{ display: "flex", gap: 8 }}>
+        <input placeholder={t("admin_ver_ph")} value={version} onChange={e => setVersion(e.target.value)} style={{
+        padding: "12px 14px",
+        background: "rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.1)",
         borderRadius: 12,
-        height: 43,
-        background: "rgba(255,255,255,0.03)"
-      }}>{t("txt_1433")}</button>
-        <span style={{
-        color: "rgba(255,255,255,0.4)",
-        fontSize: 12,
-        flex: 1,
-        textOverflow: "ellipsis",
-        overflow: "hidden",
-        whiteSpace: "nowrap"
-      }}>
-          {fileRef.current?.files?.[0]?.name || t("txt_1434")}
-        </span>
-        <button data-testid="version-upload-btn" onClick={submit} disabled={busy || !version} className="cta-btn" style={{
+        color: "#fff",
+        fontSize: 13,
+        outline: "none",
+        flex: 1
+      }} />
+        <input placeholder={t("admin_ver_size")} type="number" value={sizeMb} onChange={e => setSizeMb(e.target.value)} style={{
+        padding: "12px 14px",
+        background: "rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 12,
+        color: "#fff",
+        fontSize: 13,
+        outline: "none",
+        flex: 1
+      }} />
+      </div>
+      <input placeholder={t("admin_ver_link")} value={url} onChange={e => setUrl(e.target.value)} style={{
+        padding: "12px 14px",
+        background: "rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 12,
+        color: "#fff",
+        fontSize: 13,
+        outline: "none",
+        width: "100%"
+      }} />
+      <button onClick={submit} disabled={busy || !version || !url} className="cta-btn" style={{
         padding: "0 20px",
         borderRadius: 12,
         height: 43
       }}>
-          {busy ? <Loader2 size={14} className="spin" /> : <Upload size={14} />}{t("txt_1435")}</button>
-      </div>
+        {busy ? <Loader2 size={14} className="spin" /> : <Upload size={14} />} {t("admin_ver_btn")}
+      </button>
     </div>;
 }
 function fmtDate(iso) {
