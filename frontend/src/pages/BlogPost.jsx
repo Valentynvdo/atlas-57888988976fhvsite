@@ -41,26 +41,47 @@ export default function BlogPost() {
     }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
-        <Link to="/blog" style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          fontSize: "0.95rem",
-          fontWeight: 500,
-          color: "rgba(255,255,255,0.6)",
-          textDecoration: "none",
-          marginBottom: 40,
-          transition: "color 0.2s ease"
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
-        onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          {lang === 'uk' ? 'На головну блогу' : lang === 'ru' ? 'На главную блога' : 'Back to Blog'}
-        </Link>
+        <div style={{ display: "flex", gap: 24, marginBottom: 40 }}>
+          <Link to="/" style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: "0.95rem",
+            fontWeight: 500,
+            color: "rgba(255,255,255,0.6)",
+            textDecoration: "none",
+            transition: "color 0.2s ease"
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
+          onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            {lang === 'uk' ? 'На головну' : lang === 'ru' ? 'На главную' : 'Home'}
+          </Link>
+
+          <Link to="/blog" style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: "0.95rem",
+            fontWeight: 500,
+            color: "rgba(255,255,255,0.6)",
+            textDecoration: "none",
+            transition: "color 0.2s ease"
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
+          onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            {lang === 'uk' ? 'Блог' : lang === 'ru' ? 'Блог' : 'Blog'}
+          </Link>
+        </div>
 
         <div style={{ fontSize: "0.9rem", color: "rgba(0,229,255,0.8)", fontWeight: 500, letterSpacing: "0.05em", marginBottom: 16 }}>
           {blog.date} • {blog.readTime}

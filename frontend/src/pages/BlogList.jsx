@@ -1,20 +1,48 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { blogs } from '../data/blogs';
+import { ArrowLeft } from 'lucide-react';
 
 export default function BlogList() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language || 'en';
+  const navigate = useNavigate();
 
   return (
     <div style={{
+      position: "relative",
       minHeight: "100vh",
       background: "radial-gradient(circle at 50% 0%, #111 0%, #000 100%)",
       color: "#fff",
       fontFamily: "'Inter', sans-serif",
       padding: "120px 24px 60px 24px"
     }}>
+      <button 
+        onClick={() => navigate("/")} 
+        style={{
+          position: "absolute",
+          top: 28,
+          left: 28,
+          background: "transparent",
+          border: "none",
+          color: "rgba(255,255,255,0.6)",
+          padding: "10px 0",
+          fontSize: 14,
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          zIndex: 10,
+          transition: "all 0.2s ease"
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.color = "#fff"}
+        onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
+      >
+        <ArrowLeft size={16} />
+        {lang === 'uk' ? 'На головну' : lang === 'ru' ? 'На главную' : 'Back to Home'}
+      </button>
+
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <h1 style={{ 
           fontSize: "3rem", 
