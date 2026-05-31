@@ -907,7 +907,7 @@ a:focus-visible {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
+    width: 100vw;
     height: min(650px, 85vh);
     pointer-events: none;
     z-index: 1;
