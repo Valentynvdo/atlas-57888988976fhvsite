@@ -169,12 +169,11 @@ export default function Careers() {
         position: "absolute", top: 40, left: 40,
         display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.6)", 
         textDecoration: "none", fontSize: 14, fontWeight: 600,
-        padding: "10px 16px", borderRadius: 100, background: "rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(10px)",
-        transition: "all 0.2s", zIndex: 10
+        padding: "10px 0", background: "transparent",
+        border: "none", transition: "all 0.2s", zIndex: 10
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#fff"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}>
+      onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}>
         <ArrowLeft size={16} />
         {t("atlas_v2.careers.back_home") || "Повернутися"}
       </Link>
