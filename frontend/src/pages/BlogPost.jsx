@@ -14,20 +14,22 @@ export default function BlogPost() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  if (!blog) {
-    return <Navigate to="/blog" replace />;
-  }
-
-  const localizedData = blog.content[lang] || blog.content['en'];
+  const localizedData = blog ? (blog.content[lang] || blog.content['en']) : null;
 
   // SEO update
   useEffect(() => {
-    document.title = `${localizedData.title} | Atlas AI`;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute("content", localizedData.excerpt);
+    if (localizedData) {
+      document.title = `${localizedData.title} | Atlas AI`;
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute("content", localizedData.excerpt);
+      }
     }
-  }, [localizedData.title, localizedData.excerpt]);
+  }, [localizedData]);
+
+  if (!blog) {
+    return <Navigate to="/blog" replace />;
+  }
 
   return (
     <div style={{
