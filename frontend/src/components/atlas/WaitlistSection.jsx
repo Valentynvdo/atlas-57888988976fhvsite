@@ -286,20 +286,53 @@ export default function WaitlistSection({ onCta }) {
           </div>
 
           {/* Projected Pricing */}
-          <div style={{ marginTop: 64, display: "flex", justifyContent: "center" }}>
-            <div style={{
-              textAlign: "center",
-              maxWidth: 400
+          <div style={{ marginTop: 64, textAlign: "center" }}>
+            <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 24 }}>
+              {t("waitlist.projected_pricing", "Прогнозована ціна")}
+            </div>
+            
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "center", 
+              alignItems: "center", 
+              flexWrap: "wrap", 
+              gap: 40 
             }}>
-              <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 12 }}>
-                {t("waitlist.projected_pricing", "Прогнозована ціна")}
+              {/* Monthly */}
+              <div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{t("waitlist.plan_monthly", "Місячний")}</div>
+                <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
+                  $28.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
+                </div>
               </div>
-              <div style={{ fontSize: 48, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 8 }}>
-                $28.99 <span style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
+              
+              {/* Divider (visible on desktop) */}
+              <div style={{ width: 1, height: 40, background: "rgba(255,255,255,0.1)", display: "none" }} className="pricing-divider"></div>
+
+              {/* Quarterly */}
+              <div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{t("waitlist.plan_quarterly", "Квартальний")}</div>
+                <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
+                  $69.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_quarter", "/ 3 місяці")}</span>
+                </div>
               </div>
-              <div style={{ marginTop: 16, fontSize: 14, color: "#00E5FF", fontWeight: 500 }}>
-                {t("waitlist.discount_notice", "Учасники черги отримають пожиттєву знижку")}
+
+              {/* Divider (visible on desktop) */}
+              <div style={{ width: 1, height: 40, background: "rgba(255,255,255,0.1)", display: "none" }} className="pricing-divider"></div>
+
+              {/* Yearly */}
+              <div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>
+                  {t("waitlist.plan_yearly", "Річний")} <span style={{ color: "#00E5FF", marginLeft: 6 }}>(-30%)</span>
+                </div>
+                <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
+                  $239.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_year", "/ рік")}</span>
+                </div>
               </div>
+            </div>
+
+            <div style={{ marginTop: 24, fontSize: 14, color: "#00E5FF", fontWeight: 500 }}>
+              {t("waitlist.discount_notice", "Учасники черги отримають пожиттєву знижку")}
             </div>
           </div>
 
@@ -310,6 +343,11 @@ export default function WaitlistSection({ onCta }) {
         @keyframes pulse-dot {
           0%, 100% { opacity: 1; box-shadow: 0 0 8px #00E5FF; }
           50% { opacity: 0.5; box-shadow: 0 0 4px #00E5FF; }
+        }
+        @media (min-width: 768px) {
+          .pricing-divider {
+            display: block !important;
+          }
         }
       `}</style>
     </>
