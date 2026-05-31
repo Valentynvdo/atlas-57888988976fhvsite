@@ -680,18 +680,30 @@ export default function Docs() {
             marginBottom: 16
           }}>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step1")}</h3>
-              <ul style={{ color: "rgba(255,255,255,0.7)", paddingLeft: 20, lineHeight: 1.6, marginBottom: 20 }}>
+              <ul style={{ color: "rgba(255,255,255,0.7)", paddingLeft: 20, lineHeight: 1.6, marginBottom: 16 }}>
                 <li dangerouslySetInnerHTML={{ __html: t("docs_telegram_step1_l1") }} />
                 <li dangerouslySetInnerHTML={{ __html: t("docs_telegram_step1_l2") }} />
                 <li>{t("docs_telegram_step1_l3")}</li>
                 <li>{t("docs_telegram_step1_l4")}</li>
               </ul>
+              {/* Зображення для Кроку 1 */}
+              <div style={{ marginBottom: 32, borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <img src="/assets/docs/bot_step1.jpg" alt="BotFather Step 1" style={{ width: "100%", display: "block" }} onError={(e) => { e.target.style.display='none'; e.target.parentElement.style.display='none'; }} />
+              </div>
               
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step2")}</h3>
-              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 20 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step2_desc") }} />
+              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 16 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step2_desc") }} />
+              {/* Зображення для Кроку 2 */}
+              <div style={{ marginBottom: 32, borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <img src="/assets/docs/bot_step2.jpg" alt="Bot Token" style={{ width: "100%", display: "block" }} onError={(e) => { e.target.style.display='none'; e.target.parentElement.style.display='none'; }} />
+              </div>
               
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step3")}</h3>
-              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step3_desc") }} />
+              <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 16 }} dangerouslySetInnerHTML={{ __html: t("docs_telegram_step3_desc") }} />
+              {/* Зображення для Кроку 3 */}
+              <div style={{ marginBottom: 16, borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <img src="/assets/docs/bot_step3.jpg" alt="Dashboard Connection" style={{ width: "100%", display: "block" }} onError={(e) => { e.target.style.display='none'; e.target.parentElement.style.display='none'; }} />
+              </div>
             </div>
           </section>
 
@@ -1075,7 +1087,7 @@ main();`} />
           scrollMarginTop: 100,
           marginBottom: 80
         }}>
-            <SectionTitle eyebrow={t("txt_1147")} title={t("txt_1148")} desc="Захищений інсталятор перевіряє вашу ліцензію, завантажує Atlas та встановлює його в системну директорію macOS із захистом доступу." />
+            <SectionTitle eyebrow={t("txt_1147")} title={t("txt_1148")} desc={t("docs_install_desc")} />
             
             {/* System Requirements */}
             <div style={{
@@ -1145,9 +1157,7 @@ main();`} />
               color: "#00E5FF",
               marginBottom: 8
             }}>{t("txt_1154")}</div>
-              <p style={{ color: "#fff", fontSize: 14 }}>
-                Завантажте <b>Atlas.dmg</b> у вашому особистому кабінеті, відкрийте файл та перетягніть Atlas в папку "Програми".
-              </p>
+              <p style={{ color: "#fff", fontSize: 14 }} dangerouslySetInnerHTML={{ __html: t("docs_install_step0") }} />
               <p style={{
               fontSize: 13,
               color: "rgba(255,255,255,0.5)",
