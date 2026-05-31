@@ -322,6 +322,19 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {user?.invited_by && (
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, marginBottom: 20 }}>
+                    <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>Applied Invite Code</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontSize: 18, marginBottom: 4, fontFamily: "monospace", letterSpacing: "0.1em" }}>{user.invited_by}</div>
+                        <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>Bonus active</div>
+                      </div>
+                      <div style={{ color: "#28C840", fontWeight: 500, fontSize: 16 }}>+10% Discount</div>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ background: "linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%)", border: "1px solid rgba(0, 229, 255, 0.3)", borderRadius: 16, padding: 28 }}>
                   <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
                     <LinkIcon color="#00E5FF" size={28} />

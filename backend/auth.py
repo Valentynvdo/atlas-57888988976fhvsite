@@ -182,6 +182,12 @@ async def register(body: dict, response: Response):
     if email == admin_email_fixed or email == "admin":
         raise HTTPException(status_code=400, detail="Цей email зарезервований для адміністратора")
 
+    if invite_code:
+        # Check if the invite code matches a user_id prefix
+        inviter = await db.users.find_one({"user_id": {"$regex": f"^{invite_code}"}})
+        if not inviter:
+            raise HTTPException(status_code=400, detail="Недійсний реферальний код")
+
     existing = await db.users.find_one({"email": email})
     if existing:
         raise HTTPException(status_code=400, detail="Користувач з таким email вже існує")
@@ -558,6 +564,7 @@ async def me(user: dict = Depends(get_current_user)):
         "avatar_url": user.get("avatar_url"),
         "is_admin": bool(admin_email and user["email"].lower() == admin_email) or user.get("is_admin", False),
         "is_super_admin": bool(admin_email and user["email"].lower() == admin_email) or user.get("is_super_admin", False),
+        "invited_by": user.get("invited_by"),
     }
 
 
