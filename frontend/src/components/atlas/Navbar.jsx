@@ -93,7 +93,7 @@ export default function Navbar({ onCta }) {
             ].map((link) => (
               <a
                 key={link.id}
-                href={isHomePage ? `#${link.id}` : `/#${link.id}`}
+                href={isHomePage ? `#${link.id}` : `${i18n.language === 'en' ? '/en' : ''}/#${link.id}`}
                 data-testid={`nav-link-${link.id}`}
                 style={{
                   color: "rgba(255,255,255,0.72)",
@@ -157,7 +157,7 @@ export default function Navbar({ onCta }) {
               {i18n.language === 'uk' ? 'EN' : 'UA'}
             </button>
             <a
-              href="/docs"
+              href={i18n.language === 'en' ? "/en/docs" : "/docs"}
               onClick={(e) => {
                 e.preventDefault();
                 navigate("/docs");
@@ -249,7 +249,7 @@ export default function Navbar({ onCta }) {
           ].map((link) => (
             <a
               key={link.id}
-              href={isHomePage ? `#${link.id}` : `/#${link.id}`}
+              href={isHomePage ? `#${link.id}` : `${i18n.language === 'en' ? '/en' : ''}/#${link.id}`}
               onClick={() => setIsMobileMenuOpen(false)}
               style={{
                 color: "#fff",
@@ -264,11 +264,11 @@ export default function Navbar({ onCta }) {
           ))}
 
           <a
-            href="/docs"
+            href={i18n.language === 'en' ? "/en/docs" : "/docs"}
             onClick={(e) => {
               e.preventDefault();
               setIsMobileMenuOpen(false);
-              navigate("/docs");
+              navigate(i18n.language === 'en' ? "/en/docs" : "/docs");
             }}
             style={{
               color: "rgba(255, 255, 255, 0.8)",

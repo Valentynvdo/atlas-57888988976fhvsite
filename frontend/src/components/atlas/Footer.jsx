@@ -2,14 +2,19 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  
+  const getLocalizedPath = (path) => {
+    return i18n.language === 'en' ? `/en${path}` : path;
+  };
+
   const links = [
-    { label: t("footer.privacy"), path: "/privacy" },
-    { label: t("footer.terms"), path: "/terms" },
-    { label: t("footer.contacts"), path: "/contacts" },
-    { label: t("atlas_v2.careers.footer_link") || "Careers", path: "/careers" },
-    { label: t("footer.investors") || "Investors", path: "/investors" },
-    { label: t("footer.blog") || "Blog / Блог", path: "/blog" }
+    { label: t("footer.privacy"), path: getLocalizedPath("/privacy") },
+    { label: t("footer.terms"), path: getLocalizedPath("/terms") },
+    { label: t("footer.contacts"), path: getLocalizedPath("/contacts") },
+    { label: t("atlas_v2.careers.footer_link") || "Careers", path: getLocalizedPath("/careers") },
+    { label: t("footer.investors") || "Investors", path: getLocalizedPath("/investors") },
+    { label: t("footer.blog") || "Blog / Блог", path: getLocalizedPath("/blog") }
   ];
 
   return (
