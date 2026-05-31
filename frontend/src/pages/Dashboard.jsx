@@ -264,7 +264,7 @@ export default function Dashboard() {
                 <button onClick={copyKey} style={{ background: "#00E5FF", border: "none", color: "#000", padding: "12px 24px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
                   <Copy size={18}/> Copy Key
                 </button>
-                <a href={appVersion?.url || "/AtlasAI-Installer-1.0.dmg"} download style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                <a href={appVersion?.url || "/AtlasAI-Installer-1.0.dmg"} target="_blank" rel="noopener noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
                   <Download size={18}/> {t("dashboard_download_app", { version: appVersion?.version || "1.0" })}
                 </a>
               </div>
