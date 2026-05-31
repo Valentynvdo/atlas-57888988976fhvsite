@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { ArrowLeft, Mail, MessageSquare, Globe, Navigation, Send } from "lucide-react";
 export default function Contacts() {
   const {
     t
   } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   return <div style={{
     minHeight: "100vh",
     background: "radial-gradient(800px 500px at 50% 0%, rgba(0,229,255,0.1), transparent 60%), #000",

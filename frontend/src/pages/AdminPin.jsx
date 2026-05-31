@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { Lock, Loader2 } from "lucide-react";
 import api from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -14,7 +15,7 @@ export default function AdminPin({
     user,
     loading
   } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const [pin, setPin] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");

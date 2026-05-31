@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 
 export default function InviteHandler() {
   const { code } = useParams();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
 
   useEffect(() => {
     if (code) {

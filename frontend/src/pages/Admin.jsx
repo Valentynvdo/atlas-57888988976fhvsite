@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { toast, Toaster } from "sonner";
 import { LogOut, Search, Users, TrendingUp, DollarSign, AlertCircle, Loader2, Upload, KeyRound, Activity, X, ShieldOff, ShieldCheck, RefreshCw, Clock, Compass, Cpu, Database, Radio, FileText, Lock, Globe, MapPin, AlertTriangle, Plus, BookOpen } from "lucide-react";
 import api from "../lib/api";
@@ -17,7 +18,7 @@ export default function Admin() {
     loading,
     logout
   } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const [unlocked, setUnlocked] = useState(false);
   const [checking, setChecking] = useState(true);
 

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import CustomCursor from "./components/CustomCursor";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import LenisScroll from "./components/LenisScroll";
 import useBentoGlow from "./hooks/useBentoGlow";
+import useLocalizedNavigate from "./hooks/useLocalizedNavigate";
 
 import Navbar from "./components/atlas/Navbar";
 import Hero from "./components/atlas/Hero";
@@ -43,7 +44,7 @@ const InviteHandler = lazy(() => import("./pages/InviteHandler"));
 
 
 function Landing() {
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const rootRef = useScrollReveal();
   useBentoGlow();
 

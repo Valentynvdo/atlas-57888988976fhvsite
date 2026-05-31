@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { toast, Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,7 +16,7 @@ export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language || 'en';
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const [search] = useSearchParams();
 
   const [license, setLicense] = useState(null);

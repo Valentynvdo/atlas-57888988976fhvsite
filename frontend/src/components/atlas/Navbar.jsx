@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
 import { Menu, X, Globe } from "lucide-react";
+import useLocalizedNavigate from "../../hooks/useLocalizedNavigate";
 
 export default function Navbar({ onCta }) {
   const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const isHomePage = window.location.pathname === "/";
+  const navigate = useLocalizedNavigate();
+  const isHomePage = window.location.pathname === "/" || window.location.pathname === "/en";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -124,7 +124,11 @@ export default function Navbar({ onCta }) {
                   newPath = `/en${currentPath === '/' ? '' : currentPath}`;
                 }
                 const searchAndHash = window.location.search + window.location.hash;
-                navigate(newPath + searchAndHash);
+                // Use standard window location change for language switch to ensure hard reload if needed or just standard react-router navigate 
+                // We use standard navigate but bypassing localized logic by manually formatting:
+                // Actually navigate(newPath) here would trigger the localized hook which might add/remove EN.
+                // So for the language switcher, it's better to force a hard redirect or use window.location
+                window.location.href = newPath + searchAndHash;
               }}
               style={{
                 background: "none",

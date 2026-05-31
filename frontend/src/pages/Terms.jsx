@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { ArrowLeft, Scale, CheckCircle, AlertTriangle, HelpCircle } from "lucide-react";
 export default function Terms() {
   const {
     t
   } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   return <div style={{
     minHeight: "100vh",
     background: "radial-gradient(800px 500px at 50% 0%, rgba(157,76,221,0.12), transparent 60%), #000",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../../hooks/useLocalizedNavigate";
 import {
   Check, ArrowRight, Users, Zap, Clock, Star,
   Send, Globe, TrendingUp, MessageCircle
@@ -47,7 +47,7 @@ const PLANS = [
 
 export default function WaitlistSection({ onCta }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const { user } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState("atlas_quarterly");
   const [totalWaitlist, setTotalWaitlist] = useState(null);

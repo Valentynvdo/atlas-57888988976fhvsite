@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { useTranslation, Trans } from "react-i18next";
 import { useAuth } from "../lib/auth";
 import api from "../lib/api";
@@ -7,7 +8,7 @@ import api from "../lib/api";
 export default function Login() {
   const { t } = useTranslation();
   const { user, loading, refresh } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
 
   // Tab: 'login' | 'register' | 'forgot_password'
   const [tab, setTab] = useState("login");

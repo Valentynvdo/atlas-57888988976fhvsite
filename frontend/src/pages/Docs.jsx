@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { useAuth } from "../lib/auth";
 import { toast, Toaster } from "sonner";
 import api from "../lib/api";
@@ -193,7 +194,7 @@ export default function Docs() {
   const {
     user
   } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const [activeSection, setActiveSection] = useState("intro");
   const sectionsRef = useRef({});
   const [customDocs, setCustomDocs] = useState([]);
