@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /x7k9m-admin/
 
 Sitemap: https://atlas-assistant.online/sitemap.xml
