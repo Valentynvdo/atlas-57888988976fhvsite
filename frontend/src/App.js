@@ -136,6 +136,11 @@ function LanguageWrapper({ children }) {
     ? "Autonomous next-generation AI assistant built for your comfort and maximum productivity. Download for macOS."
     : "Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS.";
 
+  const basePath = location.pathname.replace(/^\/en/, "") || "/";
+  const urlUk = `https://atlas-assistant.online${basePath === "/" ? "" : basePath}`;
+  const urlEn = `https://atlas-assistant.online/en${basePath === "/" ? "" : basePath}`;
+  const currentUrl = isEn ? urlEn : urlUk;
+
   return (
     <>
       <Helmet>
@@ -144,8 +149,13 @@ function LanguageWrapper({ children }) {
         <meta name="description" content={desc} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />
+        <meta property="og:url" content={currentUrl} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={desc} />
+        <link rel="canonical" href={currentUrl} />
+        <link rel="alternate" hreflang="uk" href={urlUk} />
+        <link rel="alternate" hreflang="en" href={urlEn} />
+        <link rel="alternate" hreflang="x-default" href={urlUk} />
       </Helmet>
       {children}
     </>
