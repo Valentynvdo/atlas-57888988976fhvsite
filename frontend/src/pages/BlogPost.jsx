@@ -42,7 +42,7 @@ export default function BlogPost() {
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <div style={{ display: "flex", gap: 24, marginBottom: 40 }}>
-          <Link to="/" style={{
+          <Link to={lang === 'en' ? "/en/" : "/"} style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
@@ -62,7 +62,7 @@ export default function BlogPost() {
             {lang === 'uk' ? 'На головну' : lang === 'ru' ? 'На главную' : 'Home'}
           </Link>
 
-          <Link to="/blog" style={{
+          <Link to={lang === 'en' ? "/en/blog" : "/blog"} style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 6,

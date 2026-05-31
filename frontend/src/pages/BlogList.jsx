@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import useLocalizedNavigate from '../hooks/useLocalizedNavigate';
 import { blogs } from '../data/blogs';
 import { ArrowLeft } from 'lucide-react';
 
@@ -82,7 +83,7 @@ export default function BlogList() {
                 <div style={{ fontSize: "0.9rem", color: "rgba(0,229,255,0.8)", fontWeight: 500, letterSpacing: "0.05em" }}>
                   {blog.date} • {blog.readTime}
                 </div>
-                <Link to={`/blog/${blog.slug}`} style={{ textDecoration: "none" }}>
+                <Link to={lang === 'en' ? `/en/blog/${blog.slug}` : `/blog/${blog.slug}`} style={{ textDecoration: "none" }}>
                   <h2 style={{
                     fontSize: "2rem",
                     fontWeight: 600,
@@ -105,7 +106,7 @@ export default function BlogList() {
                 }}>
                   {localizedData.excerpt}
                 </p>
-                <Link to={`/blog/${blog.slug}`} style={{
+                <Link to={lang === 'en' ? `/en/blog/${blog.slug}` : `/blog/${blog.slug}`} style={{
                   fontSize: "1rem",
                   fontWeight: 500,
                   color: "#fff",

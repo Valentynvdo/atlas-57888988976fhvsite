@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { ScanFace, MapPin, Users, Heart } from "lucide-react";
@@ -7,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function AbsoluteAwareness() {
   const sectionRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -65,7 +67,7 @@ export default function AbsoluteAwareness() {
             }}
           >
             <div className="section-eyebrow" style={{ marginBottom: 0 }}>
-              Абсолютна Свідомість
+              {t("awareness_eyebrow")}
             </div>
             <div
               style={{
@@ -81,7 +83,7 @@ export default function AbsoluteAwareness() {
                 fontFamily: "var(--sf-text, -apple-system, sans-serif)",
               }}
             >
-              Atlas Vision
+              {t("awareness_vision")}
             </div>
           </div>
           <h2
@@ -95,11 +97,8 @@ export default function AbsoluteAwareness() {
               fontWeight: 700,
               fontFamily: "var(--sf-display, -apple-system, sans-serif)",
             }}
-          >
-            Пам'ятає те,
-            <br />
-            що важливо для вас
-          </h2>
+            dangerouslySetInnerHTML={{ __html: t("awareness_title") }}
+          />
           <p
             style={{
               marginTop: 24,
@@ -111,7 +110,7 @@ export default function AbsoluteAwareness() {
               maxWidth: 560,
             }}
           >
-            Атлас впізнає вас в обличчя, пам'ятає ваші адреси, вподобання та імена ваших гостей, забезпечуючи абсолютно персоналізований досвід — без зайвих запитань.
+            {t("awareness_desc")}
           </p>
 
           <div
@@ -125,23 +124,23 @@ export default function AbsoluteAwareness() {
             {[
               {
                 icon: <ScanFace size={24} color="#00E5FF" />,
-                title: "Розпізнавання",
-                value: "Обличчя та Голос",
+                title: t("awareness_s1_title"),
+                value: t("awareness_s1_val"),
               },
               {
                 icon: <MapPin size={24} color="#007AFF" />,
-                title: "Адреси",
-                value: "Дім · Робота",
+                title: t("awareness_s2_title"),
+                value: t("awareness_s2_val"),
               },
               {
                 icon: <Users size={24} color="#9D4CDD" />,
-                title: "Контакти",
-                value: "Сім'я · Друзі",
+                title: t("awareness_s3_title"),
+                value: t("awareness_s3_val"),
               },
               {
                 icon: <Heart size={24} color="#FF6B9A" />,
-                title: "Вподобання",
-                value: "Завжди під рукою",
+                title: t("awareness_s4_title"),
+                value: t("awareness_s4_val"),
               },
             ].map((m, i) => (
               <div
@@ -212,7 +211,7 @@ export default function AbsoluteAwareness() {
             }}
           />
           <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
-            <FaceIDOrb />
+            <FaceIDOrb t={t} />
           </div>
         </article>
       </div>
@@ -220,7 +219,7 @@ export default function AbsoluteAwareness() {
   );
 }
 
-function FaceIDOrb() {
+function FaceIDOrb({ t }) {
   return (
     <div
       style={{
@@ -350,9 +349,9 @@ function FaceIDOrb() {
             lineHeight: 1.3,
           }}
         >
-          Розпізнавання
+          {t("awareness_badge_title")}
           <br />
-          <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>активоване</span>
+          <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>{t("awareness_badge_val")}</span>
         </div>
       </div>
     </div>

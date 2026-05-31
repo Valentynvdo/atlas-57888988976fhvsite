@@ -937,5 +937,19 @@
   "docs_telegram_step3": "Step 3: Connecting to Atlas",
   "docs_telegram_step3_desc": "Go to the <a href=\"/dashboard\" style=\"color: #00E5FF\">Dashboard</a>, paste your token in the \"Telegram Bot Settings\" section and click \"Save\". Your local Atlas AI app will automatically sync with this bot!",
   "faq_q6": "How to set up the Telegram bot for remote access?",
-  "faq_a6": "Go to the Dashboard, create a bot via @BotFather, paste the token into the respective field, and click Save. Then simply text your bot from your phone."
+  "faq_a6": "Go to the Dashboard, create a bot via @BotFather, paste the token into the respective field, and click Save. Then simply text your bot from your phone.",
+  "awareness_eyebrow": "Absolute Awareness",
+  "awareness_vision": "Atlas Vision",
+  "awareness_title": "Remembers what<br />matters to you",
+  "awareness_desc": "Atlas recognizes your face, remembers your addresses, preferences, and the names of your guests, providing an absolutely personalized experience — without unnecessary questions.",
+  "awareness_s1_title": "Recognition",
+  "awareness_s1_val": "Face & Voice",
+  "awareness_s2_title": "Addresses",
+  "awareness_s2_val": "Home · Work",
+  "awareness_s3_title": "Contacts",
+  "awareness_s3_val": "Family · Friends",
+  "awareness_s4_title": "Preferences",
+  "awareness_s4_val": "Always at hand",
+  "awareness_badge_title": "Recognition",
+  "awareness_badge_val": "activated"
 }
