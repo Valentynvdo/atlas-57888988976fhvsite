@@ -951,5 +951,6 @@
   "awareness_s4_title": "Вподобання",
   "awareness_s4_val": "Завжди під рукою",
   "awareness_badge_title": "Розпізнавання",
-  "awareness_badge_val": "активоване"
+  "awareness_badge_val": "активоване",
+  "dashboard_download_app": "Завантажити macOS App (v{{version}})"
 }

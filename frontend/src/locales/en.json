@@ -951,5 +951,6 @@
   "awareness_s4_title": "Preferences",
   "awareness_s4_val": "Always at hand",
   "awareness_badge_title": "Recognition",
-  "awareness_badge_val": "activated"
+  "awareness_badge_val": "activated",
+  "dashboard_download_app": "Download macOS App (v{{version}})"
 }
