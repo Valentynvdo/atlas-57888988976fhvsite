@@ -8,7 +8,8 @@ export default function Footer() {
     { label: t("footer.terms"), path: "/terms" },
     { label: t("footer.contacts"), path: "/contacts" },
     { label: t("atlas_v2.careers.footer_link") || "Careers", path: "/careers" },
-    { label: t("footer.investors") || "Investors", path: "/investors" }
+    { label: t("footer.investors") || "Investors", path: "/investors" },
+    { label: t("footer.blog") || "Blog / Блог", path: "/blog" }
   ];
 
   return (

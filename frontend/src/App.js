@@ -34,6 +34,8 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Contacts = lazy(() => import("./pages/Contacts"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Investors = lazy(() => import("./pages/Investors"));
+const BlogList = lazy(() => import("./pages/BlogList"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 
 
@@ -111,6 +113,8 @@ function AppRouter() {
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/investors" element={<Investors />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/dashboard"
