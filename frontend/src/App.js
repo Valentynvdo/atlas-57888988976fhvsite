@@ -137,6 +137,8 @@ function AppRouter() {
   );
 }
 
+import CookieBanner from "./components/CookieBanner";
+
 function App() {
   return (
     <LenisScroll>
@@ -145,6 +147,7 @@ function App() {
         <AuthProvider>
           <CustomCursor />
           <AppRouter />
+          <CookieBanner />
         </AuthProvider>
       </BrowserRouter>
     </LenisScroll>

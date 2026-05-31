@@ -569,6 +569,53 @@ async def logout(request: Request, response: Response):
     return {"ok": True}
 
 
+@router.post("/me/change-password")
+async def change_password(body: dict, user: dict = Depends(get_current_user)):
+    current_password = body.get("current_password") or ""
+    new_password = body.get("new_password") or ""
+
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="Новий пароль має бути не менше 6 символів")
+
+    db_user = await db.users.find_one({"user_id": user["user_id"]})
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    salt = db_user.get("password_salt")
+    stored_hash = db_user.get("password_hash")
+    
+    if not salt or not stored_hash:
+        raise HTTPException(status_code=400, detail="Акаунт не має встановленого пароля (можливо авторизація через Google)")
+
+    is_valid, _ = _verify_and_migrate_password(current_password, salt, stored_hash)
+    if not is_valid:
+        raise HTTPException(status_code=401, detail="Невірний поточний пароль")
+
+    new_salt = secrets.token_hex(16)
+    new_hash = _hash_password_pbkdf2(new_password, new_salt)
+
+    await db.users.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"password_hash": new_hash, "password_salt": new_salt}}
+    )
+
+    return {"ok": True, "message": "Пароль успішно змінено"}
+
+
+@router.get("/me/atlas-stats")
+async def get_atlas_stats(user: dict = Depends(get_current_user)):
+    # First, get the user's license
+    lic = await db.licenses.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not lic:
+        return {}
+    
+    stats = await db.atlas_stats.find_one({"license_id": lic["license_id"]}, {"_id": 0})
+    if not stats:
+        return {}
+    
+    return stats
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Admin PIN
 # ──────────────────────────────────────────────────────────────────────────────
