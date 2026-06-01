@@ -119,17 +119,16 @@ function AppRoutes() {
 function LanguageWrapper({ children }) {
   const { i18n } = useTranslation();
   const location = useLocation();
+  
+  const isEn = location.pathname === "/en" || location.pathname.startsWith("/en/");
+  const targetLang = isEn ? "en" : "uk";
 
   useEffect(() => {
-    const isEn = location.pathname.startsWith("/en");
-    const targetLang = isEn ? "en" : "uk";
-    
     if (i18n.language !== targetLang) {
       i18n.changeLanguage(targetLang);
     }
-  }, [location.pathname, i18n]);
+  }, [targetLang, i18n]);
 
-  const isEn = i18n.language === "en";
   const title = isEn 
     ? "Atlas AI — Autonomous AI Assistant for macOS" 
     : "Atlas AI — Автономний ШІ Асистент для macOS";
@@ -137,7 +136,9 @@ function LanguageWrapper({ children }) {
     ? "Autonomous next-generation AI assistant built for your comfort and maximum productivity. Download for macOS."
     : "Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS.";
 
-  const basePath = location.pathname.replace(/^\/en/, "") || "/";
+  let basePath = location.pathname.replace(/^\/en(\/|$)/, "/");
+  if (!basePath.startsWith("/")) basePath = "/" + basePath;
+  
   const urlUk = `https://atlas-assistant.online${basePath === "/" ? "" : basePath}`;
   const urlEn = `https://atlas-assistant.online/en${basePath === "/" ? "" : basePath}`;
   const currentUrl = isEn ? urlEn : urlUk;
