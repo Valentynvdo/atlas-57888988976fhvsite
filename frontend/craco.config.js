@@ -51,6 +51,20 @@ let webpackConfig = {
         ],
       };
 
+      // Clone HtmlWebpackPlugin to also generate en/index.html
+      const HtmlWebpackPlugin = webpackConfig.plugins.find(
+        p => p.constructor.name === 'HtmlWebpackPlugin'
+      );
+      
+      if (HtmlWebpackPlugin) {
+        const enHtmlPlugin = new HtmlWebpackPlugin.constructor({
+          ...HtmlWebpackPlugin.userOptions,
+          template: path.resolve(__dirname, 'public/en/index.html'),
+          filename: 'en/index.html',
+        });
+        webpackConfig.plugins.push(enHtmlPlugin);
+      }
+
       // Add health check plugin to webpack if enabled
       if (config.enableHealthCheck && healthPluginInstance) {
         webpackConfig.plugins.push(healthPluginInstance);
