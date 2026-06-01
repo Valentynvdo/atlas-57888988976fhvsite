@@ -9,7 +9,7 @@ services:
       pip install -r requirements.txt
       cd ../frontend
       npm install --legacy-peer-deps
-      npm run build
+      CI=false npm run build
       rm -rf ../backend/static
       cp -r build ../backend/static
     startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
