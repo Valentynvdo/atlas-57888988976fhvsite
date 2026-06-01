@@ -152,8 +152,10 @@ function LanguageWrapper({ children }) {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />
         <meta property="og:url" content={currentUrl} />
+        <meta property="og:image" content="https://atlas-assistant.online/og-image.jpg" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={desc} />
+        <meta name="twitter:image" content="https://atlas-assistant.online/og-image.jpg" />
         <link rel="canonical" href={currentUrl} />
         <link rel="alternate" hreflang="uk" href={urlUk} />
         <link rel="alternate" hreflang="en" href={urlEn} />
