@@ -156,42 +156,7 @@ export default function Navbar({ onCta }) {
               <Globe size={16} />
               {i18n.language === 'uk' ? 'EN' : 'UA'}
             </button>
-            <a
-              href={i18n.language === 'en' ? "/en/blog" : "/blog"}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/blog");
-              }}
-              style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
-            >
-              {t("footer.blog") || "Blog"}
-            </a>
-            <a
-              href={i18n.language === 'en' ? "/en/team" : "/team"}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/team");
-              }}
-              style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
-            >
-              {t("atlas_v2.careers.footer_link") || "Team"}
-            </a>
-            <a
-              href={i18n.language === 'en' ? "/en/investors" : "/investors"}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/investors");
-              }}
-              style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s ease" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
-            >
-              {t("footer.investors") || "Investors"}
-            </a>
+
             <a
               href={i18n.language === 'en' ? "/en/docs" : "/docs"}
               onClick={(e) => {
@@ -299,57 +264,7 @@ export default function Navbar({ onCta }) {
             </a>
           ))}
 
-          <a
-            href={i18n.language === 'en' ? "/en/blog" : "/blog"}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              navigate(i18n.language === 'en' ? "/en/blog" : "/blog");
-            }}
-            style={{
-              color: "rgba(255, 255, 255, 0.8)",
-              fontSize: 20,
-              textDecoration: "none",
-              fontWeight: 500,
-              marginTop: 12,
-            }}
-          >
-            {t("footer.blog") || "Blog"}
-          </a>
-          <a
-            href={i18n.language === 'en' ? "/en/team" : "/team"}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              navigate(i18n.language === 'en' ? "/en/team" : "/team");
-            }}
-            style={{
-              color: "rgba(255, 255, 255, 0.8)",
-              fontSize: 20,
-              textDecoration: "none",
-              fontWeight: 500,
-              marginTop: 12,
-            }}
-          >
-            {t("atlas_v2.careers.footer_link") || "Team"}
-          </a>
-          <a
-            href={i18n.language === 'en' ? "/en/investors" : "/investors"}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              navigate(i18n.language === 'en' ? "/en/investors" : "/investors");
-            }}
-            style={{
-              color: "rgba(255, 255, 255, 0.8)",
-              fontSize: 20,
-              textDecoration: "none",
-              fontWeight: 500,
-              marginTop: 12,
-            }}
-          >
-            {t("footer.investors") || "Investors"}
-          </a>
+
           <a
             href={i18n.language === 'en' ? "/en/docs" : "/docs"}
             onClick={(e) => {

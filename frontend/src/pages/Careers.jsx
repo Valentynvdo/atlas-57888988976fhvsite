@@ -11,7 +11,8 @@ import { Helmet } from "react-helmet-async";
 const STORAGE_KEY = "atlas_careers_draft";
 
 export default function Careers() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   
   const [step, setStep] = useState(1);
   const totalSteps = 4;
@@ -149,8 +150,9 @@ export default function Careers() {
       overflowX: "hidden"
     }}>
       <Helmet>
-        <title>{t("atlas_v2.careers.title")} | Atlas AI</title>
-        <meta name="description" content={t("atlas_v2.careers.philosophy")} />
+        <title>{isEn ? "Careers at Atlas AI — Join the Next-Gen AI Macbook Team" : "Кар'єра в Atlas AI — Вакансії для AI & Swift Розробників"}</title>
+        <meta name="description" content={isEn ? "Explore remote AI engineer jobs and Swift/SwiftUI developer vacancies at Atlas AI setup. Help us build the best personal AI assistant for macOS productivity." : "Приєднуйтесь до команди Atlas AI. Вакансії для Swift, SwiftUI та AI інженерів у стартапі штучного інтелекту. Створюйте автономні ШІ-агенти для macOS разом з нами."} />
+        <link rel="canonical" href={isEn ? "https://atlas-assistant.online/en/careers" : "https://atlas-assistant.online/careers"} />
       </Helmet>
       {/* Background Effects */}
       <div style={{
@@ -207,11 +209,11 @@ export default function Careers() {
           </div>
           
           <h1 style={{ fontSize: "clamp(48px, 6vw, 64px)", fontWeight: 800, margin: "0 0 24px", letterSpacing: "-0.03em", lineHeight: 1.05 }}>
-            {t("atlas_v2.careers.title") || "Приєднуйся до команди ATLAS"}
+            {isEn ? "Careers at Atlas AI: Build Autonomous AI Agents" : "Кар'єра в Atlas AI: Створюйте майбутнє автономного ШІ"}
           </h1>
           
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 40, fontWeight: 400 }}>
-            {t("atlas_v2.careers.philosophy") || "Як і в провідних IT-компаніях, робота через AI-агентів — це новий стандарт. Працювати пліч-о-пліч з ШІ — це нормально для нас."}
+            {isEn ? "We are looking for brilliant minds to reshape desktop computing. Our team builds a secure offline ai assistant for sensitive data mac that runs fully locally. By joining us, you will develop a voice controlled autonomous ai agent macbook application and create cutting-edge open source alternatives to macos ai features." : "Ми шукаємо талановитих спеціалістів, які прагнуть змінити підхід до взаємодії з комп'ютером. Наш продукт — це автономний штучний інтелект для макбук, який працює повністю локально. Якщо ви хочете створювати додатки для продуктивності мак з голосовим керуванням та розвивати безпечні технології, Atlas AI — це ідеальне місце для вашого росту."}
           </p>
 
           {/* Social Proof Stats */}
@@ -233,9 +235,13 @@ export default function Careers() {
           </div>
 
           {/* Open Roles */}
-          <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 20, color: "rgba(255,255,255,0.9)" }}>
-            {t("atlas_v2.careers.roles.title") || "Ролі, які ми шукаємо"}
-          </h3>
+          {/* Open Roles */}
+          <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16, color: "#fff" }}>
+            {isEn ? "Open Engineering Roles and Technical Challenges" : "Наші відкриті вакансії та технологічний стек"}
+          </h2>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 32 }}>
+            {isEn ? "Our core mission is maximizing macos productivity through private, desktop-level automation. We are actively hiring for remote AI engineer jobs and SwiftUI core developers. If you are passionate about local knowledge base ai tool offline mac systems, local LLM quantization, and native macOS execution pipelines, explore our open roles and apply today." : "Ми будуємо складну екосистему, де персональний ші асистент для керування macos обробляє гігабайти даних без інтернету. Нам потрібні інженери, які розуміють, як працює автоматизація рутини на macos, локальні LLM (Ollama/Llama) та системне програмування в екосистемі Apple. Перегляньте наші вакансії розробників штучного інтелекту та Swift/SwiftUI інженерів і надсилайте своє резюме."}
+          </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {[
               { name: t("atlas_v2.careers.roles.ai_engineer") || "AI Engineer", tags: t("atlas_v2.careers.roles.ai_engineer_tags") || "Python, RAG, Agents" },

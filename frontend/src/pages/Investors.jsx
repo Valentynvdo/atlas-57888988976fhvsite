@@ -12,7 +12,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Investors() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useLocalizedNavigate();
 
   useEffect(() => {
