@@ -168,7 +168,7 @@ function AdminPanel({
   }, [q, filter, user?.is_super_admin]);
   useEffect(() => {
     refresh();
-    const intervalId = setInterval(refresh, 10000); // Оновлення кожні 10 секунд
+    const intervalId = setInterval(refresh, 3600000); // Оновлення кожну годину
     return () => clearInterval(intervalId);
   }, [refresh]);
   const sortedUsers = useMemo(() => {
