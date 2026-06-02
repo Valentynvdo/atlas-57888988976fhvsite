@@ -190,12 +190,28 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
                 if file_path.exists() and file_path.is_file():
                     return FileResponse(str(file_path))
             
-            # SPA Fallback: serve localized index.html for /en
-            if path == "/en" or path.startswith("/en/"):
+            # SPA Fallback: serve localized index.html for specific sections (SEO for sharing)
+            path_parts = [p for p in path.strip("/").split("/") if p]
+            
+            if path_parts and path_parts[0] == "en":
+                # Check for specific section like /en/blog or /en/blog/slug
+                if len(path_parts) > 1:
+                    section = path_parts[1]
+                    potential_file = STATIC_DIR / "en" / section / "index.html"
+                    if potential_file.exists():
+                        return FileResponse(str(potential_file))
+                # Fallback to English root
                 en_index = STATIC_DIR / "en" / "index.html"
                 if en_index.exists():
                     return FileResponse(str(en_index))
-                    
+            else:
+                # Check for specific section like /blog or /blog/slug
+                if len(path_parts) > 0:
+                    section = path_parts[0]
+                    potential_file = STATIC_DIR / section / "index.html"
+                    if potential_file.exists():
+                        return FileResponse(str(potential_file))
+                
             # Default SPA Fallback: serve index.html for React Router
             index = STATIC_DIR / "index.html"
             if index.exists():
