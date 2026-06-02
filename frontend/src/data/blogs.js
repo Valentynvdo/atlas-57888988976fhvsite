@@ -49,6 +49,7 @@ export const blogs = [
           <h2>An Autonomous AI Agent in Your Pocket</h2>
           <p>Atlas AI changes the game by acting as an execution bridge. When you complete an autonomous ai agent mac app download, you aren't just getting an offline chat view; you are getting a system-level executor.</p>
           <p>By linking it to Telegram, you can prompt your machine while on the move. Whether you need to ask a question to your local knowledge base ai tool offline mac or trigger a script, the background agent executes the task instantly and sends the results back to your mobile screen.</p>
+          <p>For a complete technical walkthrough, please refer to our <a href="/en/docs/telegram-integration" style="color: #00E5FF; text-decoration: underline;">Telegram Integration Documentation</a>.</p>
         `
       },
       uk: {
@@ -67,6 +68,7 @@ export const blogs = [
             <li>"Перевірте статус системи".</li>
           </ul>
           <p>Цей автономний штучний інтелект для макбук самостійно знайде файл у вашій локальній базі, обробить його та надішле вам у чат безпечним зашифрованим каналом.</p>
+          <p>Детальні технічні кроки дивіться в нашій <a href="/docs/telegram-integration" style="color: #00E5FF; text-decoration: underline;">Документації з налаштування Telegram</a>.</p>
         `
       }
     }
@@ -93,6 +95,7 @@ export const blogs = [
             <li>Real-time open source alternatives to macos ai features running silently in the system tray.</li>
             <li>Execution pipelines that translate local chat requests into script routing safely.</li>
           </ul>
+          <p>For a complete technical walkthrough, please refer to our <a href="/en/docs/local-llm-setup" style="color: #00E5FF; text-decoration: underline;">Local LLM Setup Documentation</a>.</p>
         `
       },
       uk: {
@@ -111,6 +114,7 @@ export const blogs = [
             <li>Забезпечувати автоматизацію рутини на macos через виконання локальних скриптів.</li>
             <li>Працювати як безпечний автономний ші помічник для бізнесу, де дані ніколи не передаються третім сторонам.</li>
           </ul>
+          <p>Детальні технічні кроки дивіться в нашій <a href="/docs/local-llm-setup" style="color: #00E5FF; text-decoration: underline;">Документації з налаштування локальних LLM</a>.</p>
         `
       }
     }

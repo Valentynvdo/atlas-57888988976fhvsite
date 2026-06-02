@@ -39,6 +39,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const Investors = lazy(() => import("./pages/Investors"));
 const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const DocsPost = lazy(() => import("./pages/DocsPost"));
 const InviteHandler = lazy(() => import("./pages/InviteHandler"));
 
 
@@ -87,6 +88,7 @@ function AppRoutes() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/docs" element={<Docs />} />
+      <Route path="/docs/:slug" element={<DocsPost />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/contacts" element={<Contacts />} />

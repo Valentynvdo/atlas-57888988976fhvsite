@@ -6,6 +6,7 @@ import { useAuth } from "../lib/auth";
 import { toast, Toaster } from "sonner";
 import api from "../lib/api";
 import { ArrowLeft, Copy, Check, ChevronDown, Terminal, Package, Zap, Shield, Cpu, Download, ExternalLink, Code, BookOpen, Activity, Layers, Sparkles, Key, Globe, Settings, HelpCircle, Play, CheckCircle } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 // --- Custom Code Block with Copy Button ---
 function CodeBlock({
@@ -188,14 +189,11 @@ function Accordion({
     </div>;
 }
 export default function Docs() {
-  const {
-    t
-  } = useTranslation();
-  const {
-    user
-  } = useAuth();
+  const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const navigate = useLocalizedNavigate();
   const [activeSection, setActiveSection] = useState("intro");
+  const isEn = i18n.language === 'en';
   const sectionsRef = useRef({});
   const [customDocs, setCustomDocs] = useState([]);
   useEffect(() => {
@@ -303,8 +301,12 @@ export default function Docs() {
     color: "#fff",
     fontFamily: "Inter, system-ui, sans-serif"
   }}>
+      <Helmet>
+        <title>{isEn ? "Atlas AI Documentation — Local AI & macOS Automation Setup" : "Документація Atlas AI — Інструкції з налаштування локального ШІ"}</title>
+        <meta name="description" content={isEn ? "Comprehensive user guide for Atlas AI app. Learn how to configure a secure offline AI assistant, set up a local knowledge base, and control macOS via Telegram bot." : "Повний посібник користувача Atlas AI. Інструкції з налаштування локальної бази знань, підключення Telegram-бота, конфігурації голосового керування та автоматизації macOS."} />
+        <link rel="canonical" href={isEn ? "https://atlas-assistant.online/en/docs" : "https://atlas-assistant.online/docs"} />
+      </Helmet>
       <Toaster theme="dark" position="top-center" />
-      {/* --- Background Elements --- */}
       <div style={{
       position: "fixed",
       top: 0,
@@ -420,14 +422,14 @@ export default function Docs() {
         background: "linear-gradient(135deg, #fff, rgba(255,255,255,0.7))",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent"
-      }}>{t("txt_1104")}</h1>
+      }}>{isEn ? "Atlas AI Documentation & User Guides" : "Документація та посібники Atlas AI"}</h1>
         <p style={{
         fontSize: "clamp(14px, 1.5vw, 16px)",
         color: "rgba(255,255,255,0.6)",
         maxWidth: 600,
         margin: 0,
         lineHeight: 1.6
-      }}>{t("txt_1105")}</p>
+      }}>{isEn ? "Deploy and configure your autonomous ai agent mac app download within minutes. Access complete technical handbooks on maximizing macos productivity, setting up a local knowledge base ai tool offline mac, and managing background workflows." : "Налаштуйте свій автономний штучний інтелект для макбук за лічені хвилини. Тут зібрані всі технічні інструкції, які допоможуть вам автоматизувати рутину на macOS, керувати системою голосом та побудувати безпечне робоче середовище без хмари."}</p>
       </section>
 
       {/* --- Main Two-Column Layout --- */}
