@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { useTranslation, Trans } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import { useAuth } from "../lib/auth";
 import api from "../lib/api";
 
 export default function Login() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === "en";
   const { user, loading, refresh } = useAuth();
   const navigate = useLocalizedNavigate();
 
@@ -97,6 +99,12 @@ export default function Login() {
         position: "relative",
       }}
     >
+      <Helmet>
+        <title>{isEn ? "Sign In to Account | Atlas AI" : "Вхід до особистого кабінету | Atlas AI"}</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href={isEn ? "https://atlas-assistant.online/en/login" : "https://atlas-assistant.online"} />
+      </Helmet>
+
       {/* Back to Home Button */}
       <button
         onClick={() => navigate("/")}

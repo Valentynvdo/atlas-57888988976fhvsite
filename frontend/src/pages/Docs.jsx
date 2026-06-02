@@ -268,8 +268,24 @@ export default function Docs() {
       desc: doc.desc,
       content: doc.content
     }));
-    return [...base, ...mappedCustom];
-  }, [customDocs]);
+    return [...base, {
+      id: "cabinet",
+      label: isEn ? "Registration & Cabinet" : "Реєстрація та кабінет",
+      icon: <Key size={16} />
+    }, {
+      id: "applescript",
+      label: isEn ? "AppleScript Integration" : "Взаємодія через AppleScript",
+      icon: <Code size={16} />
+    }, {
+      id: "troubleshooting",
+      label: isEn ? "Troubleshooting" : "Вирішення проблем",
+      icon: <Shield size={16} />
+    }, {
+      id: "community",
+      label: isEn ? "Community & Support" : "Спільнота",
+      icon: <HelpCircle size={16} />
+    }, ...mappedCustom];
+  }, [customDocs, t, isEn]);
   useEffect(() => {
     const handleScroll = () => {
       let current = "intro";
@@ -422,7 +438,7 @@ export default function Docs() {
         background: "linear-gradient(135deg, #fff, rgba(255,255,255,0.7))",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent"
-      }}>{isEn ? "Atlas AI Documentation & User Guides" : "Документація та посібники Atlas AI"}</h1>
+      }}>{isEn ? "Atlas AI Documentation & Technical Manuals" : "Документація та посібники користувача Atlas AI"}</h1>
         <p style={{
         fontSize: "clamp(14px, 1.5vw, 16px)",
         color: "rgba(255,255,255,0.6)",
@@ -448,7 +464,9 @@ export default function Docs() {
         flexShrink: 0,
         position: "sticky",
         top: 120,
-        height: "fit-content",
+        alignSelf: "flex-start",
+        maxHeight: "calc(100vh - 140px)",
+        overflowY: "auto",
         display: "flex",
         flexDirection: "column",
         gap: 16
@@ -673,7 +691,7 @@ export default function Docs() {
           scrollMarginTop: 100,
           marginBottom: 80
         }}>
-            <SectionTitle eyebrow={t("docs_telegram_eyebrow")} title={t("docs_telegram_title")} desc={t("docs_telegram_desc")} />
+            <SectionTitle eyebrow={t("docs_telegram_eyebrow")} title={isEn ? "Telegram Bot Routing & System Integration" : "Інтеграція з Telegram та віддалене керування macOS"} desc={t("docs_telegram_desc")} />
             
             <div style={{
             padding: 24,
@@ -715,7 +733,7 @@ export default function Docs() {
           scrollMarginTop: 100,
           marginBottom: 80
         }}>
-            <SectionTitle eyebrow={t("txt_1134")} title="Bring Your Own Frontend (Atlas SDK)" desc="Бажаєте інтегрувати розумні агенти Atlas у свій власний додаток чи сайт? Використовуйте наш офіційний SDK для підключення до локального або хмарного ядра Atlas AI." />
+            <SectionTitle eyebrow={t("txt_1134")} title={isEn ? "Quick Start Guide for Apple Silicon" : "Швидкий старт та системні налаштування"} desc="Бажаєте інтегрувати розумні агенти Atlas у свій власний додаток чи сайт? Використовуйте наш офіційний SDK для підключення до локального або хмарного ядра Atlas AI." />
             
             <div style={{
             padding: 24,
@@ -1520,7 +1538,85 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
               </div>
             </Accordion>
           </section>
+          {/* 9. Registration & Cabinet */}
+          <section ref={el => sectionsRef.current.cabinet = el} style={{
+          scrollMarginTop: 100,
+          marginBottom: 80
+        }}>
+            <SectionTitle eyebrow={isEn ? "Account" : "Акаунт"} title={isEn ? "Registration & Personal Cabinet" : "Реєстрація та особистий кабінет"} desc={isEn ? "Manage your Atlas AI instance, connect API keys, and download updates from your dashboard." : "Керуйте своїм інстансом Atlas AI, підключайте API ключі та завантажуйте оновлення з вашого кабінету."} />
+            <div style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.65)", lineHeight: 1.75 }}>
+                {isEn ? "You can register or log in to your personal cabinet to manage your subscription, generate access tokens, and download the latest build of Atlas AI for macOS." : "Ви можете зареєструватися або увійти до особистого кабінету для керування підпискою, генерації токенів доступу та завантаження останньої версії Atlas AI для macOS."}
+              </p>
+              <div style={{ marginTop: 16 }}>
+                <a href={isEn ? "/en/login" : "/login"} style={{ color: "#00E5FF", textDecoration: "none", fontWeight: 500 }}>
+                  {isEn ? "Go to Login / Registration →" : "Перейти до Входу / Реєстрації →"}
+                </a>
+              </div>
+            </div>
+          </section>
 
+          {/* 10. AppleScript Integration */}
+          <section ref={el => sectionsRef.current.applescript = el} style={{
+          scrollMarginTop: 100,
+          marginBottom: 80
+        }}>
+            <SectionTitle eyebrow={isEn ? "System Control" : "Управління системою"} title={isEn ? "AppleScript & System Interaction" : "Взаємодія через AppleScript"} desc={isEn ? "Atlas AI uses AppleScript to deeply integrate and interact with native macOS applications securely." : "Atlas AI використовує AppleScript для глибокої інтеграції та безпечної взаємодії з нативними додатками macOS."} />
+            <div style={{ padding: 24, borderRadius: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.65)", lineHeight: 1.75, marginBottom: 16 }}>
+                {isEn ? "Through AppleScript, Atlas can read your active windows, control playback, fetch notes, and automate routine tasks without requiring kernel extensions. You have complete control over permissions in System Settings > Privacy & Security." : "Завдяки AppleScript, Atlas може читати активні вікна, керувати відтворенням, отримувати нотатки та автоматизувати рутинні завдання без необхідності встановлення розширень ядра. Ви маєте повний контроль над дозволами в розділі Системні параметри > Приватність і безпека."}
+              </p>
+            </div>
+          </section>
+
+          {/* 11. Troubleshooting */}
+          <section ref={el => sectionsRef.current.troubleshooting = el} style={{
+          scrollMarginTop: 100,
+          marginBottom: 80
+        }}>
+            <SectionTitle eyebrow={isEn ? "Help" : "Допомога"} title={isEn ? "Troubleshooting" : "Вирішення проблем"} desc={isEn ? "Steps to take if your local AI or system automations aren't working." : "Кроки, які потрібно зробити, якщо локальний ШІ або системні автоматизації не працюють."} />
+            <Accordion q={isEn ? "Atlas cannot control apps or read windows" : "Atlas не може керувати додатками або читати вікна"}>
+              <div>
+                <p>{isEn ? "Check your privacy settings. The necessary permissions are usually granted automatically via AppleScript prompts, but if something fails, you can verify them:" : "Перевірте налаштування приватності. Необхідні дозволи зазвичай надаються автоматично через запити AppleScript, але якщо щось не працює, ви можете перевірити їх:"}</p>
+                <ul style={{ paddingLeft: 20, margin: "10px 0" }}>
+                  <li><strong>System Settings {">"} Privacy & Security {">"} Accessibility</strong></li>
+                  <li><strong>System Settings {">"} Privacy & Security {">"} Automation</strong></li>
+                </ul>
+              </div>
+            </Accordion>
+            <Accordion q={isEn ? "Checking background logs" : "Перевірка фонових логів"}>
+              <div>
+                <p>{isEn ? "If the agent crashes or does not respond, check the terminal output for the local server:" : "Якщо агент вилітає або не відповідає, перевірте вивід терміналу для локального сервера:"}</p>
+                <CodeBlock lang="bash" code="tail -f ~/Library/Logs/AtlasAI/server.log" />
+              </div>
+            </Accordion>
+          </section>
+
+          {/* 12. Community */}
+          <section ref={el => sectionsRef.current.community = el} style={{
+          scrollMarginTop: 100,
+          marginBottom: 80
+        }}>
+            <SectionTitle eyebrow={isEn ? "Social" : "Соціальні мережі"} title={isEn ? "Community & Telegram Channel" : "Спільнота та Telegram канал"} desc={isEn ? "Join our official Telegram community to ask questions, report bugs, and share custom skills." : "Приєднуйтесь до нашої офіційної спільноти в Telegram, щоб ставити запитання, повідомляти про помилки та ділитися власними навичками."} />
+            <div style={{ padding: 24, borderRadius: 16, background: "rgba(0, 122, 255, 0.05)", border: "1px solid rgba(0, 122, 255, 0.15)" }}>
+              <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.7)", lineHeight: 1.75, marginBottom: 16 }}>
+                {isEn ? "Our Telegram channel is divided into specific branches to help you find information easily:" : "Наш Telegram канал розділений на спеціальні гілки, щоб вам було легко знаходити потрібну інформацію:"}
+              </p>
+              <ul style={{ paddingLeft: 20, margin: "10px 0", color: "#fff", lineHeight: 1.8 }}>
+                <li><strong>General Lounge</strong> — {isEn ? "General discussions and networking" : "Загальні обговорення та спілкування"}</li>
+                <li><strong>Bug Reports</strong> — {isEn ? "Report any issues you encounter" : "Повідомлення про знайдені помилки"}</li>
+                <li><strong>Feature Requests</strong> — {isEn ? "Suggest new features for Atlas" : "Пропозиції щодо нового функціоналу"}</li>
+                <li><strong>Skills Marketplace</strong> — {isEn ? "Share and find custom automation skills" : "Обмін користувацькими навичками (скілами)"}</li>
+                <li><strong>Announcements</strong> — {isEn ? "Official updates from the Atlas team" : "Офіційні новини та оновлення"}</li>
+                <li><strong>Start Here</strong> — {isEn ? "Welcome guide for new members" : "Правила та інструкції для новачків"}</li>
+              </ul>
+              <div style={{ marginTop: 24 }}>
+                <a href="https://t.me/atlas_ai_community" target="_blank" rel="noreferrer" style={{ display: "inline-flex", padding: "10px 20px", background: "#00E5FF", color: "#000", fontWeight: 600, borderRadius: 8, textDecoration: "none" }}>
+                  {isEn ? "Join Community" : "Приєднатися до спільноти"}
+                </a>
+              </div>
+            </div>
+          </section>
           {/* Dynamic Custom Sections from Database (CMS) */}
           {SECTIONS.filter(s => s.isCustom).map(sec => <section key={sec.id} ref={el => sectionsRef.current[sec.id] = el} style={{
           scrollMarginTop: 100,

@@ -50,7 +50,11 @@ export default function Navbar({ onCta }) {
           }}
         >
           <a
-            href="#hero"
+            href={i18n.language === "en" ? "/en" : "/"}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
+            }}
             data-testid="nav-logo"
             style={{
               display: "flex",
@@ -170,10 +174,15 @@ export default function Navbar({ onCta }) {
             >
               {t("navbar.docs")}
             </a>
-            <button
+            <a
+              href={user ? (i18n.language === 'en' ? "/en/dashboard" : "/dashboard") : (i18n.language === 'en' ? "/en/login" : "/login")}
               data-testid="nav-cta-btn"
-              onClick={() => (user ? navigate("/dashboard") : navigate("/login"))}
+              onClick={(e) => {
+                e.preventDefault();
+                user ? navigate("/dashboard") : navigate("/login");
+              }}
               style={{
+                textDecoration: "none",
                 background: "none",
                 border: "none",
                 color: "rgba(255,255,255,0.72)",
@@ -201,7 +210,7 @@ export default function Navbar({ onCta }) {
                   boxShadow: "0 0 12px #00E5FF",
                 }}
               />
-            </button>
+            </a>
           </div>
 
           <button
@@ -316,12 +325,15 @@ export default function Navbar({ onCta }) {
             {i18n.language === 'uk' ? 'Switch to English' : 'Перейти на Українську'}
           </button>
 
-          <button
-            onClick={() => {
+          <a
+            href={user ? (i18n.language === 'en' ? "/en/dashboard" : "/dashboard") : (i18n.language === 'en' ? "/en/login" : "/login")}
+            onClick={(e) => {
+              e.preventDefault();
               setIsMobileMenuOpen(false);
               user ? navigate("/dashboard") : navigate("/login");
             }}
             style={{
+              textDecoration: "none",
               background: "none",
               border: "none",
               color: "#00E5FF",
@@ -332,7 +344,7 @@ export default function Navbar({ onCta }) {
             }}
           >
             {user ? t("navbar.cabinet") : t("navbar.login")}
-          </button>
+          </a>
         </div>
       )}
     </>
