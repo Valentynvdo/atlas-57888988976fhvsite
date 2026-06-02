@@ -1,111 +1,256 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home -->
   <url>
     <loc>https://atlas-assistant.online/</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>weekly</changefreq>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/privacy</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://atlas-assistant.online/en</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://atlas-assistant.online/terms</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://atlas-assistant.online/contacts</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://atlas-assistant.online/docs</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://atlas-assistant.online/careers</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+
+  <!-- Investors -->
   <url>
     <loc>https://atlas-assistant.online/investors</loc>
-    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/investors" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/investors" />
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://atlas-assistant.online/blog</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://atlas-assistant.online/en/investors</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/investors" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/investors" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Careers -->
+  <url>
+    <loc>https://atlas-assistant.online/careers</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/careers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/careers" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atlas-assistant.online/en/careers</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/careers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/careers" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Team (Alias for Careers) -->
+  <url>
+    <loc>https://atlas-assistant.online/team</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/team" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://atlas-assistant.online/en/team</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/team" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog -->
+  <url>
+    <loc>https://atlas-assistant.online/blog</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://atlas-assistant.online/en/blog</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Blog Post: why-we-created-atlas -->
+  <url>
     <loc>https://atlas-assistant.online/blog/why-we-created-atlas</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/why-we-created-atlas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/why-we-created-atlas" />
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/ai-impact-on-humanity</loc>
+    <loc>https://atlas-assistant.online/en/blog/why-we-created-atlas</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/why-we-created-atlas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/why-we-created-atlas" />
     <lastmod>2026-05-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Post: local-ai-setup -->
+  <url>
+    <loc>https://atlas-assistant.online/blog/local-ai-setup</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/local-ai-setup" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/local-ai-setup" />
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/macos-automation-future</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/blog/local-ai-setup</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/local-ai-setup" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/local-ai-setup" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Post: why-atlas-ai-is-the-best-raycast-alternative -->
+  <url>
+    <loc>https://atlas-assistant.online/blog/why-atlas-ai-is-the-best-raycast-alternative</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/why-atlas-ai-is-the-best-raycast-alternative" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/why-atlas-ai-is-the-best-raycast-alternative" />
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/privacy-first-ai</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/blog/why-atlas-ai-is-the-best-raycast-alternative</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/why-atlas-ai-is-the-best-raycast-alternative" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/why-atlas-ai-is-the-best-raycast-alternative" />
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Post: how-to-control-macos-remotely-via-telegram-bot -->
+  <url>
+    <loc>https://atlas-assistant.online/blog/how-to-control-macos-remotely-via-telegram-bot</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/how-to-control-macos-remotely-via-telegram-bot" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/how-to-control-macos-remotely-via-telegram-bot" />
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/evolution-of-ai-assistants</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/blog/how-to-control-macos-remotely-via-telegram-bot</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/how-to-control-macos-remotely-via-telegram-bot" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/how-to-control-macos-remotely-via-telegram-bot" />
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Post: how-to-run-local-llm-on-macos-with-ollama -->
+  <url>
+    <loc>https://atlas-assistant.online/blog/how-to-run-local-llm-on-macos-with-ollama</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/how-to-run-local-llm-on-macos-with-ollama" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/how-to-run-local-llm-on-macos-with-ollama" />
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/top-10-mac-hacks</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/blog/how-to-run-local-llm-on-macos-with-ollama</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/how-to-run-local-llm-on-macos-with-ollama" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/how-to-run-local-llm-on-macos-with-ollama" />
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Post: voice-controlled-ai-productivity-hacks-macos -->
+  <url>
+    <loc>https://atlas-assistant.online/blog/voice-controlled-ai-productivity-hacks-macos</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/voice-controlled-ai-productivity-hacks-macos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/voice-controlled-ai-productivity-hacks-macos" />
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/ai-in-software-development</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/blog/voice-controlled-ai-productivity-hacks-macos</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/blog/voice-controlled-ai-productivity-hacks-macos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/blog/voice-controlled-ai-productivity-hacks-macos" />
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <!-- Privacy -->
+  <url>
+    <loc>https://atlas-assistant.online/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/privacy" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/getting-started-with-atlas</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/privacy" />
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Terms -->
+  <url>
+    <loc>https://atlas-assistant.online/terms</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/terms" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/terms" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/future-of-voice-interfaces</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/terms</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/terms" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/terms" />
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Contacts -->
+  <url>
+    <loc>https://atlas-assistant.online/contacts</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/contacts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/contacts" />
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://atlas-assistant.online/blog/security-in-ai-tools</loc>
-    <lastmod>2026-05-31</lastmod>
+    <loc>https://atlas-assistant.online/en/contacts</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://atlas-assistant.online/contacts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://atlas-assistant.online/en/contacts" />
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
+
 </urlset>

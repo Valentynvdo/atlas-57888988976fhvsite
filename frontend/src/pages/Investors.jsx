@@ -69,8 +69,9 @@ export default function Investors() {
       }}
     >
       <Helmet>
-        <title>{t("investors_page.title")} | Pitch Deck</title>
+        <title>{t("investors_page.title")}</title>
         <meta name="description" content={t("investors_page.subtitle")} />
+        <link rel="canonical" href={i18n.language === 'en' ? "https://atlas-assistant.online/en/investors" : "https://atlas-assistant.online/investors"} />
       </Helmet>
 
       {/* Background Gradients */}
@@ -120,19 +121,32 @@ export default function Investors() {
 
       <main style={{ padding: "100px 3vw 120px", maxWidth: "100%", margin: "0 auto", position: "relative", zIndex: 1, overflowX: "hidden" }}>
         
-        {/* HERO SECTION */}
-        <div className="hero-reveal" style={{ textAlign: "center", maxWidth: 1000, margin: "0 auto 120px" }}>
+        {/* HERO SECTION (H1) */}
+        <div className="hero-reveal" style={{ textAlign: "center", maxWidth: 1000, margin: "0 auto 80px" }}>
           <div style={{ display: "inline-flex", gap: 16, marginBottom: 32, flexWrap: "wrap", justifyContent: "center" }}>
             <span style={{ color: "#00E5FF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><ServerOff size={14} />{t("investors_page.hero_tag_1")}</span>
             <span style={{ color: "#E5B3FF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Shield size={14} />{t("investors_page.hero_tag_2")}</span>
             <span style={{ color: "#007AFF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Cpu size={14} />{t("investors_page.hero_tag_3")}</span>
           </div>
           <h1 style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 32, background: "linear-gradient(180deg, #FFFFFF 0%, #A5B4FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            {t("investors_page.title")}
+            {t("investors_page.h1_title")}
           </h1>
           <p style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.8rem)", color: "rgba(255,255,255,0.7)", lineHeight: 1.4, maxWidth: 800, margin: "0 auto" }}>
-            {t("investors_page.subtitle")}
+            {t("investors_page.h1_desc")}
           </p>
+        </div>
+
+        {/* SEO H2 SECTION */}
+        <div className="investor-reveal" style={{ textAlign: "center", maxWidth: 1000, margin: "0 auto 120px" }}>
+          <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, marginBottom: 32, background: "linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            {t("investors_page.h2_title")}
+          </h2>
+          <p style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", color: "rgba(255,255,255,0.8)", lineHeight: 1.6, maxWidth: 800, margin: "0 auto" }}>
+            {t("investors_page.h2_desc")}
+          </p>
+          <a href="mailto:ceo@atlas-assistant.online" style={{ display: "inline-block", marginTop: 40, padding: "16px 36px", fontSize: 18, fontWeight: 600, background: "linear-gradient(135deg, #00E5FF 0%, #007AFF 100%)", color: "#fff", borderRadius: 12, cursor: "pointer", textDecoration: "none", transition: "opacity 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"} onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}>
+            {t("investors_page.get_pitch_deck")}
+          </a>
         </div>
 
         {/* PROBLEM VS SOLUTION */}

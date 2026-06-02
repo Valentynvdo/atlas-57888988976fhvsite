@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import useLocalizedNavigate from '../hooks/useLocalizedNavigate';
 import { blogs } from '../data/blogs';
 import { ArrowLeft } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function BlogList() {
   const { t, i18n } = useTranslation();
@@ -19,6 +20,10 @@ export default function BlogList() {
       fontFamily: "'Inter', sans-serif",
       padding: "120px 24px 60px 24px"
     }}>
+      <Helmet>
+        <title>{t('blog_page.title')}</title>
+        <meta name="description" content={t('blog_page.description')} />
+      </Helmet>
       <button 
         onClick={() => navigate("/")} 
         style={{
@@ -54,7 +59,7 @@ export default function BlogList() {
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent"
         }}>
-          {lang === 'uk' ? 'Блог' : lang === 'ru' ? 'Блог' : 'Blog'}
+          {t('blog_page.h1', { defaultValue: t('blog_page.h1_fallback') })}
         </h1>
         <p style={{
           fontSize: "1.1rem",
@@ -62,9 +67,7 @@ export default function BlogList() {
           marginBottom: 60,
           lineHeight: 1.6
         }}>
-          {lang === 'uk' ? 'Дізнайтеся більше про Atlas AI, автоматизацію macOS та майбутнє штучного інтелекту.' : 
-           lang === 'ru' ? 'Узнайте больше о Atlas AI, автоматизации macOS и будущем искусственного интеллекта.' : 
-           'Discover more about Atlas AI, macOS automation, and the future of artificial intelligence.'}
+          {t('blog_page.subtitle')}
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { blogs } from '../data/blogs';
+import { Helmet } from 'react-helmet-async';
 
 export default function BlogPost() {
   const { slug } = useParams();
   const { t, i18n } = useTranslation();
   const lang = i18n.language || 'en';
+  const location = useLocation();
 
   const blog = blogs.find(b => b.slug === slug);
 
@@ -16,16 +18,7 @@ export default function BlogPost() {
 
   const localizedData = blog ? (blog.content[lang] || blog.content['en']) : null;
 
-  // SEO update
-  useEffect(() => {
-    if (localizedData) {
-      document.title = `${localizedData.title} | Atlas AI`;
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute("content", localizedData.excerpt);
-      }
-    }
-  }, [localizedData]);
+  // SEO via Helmet is used in the render method
 
   if (!blog) {
     return <Navigate to="/blog" replace />;
@@ -39,6 +32,13 @@ export default function BlogPost() {
       fontFamily: "'Inter', sans-serif",
       padding: "120px 24px 80px 24px"
     }}>
+      <Helmet>
+        <title>{localizedData.seoTitle || localizedData.title}</title>
+        <meta name="description" content={localizedData.seoDescription || localizedData.excerpt} />
+        <link rel="canonical" href={`https://atlas-assistant.online${location.pathname}`} />
+        <meta property="og:title" content={localizedData.seoTitle || localizedData.title} />
+        <meta property="og:description" content={localizedData.seoDescription || localizedData.excerpt} />
+      </Helmet>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <div style={{ display: "flex", gap: 24, marginBottom: 40 }}>

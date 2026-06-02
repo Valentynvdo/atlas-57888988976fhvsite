@@ -1,5 +1,209 @@
 export const blogs = [
   {
+    id: "why-atlas-ai-is-the-best-raycast-alternative",
+    slug: "why-atlas-ai-is-the-best-raycast-alternative",
+    date: "2026-06-03",
+    readTime: "5 min",
+    content: {
+      en: {
+        title: "Best Raycast AI Alternatives: Why Atlas AI Wins on macOS",
+        seoTitle: "Best Raycast AI Alternatives: Why Atlas AI Wins on macOS",
+        excerpt: "Comparing Raycast AI vs Atlas AI. Discover why a secure offline AI assistant for sensitive data mac is the ultimate choice for privacy-focused power users.",
+        seoDescription: "Comparing Raycast AI vs Atlas AI. Discover why a secure offline AI assistant for sensitive data mac is the ultimate choice for privacy-focused power users.",
+        body: `
+          <h1>Raycast AI Alternatives: Why Atlas AI is the Best Choice for Privacy-Focused Users</h1>
+          <p>When looking for the best personal ai assistant for macos productivity, Raycast AI is often the default recommendation. However, it relies heavily on cloud data processing. For those seeking open source alternatives to macos ai features that respect corporate privacy, Atlas AI has emerged as the definitive solution.</p>
+          <h2>Secure Offline AI Assistant for Sensitive Data Mac</h2>
+          <p>Unlike cloud-based software, Atlas AI operates as a secure offline ai assistant for sensitive data mac. It compiles your indexes locally, avoiding any external server roundtrips. While Raycast streams your workspace prompts to OpenAI servers, Atlas processes everything within your local hardware, mitigating data compliance risks completely.</p>
+        `
+      },
+      uk: {
+        title: "Альтернативи Raycast AI: Чому Atlas AI кращий для macOS",
+        seoTitle: "Альтернативи Raycast AI: Чому Atlas AI кращий для macOS",
+        excerpt: "Порівняння Atlas AI та Raycast. Чому локальний та безпечний автономний ші помічник для бізнесу є кращою альтернативою хмарним ШІ-асистентам на Mac.",
+        seoDescription: "Порівняння Atlas AI та Raycast. Чому локальний та безпечний автономний ші помічник для бізнесу є кращою альтернативою хмарним ШІ-асистентам на Mac.",
+        body: `
+          <h1>Альтернативи Raycast AI: Чому Atlas AI — це майбутнє продуктивності на macOS</h1>
+          <p>Шукаючи найкращі додатки для продуктивності мак, більшість користувачів натрапляють на Raycast AI. Це чудовий інструмент, проте він має один суттєвий недолік — усі ваші запити обробляються в хмарі. Якщо ви працюєте з конфіденційними документами або кодом, хмарний ШІ стає загрозою для безпеки. На щастя, на ринку з'явилися потужні альтернативи Raycast AI, лідером серед яких є Atlas AI.</p>
+          <h2>Безпечний автономний ШІ помічник для бізнесу проти хмарних сервісів</h2>
+          <p>Головна відмінність Atlas AI від конкурентів полягає в архітектурі. Це повністю безпечний автономний ші помічник для бізнесу, який не потребує підключення до сторонніх серверів для базових операцій.</p>
+          <p>Поки Raycast відправляє ваші дані на сервери OpenAI, Atlas AI створює локальний контекст прямо на вашому Mac. Це ідеальне рішення для розробників, юристів та фінансистів, яким потрібна глибока автоматизація рутини на macos, але без ризику витоку корпоративної інформації.</p>
+        `
+      }
+    }
+  },
+  {
+    id: "how-to-control-macos-remotely-via-telegram-bot",
+    slug: "how-to-control-macos-remotely-via-telegram-bot",
+    date: "2026-06-03",
+    readTime: "4 min",
+    content: {
+      en: {
+        title: "How to Control macOS Remotely via Telegram Bot Using AI",
+        seoTitle: "How to Control macOS Remotely via Telegram Bot Using AI",
+        excerpt: "Learn how to control macOS remotely via Telegram bot. Transform Atlas AI into a secure mobile bridge for your offline mac desktop.",
+        seoDescription: "Learn how to control macOS remotely via Telegram bot. Transform Atlas AI into a secure mobile bridge for your offline mac desktop.",
+        body: `
+          <h1>How to Control macOS Remotely via Telegram Bot Securely</h1>
+          <p>Imagine being away from your desk and realizing a crucial project file is locked on your home machine. Instead of using sluggish remote desktop software, you can text your computer. This guide explores how to control macos remotely via telegram bot using next-gen background AI routing.</p>
+          <h2>An Autonomous AI Agent in Your Pocket</h2>
+          <p>Atlas AI changes the game by acting as an execution bridge. When you complete an autonomous ai agent mac app download, you aren't just getting an offline chat view; you are getting a system-level executor.</p>
+          <p>By linking it to Telegram, you can prompt your machine while on the move. Whether you need to ask a question to your local knowledge base ai tool offline mac or trigger a script, the background agent executes the task instantly and sends the results back to your mobile screen.</p>
+        `
+      },
+      uk: {
+        title: "Як керувати маком через телеграм бот віддалено за допомогою ШІ",
+        seoTitle: "Як керувати маком через телеграм бот віддалено за допомогою ШІ",
+        excerpt: "Покроковий гайд: як налаштувати віддалене керування комп'ютером Apple. Використовуйте персональний ші асистент для керування macos через Telegram.",
+        seoDescription: "Покроковий гайд: як налаштувати віддалене керування комп'ютером Apple. Використовуйте персональний ші асистент для керування macos через Telegram.",
+        body: `
+          <h1>Як керувати маком через телеграм бот віддалено за допомогою Atlas AI</h1>
+          <p>Уявіть ситуацію: ви поїхали на зустріч, а важливий файл або звіт залишився на вашому домашньому iMac. Замість того, щоб повертатися або просити когось увімкнути комп'ютер, ви можете надіслати коротке повідомлення у месенджер. У цій статті ми розберемо, як керувати маком через телеграм бот віддалено, використовуються можливості ШІ.</p>
+          <h2>Розумний персональний ШІ асистент для керування macOS у вашій кишені</h2>
+          <p>Atlas AI — це не просто чат-бот, це повноцінний персональний ші асистент для керування macos. Завдяки інтеграції з Telegram, програма перетворюється на автономного агента. Ви можете ставити йому завдання природною мовою:</p>
+          <ul>
+            <li>"Знайди звіт за минулий вівторок і скинь сюди".</li>
+            <li>"Запусти скрипт деплою проєкту".</li>
+            <li>"Перевірте статус системи".</li>
+          </ul>
+          <p>Цей автономний штучний інтелект для макбук самостійно знайде файл у вашій локальній базі, обробить його та надішле вам у чат безпечним зашифрованим каналом.</p>
+        `
+      }
+    }
+  },
+  {
+    id: "how-to-run-local-llm-on-macos-with-ollama",
+    slug: "how-to-run-local-llm-on-macos-with-ollama",
+    date: "2026-06-03",
+    readTime: "6 min",
+    content: {
+      en: {
+        title: "How to Run a Local LLM on macOS Privately with Ollama",
+        seoTitle: "How to Run a Local LLM on macOS Privately with Ollama",
+        excerpt: "Step-by-step guide to running offline language models on Mac. Connect Ollama with Atlas AI for a secure and private desktop experience.",
+        seoDescription: "Step-by-step guide to running offline language models on Mac. Connect Ollama with Atlas AI for a secure and private desktop experience.",
+        body: `
+          <h1>How to Run a Local LLM on macOS with Atlas AI and Ollama</h1>
+          <p>Running large language models locally on Apple Silicon architecture has fundamentally changed software engineering and data management workflows. You no longer need to connect to cloud APIs to analyze workspace assets. By choosing an autonomous ai agent mac app download, you can build a complete compute cluster right on your desk.</p>
+          <h2>Building a Private Knowledge Base Offline</h2>
+          <p>While CLI engines like Ollama fetch weights effectively, they lack operating system UI abstraction. Atlas AI bridges this gap, operating as a production-grade local knowledge base ai tool offline mac.</p>
+          <p>By linking local open-source models with Atlas AI, you leverage:</p>
+          <ul>
+            <li>A secure offline ai assistant for sensitive data mac that scans local source directories instantly.</li>
+            <li>Real-time open source alternatives to macos ai features running silently in the system tray.</li>
+            <li>Execution pipelines that translate local chat requests into script routing safely.</li>
+          </ul>
+        `
+      },
+      uk: {
+        title: "Як запустити локальну LLM на macOS: Гайд по Ollama та Atlas AI",
+        seoTitle: "Як запустити локальну LLM на macOS: Гайд по Ollama та Atlas AI",
+        excerpt: "Покрокова інструкція із запуску мовних моделей офлайн. Створіть локальну базу знань ШІ без інтернету на вашому Mac за допомогою Atlas AI.",
+        seoDescription: "Покрокова інструкція із запуску мовних моделей офлайн. Створіть локальну базу знань ШІ без інтернету на вашому Mac за допомогою Atlas AI.",
+        body: `
+          <h1>Як запустити локальну LLM на macOS та автоматизувати роботу</h1>
+          <p>Запуск великих мовних моделей (LLM) безпосередньо на вашому комп'ютері став реальністю завдяки чипам Apple Silicon (M1/M2/M3/M4). Більше не потрібно платити за підписки OpenAI чи ризикувати приватністю. У цьому посібнику ми розберемо, як розгорнути автономний штучний інтелект для макбук і перетворити його на повноцінного робочого асистента.</p>
+          <h2>Локальна база знань ШІ без інтернету: Об'єднуємо Ollama та Atlas AI</h2>
+          <p>Сама по собі модель (наприклад, Llama 3 або Mistral) вміє лише відповідати на загальні питання. Щоб вона приносила користь, їй потрібен контекст вашої роботи. Atlas AI вирішує це завдання, створюючи індекси ваших файлів локально.</p>
+          <p>Ви отримуєте інтегровану систему, де локальна база знань ШІ без інтернету дозволяє:</p>
+          <ul>
+            <li>Робити миттєвий пошук та аналіз за всіма вашими PDF, кодом та нотатками.</li>
+            <li>Забезпечувати автоматизацію рутини на macos через виконання локальних скриптів.</li>
+            <li>Працювати як безпечний автономний ші помічник для бізнесу, де дані ніколи не передаються третім сторонам.</li>
+          </ul>
+        `
+      }
+    }
+  },
+  {
+    id: "voice-controlled-ai-productivity-hacks-macos",
+    slug: "voice-controlled-ai-productivity-hacks-macos",
+    date: "2026-06-03",
+    readTime: "5 min",
+    content: {
+      en: {
+        title: "Voice Controlled AI on macOS: Desktop Productivity Hacks",
+        seoTitle: "Voice Controlled AI on macOS: Desktop Productivity Hacks",
+        excerpt: "Maximize your desktop output using next-generation voice tools. Explore hands-free system automation using Atlas AI framework.",
+        seoDescription: "Maximize your desktop output using next-generation voice tools. Explore hands-free system automation using Atlas AI framework.",
+        body: `
+          <h1>Voice Controlled AI on macOS: The Ultimate Productivity Leap</h1>
+          <p>Voice input on computers has evolved past primitive text dictation. With the advent of locally hosted semantic models, your voice becomes a command line interface. Utilizing a voice controlled autonomous ai agent macbook application enables power users to automate complex directory tasks without writing a single line of script.</p>
+          <h2>Seamless Desktop Action Execution</h2>
+          <p>Atlas AI runs as a native background service acting as the best personal ai assistant for macos productivity. It parses spoken natural language intent and converts it into immediate computer operations.</p>
+          <p>Instead of navigating manual tabs, you can trigger your autonomous ai agent macbook to aggregate logs, structure tables, or compose responses using offline system context. It provides an efficient hands-free operational flow for developers and power users alike.</p>
+        `
+      },
+      uk: {
+        title: "Голосове керування з ШІ на Mac: Як підвищити продуктивність",
+        seoTitle: "Голосове керування з ШІ на Mac: Як підвищити продуктивність",
+        excerpt: "Як використовувати голос для керування операційною системою. Огляд додатків для продуктивності мак з голосовим керуванням на базі ШІ.",
+        seoDescription: "Як використовувати голос для керування операційною системою. Огляд додатків для продуктивності мак з голосовим керуванням на базі ШІ.",
+        body: `
+          <h1>Голосове керування з ШІ на Mac: Новий рівень продуктивності</h1>
+          <p>Більшість людей сприймають голосове введення на комп'ютері як звичайний диктант тексту. Проте з приходом автономних агентів ваш голос стає інструментом для програмування та виконання складних операцій. Сучасні додатки для продуктивності мак з голосовим керуванням дозволяють повністю відмовитися від рутинного клікання мишкою.</p>
+          <h2>Персональний ШІ асистент для керування macOS</h2>
+          <p>Atlas AI працює на рівні системи як розумний помічник, який слухає ваші команди і розуміє їхній контекст. Замість складних комбінацій клавіш ви можете просто сказати комп'ютеру: "Згрупуй усі завантажені скріншоти за сьогодні в папку Проєкт і відправ архів колезі".</p>
+          <p>Це не просто виконання команд Siri, це глибока робота, яку робить персональний ші асистент для керування macos. Він розбирає вашу мову, планує послідовність дій (ланцюжок кроків) та виконує її автономно, заощаджуючи вам години робочого часу щодня.</p>
+        `
+      }
+    }
+  },
+  {
+    id: "local-ai-setup",
+    slug: "local-ai-setup",
+    date: "2026-06-02",
+    readTime: "4 min",
+    content: {
+      en: {
+        title: "How to Setup a Local AI Knowledge Base on macOS Offline",
+        seoTitle: "How to Setup a Local AI Knowledge Base on macOS Offline",
+        excerpt: "Step-by-step guide on building a secure offline AI assistant for sensitive data mac. Maximize macOS productivity and automate workflows using Atlas AI.",
+        seoDescription: "Step-by-step guide on building a secure offline AI assistant for sensitive data mac. Maximize macOS productivity and automate workflows using Atlas AI.",
+        body: `
+          <p>The demand for artificial intelligence in daily workflows is surging, but so are data privacy concerns. Standard cloud-based tools stream your keystrokes and corporate logs to external servers. For developers, creators, and business founders, the optimal alternative is to deploy an autonomous ai agent mac app download to handle text, files, and tasks locally.</p>
+          <p><img src="/blog-local-ai-en.png" alt="Building a local knowledge base AI tool offline mac with Atlas AI" style="max-width: 100%; border-radius: 8px;" /></p>
+          <h2>Why You Need a Local Knowledge Base AI Tool Offline</h2>
+          <p>When handling proprietary source code, legal records, or financial files, standard LLMs pose compliance risks. Building a local knowledge base ai tool offline mac guarantees absolute desktop isolation.</p>
+          <p>By running an autonomous ai agent macbook application, you unlock:</p>
+          <ul>
+            <li>Zero data leaks, as no telemetry or prompts hit the cloud.</li>
+            <li>Instant offline semantic search across your entire file directory.</li>
+            <li>Uninterrupted performance during network outages.</li>
+          </ul>
+          <h2>Maximizing macOS Productivity and Automation</h2>
+          <p>An agent should do more than text processing; it must act. Utilizing the best personal ai assistant for macos productivity, users can bridge the gap between AI and OS-level execution. From managing your calendar to writing terminal scripts, automation reshapes your desktop workflow.</p>
+          <p>By deploying voice controlled autonomous ai agent macbook triggers, execution becomes completely hands-free, integrating naturally into the system background.</p>
+          <h2>How to Control macOS Remotely via Telegram Bot Securely</h2>
+          <p>Modern workflows require flexibility. If you are away from your workstation but need to extract local analysis, it is essential to configure how to control macos remotely via telegram bot. This secure integration bridges your offline agent with a mobile interface, ensuring a secure offline ai assistant for sensitive data mac remains active and reachable wherever you go.</p>
+        `
+      },
+      uk: {
+        title: "Як налаштувати локальний ШІ на macOS для автоматизації рутини",
+        seoTitle: "Як налаштувати локальний ШІ на macOS для автоматизації рутини",
+        excerpt: "Покроковий гайд: як створити локальну базу знань ШІ без інтернету на макбук за допомогою Atlas AI. Безпечна автоматизація рутини на macOS та конфіденційність.",
+        seoDescription: "Покроковий гайд: як створити локальну базу знань ШІ без інтернету на макбук за допомогою Atlas AI. Безпечна автоматизація рутини на macOS та конфіденційність.",
+        body: `
+          <p>Сьогодні технології штучного інтелекту змінюють підхід до щоденної роботи. Проте більшість популярних інструментів вимагають постійного підключення до мережі та надсилають ваші особисті дані на зовнішні сервери. Якщо ви шукаєте рішення, яке поєднує приватність та потужність, найкращий вибір — це автономний штучний інтелект для макбук.</p>
+          <p><img src="/blog-local-ai.png" alt="Створення локальної бази знань ШІ без інтернету на macOS через Atlas AI" style="max-width: 100%; border-radius: 8px;" /></p>
+          <h2>Навіщо потрібна локальна база знань ШІ без інтернету?</h2>
+          <p>Коли ви працюєте з конфіденційною інформацією, кодом або приватними документами, безпека є головним пріоритетом. Використання хмарних сервісів завжди несе ризики витоку даних.</p>
+          <p>Саме тому безпечний автономний ші помічник для бізнесу стає стандартом для сучасних компаній. Створення локальної бази знань ШІ без інтернету дозволяє:</p>
+          <ul>
+            <li>Обробляти гігабайти локальних документів миттєво.</li>
+            <li>Гарантувати, що жоден байт інформації не залишить ваш пристрій.</li>
+            <li>Працювати в літаку, дорозі чи під час блекаутів.</li>
+          </ul>
+          <h2>Автоматизація рутини на macOS за допомогою штучного інтелекту</h2>
+          <p>Головна перевага інтегрованих систем — це не просто відповіді на питання, а реальна дія. Персональний ші асистент для керування macos від Atlas AI може самостійно виконувати рутинні завдання: від сортування файлів до створення складних робочих скриптів.</p>
+          <p>Завдяки глибокій інтеграції в екосистему Apple, ви отримуєте додатки для продуктивності мак з голосовим керуванням, які розуміють контекст вашої роботи з першого слова.</p>
+          <h2>Як керувати маком через телеграм бот віддалено</h2>
+          <p>Однією з унікальних функцій автономних агентів є можливість дистанційної взаємодії. Якщо вам терміново знадобився файл з робочого комп'ютера, а ви знаходитесь далеко від офісу, ви можете дізнатися, як керувати маком через телеграм бот віддалено. Це перетворює ваш комп'ютер на персональний сервер, доступний лише вам через захищене наскрізне шифрування.</p>
+        `
+      }
+    }
+  },
+  {
     id: "why-we-created-atlas",
     slug: "why-we-created-atlas",
     date: "2026-05-31",
@@ -7,7 +211,9 @@ export const blogs = [
     content: {
       en: {
         title: "Why We Created Atlas AI: The Autonomous Assistant for macOS",
+        seoTitle: "Why We Created Atlas AI: The Autonomous Assistant for macOS",
         excerpt: "Discover the origin story of Atlas AI and how it transforms the way professionals interact with their Macs.",
+        seoDescription: "Discover the origin story of Atlas AI and how it transforms the way professionals interact with their Macs.",
         body: `
           <p>The modern digital workspace is cluttered. Despite having powerful computers like the Mac, we spend hours doing repetitive tasks. That is why we built <strong>Atlas AI</strong>—an autonomous AI assistant designed specifically for macOS.</p>
           <p>Unlike standard chatbots, <a href="/">Atlas AI</a> integrates directly with your system. It can control windows, manage files, and automate workflows using AppleScript and AI vision.</p>
@@ -18,7 +224,9 @@ export const blogs = [
       },
       uk: {
         title: "Чому ми створили Atlas AI: Автономний асистент для macOS",
+        seoTitle: "Чому ми створили Atlas AI: Автономний асистент для macOS",
         excerpt: "Дізнайтеся історію створення Atlas AI та як він змінює спосіб взаємодії професіоналів зі своїми Mac.",
+        seoDescription: "Дізнайтеся історію створення Atlas AI та як він змінює спосіб взаємодії професіоналів зі своїми Mac.",
         body: `
           <p>Сучасний цифровий робочий простір перевантажений. Незважаючи на наявність потужних комп'ютерів, таких як Mac, ми витрачаємо години на повторювані завдання. Саме тому ми створили <strong>Atlas AI</strong> — автономного ШІ-асистента, розробленого спеціально для macOS.</p>
           <p>На відміну від звичайних чат-ботів, <a href="/">Atlas AI</a> інтегрується безпосередньо з вашою системою. Він може керувати вікнами, файлами та автоматизувати робочі процеси.</p>
@@ -29,7 +237,9 @@ export const blogs = [
       },
       ru: {
         title: "Почему мы создали Atlas AI: Автономный ассистент для macOS",
+        seoTitle: "Почему мы создали Atlas AI: Автономный ассистент для macOS",
         excerpt: "Узнайте историю создания Atlas AI и как он меняет способ взаимодействия профессионалов со своими Mac.",
+        seoDescription: "Узнайте историю создания Atlas AI и как он меняет способ взаимодействия профессионалов со своими Mac.",
         body: `
           <p>Современное цифровое рабочее пространство перегружено. Несмотря на наличие мощных компьютеров, таких как Mac, мы тратим часы на повторяющиеся задачи. Именно поэтому мы создали <strong>Atlas AI</strong> — автономного ИИ-ассистента, разработанного специально для macOS.</p>
           <p>В отличие от обычных чат-ботов, <a href="/">Atlas AI</a> интегрируется непосредственно с вашей системой. Он может управлять окнами, файлами и автоматизировать рабочие процессы.</p>
@@ -48,7 +258,9 @@ export const blogs = [
     content: {
       en: {
         title: "The Impact of Artificial Intelligence on Humanity",
+        seoTitle: "The Impact of Artificial Intelligence on Humanity",
         excerpt: "How AI is reshaping our society, economy, and daily lives in the 21st century.",
+        seoDescription: "How AI is reshaping our society, economy, and daily lives in the 21st century.",
         body: `
           <p>Artificial Intelligence is no longer science fiction. It is the core of modern technology, driving everything from medical research to personal assistants like <strong>Atlas AI</strong>.</p>
           <h2>Enhancing Productivity</h2>
@@ -57,7 +269,9 @@ export const blogs = [
       },
       uk: {
         title: "Вплив штучного інтелекту на людство",
+        seoTitle: "Вплив штучного інтелекту на людство",
         excerpt: "Як ШІ змінює наше суспільство, економіку та повсякденне життя у 21 столітті.",
+        seoDescription: "Як ШІ змінює наше суспільство, економіку та повсякденне життя у 21 столітті.",
         body: `
           <p>Штучний інтелект більше не є науковою фантастикою. Це ядро сучасних технологій, яке керує всім: від медичних досліджень до персональних асистентів, таких як <strong>Atlas AI</strong>.</p>
           <h2>Підвищення продуктивності</h2>

@@ -92,6 +92,7 @@ function AppRoutes() {
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/careers" element={<Careers />} />
       <Route path="/investors" element={<Investors />} />
+      <Route path="/team" element={<Careers />} />
       <Route path="/blog" element={<BlogList />} />
       <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/invite/:code" element={<InviteHandler />} />
@@ -130,11 +131,11 @@ function LanguageWrapper({ children }) {
   }, [targetLang, i18n]);
 
   const title = isEn 
-    ? "Atlas AI — Autonomous AI Assistant for macOS" 
-    : "Atlas AI — Автономний ШІ Асистент для macOS";
+    ? "Atlas AI — Autonomous AI Agent & Personal Assistant for macOS" 
+    : "Atlas AI — Автономний ШІ Асистент та Розумний Помічник для macOS";
   const desc = isEn
-    ? "Autonomous next-generation AI assistant built for your comfort and maximum productivity. Download for macOS."
-    : "Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS.";
+    ? "Download a secure offline AI assistant for sensitive data mac. Build a local knowledge base AI tool offline to automate workflows and control macOS via Telegram."
+    : "Завантажте персональний автономний штучний інтелект для макбук. Локальна база знань ШІ без інтернету для повної безпеки конфіденційних даних та автоматизації рутини на macOS.";
 
   let basePath = location.pathname.replace(/^\/en(\/|$)/, "/");
   if (!basePath.startsWith("/")) basePath = "/" + basePath;

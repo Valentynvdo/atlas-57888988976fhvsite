@@ -9,8 +9,8 @@
     "login": "Login"
   },
   "hero": {
-    "title_span": "Autonomous AI Assistant for macOS.",
-    "subtitle": "An intelligence that doesn't just listen. It understands, adapts, and acts.",
+    "title_span": "Autonomous AI Agent for macOS Productivity.",
+    "subtitle": "Atlas AI is the best personal ai assistant for macos productivity. Run workflows locally and safely execute operations without external server dependencies.",
     "btn_meet": "Meet Atlas",
     "btn_learn": "Learn more",
     "proof_1": "Built for macOS",
@@ -154,8 +154,8 @@
     "faq_a3": "Click 'Cancel auto-renewal' in the Subscription block. Atlas will work until the end date of the current period.",
     "faq_q4": "Atlas won't launch — what to do?",
     "faq_a4": "Check that you allowed Accessibility and Microphone in System Settings → Privacy. Restart Atlas. If it doesn't help — write to support.",
-    "faq_q5": "Does Atlas work without internet?",
-    "faq_a5": "Basic commands work offline. Evolution, new skills, and language models require an internet connection.",
+    "faq_q5": "Is it a secure offline AI assistant for sensitive data mac?",
+    "faq_a5": "Yes, Atlas AI is completely self-contained, ensuring no logs leave your desktop environment.",
     "waitlist_title": "Early Access Queue",
     "waitlist_eyebrow": "Beta Program",
     "waitlist_desc": "Atlas AI is ready. We are onboarding users in batches. Join the queue to get early access.",
@@ -675,10 +675,10 @@
       "eyebrow": "Seamless Control",
       "title": "Always Connected.",
       "desc": "Control your Mac locally with your voice or remotely from anywhere in the world via a secure Telegram bot.",
-      "voice_title": "Local Voice",
-      "voice_desc": "Atlas constantly listens to the space in the background. No clicks or activation — just say what you need, and the system will react instantly.",
-      "tg_title": "Remote Access",
-      "tg_desc": "Control your computer via the official Telegram bot. Atlas will execute the command on your Mac, even if you are on another continent."
+      "voice_title": "Local Knowledge Base AI Tool Fully Offline",
+      "voice_desc": "A native voice controlled autonomous ai agent macbook app that learns from your local data securely.",
+      "tg_title": "How to Control macOS Remotely via Telegram Bot",
+      "tg_desc": "Interact with your computer using open source alternatives to macos ai features from any device."
     },
     "comparison": {
       "title": "This is not just a chatbot.",
@@ -856,8 +856,13 @@
     "powered_by": "Powered by modern infrastructure"
   },
   "investors_page": {
-    "title": "Atlas AI",
-    "subtitle": "The Autonomous Local Operating System for macOS. On-Device Privacy & Native System Actions.",
+    "title": "Invest in Atlas AI Startup — The Future of Autonomous macOS Agents",
+    "subtitle": "Investor relations and pitch deck for Atlas AI. Invest in an enterprise-grade secure offline AI assistant for sensitive data mac and local B2B software market.",
+    "h1_title": "Invest in AI Startup: The Atlas AI Ecosystem",
+    "h1_desc": "Atlas AI is pioneering the desktop automation layer. We develop a secure offline ai assistant for sensitive data mac that bypasses corporate cloud risks. The autonomous ai software market growth is rapidly accelerating, and Atlas AI positions itself as a core infrastructure tool for professional workflows.",
+    "h2_title": "Capitalizing on the Shift to Local Compute and Privacy",
+    "h2_desc": "Enterprise clients are restricting cloud LLM access due to data compliance leaks. By investing in our autonomous ai agent mac app download growth ecosystem, you fund a subscription-based (SaaS) platform that builds a native local knowledge base ai tool offline mac. Our product roadmap drives sustainable annual recurring revenue (ARR) by deploying smart assistant automation across highly regulated tech sectors.",
+    "get_pitch_deck": "Get Pitch Deck",
     "hero_tag_1": "Zero Server Latency",
     "hero_tag_2": "Permanent Session Guard",
     "hero_tag_3": "Hardware-Level AI",
@@ -959,5 +964,12 @@
   "admin_ver_ph": "1.0.1",
   "admin_ver_size": "Size (MB)",
   "admin_ver_link": "Direct link (Google Drive...)",
-  "admin_ver_btn": "Save link"
+  "admin_ver_btn": "Save link",
+  "blog_page": {
+    "title": "Atlas AI Blog — Insights on macOS Productivity & Offline AI Agents",
+    "description": "Expert guides on deploying an autonomous ai agent macbook application. Learn how to configure a secure local knowledge base ai tool offline mac.",
+    "h1": "Atlas AI Knowledge Hub: Desktop Automation & Offline AI",
+    "subtitle": "Explore depth tutorials on maximizing macos productivity. Learn how a secure offline ai assistant for sensitive data mac transforms your everyday digital workflows and business execution.",
+    "h1_fallback": "Blog"
+  }
 }

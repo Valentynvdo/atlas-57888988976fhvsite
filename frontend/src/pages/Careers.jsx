@@ -6,6 +6,7 @@ import {
   CheckCircle2, Users, Globe2, ChevronRight, Github 
 } from "lucide-react";
 import api from "../lib/api";
+import { Helmet } from "react-helmet-async";
 
 const STORAGE_KEY = "atlas_careers_draft";
 
@@ -147,6 +148,10 @@ export default function Careers() {
       padding: "80px 40px",
       overflowX: "hidden"
     }}>
+      <Helmet>
+        <title>{t("atlas_v2.careers.title")} | Atlas AI</title>
+        <meta name="description" content={t("atlas_v2.careers.philosophy")} />
+      </Helmet>
       {/* Background Effects */}
       <div style={{
         position: "fixed", top: "10%", left: "20%", width: 600, height: 600,

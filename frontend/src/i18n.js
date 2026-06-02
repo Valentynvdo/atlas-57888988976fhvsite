@@ -12,6 +12,7 @@ i18n
       en: { translation: enTranslations },
       uk: { translation: ukTranslations }
     },
+    lng: window.location.pathname.startsWith('/en') ? 'en' : undefined,
     fallbackLng: 'uk',
     supportedLngs: ['uk', 'en'],
     interpolation: {
