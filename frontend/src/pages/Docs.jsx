@@ -462,15 +462,18 @@ export default function Docs() {
         <aside style={{
         width: 280,
         flexShrink: 0,
-        position: "sticky",
-        top: 120,
-        alignSelf: "flex-start",
-        maxHeight: "calc(100vh - 140px)",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: 16
       }} className="sidebar">
+          <div style={{
+            position: "fixed",
+            top: 120,
+            width: 280,
+            maxHeight: "calc(100vh - 140px)",
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            paddingRight: 10
+          }}>
           <div style={{
           padding: "0 8px 8px",
           borderBottom: "1px solid rgba(255,255,255,0.05)"
@@ -524,6 +527,7 @@ export default function Docs() {
                 </button>;
           })}
           </nav>
+          </div>
         </aside>
 
         {/* Right Content Area */}
