@@ -946,3 +946,12 @@ async def delete_waitlist_entry(entry_id: str, _=Depends(require_super_admin)):
     await db.waitlist.delete_one({"_id": entry_id})
     return {"ok": True}
 
+
+# ── Analytics Endpoints ───────────────────────────────────────────────────────
+
+@router.get("/analytics/events")
+async def get_analytics_events(_=Depends(require_admin)):
+    """Get real-time tracking events."""
+    events = await db.analytics_events.find({}).sort("created_at", -1).limit(200).to_list(200)
+    return events
+

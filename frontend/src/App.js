@@ -49,10 +49,22 @@ function Landing() {
   const rootRef = useScrollReveal();
   useBentoGlow();
 
+  const handleCtaClick = (eventName) => {
+    // Fire tracking event asynchronously without blocking navigation
+    fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event_name: eventName, metadata: { source: "landing" } })
+    }).catch(e => console.error("Tracking error:", e));
+    
+    // Navigate to login
+    navigate("/login");
+  };
+
   return (
     <div className="App" ref={rootRef} data-testid="atlas-landing">
-      <Navbar onCta={() => navigate("/login")} />
-      <Hero onCta={() => navigate("/login")} />
+      <Navbar onCta={() => handleCtaClick("download_macos_navbar_click")} />
+      <Hero onCta={() => handleCtaClick("download_macos_hero_click")} />
       <AtlasLiveThought />
       <TechInfrastructure />
       <LivingIntelligence />
@@ -61,8 +73,8 @@ function Landing() {
       <AbsoluteAwareness />
       <AtlasInteractions />
       <AtlasComparison />
-      <WaitlistSection onCta={() => navigate("/login")} />
-      <FinalCTA onCta={() => navigate("/login")} />
+      <WaitlistSection onCta={() => handleCtaClick("download_macos_waitlist_click")} />
+      <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
       <Footer />
     </div>
   );

@@ -97,6 +97,7 @@ function AdminPanel({
   const [isDocModalOpen, setIsDocModalOpen] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState("edit");
   const [liveContent, setLiveContent] = useState("");
+  const [trackingEvents, setTrackingEvents] = useState([]);
   
   // Нові стани для кандидатів
   const [candidates, setCandidates] = useState([
@@ -121,12 +122,12 @@ function AdminPanel({
 
   const refresh = useCallback(async () => {
     try {
-      const [s, u, l, v, ds, hm, am, al, cd] = await Promise.all([api.get("/api/admin/stats"), api.get("/api/admin/users", {
+      const [s, u, l, v, ds, hm, am, al, cd, te] = await Promise.all([api.get("/api/admin/stats"), api.get("/api/admin/users", {
         params: {
           q,
           filter
         }
-      }), api.get("/api/admin/api-logs"), api.get("/api/admin/version"), api.get("/api/admin/detailed-stats"), api.get("/api/admin/health-metrics"), api.get("/api/admin/active-map"), api.get("/api/admin/admin-logs"), api.get("/api/admin/docs/custom")]);
+      }), api.get("/api/admin/api-logs"), api.get("/api/admin/version"), api.get("/api/admin/detailed-stats"), api.get("/api/admin/health-metrics"), api.get("/api/admin/active-map"), api.get("/api/admin/admin-logs"), api.get("/api/admin/docs/custom"), api.get("/api/admin/analytics/events")]);
       setStats(s.data);
       setUsers(u.data);
       setApiLogs(l.data);
@@ -136,6 +137,7 @@ function AdminPanel({
       setActiveMap(am.data);
       setAdminLogs(al.data);
       setCustomDocs(cd.data);
+      setTrackingEvents(te.data);
       
       try {
         const cands = await api.get("/api/admin/job-applications");
@@ -1127,6 +1129,69 @@ function AdminPanel({
 
               </div>;
         })()}
+
+          {/* Tab: Tracking Analytics */}
+          {activeTab === "tracking" && (
+            <div className="fade-in">
+              <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                    <Activity size={20} color="#00E5FF" />
+                    Відстеження дій (Кліки по кнопках)
+                  </h3>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.05)", padding: "4px 10px", borderRadius: 12 }}>
+                    Оновлюється автоматично
+                  </div>
+                </div>
+                
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                    <thead>
+                      <tr style={{ color: "rgba(255,255,255,0.4)", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                        <th style={{ padding: 12 }}>Час події (Local)</th>
+                        <th style={{ padding: 12 }}>Цільова дія (Event)</th>
+                        <th style={{ padding: 12 }}>IP Адреса</th>
+                        <th style={{ padding: 12 }}>User Agent (Пристрій/ОС)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {trackingEvents.map((evt, idx) => (
+                        <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                          <td style={{ padding: 12, color: "rgba(255,255,255,0.6)" }}>
+                            {fmtDateTime(evt.created_at)}
+                          </td>
+                          <td style={{ padding: 12, fontWeight: 600 }}>
+                            <span style={{
+                              padding: "4px 10px",
+                              borderRadius: 8,
+                              background: evt.event_name.includes("download") ? "rgba(0,229,255,0.1)" : "rgba(157,76,221,0.1)",
+                              color: evt.event_name.includes("download") ? "#00E5FF" : "#9D4CDD",
+                              fontSize: 12
+                            }}>
+                              {evt.event_name}
+                            </span>
+                          </td>
+                          <td style={{ padding: 12, fontFamily: "monospace", color: "#FEBC2E" }}>
+                            {evt.ip_address}
+                          </td>
+                          <td style={{ padding: 12, color: "rgba(255,255,255,0.5)", maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={evt.user_agent}>
+                            {evt.user_agent}
+                          </td>
+                        </tr>
+                      ))}
+                      {trackingEvents.length === 0 && (
+                        <tr>
+                          <td colSpan={4} style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
+                            Поки що немає зафіксованих дій.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          )}
 
           {/* Tab: Users Table (Live heartbeats) */}
           {activeTab === "users" && <section data-testid="admin-users-block" className="glass fade-in" style={{
@@ -2583,6 +2648,7 @@ function AdminPanel({
           <SidebarButton icon={<Compass size={16} />} label={t("txt_1390")} active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
           <SidebarButton icon={<DollarSign size={16} />} label={t("txt_1391")} active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} />
           <SidebarButton icon={<Globe size={16} />} label={t("txt_1392")} active={activeTab === "map"} onClick={() => setActiveTab("map")} />
+          <SidebarButton icon={<Activity size={16} />} label="Аналітика Дій (Кліки)" active={activeTab === "tracking"} onClick={() => setActiveTab("tracking")} />
           <SidebarButton icon={<Users size={16} />} label={t("txt_1393")} active={activeTab === "users"} onClick={() => setActiveTab("users")} />
           <SidebarButton icon={<Cpu size={16} />} label={t("txt_1394")} active={activeTab === "health"} onClick={() => setActiveTab("health")} />
           <SidebarButton icon={<Radio size={16} />} label={t("txt_1395")} active={activeTab === "broadcast"} onClick={() => setActiveTab("broadcast")} />

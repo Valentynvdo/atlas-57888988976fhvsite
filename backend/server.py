@@ -17,6 +17,7 @@ from billing import router as billing_router, webhook_router
 from atlas import router as atlas_router
 from admin import router as admin_router
 from careers import router as careers_router
+from analytics import router as analytics_router
 from db import init_pool, close_pool, client
 from support_bot import create_bot_and_dispatcher
 
@@ -132,6 +133,7 @@ app.include_router(webhook_router)
 app.include_router(atlas_router)
 app.include_router(admin_router)
 app.include_router(careers_router)
+app.include_router(analytics_router)
 
 
 # ── Shell script distribution routes ────────────────────────────────────────
