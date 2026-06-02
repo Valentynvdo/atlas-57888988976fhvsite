@@ -35,12 +35,12 @@ export default function DocsPost() {
           rel="canonical"
           href={
             isEn
-              ? \`https://atlas-assistant.online/en/docs/\${slug}\`
-              : \`https://atlas-assistant.online/docs/\${slug}\`
+              ? `https://atlas-assistant.online/en/docs/${slug}`
+              : `https://atlas-assistant.online/docs/${slug}`
           }
         />
-        <link rel="alternate" hreflang="uk" href={\`https://atlas-assistant.online/docs/\${slug}\`} />
-        <link rel="alternate" hreflang="en" href={\`https://atlas-assistant.online/en/docs/\${slug}\`} />
+        <link rel="alternate" hreflang="uk" href={`https://atlas-assistant.online/docs/${slug}`} />
+        <link rel="alternate" hreflang="en" href={`https://atlas-assistant.online/en/docs/${slug}`} />
       </Helmet>
       
       <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
