@@ -15,9 +15,9 @@ const getBackendUrl = () => {
     return "https://atlas-backend-zhgz.onrender.com";
   }
 
-  // 3. On Render (production unified) — same origin
-  if (hostname !== "localhost" && hostname !== "127.0.0.1") {
-    return window.location.origin;
+  // 3. Production domain — API is on the separate backend service
+  if (hostname === "atlas-assistant.online" || hostname === "www.atlas-assistant.online") {
+    return "https://atlas-backend-zhgz.onrender.com";
   }
   
   // 4. Local dev — backend on port 8000
