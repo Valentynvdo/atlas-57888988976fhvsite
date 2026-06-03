@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 
 from auth import require_admin, require_super_admin, _generate_key, _hash_password_pbkdf2
 from db import db
@@ -955,3 +955,118 @@ async def get_analytics_events(_=Depends(require_admin)):
     events = await db.analytics_events.find({}).sort("created_at", -1).limit(200).to_list(200)
     return events
 
+
+# ── Email Change (Admin-initiated with confirmation) ──────────────────────────
+
+import random as _random
+import os as _os
+
+def _send_email_change_code(to_email: str, code: str, old_email: str):
+    """Send confirmation code to the NEW email address."""
+    body = f"""
+An administrator has requested to change the email address for your Atlas AI account.
+
+Old email: {old_email}
+New email: {to_email}
+
+Your confirmation code: {code}
+
+This code is valid for 15 minutes.
+If you did not expect this, please contact support.
+    """
+    logger.info(f"📧 EMAIL CHANGE CODE for {to_email}: {code}")
+
+    resend_api_key = _os.getenv("RESEND_API_KEY")
+    if not resend_api_key:
+        logger.warning(f"RESEND_API_KEY not set — email change code not sent to {to_email}")
+        return
+
+    import httpx
+    from_email = _os.getenv("SMTP_FROM", "Atlas AI Support <onboarding@resend.dev>")
+    payload = {
+        "from": from_email,
+        "to": [to_email],
+        "subject": "Email Change Confirmation — Atlas AI",
+        "text": body,
+    }
+    headers = {"Authorization": f"Bearer {resend_api_key}", "Content-Type": "application/json"}
+    try:
+        with httpx.Client() as client:
+            resp = client.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=10.0)
+            if resp.status_code >= 400:
+                logger.error(f"Failed to send email change code: {resp.text}")
+            else:
+                logger.info(f"Email change code sent to {to_email}")
+    except Exception as e:
+        logger.error(f"Email change send error: {e}")
+
+
+@router.post("/users/{user_id}/change-email/request")
+async def admin_request_email_change(user_id: str, body: dict, background_tasks: BackgroundTasks, _=Depends(require_admin)):
+    """Admin requests an email change for a user. Sends confirmation code to the NEW email."""
+    new_email = (body.get("new_email") or "").strip().lower()
+    if not new_email or "@" not in new_email:
+        raise HTTPException(status_code=400, detail="Вкажіть коректний новий email")
+
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено")
+
+    # Check new email not taken
+    existing = await db.users.find_one({"email": new_email})
+    if existing and str(existing["_id"]) != user_id:
+        raise HTTPException(status_code=409, detail="Цей email вже використовується")
+
+    code = str(_random.randint(100000, 999999))
+    expires_at = (datetime.now(timezone.utc) + timedelta(minutes=15)).isoformat()
+
+    await db.users.update_one(
+        {"_id": user_id},
+        {"$set": {
+            "pending_email_change": {
+                "new_email": new_email,
+                "code": code,
+                "expires_at": expires_at,
+            }
+        }}
+    )
+
+    background_tasks.add_task(_send_email_change_code, new_email, code, user.get("email", ""))
+    return {"ok": True, "message": f"Код підтвердження надіслано на {new_email}"}
+
+
+@router.post("/users/{user_id}/change-email/confirm")
+async def admin_confirm_email_change(user_id: str, body: dict, _=Depends(require_admin)):
+    """Admin confirms the email change with the code received on the new email."""
+    code = (body.get("code") or "").strip()
+    if not code:
+        raise HTTPException(status_code=400, detail="Введіть код підтвердження")
+
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено")
+
+    pending = user.get("pending_email_change")
+    if not pending:
+        raise HTTPException(status_code=400, detail="Немає активного запиту на зміну email")
+
+    expires_at = _parse_dt(pending.get("expires_at"))
+    if expires_at and datetime.now(timezone.utc) > expires_at:
+        raise HTTPException(status_code=400, detail="Код підтвердження прострочений")
+
+    if pending.get("code") != code:
+        raise HTTPException(status_code=400, detail="Невірний код підтвердження")
+
+    new_email = pending["new_email"]
+    old_email = user.get("email", "")
+
+    await db.users.update_one(
+        {"_id": user_id},
+        {
+            "$set": {"email": new_email},
+            "$unset": {"pending_email_change": ""},
+        }
+    )
+
+    logger.info(f"✅ Email changed by admin: {old_email} → {new_email} for user {user_id}")
+    return {"ok": True, "message": f"Email змінено: {old_email} → {new_email}"}

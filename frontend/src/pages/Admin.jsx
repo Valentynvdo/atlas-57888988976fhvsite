@@ -168,7 +168,7 @@ function AdminPanel({
   }, [q, filter, user?.is_super_admin]);
   useEffect(() => {
     refresh();
-    const intervalId = setInterval(refresh, 3600000); // Оновлення кожну годину
+    const intervalId = setInterval(refresh, 30000); // Оновлення кожні 30 секунд
     return () => clearInterval(intervalId);
   }, [refresh]);
   const sortedUsers = useMemo(() => {
@@ -2820,6 +2820,11 @@ function UserDetailsModal({
   const { t } = useTranslation();
   const [notes, setNotes] = useState(user.admin_notes || "");
   const [busy, setBusy] = useState(false);
+  const [showEmailChange, setShowEmailChange] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailCode, setEmailCode] = useState("");
+  const [emailStep, setEmailStep] = useState(0); // 0: input email, 1: input code
+
   const doAction = async (action, extra = {}) => {
     setBusy(true);
     try {
@@ -2835,6 +2840,35 @@ function UserDetailsModal({
       }
     } catch (e) {
       toast.error(t("txt_1400"));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const requestEmailChange = async () => {
+    if (!newEmail.includes("@")) return toast.error("Введіть коректний email");
+    setBusy(true);
+    try {
+      const res = await api.post(`/api/admin/users/${user.user_id}/change-email/request`, { new_email: newEmail });
+      toast.success(res.data.message || "Код надіслано");
+      setEmailStep(1);
+    } catch (e) {
+      toast.error(e.response?.data?.detail || "Помилка при надсиланні коду");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const confirmEmailChange = async () => {
+    if (!emailCode) return toast.error("Введіть код");
+    setBusy(true);
+    try {
+      const res = await api.post(`/api/admin/users/${user.user_id}/change-email/confirm`, { code: emailCode });
+      toast.success(res.data.message || "Email успішно змінено");
+      setShowEmailChange(false);
+      onUpdated();
+    } catch (e) {
+      toast.error(e.response?.data?.detail || "Помилка при підтвердженні");
     } finally {
       setBusy(false);
     }
@@ -2922,6 +2956,51 @@ function UserDetailsModal({
           <Row label={t("txt_1405")} value={user.active ? t("txt_1406") : t("txt_1407")} />
           <Row label={t("txt_1408")} value={fmtDate(user.created_at)} />
           <Row label={t("txt_1409")} value={fmtDate(user.expires_at)} />
+        </div>
+
+        {/* Зміна Email */}
+        <div style={{ marginBottom: 24 }}>
+          {!showEmailChange ? (
+             <button disabled={busy} onClick={() => setShowEmailChange(true)} className="ghost-btn" style={{
+               width: "100%", background: "rgba(255,255,255,0.05)", padding: "10px", borderRadius: "10px"
+             }}>
+               Змінити Email користувача
+             </button>
+          ) : (
+            <div style={{ background: "rgba(0,0,0,0.3)", padding: 16, borderRadius: 14, border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div style={{ fontWeight: 600, marginBottom: 12 }}>Зміна Email</div>
+              {emailStep === 0 ? (
+                <>
+                  <input
+                    type="email"
+                    placeholder="Новий Email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    style={{ width: "100%", padding: "10px", borderRadius: "8px", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", marginBottom: "10px" }}
+                  />
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button onClick={() => setShowEmailChange(false)} className="ghost-btn" style={{ flex: 1, padding: "8px" }}>Скасувати</button>
+                    <button onClick={requestEmailChange} disabled={busy} className="cta-btn" style={{ flex: 1, padding: "8px", borderRadius: "8px" }}>Надіслати код</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginBottom: "10px" }}>Код підтвердження надіслано на <b>{newEmail}</b>. Попросіть користувача його продиктувати.</div>
+                  <input
+                    type="text"
+                    placeholder="Код з email"
+                    value={emailCode}
+                    onChange={(e) => setEmailCode(e.target.value)}
+                    style={{ width: "100%", padding: "10px", borderRadius: "8px", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", marginBottom: "10px" }}
+                  />
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button onClick={() => setEmailStep(0)} className="ghost-btn" style={{ flex: 1, padding: "8px" }}>Назад</button>
+                    <button onClick={confirmEmailChange} disabled={busy} className="cta-btn" style={{ flex: 1, padding: "8px", borderRadius: "8px" }}>Підтвердити</button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <div style={{
