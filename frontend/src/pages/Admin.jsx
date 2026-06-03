@@ -2499,7 +2499,7 @@ function AdminPanel({
                                 onClick={async () => {
                                   setWaitlistBusy(entry._id);
                                   try {
-                                    await api.patch(`/api/admin/waitlist/${entry._id}/approve`);
+                                    await api.post(`/api/admin/waitlist/${entry._id}/approve`);
                                     toast.success("Доступ надано!");
                                     refresh();
                                   } catch (e) {
@@ -2519,7 +2519,7 @@ function AdminPanel({
                                 onClick={async () => {
                                   setWaitlistBusy(entry._id);
                                   try {
-                                    await api.patch(`/api/admin/waitlist/${entry._id}/reject`);
+                                    await api.post(`/api/admin/waitlist/${entry._id}/reject`);
                                     toast.success("Відхилено");
                                     refresh();
                                   } catch { toast.error("Помилка"); } finally { setWaitlistBusy(null); }

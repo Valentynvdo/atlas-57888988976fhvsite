@@ -874,7 +874,7 @@ async def approve_all_waitlist(body: dict = {}, _=Depends(require_admin)):
     return {"ok": True, "approved_count": count}
 
 
-@router.patch("/waitlist/{entry_id}/approve")
+@router.post("/waitlist/{entry_id}/approve")
 async def approve_waitlist_entry(entry_id: str, body: dict = {}, _=Depends(require_admin)):
     """Approve a waitlist entry and optionally activate their license."""
     entry = await db.waitlist.find_one({"_id": entry_id})
@@ -922,7 +922,7 @@ async def approve_waitlist_entry(entry_id: str, body: dict = {}, _=Depends(requi
     return {"ok": True, "days_granted": days, "message": f"Access granted for {days} days"}
 
 
-@router.patch("/waitlist/{entry_id}/reject")
+@router.post("/waitlist/{entry_id}/reject")
 async def reject_waitlist_entry(entry_id: str, _=Depends(require_admin)):
     """Reject a waitlist entry."""
     entry = await db.waitlist.find_one({"_id": entry_id})
