@@ -171,54 +171,202 @@ app.mount("/downloads", StaticFiles(directory=str(UPLOAD_DIR)), name="downloads"
 STATIC_DIR = ROOT_DIR / "static"
 
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 
 if STATIC_DIR.exists():
     # Mount compiled static assets (JS, CSS, images) inside /static/
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR / "static")), name="react-static")
 
-# ── Explicit SPA Routes for SEO / Social Sharing ────────────────────────────
-# We define explicit GET endpoints for top-level pages so that bots (Telegram, etc.)
-# get the correct customized index.html without relying on the 404 fallback handler.
+
+# ── SEO Meta definitions per page ───────────────────────────────────────────
+# These replace the generic og:title/og:description in the single index.html
+# so that Telegram/Slack/Twitter bots see the correct preview for each URL.
+
+SEO_META = {
+    # Ukrainian pages
+    "/": {
+        "lang": "uk",
+        "title": "Atlas AI — Автономний ШІ Асистент для macOS",
+        "description": "Автономний ШІ-асистент нового покоління, створений для вашого комфорту та максимальної продуктивності. Завантажте для macOS.",
+        "url": "https://atlas-assistant.online/",
+    },
+    "/blog": {
+        "lang": "uk",
+        "title": "Блог Atlas AI — Штучний Інтелект, Автоматизація та macOS",
+        "description": "Останні новини, статті та технічні інсайти від команди Atlas AI. Читайте про розвиток автономних ШІ-агентів, локальні LLM та майбутнє екосистеми Apple.",
+        "url": "https://atlas-assistant.online/blog",
+    },
+    "/docs": {
+        "lang": "uk",
+        "title": "Документація Atlas AI — Інструкції з налаштування локального ШІ",
+        "description": "Офіційна документація Atlas AI. Покрокові інструкції з встановлення, налаштування та використання вашого AI-асистента для macOS.",
+        "url": "https://atlas-assistant.online/docs",
+    },
+    "/careers": {
+        "lang": "uk",
+        "title": "Кар'єра в Atlas AI — Вакансії для AI & Swift Розробників",
+        "description": "Приєднуйтесь до команди Atlas AI. Відкриті вакансії для Python, Swift та ML-інженерів. Будуємо майбутнє автономного ШІ.",
+        "url": "https://atlas-assistant.online/careers",
+    },
+    "/investors": {
+        "lang": "uk",
+        "title": "Інвестиції в ШІ-стартап Atlas AI — Майбутнє Автономних Агентів для macOS",
+        "description": "Інвестуйте у Atlas AI — найперспективніший ШІ-стартап для macOS. Ознайомтесь з нашою технологією та можливостями для інвесторів.",
+        "url": "https://atlas-assistant.online/investors",
+    },
+    # English pages
+    "/en": {
+        "lang": "en",
+        "title": "Atlas AI — Autonomous AI Assistant for macOS",
+        "description": "Next-generation autonomous AI assistant built for your comfort and maximum productivity. Download for macOS.",
+        "url": "https://atlas-assistant.online/en",
+    },
+    "/en/blog": {
+        "lang": "en",
+        "title": "Atlas AI Blog — Artificial Intelligence, Automation & macOS",
+        "description": "Latest news, articles and technical insights from the Atlas AI team. Read about autonomous AI agents, local LLMs and the future of the Apple ecosystem.",
+        "url": "https://atlas-assistant.online/en/blog",
+    },
+    "/en/docs": {
+        "lang": "en",
+        "title": "Atlas AI Documentation — Local AI Setup Guides",
+        "description": "Official Atlas AI documentation. Step-by-step guides for installing, configuring and using your AI assistant for macOS.",
+        "url": "https://atlas-assistant.online/en/docs",
+    },
+    "/en/careers": {
+        "lang": "en",
+        "title": "Careers at Atlas AI — Join the Next-Gen AI Team",
+        "description": "Join the Atlas AI team. Open positions for Python, Swift and ML engineers. Building the future of autonomous AI for macOS.",
+        "url": "https://atlas-assistant.online/en/careers",
+    },
+    "/en/investors": {
+        "lang": "en",
+        "title": "Invest in Atlas AI — The Future of Autonomous AI Agents for macOS",
+        "description": "Invest in Atlas AI — the most promising AI startup for macOS. Explore our technology and opportunities for investors.",
+        "url": "https://atlas-assistant.online/en/investors",
+    },
+}
+
+OG_IMAGE = "https://atlas-assistant.online/og-image.jpg"
+
+
+def build_seo_html(path: str) -> str | None:
+    """Read index.html and inject page-specific meta tags. Returns None if index.html not found."""
+    index_path = STATIC_DIR / "index.html"
+    if not index_path.exists():
+        return None
+
+    # Normalise path: strip trailing slash, collapse /en/blog/some-slug -> /en/blog
+    norm = path.rstrip("/") or "/"
+
+    # Try exact match first, then match by prefix (for slug sub-pages like /blog/my-post)
+    meta = SEO_META.get(norm)
+    if meta is None:
+        parts = norm.split("/")  # e.g. ['', 'blog', 'my-post']
+        # Try /section or /en/section
+        if len(parts) >= 3 and parts[1] == "en":
+            meta = SEO_META.get("/en/" + parts[2])
+        elif len(parts) >= 2:
+            meta = SEO_META.get("/" + parts[1])
+
+    # Fall back to homepage meta if no match
+    if meta is None:
+        lang = "en" if norm.startswith("/en") else "uk"
+        meta = SEO_META.get("/en" if lang == "en" else "/")
+
+    html = index_path.read_text(encoding="utf-8")
+
+    # Replace <html lang=...>
+    html = html.replace('<html lang="uk">', f'<html lang="{meta["lang"]}">', 1)
+    html = html.replace('<html lang="en">', f'<html lang="{meta["lang"]}">', 1)
+
+    # Replace <title>
+    import re
+    html = re.sub(r'<title>[^<]*</title>', f'<title>{meta["title"]}</title>', html, count=1)
+
+    # Replace og: / twitter: tags
+    replacements = {
+        'og:title':            meta["title"],
+        'og:description':      meta["description"],
+        'og:url':              meta["url"],
+        'twitter:title':       meta["title"],
+        'twitter:description': meta["description"],
+        'twitter:url':         meta["url"],
+    }
+    for prop, value in replacements.items():
+        if prop.startswith("og:"):
+            html = re.sub(
+                rf'<meta property="{re.escape(prop)}" content="[^"]*"',
+                f'<meta property="{prop}" content="{value}"',
+                html, count=1
+            )
+        else:
+            html = re.sub(
+                rf'<meta name="{re.escape(prop)}" content="[^"]*"',
+                f'<meta name="{prop}" content="{value}"',
+                html, count=1
+            )
+
+    # Replace meta name="description"
+    html = re.sub(
+        r'<meta name="description" content="[^"]*"',
+        f'<meta name="description" content="{meta["description"]}"',
+        html, count=1
+    )
+
+    return html
+
+
+# ── Explicit SPA Routes for SEO / Social Sharing ─────────────────────────────
+# All top-level page routes use dynamic OG injection so bots see correct previews.
+
+async def _seo_response(path: str) -> HTMLResponse | FileResponse:
+    html = build_seo_html(path)
+    if html:
+        return HTMLResponse(content=html)
+    # Fallback if static dir not built yet
+    return FileResponse(str(STATIC_DIR / "index.html"))
+
+
 @app.get("/blog")
 @app.get("/blog/{path:path}")
 async def serve_blog(request: Request, path: str = ""):
-    return FileResponse(str(STATIC_DIR / "blog" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/en/blog")
 @app.get("/en/blog/{path:path}")
 async def serve_en_blog(request: Request, path: str = ""):
-    return FileResponse(str(STATIC_DIR / "en" / "blog" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/docs")
 @app.get("/docs/{path:path}")
 async def serve_docs(request: Request, path: str = ""):
-    return FileResponse(str(STATIC_DIR / "docs" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/en/docs")
 @app.get("/en/docs/{path:path}")
 async def serve_en_docs(request: Request, path: str = ""):
-    return FileResponse(str(STATIC_DIR / "en" / "docs" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/careers")
 async def serve_careers(request: Request):
-    return FileResponse(str(STATIC_DIR / "careers" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/en/careers")
 async def serve_en_careers(request: Request):
-    return FileResponse(str(STATIC_DIR / "en" / "careers" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/investors")
 async def serve_investors(request: Request):
-    return FileResponse(str(STATIC_DIR / "investors" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/en/investors")
 async def serve_en_investors(request: Request):
-    return FileResponse(str(STATIC_DIR / "en" / "investors" / "index.html"))
+    return await _seo_response(request.url.path)
 
 @app.get("/en")
 async def serve_en_home(request: Request):
-    return FileResponse(str(STATIC_DIR / "en" / "index.html"))
+    return await _seo_response(request.url.path)
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -227,44 +375,26 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
         path = request.url.path
         if path.startswith("/api/") or path.startswith("/downloads/"):
             return JSONResponse({"detail": "Not Found"}, status_code=404)
-            
+
         if STATIC_DIR.exists():
             rel_path = path.lstrip("/")
-            # Attempt to serve root-level static files (favicon, manifest, etc.)
+            # Serve root-level static files (favicon, manifest, etc.)
             if rel_path:
                 file_path = STATIC_DIR / rel_path
                 if file_path.exists() and file_path.is_file():
                     return FileResponse(str(file_path))
-            
-            # SPA Fallback: serve localized index.html for specific sections (SEO for sharing)
-            path_parts = [p for p in path.strip("/").split("/") if p]
-            
-            if path_parts and path_parts[0] == "en":
-                # Check for specific section like /en/blog or /en/blog/slug
-                if len(path_parts) > 1:
-                    section = path_parts[1]
-                    potential_file = STATIC_DIR / "en" / section / "index.html"
-                    if potential_file.exists():
-                        return FileResponse(str(potential_file))
-                # Fallback to English root
-                en_index = STATIC_DIR / "en" / "index.html"
-                if en_index.exists():
-                    return FileResponse(str(en_index))
-            else:
-                # Check for specific section like /blog or /blog/slug
-                if len(path_parts) > 0:
-                    section = path_parts[0]
-                    potential_file = STATIC_DIR / section / "index.html"
-                    if potential_file.exists():
-                        return FileResponse(str(potential_file))
-                
-            # Default SPA Fallback: serve index.html for React Router
+
+            # SPA fallback — inject SEO meta for known sections
+            html = build_seo_html(path)
+            if html:
+                return HTMLResponse(content=html)
+
             index = STATIC_DIR / "index.html"
             if index.exists():
                 return FileResponse(str(index))
-                
-    # Return default JSON for other HTTP exceptions
+
     return JSONResponse({"detail": str(exc.detail)}, status_code=exc.status_code)
+
 
 if not STATIC_DIR.exists():
     logger.warning("React build not found at %s — running API only", STATIC_DIR)
