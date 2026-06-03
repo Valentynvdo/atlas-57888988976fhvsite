@@ -182,42 +182,42 @@ if STATIC_DIR.exists():
 # get the correct customized index.html without relying on the 404 fallback handler.
 @app.get("/blog")
 @app.get("/blog/{path:path}")
-async def serve_blog(request: Request):
+async def serve_blog(request: Request, path: str = ""):
     return FileResponse(str(STATIC_DIR / "blog" / "index.html"))
 
 @app.get("/en/blog")
 @app.get("/en/blog/{path:path}")
-async def serve_en_blog():
+async def serve_en_blog(request: Request, path: str = ""):
     return FileResponse(str(STATIC_DIR / "en" / "blog" / "index.html"))
 
 @app.get("/docs")
 @app.get("/docs/{path:path}")
-async def serve_docs():
+async def serve_docs(request: Request, path: str = ""):
     return FileResponse(str(STATIC_DIR / "docs" / "index.html"))
 
 @app.get("/en/docs")
 @app.get("/en/docs/{path:path}")
-async def serve_en_docs():
+async def serve_en_docs(request: Request, path: str = ""):
     return FileResponse(str(STATIC_DIR / "en" / "docs" / "index.html"))
 
 @app.get("/careers")
-async def serve_careers():
+async def serve_careers(request: Request):
     return FileResponse(str(STATIC_DIR / "careers" / "index.html"))
 
 @app.get("/en/careers")
-async def serve_en_careers():
+async def serve_en_careers(request: Request):
     return FileResponse(str(STATIC_DIR / "en" / "careers" / "index.html"))
 
 @app.get("/investors")
-async def serve_investors():
+async def serve_investors(request: Request):
     return FileResponse(str(STATIC_DIR / "investors" / "index.html"))
 
 @app.get("/en/investors")
-async def serve_en_investors():
+async def serve_en_investors(request: Request):
     return FileResponse(str(STATIC_DIR / "en" / "investors" / "index.html"))
 
 @app.get("/en")
-async def serve_en_home():
+async def serve_en_home(request: Request):
     return FileResponse(str(STATIC_DIR / "en" / "index.html"))
 
 
