@@ -21,6 +21,7 @@ import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
 import WaitlistSection from "./components/atlas/WaitlistSection";
 import TechInfrastructure from "./components/atlas/TechInfrastructure";
+import AtlasSEOContent from "./components/atlas/AtlasSEOContent";
 import useScrollReveal from "./components/atlas/useScrollReveal";
 
 import { AuthProvider } from "./lib/auth";
@@ -74,6 +75,7 @@ function Landing() {
       <AtlasInteractions />
       <AtlasComparison />
       <WaitlistSection onCta={() => handleCtaClick("download_macos_waitlist_click")} />
+      <AtlasSEOContent />
       <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
       <Footer />
     </div>
