@@ -97,22 +97,22 @@ const PageLoader = () => (
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/docs" element={<Docs />} />
-      <Route path="/docs/:slug" element={<DocsPost />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="/contacts" element={<Contacts />} />
-      <Route path="/careers" element={<Careers />} />
-      <Route path="/investors" element={<Investors />} />
-      <Route path="/team" element={<Careers />} />
-      <Route path="/blog" element={<BlogList />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path="/invite/:code" element={<InviteHandler />} />
-      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route index element={<Landing />} />
+      <Route path="login" element={<Login />} />
+      <Route path="docs" element={<Docs />} />
+      <Route path="docs/:slug" element={<DocsPost />} />
+      <Route path="privacy" element={<Privacy />} />
+      <Route path="terms" element={<Terms />} />
+      <Route path="contacts" element={<Contacts />} />
+      <Route path="careers" element={<Careers />} />
+      <Route path="investors" element={<Investors />} />
+      <Route path="team" element={<Careers />} />
+      <Route path="blog" element={<BlogList />} />
+      <Route path="blog/:slug" element={<BlogPost />} />
+      <Route path="invite/:code" element={<InviteHandler />} />
+      <Route path="auth/callback" element={<AuthCallback />} />
       <Route
-        path="/dashboard"
+        path="dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
@@ -120,7 +120,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/x7k9m-admin"
+        path="x7k9m-admin"
         element={
           <ProtectedRoute adminOnly>
             <Admin />
