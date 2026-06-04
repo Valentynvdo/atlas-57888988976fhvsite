@@ -67,16 +67,16 @@ const pages = {
 function generateHtml(baseHtml, meta, urlPath) {
   let html = baseHtml;
   
-  html = html.replace(/<meta name="description" content="[^"]*" \/>/g, `<meta name="description" content="${meta.description}" />`);
-  html = html.replace(/<meta property="og:description" content="[^"]*" \/>/g, `<meta property="og:description" content="${meta.description}" />`);
-  html = html.replace(/<meta name="twitter:description" content="[^"]*" \/>/g, `<meta name="twitter:description" content="${meta.description}" />`);
+  html = html.replace(/<meta[^>]*?name="description"[^>]*?>/g, `<meta data-rh="true" name="description" content="${meta.description}" />`);
+  html = html.replace(/<meta[^>]*?property="og:description"[^>]*?>/g, `<meta data-rh="true" property="og:description" content="${meta.description}" />`);
+  html = html.replace(/<meta[^>]*?name="twitter:description"[^>]*?>/g, `<meta data-rh="true" name="twitter:description" content="${meta.description}" />`);
   
-  html = html.replace(/<meta property="og:title" content="[^"]*" \/>/g, `<meta property="og:title" content="${meta.title}" />`);
-  html = html.replace(/<meta name="twitter:title" content="[^"]*" \/>/g, `<meta name="twitter:title" content="${meta.title}" />`);
+  html = html.replace(/<meta[^>]*?property="og:title"[^>]*?>/g, `<meta data-rh="true" property="og:title" content="${meta.title}" />`);
+  html = html.replace(/<meta[^>]*?name="twitter:title"[^>]*?>/g, `<meta data-rh="true" name="twitter:title" content="${meta.title}" />`);
   
-  html = html.replace(/<link rel="canonical" href="https:\/\/atlas-assistant\.online\/[^"]*" \/>/g, `<link rel="canonical" href="https://atlas-assistant.online${urlPath}" />`);
-  html = html.replace(/<meta property="og:url" content="https:\/\/atlas-assistant\.online\/[^"]*" \/>/g, `<meta property="og:url" content="https://atlas-assistant.online${urlPath}" />`);
-  html = html.replace(/<meta name="twitter:url" content="https:\/\/atlas-assistant\.online\/[^"]*" \/>/g, `<meta name="twitter:url" content="https://atlas-assistant.online${urlPath}" />`);
+  html = html.replace(/<link[^>]*?rel="canonical"[^>]*?>/g, `<link data-rh="true" rel="canonical" href="https://atlas-assistant.online${urlPath}" />`);
+  html = html.replace(/<meta[^>]*?property="og:url"[^>]*?>/g, `<meta data-rh="true" property="og:url" content="https://atlas-assistant.online${urlPath}" />`);
+  html = html.replace(/<meta[^>]*?name="twitter:url"[^>]*?>/g, `<meta data-rh="true" name="twitter:url" content="https://atlas-assistant.online${urlPath}" />`);
   
   if (html.includes('<title>')) {
     html = html.replace(/<title>.*<\/title>/, `<title>${meta.title}</title>`);
@@ -85,7 +85,7 @@ function generateHtml(baseHtml, meta, urlPath) {
   }
 
   // Ensure scripts and css are injected
-  if (cssTags && !html.includes('rel="stylesheet"')) {
+  if (cssTags) {
     html = html.replace('</head>', `${cssTags}</head>`);
   }
   if (scriptTags && !html.includes('src="/static/js')) {
