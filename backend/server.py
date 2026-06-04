@@ -285,11 +285,11 @@ def build_seo_html(path: str) -> str | None:
 
     # Replace <title> or insert if missing
     import re
-    if re.search(r'<title>[^<]*</title>', html):
-        html = re.sub(r'<title>[^<]*</title>', f'<title>{meta["title"]}</title>', html, count=1)
+    if re.search(r'<title[^>]*>[^<]*</title>', html):
+        html = re.sub(r'<title[^>]*>[^<]*</title>', f'<title data-rh="true">{meta["title"]}</title>', html, count=1)
     else:
         # Inject <title> right after <head>
-        html = html.replace('<head>', f'<head><title>{meta["title"]}</title>', 1)
+        html = html.replace('<head>', f'<head><title data-rh="true">{meta["title"]}</title>', 1)
 
     # Replace og: / twitter: tags
     replacements = {
