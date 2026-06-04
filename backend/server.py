@@ -73,9 +73,11 @@ def is_allowed_origin(origin: str) -> bool:
     frontend_url = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
     if frontend_url and origin.rstrip("/") == frontend_url:
         return True
-    # Дозволяємо фронтенд на Render та локальні хости для розробки
+    # Дозволяємо всі відомі фронтенд-хости та локальні хости для розробки
     clean_origin = origin.rstrip("/")
     if clean_origin in (
+        "https://atlas-assistant.online",
+        "https://www.atlas-assistant.online",
         "https://atlas-xl1e.onrender.com",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -109,8 +111,9 @@ async def cors_middleware(request: Request, call_next):
             r.headers["Access-Control-Allow-Credentials"] = "true"
         else:
             r.headers["Access-Control-Allow-Origin"] = "null"
-        r.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        r.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
         r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID, X-Admin-Pin"
+        r.headers["Access-Control-Max-Age"] = "86400"
         return r
 
     response = await call_next(request)
@@ -120,7 +123,7 @@ async def cors_middleware(request: Request, call_next):
             response.headers["Access-Control-Allow-Credentials"] = "true"
         else:
             response.headers["Access-Control-Allow-Origin"] = "null"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Session-ID, X-Admin-Pin"
     return response
 
@@ -280,9 +283,13 @@ def build_seo_html(path: str) -> str | None:
     html = html.replace('<html lang="uk">', f'<html lang="{meta["lang"]}">', 1)
     html = html.replace('<html lang="en">', f'<html lang="{meta["lang"]}">', 1)
 
-    # Replace <title>
+    # Replace <title> or insert if missing
     import re
-    html = re.sub(r'<title>[^<]*</title>', f'<title>{meta["title"]}</title>', html, count=1)
+    if re.search(r'<title>[^<]*</title>', html):
+        html = re.sub(r'<title>[^<]*</title>', f'<title>{meta["title"]}</title>', html, count=1)
+    else:
+        # Inject <title> right after <head>
+        html = html.replace('<head>', f'<head><title>{meta["title"]}</title>', 1)
 
     # Replace og: / twitter: tags
     replacements = {
@@ -295,6 +302,7 @@ def build_seo_html(path: str) -> str | None:
     }
     for prop, value in replacements.items():
         if prop.startswith("og:"):
+            # Also handle both double and single quotes or no spaces just in case, though minifier uses double
             html = re.sub(
                 rf'<meta property="{re.escape(prop)}" content="[^"]*"',
                 f'<meta property="{prop}" content="{value}"',
