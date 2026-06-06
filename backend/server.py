@@ -302,23 +302,23 @@ def build_seo_html(path: str) -> str | None:
     }
     for prop, value in replacements.items():
         if prop.startswith("og:"):
-            # Also handle both double and single quotes or no spaces just in case, though minifier uses double
+            # Use non-greedy wildcard to match tags that might have data-rh="true" before or after the property
             html = re.sub(
-                rf'<meta property="{re.escape(prop)}" content="[^"]*"',
-                f'<meta property="{prop}" content="{value}"',
+                rf'<meta[^>]*?property="{re.escape(prop)}"[^>]*?>',
+                f'<meta data-rh="true" property="{prop}" content="{value}" />',
                 html, count=1
             )
         else:
             html = re.sub(
-                rf'<meta name="{re.escape(prop)}" content="[^"]*"',
-                f'<meta name="{prop}" content="{value}"',
+                rf'<meta[^>]*?name="{re.escape(prop)}"[^>]*?>',
+                f'<meta data-rh="true" name="{prop}" content="{value}" />',
                 html, count=1
             )
 
     # Replace meta name="description"
     html = re.sub(
-        r'<meta name="description" content="[^"]*"',
-        f'<meta name="description" content="{meta["description"]}"',
+        r'<meta[^>]*?name="description"[^>]*?>',
+        f'<meta data-rh="true" name="description" content="{meta["description"]}" />',
         html, count=1
     )
 
