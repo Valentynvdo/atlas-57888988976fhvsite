@@ -74,8 +74,8 @@ function Landing() {
       <AbsoluteAwareness />
       <AtlasInteractions />
       <AtlasComparison />
-      <WaitlistSection onCta={() => handleCtaClick("download_macos_waitlist_click")} />
       <AtlasSEOContent />
+      <WaitlistSection onCta={() => handleCtaClick("download_macos_waitlist_click")} />
       <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mic, Shield, Cpu, FolderOpen, Send } from 'lucide-react';
+import { Mic, Shield, Cpu, FolderOpen, Send, Zap, TrendingUp, Code, Bot } from 'lucide-react';
 import './AtlasSEOContent.css';
 
 export default function AtlasSEOContent() {
@@ -12,7 +12,11 @@ export default function AtlasSEOContent() {
     { id: 'privacy', icon: Shield, label: t('seo_nav_privacy') },
     { id: 'automation', icon: Cpu, label: t('seo_nav_automation') },
     { id: 'files', icon: FolderOpen, label: t('seo_nav_files') },
-    { id: 'telegram', icon: Send, label: t('seo_nav_telegram') }
+    { id: 'telegram', icon: Send, label: t('seo_nav_telegram') },
+    { id: 'performance', icon: Zap, label: t('seo_nav_performance') },
+    { id: 'investors', icon: TrendingUp, label: t('seo_nav_investors') },
+    { id: 'skills', icon: Code, label: t('seo_nav_skills') },
+    { id: 'agents', icon: Bot, label: t('seo_nav_agents') }
   ];
 
   return (
@@ -76,11 +80,43 @@ export default function AtlasSEOContent() {
               </div>
             )}
 
-            {activeTab === 'telegram' && (
+            { activeTab === 'telegram' && (
               <div className="seo-tab-pane fade-in">
                 <h3>{t('seo_telegram_h3')}</h3>
                 <p dangerouslySetInnerHTML={{ __html: t('seo_telegram_p1') }} />
                 <p dangerouslySetInnerHTML={{ __html: t('seo_telegram_p2') }} />
+              </div>
+            )}
+
+            { activeTab === 'performance' && (
+              <div className="seo-tab-pane fade-in">
+                <h3>{t('seo_performance_h3')}</h3>
+                <p dangerouslySetInnerHTML={{ __html: t('seo_performance_p1') }} />
+                <p dangerouslySetInnerHTML={{ __html: t('seo_performance_p2') }} />
+              </div>
+            )}
+
+            { activeTab === 'investors' && (
+              <div className="seo-tab-pane fade-in">
+                <h3>{t('seo_investors_h3')}</h3>
+                <p dangerouslySetInnerHTML={{ __html: t('seo_investors_p1') }} />
+                <p dangerouslySetInnerHTML={{ __html: t('seo_investors_p2') }} />
+              </div>
+            )}
+
+            { activeTab === 'skills' && (
+              <div className="seo-tab-pane fade-in">
+                <h3>{t('seo_skills_h3')}</h3>
+                <p dangerouslySetInnerHTML={{ __html: t('seo_skills_p1') }} />
+                <p dangerouslySetInnerHTML={{ __html: t('seo_skills_p2') }} />
+              </div>
+            )}
+
+            { activeTab === 'agents' && (
+              <div className="seo-tab-pane fade-in">
+                <h3>{t('seo_agents_h3')}</h3>
+                <p dangerouslySetInnerHTML={{ __html: t('seo_agents_p1') }} />
+                <p dangerouslySetInnerHTML={{ __html: t('seo_agents_p2') }} />
               </div>
             )}
           </main>
