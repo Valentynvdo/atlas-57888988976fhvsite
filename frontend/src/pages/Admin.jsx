@@ -2876,20 +2876,24 @@ function UserDetailsModal({
   return <div onClick={onClose} style={{
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.8)",
-    backdropFilter: "blur(12px)",
+    background: "rgba(0,0,0,0.5)",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
     zIndex: 1000,
     display: "grid",
     placeItems: "center",
-    padding: 24
+    padding: 24,
+    animation: "fadeIn 0.2s ease-out"
   }} data-testid="user-details-modal">
-      <div onClick={e => e.stopPropagation()} className="glass" style={{
-      width: "min(560px, 100%)",
+      <div onClick={e => e.stopPropagation()} style={{
+      width: "min(520px, 100%)",
       maxHeight: "90vh",
       overflowY: "auto",
-      padding: 28,
-      borderRadius: 24,
-      border: "1px solid rgba(255,255,255,0.06)"
+      padding: 32,
+      borderRadius: 28,
+      background: "rgba(28, 28, 30, 0.75)",
+      border: "1px solid rgba(255,255,255,0.08)",
+      boxShadow: "0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset"
     }}>
         <div style={{
         display: "flex",
@@ -2917,13 +2921,16 @@ function UserDetailsModal({
           }} />}
             <div>
               <div style={{
-              fontWeight: 700,
-              fontSize: 16
+              fontWeight: 600,
+              fontSize: 22,
+              letterSpacing: "-0.02em",
+              color: "#fff"
             }}>{user.name || user.email}</div>
               <div style={{
-              fontSize: 12,
+              fontSize: 14,
               color: "rgba(255,255,255,0.5)",
-              marginTop: 2
+              marginTop: 4,
+              letterSpacing: "-0.01em"
             }}>{user.email}</div>
             </div>
           </div>
@@ -2941,25 +2948,26 @@ function UserDetailsModal({
         </div>
 
         <div style={{
-        display: "grid",
-        gap: 10,
-        fontSize: 13,
-        color: "rgba(255,255,255,0.7)",
-        marginBottom: 24,
-        background: "rgba(255,255,255,0.02)",
-        padding: 16,
-        borderRadius: 14
+        display: "flex",
+        flexDirection: "column",
+        fontSize: 14,
+        color: "rgba(255,255,255,0.85)",
+        marginBottom: 32,
+        background: "rgba(255,255,255,0.03)",
+        borderRadius: 16,
+        border: "1px solid rgba(255,255,255,0.06)",
+        overflow: "hidden"
       }}>
           <Row label={t("txt_1401")} value={user.key} mono />
           <Row label={t("txt_1402")} value={user.mac_id ? `${user.mac_name || "Mac"} · ${user.mac_id.slice(0, 16)}...` : t("txt_1403")} />
           <Row label={t("txt_1404")} value={user.version} />
           <Row label={t("txt_1405")} value={user.active ? t("txt_1406") : t("txt_1407")} />
           <Row label={t("txt_1408")} value={fmtDate(user.created_at)} />
-          <Row label={t("txt_1409")} value={fmtDate(user.expires_at)} />
+          <Row label={t("txt_1409")} value={fmtDate(user.expires_at)} isLast />
         </div>
 
         {/* Зміна Email */}
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 32 }}>
           {!showEmailChange ? (
              <button disabled={busy} onClick={() => setShowEmailChange(true)} className="ghost-btn" style={{
                width: "100%", background: "rgba(255,255,255,0.05)", padding: "10px", borderRadius: "10px"
@@ -3005,33 +3013,57 @@ function UserDetailsModal({
 
         <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-        gap: 10,
-        marginBottom: 24
+        gridTemplateColumns: "1fr 1fr",
+        gap: 12,
+        marginBottom: 32
       }}>
           <button data-testid="action-extend" disabled={busy} onClick={() => doAction("extend", {
           days: 30
         })} className="ghost-btn" style={{
-          background: "rgba(40,200,64,0.08)",
-          borderColor: "rgba(40,200,64,0.2)",
-          color: "#28C840"
+          background: "rgba(255,255,255,0.06)",
+          color: "#fff",
+          borderRadius: 12,
+          padding: "12px 16px",
+          fontWeight: 500,
+          border: "none"
         }}>
-            <Clock size={14} />{t("txt_1410")}</button>
-          <button data-testid="action-cancel" disabled={busy} onClick={() => doAction("cancel")} className="ghost-btn" style={{
-          background: "rgba(255,95,87,0.08)",
-          borderColor: "rgba(255,95,87,0.2)",
-          color: "#FF5F57"
-        }}>{t("txt_1411")}</button>
-          <button data-testid="action-regen" disabled={busy} onClick={() => doAction("regen_key")} className="ghost-btn">
-            <RefreshCw size={14} />{t("txt_1412")}</button>
-          <button data-testid="action-reset-mac" disabled={busy} onClick={() => doAction("reset_mac")} className="ghost-btn">{t("txt_1413")}</button>
+            <Clock size={16} />{t("txt_1410")}</button>
+          <button data-testid="action-regen" disabled={busy} onClick={() => doAction("regen_key")} className="ghost-btn" style={{
+          background: "rgba(255,255,255,0.06)",
+          color: "#fff",
+          borderRadius: 12,
+          padding: "12px 16px",
+          fontWeight: 500,
+          border: "none"
+        }}>
+            <RefreshCw size={16} />{t("txt_1412")}</button>
+          <button data-testid="action-reset-mac" disabled={busy} onClick={() => doAction("reset_mac")} className="ghost-btn" style={{
+          background: "rgba(255,255,255,0.06)",
+          color: "#fff",
+          borderRadius: 12,
+          padding: "12px 16px",
+          fontWeight: 500,
+          border: "none"
+        }}>{t("txt_1413")}</button>
           <button data-testid="action-block" disabled={busy} onClick={() => doAction(user.is_blocked ? "unblock" : "block")} className="ghost-btn" style={{
-          borderColor: user.is_blocked ? "rgba(40,200,64,0.4)" : "rgba(255,95,87,0.4)",
-          color: user.is_blocked ? "#28C840" : "#FF5F57",
-          background: user.is_blocked ? "rgba(40,200,64,0.05)" : "rgba(255,95,87,0.05)"
+          background: user.is_blocked ? "rgba(40,200,64,0.1)" : "rgba(255,255,255,0.06)",
+          color: user.is_blocked ? "#28C840" : "#fff",
+          borderRadius: 12,
+          padding: "12px 16px",
+          fontWeight: 500,
+          border: "none"
         }}>
             {user.is_blocked ? t("txt_1414") : t("txt_1415")}
           </button>
+          <button data-testid="action-cancel" disabled={busy} onClick={() => doAction("cancel")} className="ghost-btn" style={{
+          gridColumn: "1 / -1",
+          background: "rgba(255,59,48,0.1)",
+          color: "#FF3B30",
+          borderRadius: 12,
+          padding: "12px 16px",
+          fontWeight: 500,
+          border: "none"
+        }}>{t("txt_1411")}</button>
         </div>
 
         <div>
@@ -3068,24 +3100,29 @@ function UserDetailsModal({
 function Row({
   label,
   value,
-  mono
+  mono,
+  isLast
 }) {
   const { t } = useTranslation();
   return <div style={{
     display: "flex",
     justifyContent: "space-between",
-    gap: 12,
-    borderBottom: "1px solid rgba(255,255,255,0.03)",
-    paddingBottom: 6
+    alignItems: "center",
+    gap: 16,
+    padding: "14px 16px",
+    borderBottom: isLast ? "none" : "1px solid rgba(255,255,255,0.06)",
+    background: "transparent"
   }}>
       <span style={{
-      color: "rgba(255,255,255,0.4)"
+      color: "rgba(255,255,255,0.5)",
+      fontWeight: 400
     }}>{label}</span>
       <span style={{
       color: "#fff",
-      fontFamily: mono ? "monospace" : "inherit",
+      fontFamily: mono ? "SF Mono, monospace" : "inherit",
       textAlign: "right",
-      wordBreak: "break-all"
+      wordBreak: "break-all",
+      fontWeight: 500
     }}>{value || "—"}</span>
     </div>;
 }

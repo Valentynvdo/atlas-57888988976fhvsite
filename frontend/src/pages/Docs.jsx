@@ -1615,7 +1615,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
                 <li><strong>Start Here</strong> — {isEn ? "Welcome guide for new members" : "Правила та інструкції для новачків"}</li>
               </ul>
               <div style={{ marginTop: 24 }}>
-                <a href="https://t.me/atlas_ai_community" target="_blank" rel="noreferrer" style={{ display: "inline-flex", padding: "10px 20px", background: "#00E5FF", color: "#000", fontWeight: 600, borderRadius: 8, textDecoration: "none" }}>
+                <a href="https://t.me/AtlasAICommunity" target="_blank" rel="noreferrer" style={{ display: "inline-flex", padding: "10px 20px", background: "#00E5FF", color: "#000", fontWeight: 600, borderRadius: 8, textDecoration: "none" }}>
                   {isEn ? "Join Community" : "Приєднатися до спільноти"}
                 </a>
               </div>
