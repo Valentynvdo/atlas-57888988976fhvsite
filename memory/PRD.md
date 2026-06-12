@@ -1,61 +1,73 @@
-# Atlas AI — Landing Page
+# Atlas AI — Product Requirements & Changelog
 
-## Original Problem Statement (verbatim)
-Створи преміальний, сучасний та інтерактивний Landing Page для продукту "Atlas AI" — найрозумнішого автономного асистента для macOS.
+## Original Problem Statement
+Complete UI/UX redesign of "Atlas AI" website to achieve a modern Apple/Mac premium aesthetic.
 
-Дизайн: тільки Dark Mode (#000/#0a0a0c), Inter/SF Pro typography, glassmorphism, неонові градієнти (синій/фіолетовий/бірюзовий).
+## Active Mandate (Feb 2026)
+User requested (Ukrainian):
+- Прибрати неонові ефекти
+- Прибрати сферу (3D EnergySphere)
+- Сучасний Apple/Mac дизайн (Dark variant)
+- Hero секція що продає (animated product preview)
+- Прибрати дублюючи елементи (11 sections → 5–6)
+- Красивий дизайн для всіх секцій
+- Pricing teaser на лендінгу + окрема сторінка
+- Мінімальні анімації, лише плавний fade-in
 
-Структура:
-1. Hero з 3D пульсуючою сферою + заголовок "Atlas AI. Ваш персональний всесвіт."
-2. Живий Інтелект (автономність + нейронні зв'язки)
-3. Повний контроль над macOS (3 glassmorphism картки)
-4. Smart Concierge (Bolt/Uber/Glovo/готелі/квитки) — карусель
-5. Абсолютна Свідомість (FaceID/біометрія + пам'ять)
+## Design System (current)
+- Palette: pure black `#000` background, graphite cards `#1d1d1f`, hairline `rgba(255,255,255,0.06)`
+- Text: primary `#f5f5f7`, secondary `#a1a1a6`
+- Accent: Apple blue `#0071e3` / `#2997ff` (links, "popular" highlights, user chat bubbles)
+- Typography: SF Pro Display / SF Pro Text, letter-spacing -0.025em on headings
+- Buttons: white pill (primary), translucent ghost (secondary), Apple-style chevron link
+- No neon glow, no rainbow gradients, no 3D sphere
+- Subtle CSS animations only (fade-in, typing dots, bubble appear)
 
-## User Choices
-- Stack: React + Tailwind (existing CRA)
-- Sphere: Three.js / WebGL
-- Static landing, no backend
-- Mova: тільки UA
-- Premium, smooth animations, glassmorphism
+## Landing Structure (5 main + SEO + Footer)
+1. Hero — Apple title + animated Mac window chat preview
+2. BentoFeatures — `#features` graphite card grid (10 capabilities)
+3. HowItWorks — `#how-it-works` 3 numbered cards
+4. AtlasComparison — `#comparison` VS layout (Normal AI vs Atlas)
+5. PricingTeaser — `#pricing` horizontal card → /pricing
+6. FinalCTA — closing graphite plate
+7. AtlasSEOContent — kept in DOM (collapsed tabs) for SEO
+8. Footer — multi-column Apple-style
 
-## Architecture
-- Frontend only: React + Three.js + Vanilla CSS (Tailwind retained for utility classes)
-- No backend, no MongoDB, no API calls
-- Components in `/app/frontend/src/components/atlas/`:
-  - `EnergySphere.jsx` — Three.js icosahedron + custom shader (3D simplex noise displacement, fresnel rim glow, particles, wireframe halo, mouse parallax)
-  - `Navbar.jsx` — sticky glass nav with scroll-aware blur
-  - `Hero.jsx` — sphere centered at top, gradient title, CTA
-  - `LivingIntelligence.jsx` — 2-col layout + animated SVG neural web
-  - `MacOSControl.jsx` — 3 glassmorphism cards w/ Mac-style window dots
-  - `SmartConcierge.jsx` — horizontal carousel w/ scroll snap (6 cards: транспорт, доставка, готелі, квитки, послуги, авіа)
-  - `AbsoluteAwareness.jsx` — FaceID orb visual (animated SVG rings + dots + scan line)
-  - `FinalCTA.jsx` — closing gradient card w/ "Скоро" CTA
-  - `Footer.jsx`
-  - `ComingSoonModal.jsx` — accessible modal triggered by all CTAs
-  - `useScrollReveal.js` — IntersectionObserver hook for scroll-triggered reveals
+Removed components from landing: AtlasLiveThought, TechInfrastructure, LivingIntelligence,
+MacOSControl, SmartConcierge, AbsoluteAwareness, AtlasInteractions, WaitlistSection,
+EnergySphere. Files preserved on disk; only landing imports were removed.
 
-## What's been implemented (2025-12)
-- [x] Hero with 3D Three.js pulsing energy sphere
-- [x] Gradient/shimmer title, eyebrow badge, two CTAs
-- [x] Living Intelligence: neural SVG web w/ pulsing nodes + dashed dash-array animation
-- [x] macOS Control: 3 glass cards (Керування Mac, Робота з програмами, Безпека)
-- [x] Smart Concierge: 6-card horizontal carousel w/ prev/next buttons
-- [x] Absolute Awareness: FaceID-style orb (concentric animated rings, dot pattern, scan line)
-- [x] Final CTA card w/ ambient gradients
-- [x] Coming Soon modal (esc-closes, click-outside, accessible)
-- [x] Scroll-reveal via IntersectionObserver
-- [x] Glassmorphism utility (.glass), shimmer text, pulse rings, grid overlay
-- [x] Full responsive (mobile-first, .two-col breakpoint at 900px)
-- [x] data-testid on all interactive + critical elements
-- [x] Custom scrollbar gradient, smooth in-app anchor nav
+## Pages Status (Apple Dark redesign)
+- ✅ / (Landing) — full redesign
+- ✅ /pricing — rewritten Apple Dark
+- ⏳ /docs, /docs/:slug — uses legacy styles, inherits dark palette but cards still need polish
+- ⏳ /blog, /blog/:slug — previously rewritten with glass but accent colors changed via CSS vars
+- ⏳ /login — not touched yet
+- ⏳ /dashboard, /x7k9m-admin — not touched yet
+- ⏳ /privacy, /terms, /contacts, /careers, /investors — inherit Apple Dark vars, may need polish
 
-## Backlog (P1/P2)
-- P1: Localization toggle (UA/EN)
-- P1: Email waitlist (would require minimal FastAPI + Mongo)
-- P2: Pricing / FAQ sections
-- P2: Embedded product demo video
-- P2: SEO meta + OG image
+## Files Modified (this session)
+- `frontend/src/index.css` — palette switched to Apple Dark, removed neon CSS,
+  added `.apple-hero`, `.mac-preview`, `.apple-section`, `.steps-grid`,
+  `.pricing-teaser-card`, `.apple-nav`
+- `frontend/src/App.js` — slim Landing to 5 visual sections + SEO + Footer; removed grain overlay
+- `frontend/src/components/atlas/Hero.jsx` — full rewrite, animated Mac chat preview, EnergySphere removed
+- `frontend/src/components/atlas/Navbar.jsx` — Apple translucent top bar with fallback labels
+- `frontend/src/components/atlas/Footer.jsx` — Apple multi-column footer
+- `frontend/src/components/atlas/FinalCTA.jsx` — graphite card, no gradient text
+- `frontend/src/components/atlas/BentoFeatures.jsx` — neutralized rainbow accents, fixed JSX bug (`</div>` → `</article>`)
+- `frontend/src/components/atlas/AtlasComparison.jsx` — removed neon glows
+- `frontend/src/pages/Pricing.jsx` — full Apple Dark rewrite
+
+## Files Created
+- `frontend/src/components/atlas/HowItWorks.jsx`
+- `frontend/src/components/atlas/PricingTeaser.jsx`
+
+## Backlog (P1)
+- Audit and restyle /docs, /blog, /login, /dashboard, /admin to Apple Dark
+- Localize hero `t("hero.title_span")` to a punchier short phrase (currently 3-line wrap on desktop)
+- Optional: remove unused legacy section components (TechInfrastructure, EnergySphere etc.)
+- Add subtle scroll-triggered fade-in to Mac preview entrance
 
 ## Test Credentials
-N/A (no auth in this static landing)
+- Admin: `admin@atlas.com` / `srv-d84mtqjtqb8s73fgcjog`

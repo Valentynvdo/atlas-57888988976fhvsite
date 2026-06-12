@@ -10,17 +10,12 @@ import useLocalizedNavigate from "./hooks/useLocalizedNavigate";
 
 import Navbar from "./components/atlas/Navbar";
 import Hero from "./components/atlas/Hero";
-import AtlasInteractions from "./components/atlas/AtlasInteractions";
+import BentoFeatures from "./components/atlas/BentoFeatures";
+import HowItWorks from "./components/atlas/HowItWorks";
 import AtlasComparison from "./components/atlas/AtlasComparison";
-import AtlasLiveThought from "./components/atlas/AtlasLiveThought";
-import LivingIntelligence from "./components/atlas/LivingIntelligence";
-import MacOSControl from "./components/atlas/MacOSControl";
-import SmartConcierge from "./components/atlas/SmartConcierge";
-import AbsoluteAwareness from "./components/atlas/AbsoluteAwareness";
+import PricingTeaser from "./components/atlas/PricingTeaser";
 import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
-import WaitlistSection from "./components/atlas/WaitlistSection";
-import TechInfrastructure from "./components/atlas/TechInfrastructure";
 import AtlasSEOContent from "./components/atlas/AtlasSEOContent";
 import useScrollReveal from "./components/atlas/useScrollReveal";
 
@@ -67,27 +62,23 @@ function Landing() {
     <div className="App" ref={rootRef} data-testid="atlas-landing">
       <Navbar onCta={() => handleCtaClick("download_macos_navbar_click")} />
       <Hero onCta={() => handleCtaClick("download_macos_hero_click")} />
-      <AtlasLiveThought />
-      <TechInfrastructure />
-      <LivingIntelligence />
-      <MacOSControl />
-      <SmartConcierge />
-      <AbsoluteAwareness />
-      <AtlasInteractions />
+      <BentoFeatures />
+      <HowItWorks />
       <AtlasComparison />
-      <AtlasSEOContent />
-      <WaitlistSection onCta={() => handleCtaClick("download_macos_waitlist_click")} />
+      <PricingTeaser />
       <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
+      {/* SEO content preserved in DOM (collapsed tabs) for indexing */}
+      <AtlasSEOContent />
       <Footer />
     </div>
   );
 }
 
 const PageLoader = () => (
-  <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#030303", color: "#22D3EE", fontFamily: "sans-serif" }}>
+  <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000000", color: "#f5f5f7", fontFamily: "sans-serif" }}>
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-      <div style={{ width: 40, height: 40, borderRadius: "50%", border: "3px solid rgba(34, 211, 238, 0.1)", borderTopColor: "#22D3EE", animation: "spin 1s linear infinite" }}></div>
-      <span style={{ fontSize: 14, letterSpacing: "0.05em", opacity: 0.8 }}>Завантаження...</span>
+      <div style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid rgba(245, 245, 247, 0.1)", borderTopColor: "#f5f5f7", animation: "spin 0.9s linear infinite" }}></div>
+      <span style={{ fontSize: 13, letterSpacing: "0.03em", opacity: 0.6 }}>Завантаження...</span>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
@@ -227,7 +218,6 @@ import CookieBanner from "./components/CookieBanner";
 function App() {
   return (
     <LenisScroll>
-      <div className="grain-overlay" />
       <BrowserRouter>
         <AuthProvider>
           <CustomCursor />

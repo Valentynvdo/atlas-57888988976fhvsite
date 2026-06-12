@@ -1,97 +1,78 @@
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 
+/**
+ * FinalCTA — Apple Dark closing block. No neon, solid card.
+ */
 export default function FinalCTA({ onCta }) {
   const { t } = useTranslation();
   return (
     <section
       id="final-cta"
       data-testid="final-cta-section"
-      className="section-container"
-      style={{ paddingTop: 40, paddingBottom: 40 }}
+      style={{
+        padding: "80px 5%",
+        maxWidth: 1200,
+        margin: "0 auto"
+      }}
     >
       <div
-        className="glass reveal"
-        style={{
-          borderRadius: 36,
-          padding: "clamp(40px, 8vw, 96px) clamp(24px, 6vw, 64px)",
-          position: "relative",
-          overflow: "hidden",
-          textAlign: "center",
-        }}
         data-testid="final-cta-card"
+        style={{
+          background: "#1d1d1f",
+          border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 28,
+          padding: "clamp(48px, 8vw, 96px) clamp(24px, 6vw, 64px)",
+          textAlign: "center"
+        }}
       >
-        {/* Background gradients */}
+        <p className="apple-eyebrow" style={{ margin: "0 0 14px" }}>
+          {t("final_cta.soon")}
+        </p>
+        <h2
+          style={{
+            fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
+            fontSize: "clamp(32px, 5vw, 56px)",
+            lineHeight: 1.05,
+            letterSpacing: "-0.025em",
+            color: "#f5f5f7",
+            fontWeight: 600,
+            margin: 0,
+            maxWidth: 760,
+            marginInline: "auto"
+          }}
+        >
+          {t("final_cta.title_1")}
+        </h2>
+        <p
+          style={{
+            color: "rgba(245,245,247,0.65)",
+            fontSize: 18,
+            lineHeight: 1.5,
+            margin: "20px auto 0",
+            maxWidth: 560
+          }}
+        >
+          {t("final_cta.desc")}
+        </p>
+
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(ellipse at 20% 0%, rgba(109,93,246,0.3), transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.3), transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(34,211,238,0.15), transparent 60%)",
-            pointerEvents: "none",
+            marginTop: 36,
+            display: "flex",
+            gap: 14,
+            justifyContent: "center",
+            flexWrap: "wrap"
           }}
-        />
-
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div
-            className="section-eyebrow"
-            style={{ justifyContent: "center", display: "inline-block" }}
+        >
+          <button
+            data-testid="final-cta-btn"
+            onClick={onCta}
+            className="cta-btn"
           >
-            {t("final_cta.soon")}
-          </div>
-          <h2
-            style={{
-              marginTop: 16,
-              fontSize: "clamp(2rem, 5.5vw, 4.5rem)",
-              lineHeight: 1.05,
-              letterSpacing: "-0.04em",
-              fontWeight: 700,
-              fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
-              maxWidth: 900,
-              margin: "16px auto 0",
-              background:
-                "linear-gradient(120deg, #ffffff 0%, #d8d2ff 50%, #22D3EE 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            {t("final_cta.title_1")}
-          </h2>
-          <p
-            style={{
-              marginTop: 20,
-              color: "rgba(255,255,255,0.7)",
-              fontSize: 17,
-              fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
-              letterSpacing: "-0.43px",
-              lineHeight: 1.55,
-              maxWidth: 560,
-              margin: "20px auto 0",
-            }}
-          >
-            {t("final_cta.desc")}
-          </p>
-
-          <div
-            style={{
-              marginTop: 40,
-              display: "flex",
-              gap: 16,
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <button
-              data-testid="final-cta-btn"
-              onClick={onCta}
-              className="cta-btn"
-            >
-              {t("final_cta.btn")}
-              <ArrowRight size={18} />
-            </button>
-          </div>
+            {t("final_cta.btn")}
+            <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </section>

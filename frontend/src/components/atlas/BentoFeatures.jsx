@@ -53,118 +53,110 @@ export default function BentoFeatures() {
       title: "Керування та AppleScript",
       desc: "Пряме керування macOS: взаємодія з активними вікнами (Finder, Safari, Xcode, Terminal) та автоматизація дій через AppleScript.",
       status: "Працює локально",
-      icon: <Terminal size={24} color="#22D3EE" />,
-      accent: "#22D3EE",
+      icon: <Terminal size={22} color="#f5f5f7" />,
     },
     {
       file: "evolution.py · plan.md",
       title: "Автономна Само-Еволюція",
       desc: "Унікальний цикл самовдосконалення: асистент аналізує свої помилки, пише нові скіли, проводить тестування та оновлює свій код.",
       status: "Працює локально",
-      icon: <Code size={24} color="#7C3AED" />,
-      accent: "#7C3AED",
+      icon: <Code size={22} color="#f5f5f7" />,
     },
     {
       file: "semantic_memory.py",
       title: "Асоціативна Пам'ять",
       desc: "Зберігає контекст розмов, важливі факти про користувача та вибудовує довготривалу семантичну пам'ять у локальному JSON.",
       status: "Працює локально",
-      icon: <BrainCircuit size={24} color="#6D5DF6" />,
-      accent: "#6D5DF6",
+      icon: <BrainCircuit size={22} color="#f5f5f7" />,
     },
     {
       file: "autonomous_researcher.py",
       title: "Автономний Дослідник",
       desc: "Самостійно шукає інформацію в мережі, агрегує джерела, перевіряє факти (fact_checker.py) та готує аналітичні звіти.",
       status: "Працює локально",
-      icon: <Search size={24} color="#22D3EE" />,
-      accent: "#22D3EE",
+      icon: <Search size={22} color="#f5f5f7" />,
     },
     {
       file: "apple_notes_connector.py · contacts_connector.py",
       title: "Нотатки та Контакти",
       desc: "Глибока інтеграція з базою контактів macOS, читання та запис у Apple Notes, а також аналіз історії викликів.",
       status: "Працює локально",
-      icon: <Contact size={24} color="#7C3AED" />,
-      accent: "#7C3AED",
+      icon: <Contact size={22} color="#f5f5f7" />,
     },
     {
       file: "proactive_watcher.py",
       title: "Проактивний Наглядач",
       desc: "Стежить за файловою системою, новими файлами та подіями на екрані, щоб вчасно пропонувати автоматизацію рутинних завдань.",
       status: "Працює локально",
-      icon: <Eye size={24} color="#6D5DF6" />,
-      accent: "#6D5DF6",
+      icon: <Eye size={22} color="#f5f5f7" />,
     },
     {
       file: "emotion_recognition.py · sarcasm_detector.py",
       title: "Емоційний Інтелект",
       desc: "Визначає настрій користувача, аналізує рівень стресу, розпізнає сарказм та підлаштовує стиль відповідей.",
       status: "Незабаром",
-      icon: <Heart size={24} color="#F472B6" />,
-      accent: "#F472B6",
+      icon: <Heart size={22} color="#f5f5f7" />,
     },
     {
       file: "eye_strain_reminder.py · sleep_advisor.py",
       title: "Турбота про Здоров'я",
       desc: "Стежить за часом безперервної роботи, нагадує про перерви для очей та аналізує графік сну відповідно до активності.",
       status: "Незабаром",
-      icon: <Heart size={24} color="#F472B6" />,
-      accent: "#F472B6",
+      icon: <Heart size={22} color="#f5f5f7" />,
     },
     {
       file: "vision_handler.py",
       title: "Зорове Сприйняття",
       desc: "Аналізує інтерфейс та вміст екрана користувача, розпізнає активні області та розуміє візуальний контекст роботи.",
       status: "Працює локально",
-      icon: <Eye size={24} color="#22D3EE" />,
-      accent: "#22D3EE",
+      icon: <Eye size={22} color="#f5f5f7" />,
     },
     {
       file: "privacy_guard.py · security_manager.py",
       title: "Конфіденційність та Безпека",
       desc: "Захищає конфіденційні дані, блокує небезпечні команди, фільтрує витік токенів та паролів, шифрує логи розмов.",
       status: "Працює локально",
-      icon: <Lock size={24} color="#28C840" />,
-      accent: "#28C840",
+      icon: <Lock size={22} color="#f5f5f7" />,
     },
   ];
 
   return (
     <section
       ref={sectionRef}
+      id="features"
       className="section-container"
-      style={{ padding: "120px 5%", position: "relative" }}
+      style={{ padding: "100px 5%", position: "relative", maxWidth: 1200, margin: "0 auto" }}
     >
       {/* Section heading */}
-      <div style={{ textAlign: "center", marginBottom: 80 }}>
-        <div className="section-eyebrow" style={{ marginBottom: 16 }}>
+      <div style={{ textAlign: "center", marginBottom: 64 }}>
+        <p className="section-eyebrow apple-eyebrow" style={{ margin: "0 0 14px" }}>
           Автоматизація macOS
-        </div>
+        </p>
         <h2
-          className="bento-heading gradient-text"
+          className="bento-heading"
           style={{
-            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-            fontWeight: 700,
+            fontSize: "clamp(32px, 4.8vw, 56px)",
+            fontWeight: 600,
             fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
-            letterSpacing: "-0.04em",
-            lineHeight: 1.05,
+            letterSpacing: "-0.025em",
+            lineHeight: 1.08,
+            color: "#f5f5f7",
             margin: 0,
+            maxWidth: 820,
+            marginInline: "auto"
           }}
         >
-          Реальні дії
-          <br />
-          у реальному світі.
+          Реальні дії у реальному світі.
         </h2>
         <p
           style={{
-            marginTop: 24,
-            fontSize: 20,
-            letterSpacing: "-0.43px",
-            lineHeight: 1.55,
-            color: "rgba(255,255,255,0.7)",
-            maxWidth: 680,
-            margin: "24px auto 0",
+            marginTop: 20,
+            fontSize: 19,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.5,
+            color: "rgba(245,245,247,0.6)",
+            maxWidth: 640,
+            margin: "20px auto 0",
             fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
           }}
         >
@@ -172,113 +164,113 @@ export default function BentoFeatures() {
         </p>
       </div>
 
-      {/* Floating Scripts Grid */}
-      <div 
+      {/* Features Grid — Apple Dark cards */}
+      <div
         className="script-container"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-          gap: 32,
-          maxWidth: 1400,
-          margin: "0 auto",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: 16,
         }}
       >
         {scripts.map((script, i) => (
           <article
             key={i}
-            data-card 
+            data-card
             data-testid={`features-card-${i}`}
-            className="script-card group"
+            className="script-card"
             style={{
               display: "flex",
               flexDirection: "column",
               position: "relative",
-              padding: "40px 32px",
-              borderRadius: 32,
-              background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%)",
-              borderTop: "1px solid rgba(255,255,255,0.05)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
-              transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+              padding: "28px 26px",
+              borderRadius: 22,
+              background: "#1d1d1f",
+              border: "1px solid rgba(255,255,255,0.06)",
+              transition: "transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease",
             }}
           >
-            {/* Top ambient glow */}
-            <div style={{
-              position: "absolute",
-              top: 0,
-              left: "20%",
-              right: "20%",
-              height: 1,
-              background: `linear-gradient(90deg, transparent, ${script.accent}55, transparent)`,
-              opacity: 0.5
-            }} />
-
-            {/* Header: Status & Script Name */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ 
-                  fontFamily: "var(--sf-text, monospace)", 
-                  fontSize: 12, 
-                  color: script.accent,
-                  background: `linear-gradient(90deg, ${script.accent}15, transparent)`,
-                  padding: "6px 14px",
-                  borderRadius: 8,
-                  borderLeft: `2px solid ${script.accent}`,
-                  letterSpacing: "0.02em"
-                }}>
-                  {script.file}
-                </span>
-              </div>
-              <div style={{
-                fontSize: 11,
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: script.status === "Працює локально" ? "rgba(255,255,255,0.4)" : script.accent,
-                display: "flex",
-                alignItems: "center",
-                gap: 6
-              }}>
-                {script.status === "Працює локально" && <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff", opacity: 0.3 }} />}
+            {/* Header: file name + status */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, gap: 10 }}>
+              <span
+                style={{
+                  fontFamily: "var(--mono, monospace)",
+                  fontSize: 11,
+                  color: "rgba(245,245,247,0.55)",
+                  background: "rgba(255,255,255,0.04)",
+                  padding: "4px 10px",
+                  borderRadius: 6,
+                  letterSpacing: "0.02em",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "70%"
+                }}
+              >
+                {script.file}
+              </span>
+              <div
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: script.status === "Працює локально" ? "rgba(245,245,247,0.45)" : "#0a84ff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  whiteSpace: "nowrap"
+                }}
+              >
+                {script.status === "Працює локально" && (
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#28c840" }} />
+                )}
                 {script.status}
               </div>
             </div>
 
-            {/* Title & Icon */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 14,
-                display: "grid",
-                placeItems: "center",
-                background: `linear-gradient(135deg, ${script.accent}22, ${script.accent}05)`,
-                border: `1px solid ${script.accent}33`,
-              }}>
+            {/* Icon + Title */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
+              <div
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 11,
+                  display: "grid",
+                  placeItems: "center",
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
                 {script.icon}
               </div>
-              <h3 style={{
-                fontSize: 22,
-                fontWeight: 600,
-                margin: 0,
-                color: "#fff",
-                letterSpacing: "-0.02em",
-                fontFamily: "var(--sf-display, sans-serif)"
-              }}>
+              <h3
+                style={{
+                  fontSize: 19,
+                  fontWeight: 600,
+                  margin: 0,
+                  color: "#f5f5f7",
+                  letterSpacing: "-0.01em",
+                  fontFamily: "var(--sf-display, sans-serif)",
+                }}
+              >
                 {script.title}
               </h3>
             </div>
 
             {/* Description */}
-            <p style={{
-              fontSize: 16,
-              color: "rgba(255,255,255,0.55)",
-              lineHeight: 1.6,
-              margin: 0,
-              fontFamily: "var(--sf-text, sans-serif)",
-            }}>
+            <p
+              style={{
+                fontSize: 14,
+                color: "rgba(245,245,247,0.55)",
+                lineHeight: 1.55,
+                margin: 0,
+                fontFamily: "var(--sf-text, sans-serif)",
+              }}
+            >
               {script.desc}
             </p>
-          </div>
+          </article>
         ))}
       </div>
     </section>

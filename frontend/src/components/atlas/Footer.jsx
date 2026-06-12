@@ -1,22 +1,38 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+/**
+ * Footer — Apple Dark, minimal. No glow, no neon.
+ */
 export default function Footer() {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language === "en";
+  const lp = (p) => (isEn ? `/en${p}` : p);
 
-  const getLocalizedPath = (path) => {
-    return isEn ? `/en${path}` : path;
-  };
-
-  const links = [
-    { label: t("footer.privacy"), path: getLocalizedPath("/privacy") },
-    { label: t("footer.terms"), path: getLocalizedPath("/terms") },
-    { label: t("footer.contacts"), path: getLocalizedPath("/contacts") },
-    { label: t("atlas_v2.careers.footer_link") || "Careers", path: getLocalizedPath("/careers") },
-    { label: t("footer.investors") || "Investors", path: getLocalizedPath("/investors") },
-    { label: t("footer.blog") || "Blog / Блог", path: getLocalizedPath("/blog") },
-    { label: isEn ? "Pricing" : "Ціни", path: getLocalizedPath("/pricing") },
+  const groups = [
+    {
+      title: isEn ? "Product" : "Продукт",
+      links: [
+        { label: isEn ? "Pricing" : "Ціни", to: lp("/pricing") },
+        { label: t("navbar.docs"), to: lp("/docs") },
+        { label: isEn ? "Blog" : "Блог", to: lp("/blog") }
+      ]
+    },
+    {
+      title: isEn ? "Company" : "Компанія",
+      links: [
+        { label: t("atlas_v2.careers.footer_link") || (isEn ? "Careers" : "Кар'єра"), to: lp("/careers") },
+        { label: t("footer.investors") || (isEn ? "Investors" : "Інвесторам"), to: lp("/investors") },
+        { label: t("footer.contacts"), to: lp("/contacts") }
+      ]
+    },
+    {
+      title: isEn ? "Legal" : "Юридичне",
+      links: [
+        { label: t("footer.privacy"), to: lp("/privacy") },
+        { label: t("footer.terms"), to: lp("/terms") }
+      ]
+    }
   ];
 
   return (
@@ -26,102 +42,105 @@ export default function Footer() {
       style={{
         position: "relative",
         zIndex: 1,
+        background: "#0a0a0a",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        marginTop: 80
       }}
     >
-      {/* Decorative ambient glow */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: "50%",
-          bottom: "-180px",
-          transform: "translateX(-50%)",
-          width: 700,
-          height: 320,
-          background: "radial-gradient(ellipse, rgba(109,93,246,0.14), transparent 70%)",
-          filter: "blur(30px)",
-          pointerEvents: "none",
-        }}
-      />
       <div
         style={{
-          maxWidth: 1200,
+          maxWidth: 1100,
           margin: "0 auto",
-          padding: "48px 24px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          gap: 28,
-          position: "relative",
+          padding: "56px 24px 28px",
+          display: "grid",
+          gridTemplateColumns: "1.4fr repeat(3, 1fr)",
+          gap: 40
         }}
+        className="footer-grid"
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <img
-            src="/atlas-icon.png"
-            alt="Atlas AI"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              boxShadow: "0 0 22px rgba(109,93,246,0.5)",
-            }}
-          />
-          <span style={{ fontWeight: 700, letterSpacing: "-0.02em", fontSize: 17 }}>
-            Atlas AI
-          </span>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+            <img src="/atlas-icon.png" alt="Atlas AI" style={{ width: 24, height: 24, borderRadius: 6 }} />
+            <span style={{ fontWeight: 500, letterSpacing: "-0.01em", fontSize: 15, color: "#f5f5f7" }}>
+              Atlas AI
+            </span>
+          </div>
+          <p style={{ color: "rgba(245,245,247,0.5)", fontSize: 13, lineHeight: 1.5, margin: 0, maxWidth: 280 }}>
+            {isEn
+              ? "An autonomous AI assistant for macOS. Private by design."
+              : "Автономний ШІ‑асистент для macOS. Приватний за замовчуванням."}
+          </p>
         </div>
 
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "14px 8px" }}>
-          {links.map((link) => (
-            <Link
-              key={link.label}
-              to={link.path}
-              data-testid={`footer-link-${link.label}`}
+        {groups.map((g) => (
+          <div key={g.title}>
+            <div
               style={{
-                fontSize: 14,
-                color: "rgba(255,255,255,0.6)",
-                textDecoration: "none",
-                transition: "color 0.3s ease, background 0.3s ease, border-color 0.3s ease",
-                whiteSpace: "nowrap",
-                padding: "8px 16px",
-                borderRadius: 999,
-                border: "1px solid transparent",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#fff";
-                e.currentTarget.style.background = "rgba(109,93,246,0.1)";
-                e.currentTarget.style.borderColor = "rgba(109,93,246,0.3)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderColor = "transparent";
+                fontSize: 12,
+                color: "rgba(245,245,247,0.45)",
+                fontWeight: 500,
+                letterSpacing: "0.02em",
+                marginBottom: 14
               }}
             >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 520,
-            height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
-          }}
-        />
-
-        <div
-          style={{
-            fontSize: 13,
-            color: "rgba(255,255,255,0.4)",
-          }}
-        >
-          © {new Date().getFullYear()} Atlas AI. {t("footer.created_with_care")}
-        </div>
+              {g.title}
+            </div>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+              {g.links.map((l) => (
+                <li key={l.label}>
+                  <Link
+                    to={l.to}
+                    data-testid={`footer-link-${l.label}`}
+                    style={{
+                      color: "rgba(245,245,247,0.75)",
+                      fontSize: 13,
+                      textDecoration: "none",
+                      transition: "color 0.2s ease"
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(245,245,247,0.75)")}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
+
+      <div
+        style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          padding: "20px 24px",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 12,
+          fontSize: 12,
+          color: "rgba(245,245,247,0.4)"
+        }}
+      >
+        <span>© {new Date().getFullYear()} Atlas AI. {t("footer.created_with_care")}</span>
+        <span>{isEn ? "Designed for macOS." : "Створено для macOS."}</span>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 28px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </footer>
   );
 }

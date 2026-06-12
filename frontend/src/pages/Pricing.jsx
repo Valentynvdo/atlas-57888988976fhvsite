@@ -1,10 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
-import { Check, ArrowRight, Sparkles, Zap, Crown } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import Navbar from "../components/atlas/Navbar";
 import Footer from "../components/atlas/Footer";
 
+/**
+ * Pricing page — Apple Dark style.
+ * No neon. Graphite cards on solid black background.
+ */
 export default function Pricing() {
   const { i18n } = useTranslation();
   const isEn = i18n.language === "en";
@@ -15,10 +19,9 @@ export default function Pricing() {
   const plans = [
     {
       id: "monthly",
-      icon: <Zap size={22} color="#22D3EE" />,
       name: L("Місячний", "Monthly"),
       price: "$28.99",
-      per: L("/ місяць", "/ month"),
+      per: L("/ міс.", "/ month"),
       billed: L("Оплата щомісяця", "Billed monthly"),
       popular: false,
       features: [
@@ -31,10 +34,9 @@ export default function Pricing() {
     },
     {
       id: "quarterly",
-      icon: <Sparkles size={22} color="#6D5DF6" />,
       name: L("Квартальний", "Quarterly"),
       price: "$23.33",
-      per: L("/ місяць", "/ month"),
+      per: L("/ міс.", "/ month"),
       billed: L("Оплата $69.99 / 3 міс.", "Billed $69.99 / 3 mos"),
       popular: true,
       features: [
@@ -42,21 +44,20 @@ export default function Pricing() {
         L("Пріоритетна підтримка", "Priority support"),
         L("Ранній доступ до нових скілів", "Early access to new skills"),
         L("Генеративний Sandbox для скілів", "Generative skill Sandbox"),
-        L("Знижка 20% порівняно з місячним", "20% cheaper than monthly"),
+        L("Знижка 20%", "Save 20%"),
       ],
     },
     {
       id: "yearly",
-      icon: <Crown size={22} color="#A78BFA" />,
       name: L("Річний", "Yearly"),
       price: "$19.99",
-      per: L("/ місяць", "/ month"),
+      per: L("/ міс.", "/ month"),
       billed: L("Оплата $239.99 / рік", "Billed $239.99 / year"),
       popular: false,
       badge: "-30%",
       features: [
         L("Усе з квартального плану", "Everything in Quarterly"),
-        L("Пожиттєва знижка для ранніх користувачів", "Lifetime early-adopter discount"),
+        L("Пожиттєва знижка для ранніх", "Lifetime early-adopter discount"),
         L("Ексклюзивна спільнота Atlas", "Exclusive Atlas community"),
         L("Доступ до бета-функцій", "Beta features access"),
         L("Максимальна економія 30%", "Maximum savings of 30%"),
@@ -65,7 +66,7 @@ export default function Pricing() {
   ];
 
   return (
-    <div data-testid="pricing-page" style={{ minHeight: "100vh", color: "#fff", position: "relative", overflow: "hidden" }}>
+    <div data-testid="pricing-page" style={{ minHeight: "100vh", color: "#f5f5f7", background: "#000" }}>
       <Helmet>
         <title>{isEn ? "Pricing — Atlas AI for macOS" : "Ціни — Atlas AI для macOS"}</title>
         <meta
@@ -79,102 +80,127 @@ export default function Pricing() {
 
       <Navbar onCta={() => navigate("/login")} />
 
-      {/* Ambient glow */}
-      <div aria-hidden="true" style={{
-        position: "absolute", top: -220, left: "50%", transform: "translateX(-50%)",
-        width: 1000, height: 560,
-        background: "radial-gradient(ellipse, rgba(109,93,246,0.18), transparent 70%)",
-        filter: "blur(40px)", pointerEvents: "none",
-      }} />
-
-      <main style={{ position: "relative", padding: "160px 5% 100px", maxWidth: 1180, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 72 }} className="fade-up">
-          <div className="section-eyebrow">{L("Тарифи", "Pricing")}</div>
-          <h1 style={{
-            marginTop: 16,
-            fontSize: "clamp(2.4rem, 5.5vw, 4.2rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.04em",
-            lineHeight: 1.05,
-            background: "linear-gradient(120deg, #fff 0%, #d8d2ff 50%, #22D3EE 100%)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-            WebkitTextFillColor: "transparent",
-            margin: "16px 0 0",
-          }}>
+      <main style={{ position: "relative", padding: "140px 5% 80px", maxWidth: 1180, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 64 }}>
+          <p className="apple-eyebrow" style={{ margin: "0 0 14px" }}>{L("Тарифи", "Pricing")}</p>
+          <h1
+            style={{
+              fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
+              fontSize: "clamp(36px, 5.5vw, 64px)",
+              fontWeight: 600,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.06,
+              color: "#f5f5f7",
+              margin: 0,
+              maxWidth: 860,
+              marginInline: "auto"
+            }}
+          >
             {L("Один асистент. Безмежні можливості.", "One assistant. Limitless possibilities.")}
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 18, marginTop: 20, maxWidth: 560, margin: "20px auto 0", lineHeight: 1.6 }}>
+          <p style={{ color: "rgba(245,245,247,0.6)", fontSize: 18, lineHeight: 1.5, margin: "20px auto 0", maxWidth: 560 }}>
             {L(
-              "Оберіть план, який підходить саме вам. Учасники черги очікування отримають пожиттєву знижку.",
+              "Оберіть план, який підходить саме вам. Учасники черги отримають пожиттєву знижку.",
               "Pick the plan that fits you. Waitlist members get a lifetime discount."
             )}
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 28, alignItems: "stretch" }}>
-          {plans.map((plan, i) => (
-            <div
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 20,
+            alignItems: "stretch"
+          }}
+        >
+          {plans.map((plan) => (
+            <article
               key={plan.id}
-              className={`pricing-card fade-up ${plan.popular ? "popular" : ""}`}
               data-testid={`pricing-plan-${plan.id}`}
-              style={{ animationDelay: `${i * 0.1}s` }}
+              style={{
+                background: plan.popular ? "#1d1d1f" : "#161617",
+                border: plan.popular ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.06)",
+                borderRadius: 22,
+                padding: "36px 28px",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative"
+              }}
             >
               {plan.popular && (
-                <div style={{
-                  position: "absolute",
-                  top: -14,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  padding: "6px 18px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  background: "linear-gradient(135deg, #6D5DF6, #7C3AED)",
-                  boxShadow: "0 8px 24px rgba(109,93,246,0.45)",
-                  whiteSpace: "nowrap",
-                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: -12,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    padding: "5px 14px",
+                    borderRadius: 999,
+                    fontSize: 11,
+                    fontWeight: 500,
+                    letterSpacing: "0.04em",
+                    background: "#f5f5f7",
+                    color: "#000",
+                    whiteSpace: "nowrap"
+                  }}
+                >
                   {L("Найпопулярніший", "Most popular")}
                 </div>
               )}
 
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                <div style={{
-                  width: 46, height: 46, borderRadius: 14, display: "grid", placeItems: "center",
-                  background: "rgba(109,93,246,0.1)", border: "1px solid rgba(109,93,246,0.25)",
-                }}>
-                  {plan.icon}
-                </div>
-                <div style={{ fontSize: 18, fontWeight: 650, letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                <h3 style={{ fontSize: 18, fontWeight: 500, letterSpacing: "-0.01em", margin: 0, color: "#f5f5f7" }}>
                   {plan.name}
-                  {plan.badge && (
-                    <span style={{
-                      fontSize: 12, fontWeight: 700, color: "#22D3EE",
-                      background: "rgba(34,211,238,0.1)", border: "1px solid rgba(34,211,238,0.3)",
-                      padding: "2px 10px", borderRadius: 999,
-                    }}>{plan.badge}</span>
-                  )}
-                </div>
+                </h3>
+                {plan.badge && (
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      color: "#0a84ff",
+                      background: "rgba(10,132,255,0.12)",
+                      padding: "2px 8px",
+                      borderRadius: 6
+                    }}
+                  >
+                    {plan.badge}
+                  </span>
+                )}
               </div>
 
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span style={{ fontSize: 46, fontWeight: 800, letterSpacing: "-0.04em" }}>{plan.price}</span>
-                <span style={{ fontSize: 14, color: "rgba(255,255,255,0.45)" }}>{plan.per}</span>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+                <span style={{ fontSize: 44, fontWeight: 600, letterSpacing: "-0.03em", color: "#f5f5f7" }}>{plan.price}</span>
+                <span style={{ fontSize: 14, color: "rgba(245,245,247,0.5)" }}>{plan.per}</span>
               </div>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 6, marginBottom: 28 }}>{plan.billed}</div>
+              <div style={{ fontSize: 13, color: "rgba(245,245,247,0.45)", marginTop: 4, marginBottom: 28 }}>{plan.billed}</div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32, flex: 1 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 28, flex: 1 }}>
                 {plan.features.map((f, j) => (
-                  <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 14.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5 }}>
-                    <span style={{
-                      width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
-                      display: "grid", placeItems: "center",
-                      background: plan.popular ? "rgba(109,93,246,0.2)" : "rgba(34,211,238,0.12)",
-                    }}>
-                      <Check size={12} color={plan.popular ? "#8d7dff" : "#22D3EE"} />
+                  <div
+                    key={j}
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "flex-start",
+                      fontSize: 14,
+                      color: "rgba(245,245,247,0.78)",
+                      lineHeight: 1.5
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        flexShrink: 0,
+                        display: "grid",
+                        placeItems: "center",
+                        background: "rgba(255,255,255,0.06)",
+                        marginTop: 1
+                      }}
+                    >
+                      <Check size={11} color="#f5f5f7" strokeWidth={2.5} />
                     </span>
                     {f}
                   </div>
@@ -186,47 +212,40 @@ export default function Pricing() {
                 onClick={() => navigate("/login")}
                 style={{
                   width: "100%",
-                  padding: "15px 24px",
-                  borderRadius: 16,
-                  fontSize: 15,
-                  fontWeight: 650,
+                  padding: "12px 22px",
+                  borderRadius: 999,
+                  fontSize: 14,
+                  fontWeight: 500,
                   cursor: "pointer",
-                  border: plan.popular ? "none" : "1px solid rgba(255,255,255,0.14)",
-                  background: plan.popular
-                    ? "linear-gradient(135deg, #6D5DF6, #4F46E5)"
-                    : "rgba(255,255,255,0.05)",
-                  color: "#fff",
+                  border: "none",
+                  background: plan.popular ? "#f5f5f7" : "rgba(255,255,255,0.06)",
+                  color: plan.popular ? "#000" : "#f5f5f7",
                   display: "inline-flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: 8,
-                  transition: "transform 0.3s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.3s ease, background 0.3s ease",
-                  boxShadow: plan.popular ? "0 10px 32px rgba(109,93,246,0.35)" : "none",
+                  gap: 6,
+                  transition: "background 0.2s ease, transform 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = plan.popular
-                    ? "0 16px 44px rgba(109,93,246,0.5)"
-                    : "0 10px 30px rgba(109,93,246,0.2)";
+                  e.currentTarget.style.background = plan.popular ? "#fff" : "rgba(255,255,255,0.12)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "none";
-                  e.currentTarget.style.boxShadow = plan.popular ? "0 10px 32px rgba(109,93,246,0.35)" : "none";
+                  e.currentTarget.style.background = plan.popular ? "#f5f5f7" : "rgba(255,255,255,0.06)";
                 }}
               >
                 {L("Отримати ранній доступ", "Get early access")}
-                <ArrowRight size={16} />
+                <ArrowRight size={14} />
               </button>
-            </div>
+            </article>
           ))}
         </div>
 
-        <div style={{ textAlign: "center", marginTop: 56, color: "rgba(255,255,255,0.45)", fontSize: 14 }} className="fade-up">
+        <div style={{ textAlign: "center", marginTop: 56, color: "rgba(245,245,247,0.5)", fontSize: 13 }}>
           {L(
             "Усі плани включають 7-денну гарантію повернення коштів. Без прихованих платежів.",
             "All plans include a 7-day money-back guarantee. No hidden fees."
           )}
-          <div style={{ marginTop: 12, color: "#22D3EE", fontWeight: 500 }}>
+          <div style={{ marginTop: 8, color: "#2997ff", fontWeight: 400 }}>
             {L("Учасники черги отримають пожиттєву знижку", "Waitlist members receive a lifetime discount")}
           </div>
         </div>
