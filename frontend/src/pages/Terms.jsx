@@ -9,7 +9,7 @@ export default function Terms() {
   const navigate = useLocalizedNavigate();
   return <div style={{
     minHeight: "100vh",
-    background: "radial-gradient(800px 500px at 50% 0%, rgba(124,58,237,0.12), transparent 60%), #000",
+    background: "radial-gradient(800px 500px at 50% 0%, rgba(255,255,255,0.060), transparent 60%), #000",
     color: "#fff",
     padding: "80px 24px 60px",
     fontFamily: "Inter, sans-serif"
@@ -57,10 +57,10 @@ export default function Terms() {
           width: 44,
           height: 44,
           borderRadius: 12,
-          background: "rgba(124,58,237,0.15)",
+          background: "rgba(255,255,255,0.075)",
           display: "grid",
           placeItems: "center",
-          color: "#7C3AED"
+          color: "#f5f5f7"
         }}>
             <Scale size={22} />
           </div>
@@ -118,7 +118,7 @@ export default function Terms() {
           border: "none"
         }}>
               <div style={{
-            color: "#7C3AED",
+            color: "#f5f5f7",
             flexShrink: 0,
             marginTop: 2
           }}>{item.icon}</div>

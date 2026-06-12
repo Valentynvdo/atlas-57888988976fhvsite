@@ -9,7 +9,7 @@ export default function Contacts() {
   const navigate = useLocalizedNavigate();
   return <div style={{
     minHeight: "100vh",
-    background: "radial-gradient(800px 500px at 50% 0%, rgba(34,211,238,0.1), transparent 60%), #000",
+    background: "radial-gradient(800px 500px at 50% 0%, rgba(255,255,255,0.060), transparent 60%), #000",
     color: "#fff",
     padding: "80px 24px 60px",
     fontFamily: "Inter, sans-serif"
@@ -57,10 +57,10 @@ export default function Contacts() {
           width: 44,
           height: 44,
           borderRadius: 12,
-          background: "rgba(34,211,238,0.12)",
+          background: "rgba(255,255,255,0.072)",
           display: "grid",
           placeItems: "center",
-          color: "#22D3EE"
+          color: "#2997ff"
         }}>
             <Mail size={22} />
           </div>
@@ -119,7 +119,7 @@ export default function Contacts() {
           transition: "all 0.3s ease"
         }} onMouseEnter={e => {
           e.currentTarget.style.transform = "translateX(8px)";
-          e.currentTarget.style.borderBottomColor = "rgba(34,211,238,0.6)";
+          e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.200)";
           e.currentTarget.style.background = "transparent";
         }} onMouseLeave={e => {
           e.currentTarget.style.transform = "translateX(0)";
@@ -130,10 +130,10 @@ export default function Contacts() {
             width: 40,
             height: 40,
             borderRadius: 10,
-            background: "rgba(34,211,238,0.08)",
+            background: "rgba(255,255,255,0.048)",
             display: "grid",
             placeItems: "center",
-            color: "#22D3EE"
+            color: "#2997ff"
           }}>
                 {item.icon}
               </div>

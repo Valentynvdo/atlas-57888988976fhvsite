@@ -54,11 +54,8 @@ export default function Navbar({ onCta }) {
       <nav
         data-testid="navbar"
         className="apple-nav"
-        style={{
-          background: scrolled ? "rgba(22, 22, 23, 0.82)" : "rgba(22, 22, 23, 0.6)"
-        }}
       >
-        <div className="apple-nav-inner">
+        <div className="apple-nav-inner" style={{ background: scrolled ? "rgba(22, 22, 23, 0.85)" : "rgba(22, 22, 23, 0.7)" }}>
           <a
             href={isEn ? "/en" : "/"}
             onClick={(e) => { e.preventDefault(); navigate("/"); }}

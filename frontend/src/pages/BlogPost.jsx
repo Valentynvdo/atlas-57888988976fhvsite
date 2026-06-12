@@ -46,7 +46,7 @@ export default function BlogPost() {
       <div aria-hidden="true" style={{
         position: "absolute", top: -180, left: "50%", transform: "translateX(-50%)",
         width: 800, height: 440,
-        background: "radial-gradient(ellipse, rgba(109,93,246,0.14), transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(255,255,255,0.070), transparent 70%)",
         filter: "blur(40px)", pointerEvents: "none",
       }} />
 
@@ -72,7 +72,7 @@ export default function BlogPost() {
               backdropFilter: "blur(12px)",
               transition: "color 0.2s ease, border-color 0.2s ease"
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(109,93,246,0.5)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.180)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
             >
               ← {l.label}
@@ -85,7 +85,7 @@ export default function BlogPost() {
           borderRadius: 24,
           overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 30px 80px rgba(0,0,0,0.5), 0 0 70px rgba(109,93,246,0.12)",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.5), 0 0 70px rgba(255,255,255,0.060)",
           marginBottom: 40,
         }}>
           <img
@@ -97,7 +97,7 @@ export default function BlogPost() {
           />
         </div>
 
-        <div style={{ fontSize: "0.9rem", color: "#22D3EE", fontWeight: 600, letterSpacing: "0.06em", marginBottom: 16 }}>
+        <div style={{ fontSize: "0.9rem", color: "#2997ff", fontWeight: 600, letterSpacing: "0.06em", marginBottom: 16 }}>
           {blog.date} • {blog.readTime}
         </div>
 
@@ -130,14 +130,14 @@ export default function BlogPost() {
           .blog-content h1 { color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 24px; }
           .blog-content h2 { color: #fff; margin-top: 48px; margin-bottom: 20px; font-size: 1.85rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.25; }
           .blog-content h3 { color: #fff; margin-top: 32px; margin-bottom: 16px; font-size: 1.4rem; font-weight: 600; }
-          .blog-content a { color: #22D3EE; text-decoration: none; border-bottom: 1px solid rgba(34,211,238,0.3); transition: border-color 0.2s; }
-          .blog-content a:hover { border-bottom-color: rgba(34,211,238,1); }
+          .blog-content a { color: #2997ff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.180); transition: border-color 0.2s; }
+          .blog-content a:hover { border-bottom-color: rgba(255,255,255,0.200); }
           .blog-content strong { color: #fff; font-weight: 600; }
           .blog-content ul, .blog-content ol { margin-bottom: 24px; padding-left: 24px; }
           .blog-content li { margin-bottom: 10px; }
-          .blog-content code { font-family: var(--mono, monospace); font-size: 0.92em; background: rgba(109,93,246,0.12); border: 1px solid rgba(109,93,246,0.2); padding: 2px 8px; border-radius: 8px; color: #cdc7ff; }
+          .blog-content code { font-family: var(--mono, monospace); font-size: 0.92em; background: rgba(255,255,255,0.060); border: 1px solid rgba(255,255,255,0.100); padding: 2px 8px; border-radius: 8px; color: #cdc7ff; }
           .blog-content pre { background: rgba(13,13,18,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; overflow-x: auto; margin-bottom: 24px; }
-          .blog-content blockquote { border-left: 3px solid #6D5DF6; margin: 0 0 24px; padding: 8px 0 8px 20px; color: rgba(255,255,255,0.65); }
+          .blog-content blockquote { border-left: 3px solid #f5f5f7; margin: 0 0 24px; padding: 8px 0 8px 20px; color: rgba(255,255,255,0.65); }
         `}} />
       </div>
     </div>

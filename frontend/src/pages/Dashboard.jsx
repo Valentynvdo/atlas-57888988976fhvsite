@@ -158,7 +158,7 @@ export default function Dashboard() {
   if (!license) {
     return (
       <div style={{ minHeight: "100vh", background: "#000", display: "grid", placeItems: "center" }}>
-        <Loader2 size={32} color="#22D3EE" className="animate-spin" />
+        <Loader2 size={32} color="#2997ff" className="animate-spin" />
       </div>
     );
   }
@@ -169,7 +169,7 @@ export default function Dashboard() {
     <div style={{
       minHeight: "100vh",
       background: "#000",
-      backgroundImage: "radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.1) 0%, transparent 60%)",
+      backgroundImage: "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.060) 0%, transparent 60%)",
       color: "#fff",
       fontFamily: "'Inter', sans-serif",
       position: "relative",
@@ -211,8 +211,8 @@ export default function Dashboard() {
             
             {waitlist?.in_waitlist ? (
               <>
-                <div style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.2em", color: "#22D3EE", marginBottom: 20 }}>Your Waitlist Position</div>
-                <div style={{ fontSize: "140px", fontWeight: 200, lineHeight: 1, letterSpacing: "-0.04em", textShadow: "0 0 80px rgba(34, 211, 238, 0.4)" }}>
+                <div style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.2em", color: "#2997ff", marginBottom: 20 }}>Your Waitlist Position</div>
+                <div style={{ fontSize: "140px", fontWeight: 200, lineHeight: 1, letterSpacing: "-0.04em", textShadow: "0 0 80px rgba(255,255,255,0.200)" }}>
                   #{waitlist.position || "—"}
                 </div>
                 <div style={{ fontSize: 18, color: "rgba(255,255,255,0.5)", marginTop: 20 }}>
@@ -228,7 +228,7 @@ export default function Dashboard() {
                   placeholder="How do you plan to use Atlas?"
                   style={{ width: "100%", padding: 16, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff", minHeight: 100, marginBottom: 20 }}
                 />
-                <button onClick={joinWaitlist} disabled={waitlistLoading} style={{ width: "100%", padding: 16, background: "#22D3EE", color: "#000", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
+                <button onClick={joinWaitlist} disabled={waitlistLoading} style={{ width: "100%", padding: 16, background: "#2997ff", color: "#000", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
                   {waitlistLoading ? "Joining..." : "Get Early Access"}
                 </button>
               </div>
@@ -261,7 +261,7 @@ export default function Dashboard() {
                 <button onClick={() => setKeyHidden(!keyHidden)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
                   {keyHidden ? <Eye size={18}/> : <EyeOff size={18}/>} {keyHidden ? "Reveal" : "Hide"}
                 </button>
-                <button onClick={copyKey} style={{ background: "#22D3EE", border: "none", color: "#000", padding: "12px 24px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
+                <button onClick={copyKey} style={{ background: "#2997ff", border: "none", color: "#000", padding: "12px 24px", borderRadius: 30, cursor: "pointer", fontWeight: 600, display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
                   <Copy size={18}/> Copy Key
                 </button>
                 <a href={appVersion?.url || "/AtlasAI-Installer-1.0.dmg"} target="_blank" rel="noopener noreferrer" style={{ background: "rgba(255,255,255,0.1)", textDecoration: "none", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 30, cursor: "pointer", display: "flex", gap: 8, alignItems: "center", fontSize: 15 }}>
@@ -276,7 +276,7 @@ export default function Dashboard() {
               {/* Terminal */}
               <div>
                 <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>Live Evolution Log</div>
-                <div style={{ background: "rgba(0,0,0,0.5)", border: "1px solid rgba(34, 211, 238, 0.2)", borderRadius: 16, padding: 24, minHeight: 280, fontFamily: "'Source Code Pro', monospace", fontSize: 13, color: "#22D3EE", boxShadow: "inset 0 0 40px rgba(34,211,238,0.05)" }}>
+                <div style={{ background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.120)", borderRadius: 16, padding: 24, minHeight: 280, fontFamily: "'Source Code Pro', monospace", fontSize: 13, color: "#2997ff", boxShadow: "inset 0 0 40px rgba(255,255,255,0.030)" }}>
                   <div style={{ color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>Connected to Atlas Local Engine...</div>
                   {liveThought ? (
                     <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
@@ -286,7 +286,7 @@ export default function Dashboard() {
                     <div className="animate-pulse">Awaiting thought stream...</div>
                   )}
                   <div style={{ marginTop: 24, display: "flex", alignItems: "center", gap: 8, opacity: 0.5 }}>
-                    <div style={{ width: 8, height: 16, background: "#22D3EE", animation: "blink 1s infinite" }} />
+                    <div style={{ width: 8, height: 16, background: "#2997ff", animation: "blink 1s infinite" }} />
                   </div>
                 </div>
               </div>
@@ -297,10 +297,10 @@ export default function Dashboard() {
                 <TelemetryCard title="Skills Deployed" value={stats?.skills_count || "0"} desc="Active local python scripts" />
                 
                 {/* Mock Emotion Map */}
-                <div style={{ gridColumn: "span 2", background: "linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, transparent 100%)", border: "1px solid rgba(124, 58, 237, 0.2)", borderRadius: 16, padding: 24 }}>
-                  <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "#7C3AED", marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
+                <div style={{ gridColumn: "span 2", background: "linear-gradient(135deg, rgba(255,255,255,0.050) 0%, transparent 100%)", border: "1px solid rgba(255,255,255,0.100)", borderRadius: 16, padding: 24 }}>
+                  <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "#f5f5f7", marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
                     <span>Stress / Emotion Map</span>
-                    <span style={{ fontSize: 11, background: "rgba(124,58,237,0.2)", padding: "2px 8px", borderRadius: 10 }}>Live</span>
+                    <span style={{ fontSize: 11, background: "rgba(255,255,255,0.100)", padding: "2px 8px", borderRadius: 10 }}>Live</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "flex-end", height: 80, gap: 4 }}>
                     {/* Mock Graph Bars */}
@@ -364,9 +364,9 @@ export default function Dashboard() {
                   </div>
                 )}
 
-                <div style={{ background: "linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, transparent 100%)", border: "1px solid rgba(34, 211, 238, 0.3)", borderRadius: 16, padding: 28 }}>
+                <div style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.060) 0%, transparent 100%)", border: "1px solid rgba(255,255,255,0.180)", borderRadius: 16, padding: 28 }}>
                   <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
-                    <LinkIcon color="#22D3EE" size={28} />
+                    <LinkIcon color="#2997ff" size={28} />
                     <div style={{ fontSize: 20, fontWeight: 500 }}>Share Your Skill</div>
                   </div>
                   <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, marginBottom: 24, lineHeight: 1.6 }}>
@@ -375,7 +375,7 @@ export default function Dashboard() {
                   <button onClick={() => {
                     navigator.clipboard.writeText(window.location.origin + "/invite/" + (user?.user_id?.substring(0,8) || "atlas"));
                     toast.success("Referral Link Copied!");
-                  }} style={{ width: "100%", background: "transparent", border: "1px solid #22D3EE", color: "#22D3EE", padding: "14px", borderRadius: 10, fontWeight: 600, cursor: "pointer", fontSize: 15 }}>
+                  }} style={{ width: "100%", background: "transparent", border: "1px solid #2997ff", color: "#2997ff", padding: "14px", borderRadius: 10, fontWeight: 600, cursor: "pointer", fontSize: 15 }}>
                     Copy Referral Link
                   </button>
                 </div>
@@ -401,7 +401,7 @@ export default function Dashboard() {
                 <button 
                   onClick={saveTelegramConfig} 
                   disabled={telegramSaving}
-                  style={{ background: "#22D3EE", color: "#000", border: "none", padding: "14px 28px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}
+                  style={{ background: "#2997ff", color: "#000", border: "none", padding: "14px 28px", borderRadius: 10, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}
                 >
                   {telegramSaving ? <Loader2 size={18} className="animate-spin" /> : t("telegram_btn_save")}
                 </button>
@@ -465,7 +465,7 @@ export default function Dashboard() {
 function FeatureTeaser({ icon, title, desc }) {
   return (
     <div style={{ textAlign: "left", padding: 30, borderRadius: 24, border: "1px solid rgba(255,255,255,0.1)" }}>
-      <div style={{ color: "#22D3EE", marginBottom: 20 }}>{icon}</div>
+      <div style={{ color: "#2997ff", marginBottom: 20 }}>{icon}</div>
       <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
         {title} <Lock size={14} color="rgba(255,255,255,0.4)" />
       </div>

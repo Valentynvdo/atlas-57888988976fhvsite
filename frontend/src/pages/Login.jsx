@@ -89,13 +89,12 @@ export default function Login() {
       data-testid="login-page"
       style={{
         minHeight: "100vh",
-        background:
-          "radial-gradient(800px 500px at 50% 0%, rgba(109,93,246,0.18), transparent 60%), radial-gradient(700px 500px at 50% 100%, rgba(124,58,237,0.14), transparent 60%), #000",
-        color: "#fff",
+        background: "#000",
+        color: "#f5f5f7",
         display: "grid",
         placeItems: "center",
         padding: 24,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, sans-serif",
         position: "relative",
       }}
     >
@@ -138,24 +137,23 @@ export default function Login() {
       </button>
 
       <div
-        className="glass"
         style={{
           width: "min(440px, 90%)",
           padding: "40px 32px",
-          borderRadius: 28,
+          borderRadius: 24,
           textAlign: "center",
           position: "relative",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+          background: "#1d1d1f",
           border: "1px solid rgba(255,255,255,0.06)",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.6)",
         }}
       >
         <img
           src="/atlas-icon.png"
           alt="Atlas AI"
           style={{
-            width: 64, height: 64, borderRadius: 16,
-            margin: "0 auto 20px", display: "block",
-            boxShadow: "0 0 35px rgba(34,211,238,0.4)",
+            width: 56, height: 56, borderRadius: 14,
+            margin: "0 auto 18px", display: "block",
           }}
         />
         <h1
@@ -393,7 +391,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => { setTab("forgot_password"); setError(""); setSuccess(""); }}
-                    style={{ background: "none", border: "none", color: "#6D5DF6", fontSize: 13, cursor: "pointer", padding: 0 }}
+                    style={{ background: "none", border: "none", color: "#2997ff", fontSize: 13, cursor: "pointer", padding: 0 }}
                   >
                     {t("login.forgot_password")}
                   </button>

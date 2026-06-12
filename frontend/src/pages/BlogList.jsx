@@ -34,7 +34,7 @@ export default function BlogList() {
       <div aria-hidden="true" style={{
         position: "absolute", top: -200, left: "50%", transform: "translateX(-50%)",
         width: 900, height: 500,
-        background: "radial-gradient(ellipse, rgba(109,93,246,0.16), transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(255,255,255,0.080), transparent 70%)",
         filter: "blur(40px)", pointerEvents: "none",
       }} />
 
@@ -58,7 +58,7 @@ export default function BlogList() {
           backdropFilter: "blur(12px)",
           transition: "all 0.2s ease"
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(109,93,246,0.5)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.180)"; }}
         onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
       >
         <ArrowLeft size={16} />
@@ -73,7 +73,7 @@ export default function BlogList() {
           letterSpacing: "-0.04em",
           marginBottom: 16,
           marginTop: 0,
-          background: "linear-gradient(120deg, #fff 0%, #d8d2ff 60%, #a5b4fc 100%)",
+          color: "#f5f5f7", background: "none",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent"
         }}>
@@ -103,7 +103,7 @@ export default function BlogList() {
               />
             </div>
             <div style={{ padding: "40px 36px", display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ fontSize: "0.85rem", color: "#22D3EE", fontWeight: 600, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontSize: "0.85rem", color: "#2997ff", fontWeight: 600, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 8 }}>
                 <Clock size={13} /> {featured.date} • {featured.readTime}
               </div>
               <h2 style={{
@@ -124,7 +124,7 @@ export default function BlogList() {
                 display: "inline-flex", alignItems: "center", gap: 8, marginTop: "auto", paddingTop: 10,
               }}>
                 {lang === 'uk' ? 'Читати далі' : lang === 'ru' ? 'Читать далее' : 'Read more'}
-                <ArrowRight size={16} color="#6D5DF6" />
+                <ArrowRight size={16} color="#f5f5f7" />
               </span>
             </div>
           </article>
@@ -147,7 +147,7 @@ export default function BlogList() {
                     />
                   </div>
                   <div style={{ padding: "24px 24px 28px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-                    <div style={{ fontSize: "0.8rem", color: "#22D3EE", fontWeight: 600, letterSpacing: "0.08em" }}>
+                    <div style={{ fontSize: "0.8rem", color: "#2997ff", fontWeight: 600, letterSpacing: "0.08em" }}>
                       {blog.date} • {blog.readTime}
                     </div>
                     <h2 style={{
@@ -177,7 +177,7 @@ export default function BlogList() {
                       display: "inline-flex", alignItems: "center", gap: 6, marginTop: "auto", paddingTop: 8,
                     }}>
                       {lang === 'uk' ? 'Читати далі' : lang === 'ru' ? 'Читать далее' : 'Read more'}
-                      <ArrowRight size={14} color="#6D5DF6" />
+                      <ArrowRight size={14} color="#f5f5f7" />
                     </span>
                   </div>
                 </article>

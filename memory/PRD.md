@@ -1,57 +1,51 @@
 # Atlas AI — Product Requirements & Changelog
 
 ## Original Problem Statement
-Complete UI/UX redesign of "Atlas AI" website to achieve a modern Apple/Mac premium aesthetic. SEO content (H1/H2/meta) MUST be preserved in DOM.
+Complete UI/UX redesign of "Atlas AI" website to Apple/Mac modern aesthetic.
+SEO content (H1/H2/meta) MUST be preserved in DOM.
 
-## Active Mandate (Feb 2026 — iter 2)
+## Active Mandate (Feb 2026 — iter 3)
 User requested:
-- ✅ Прибрати неонові ефекти
-- ✅ Прибрати сферу (3D EnergySphere)
-- ✅ Прибрати Mac preview window з Hero
-- ✅ Hero: верхній і нижній **заокруглені контейнери** з красивою анімацією за заголовком (м'який aurora blob)
-- ✅ Hero showcase: нижній заокруглений контейнер із product image (`/images/hero-atlas-app.png`)
-- ✅ Видалити PricingTeaser секцію з лендінгу (натомість nav‑link `Ціни` веде на `/pricing`)
-- ✅ BentoFeatures cards — **клікабельні з demo modal анімацією** (Apple‑style fade‑in + terminal typing demo)
-- ✅ FinalCTA — Apple Mac modern, заокруглений контейнер з aurora animation
-- ⏳ Передизайн `/docs`, `/blog`, `/login`, `/dashboard`, `/admin` (defer — backlog)
+- ✅ Hero — **full‑width / full‑height** container with smooth **fade-out** at bottom
+- ✅ Navbar — beautiful **rounded pill** floating container
+- ✅ Lower hero — remove duplicate copy ("Створено для macOS / Реальні дії / Приватність") — keep only the clean product image
+- ✅ FinalCTA — **no container**, plain text on page with subtle aurora glow
+- ✅ Blog/Docs/Login/Privacy/Terms/Contacts/Careers/Investors/Dashboard/Admin — bulk‑swept old neon palette → Apple Dark
+- ✅ Login — graphite card on solid black, no glow
 
-## Design System
-- Background: `#000` solid, no gradients
+## Design System (current)
+- Background: `#000` solid
 - Surfaces: `#161617` / `#1d1d1f` graphite cards
-- Hairlines: `rgba(255,255,255,0.06)`
+- Hairlines: `rgba(255,255,255,0.06)` / `0.08`
 - Text: primary `#f5f5f7`, secondary `#a1a1a6`
-- Accent: Apple blue `#0071e3` / `#2997ff` for links and highlights
-- Typography: SF Pro Display / SF Pro Text, letter‑spacing -0.025em
+- Accent: Apple blue `#2997ff` / `#0a84ff`
+- Typography: SF Pro Display / Text, letter-spacing -0.025em
 - Buttons: white pill (primary), translucent ghost (secondary)
-- Animations: subtle aurora drift (18s), title shine (8s), demo terminal typing
+- Animations: aurora drift (18s), title shine (8s), demo terminal typing
 - No neon, no rainbow gradients, no 3D sphere
 
-## Landing Structure (final)
-1. Hero — rounded card with aurora animation + Apple title + CTA
-2. Hero Showcase — rounded card with proof eyebrow + heading + product image
-3. BentoFeatures — `#features` clickable graphite cards → demo modal
-4. HowItWorks — `#how-it-works` 3 numbered cards
-5. AtlasComparison — `#comparison`
-6. FinalCTA — rounded card with aurora animation
-7. AtlasSEOContent — preserved in DOM for indexing
-8. Footer — Apple multi‑column
+## Landing Structure
+1. Hero — full‑bleed background, aurora behind title, seamless product image + fade-out
+2. BentoFeatures — clickable graphite cards → demo modal
+3. HowItWorks — 3 numbered cards
+4. AtlasComparison — VS layout
+5. FinalCTA — plain text with aurora (no container)
+6. AtlasSEOContent — preserved in DOM
+7. Footer — multi-column Apple-style
 
-## Files Modified (this iteration)
-- `frontend/src/index.css` — added `.hero-aurora`, `.hero-grid`, `.hero-title-anim`, `.hero-showcase`, `.feature-card-btn`, `.demo-line`, modal animations
-- `frontend/src/App.js` — removed PricingTeaser import + usage
-- `frontend/src/components/atlas/Hero.jsx` — rewritten: top rounded card with aurora animation, bottom rounded card with image showcase, no Mac preview, no sphere
-- `frontend/src/components/atlas/FinalCTA.jsx` — rounded card with aurora, shine title animation
-- `frontend/src/components/atlas/BentoFeatures.jsx` — cards converted to `<button>`, FeatureDemoModal added with terminal typing demo
-- `frontend/src/components/atlas/Navbar.jsx`, `Footer.jsx`, `AtlasComparison.jsx`, `pages/Pricing.jsx` — Apple Dark style
-
-## Files Created
-- `frontend/src/components/atlas/HowItWorks.jsx`
-- `frontend/src/components/atlas/PricingTeaser.jsx` (created but no longer imported — kept for future use)
+## Files Modified (iter 3)
+- `frontend/src/index.css` — added `.hero-card-full`, `.hero-card-inner`, `.hero-fade-bottom`, navbar pill rebuilt
+- `frontend/src/components/atlas/Hero.jsx` — full-bleed top section, removed duplicate copy block, clean image showcase
+- `frontend/src/components/atlas/Navbar.jsx` — pill inner now applies background dynamically
+- `frontend/src/components/atlas/FinalCTA.jsx` — removed boxed container, plain text + aurora
+- `frontend/src/pages/Login.jsx` — solid black background, graphite card, removed neon glow
+- `scripts/apple_dark_pages.py` — created; swept 10 pages replacing neon hex/rgba → Apple Dark
+- Pages bulk-swept: BlogList, BlogPost, Docs, Privacy, Terms, Contacts, Careers, Investors, Dashboard, Admin
 
 ## Backlog (P1)
-- Apple Dark redesign for `/docs`, `/blog`, `/login`, `/dashboard`, `/x7k9m-admin`
-- Replace static `hero-atlas-app.png` with a new generated image that matches new Apple Dark aesthetic (current one shows old purple sphere)
-- Add scroll-triggered fade‑in to Hero showcase image entrance
+- Replace AI-generated cover images on /blog (still show old purple sphere visuals from previous Gemini batch). Regenerate via Gemini Nano Banana to match Apple Dark
+- Polish DocsPost.jsx (single article page) — script didn't catch some inline styles
+- Manual review of Admin.jsx tables — bulk replace may have neutralized intentional brand colors
 
 ## Test Credentials
 - Admin: `admin@atlas.com` / `srv-d84mtqjtqb8s73fgcjog`
