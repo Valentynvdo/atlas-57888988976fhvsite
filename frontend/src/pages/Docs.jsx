@@ -107,7 +107,7 @@ function SectionTitle({
     marginBottom: 32
   }}>
       <div style={{
-      color: "#00E5FF",
+      color: "#22D3EE",
       fontSize: 11,
       fontWeight: 700,
       letterSpacing: "0.2em",
@@ -121,7 +121,7 @@ function SectionTitle({
         width: 6,
         height: 6,
         borderRadius: "50%",
-        background: "#00E5FF"
+        background: "#22D3EE"
       }} />
         {eyebrow}
       </div>
@@ -329,7 +329,7 @@ export default function Docs() {
       left: 0,
       right: 0,
       height: "100vh",
-      background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 122, 255, 0.08), transparent 70%), radial-gradient(ellipse 50% 50% at 80% 80%, rgba(157, 76, 221, 0.04), transparent 60%)",
+      background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(109, 93, 246, 0.08), transparent 70%), radial-gradient(ellipse 50% 50% at 80% 80%, rgba(124, 58, 237, 0.04), transparent 60%)",
       pointerEvents: "none",
       zIndex: 0
     }} />
@@ -372,7 +372,7 @@ export default function Docs() {
           <span className="docs-version" style={{
           fontSize: 14,
           fontWeight: 700,
-          background: "linear-gradient(90deg, #00E5FF, #9D4CDD)",
+          background: "linear-gradient(90deg, #22D3EE, #7C3AED)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent"
         }}>Atlas Docs v0.9.5</span>
@@ -400,8 +400,8 @@ export default function Docs() {
             width: 6,
             height: 6,
             borderRadius: "50%",
-            background: "#00E5FF",
-            boxShadow: "0 0 12px #00E5FF"
+            background: "#22D3EE",
+            boxShadow: "0 0 12px #22D3EE"
           }} />
           </button>
         </div>
@@ -422,11 +422,11 @@ export default function Docs() {
         width: 48,
         height: 48,
         borderRadius: 12,
-        background: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+        background: "linear-gradient(135deg, #22D3EE, #7C3AED)",
         display: "grid",
         placeItems: "center",
         marginBottom: 20,
-        boxShadow: "0 0 30px rgba(0, 229, 255, 0.2)"
+        boxShadow: "0 0 30px rgba(34, 211, 238, 0.2)"
       }}>
           <Terminal size={22} color="#fff" />
         </div>
@@ -501,8 +501,8 @@ export default function Docs() {
               padding: "10px 14px",
               borderRadius: 10,
               border: "none",
-              background: active ? "rgba(0, 229, 255, 0.08)" : "transparent",
-              color: active ? "#00E5FF" : "rgba(255,255,255,0.65)",
+              background: active ? "rgba(34, 211, 238, 0.08)" : "transparent",
+              color: active ? "#22D3EE" : "rgba(255,255,255,0.65)",
               fontSize: 13.5,
               fontWeight: active ? 600 : 500,
               textAlign: "left",
@@ -521,7 +521,7 @@ export default function Docs() {
             }}>
                   <span style={{
                 display: "flex",
-                color: active ? "#00E5FF" : "rgba(255,255,255,0.4)"
+                color: active ? "#22D3EE" : "rgba(255,255,255,0.4)"
               }}>{sec.icon}</span>
                   {sec.label}
                 </button>;
@@ -568,8 +568,8 @@ export default function Docs() {
                 width: 36,
                 height: 36,
                 borderRadius: 8,
-                background: "rgba(0, 122, 255, 0.12)",
-                color: "#007AFF",
+                background: "rgba(109, 93, 246, 0.12)",
+                color: "#6D5DF6",
                 display: "grid",
                 placeItems: "center",
                 marginBottom: 14
@@ -598,8 +598,8 @@ export default function Docs() {
                 width: 36,
                 height: 36,
                 borderRadius: 8,
-                background: "rgba(157, 76, 221, 0.12)",
-                color: "#9D4CDD",
+                background: "rgba(124, 58, 237, 0.12)",
+                color: "#7C3AED",
                 display: "grid",
                 placeItems: "center",
                 marginBottom: 14
@@ -700,8 +700,8 @@ export default function Docs() {
             <div style={{
             padding: 24,
             borderRadius: 16,
-            background: "rgba(0, 229, 255, 0.03)",
-            border: "1px solid rgba(0, 229, 255, 0.15)",
+            background: "rgba(34, 211, 238, 0.03)",
+            border: "1px solid rgba(34, 211, 238, 0.15)",
             marginBottom: 16
           }}>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: "#fff" }}>{t("docs_telegram_step1")}</h3>
@@ -742,8 +742,8 @@ export default function Docs() {
             <div style={{
             padding: 24,
             borderRadius: 16,
-            background: "rgba(0, 229, 255, 0.03)",
-            border: "1px solid rgba(0, 229, 255, 0.15)",
+            background: "rgba(34, 211, 238, 0.03)",
+            border: "1px solid rgba(34, 211, 238, 0.15)",
             marginBottom: 16
           }}>
               <div style={{
@@ -752,11 +752,11 @@ export default function Docs() {
               gap: 10,
               marginBottom: 8
             }}>
-                <CheckCircle size={16} color="#00E5FF" />
+                <CheckCircle size={16} color="#22D3EE" />
                 <span style={{
                 fontSize: 14,
                 fontWeight: 700,
-                color: "#00E5FF"
+                color: "#22D3EE"
               }}>{t("txt_1135")}</span>
               </div>
               <p style={{
@@ -829,12 +829,12 @@ main();`} />
                 width: 52,
                 height: 52,
                 borderRadius: "50%",
-                background: "rgba(0, 229, 255, 0.1)",
-                border: "1px solid rgba(0, 229, 255, 0.3)",
-                boxShadow: "0 0 20px rgba(0, 229, 255, 0.2)",
+                background: "rgba(34, 211, 238, 0.1)",
+                border: "1px solid rgba(34, 211, 238, 0.3)",
+                boxShadow: "0 0 20px rgba(34, 211, 238, 0.2)",
                 display: "grid",
                 placeItems: "center",
-                color: "#00E5FF",
+                color: "#22D3EE",
                 marginBottom: 16
               }}>
                   <Zap size={24} style={{
@@ -927,14 +927,14 @@ main();`} />
                 <div style={{
                 flex: 0.5,
                 height: 1,
-                background: "linear-gradient(90deg, #007AFF, #9D4CDD)",
+                background: "linear-gradient(90deg, #6D5DF6, #7C3AED)",
                 position: "relative"
               }}>
                   <div style={{
                   position: "absolute",
                   right: 0,
                   top: -4,
-                  borderLeft: "5px solid #9D4CDD",
+                  borderLeft: "5px solid #7C3AED",
                   borderTop: "5px solid transparent",
                   borderBottom: "5px solid transparent"
                 }} />
@@ -950,8 +950,8 @@ main();`} />
                   <div style={{
                   padding: "12px 18px",
                   borderRadius: 12,
-                  background: "rgba(157, 76, 221, 0.1)",
-                  border: "1px solid rgba(157, 76, 221, 0.3)",
+                  background: "rgba(124, 58, 237, 0.1)",
+                  border: "1px solid rgba(124, 58, 237, 0.3)",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -960,7 +960,7 @@ main();`} />
                 }}>
                     <span style={{
                     fontSize: 11,
-                    color: "#9D4CDD",
+                    color: "#7C3AED",
                     fontWeight: 700
                   }}>{t("txt_1143")}</span>
                     <span style={{
@@ -975,14 +975,14 @@ main();`} />
                 <div style={{
                 flex: 0.5,
                 height: 1,
-                background: "linear-gradient(90deg, #9D4CDD, #00E5FF)",
+                background: "linear-gradient(90deg, #7C3AED, #22D3EE)",
                 position: "relative"
               }}>
                   <div style={{
                   position: "absolute",
                   right: 0,
                   top: -4,
-                  borderLeft: "5px solid #00E5FF",
+                  borderLeft: "5px solid #22D3EE",
                   borderTop: "5px solid transparent",
                   borderBottom: "5px solid transparent"
                 }} />
@@ -998,8 +998,8 @@ main();`} />
                   <div style={{
                   padding: "12px 18px",
                   borderRadius: 12,
-                  background: "rgba(0, 229, 255, 0.1)",
-                  border: "1px solid rgba(0, 229, 255, 0.3)",
+                  background: "rgba(34, 211, 238, 0.1)",
+                  border: "1px solid rgba(34, 211, 238, 0.3)",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -1008,7 +1008,7 @@ main();`} />
                 }}>
                     <span style={{
                     fontSize: 11,
-                    color: "#00E5FF",
+                    color: "#22D3EE",
                     fontWeight: 700
                   }}>{t("txt_1144")}</span>
                     <span style={{
@@ -1023,7 +1023,7 @@ main();`} />
                 <div style={{
                 flex: 0.5,
                 height: 1,
-                background: "linear-gradient(90deg, #00E5FF, #28C840)",
+                background: "linear-gradient(90deg, #22D3EE, #28C840)",
                 position: "relative"
               }}>
                   <div style={{
@@ -1078,7 +1078,7 @@ main();`} />
                 <div style={{
                 width: 1,
                 height: 32,
-                background: "linear-gradient(180deg, #00E5FF, rgba(0,229,255,0))"
+                background: "linear-gradient(180deg, #22D3EE, rgba(34,211,238,0))"
               }} />
               </div>
               <div style={{
@@ -1100,7 +1100,7 @@ main();`} />
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  background: "#00E5FF"
+                  background: "#22D3EE"
                 }} />{t("txt_1146")}</div>
               </div>
 
@@ -1150,10 +1150,10 @@ main();`} />
                 width: 32,
                 height: 32,
                 borderRadius: 8,
-                background: "rgba(0,229,255,0.08)",
+                background: "rgba(34,211,238,0.08)",
                 display: "grid",
                 placeItems: "center",
-                color: "#00E5FF"
+                color: "#22D3EE"
               }}>{item.icon}</div>
                   <div>
                     <div style={{
@@ -1172,14 +1172,14 @@ main();`} />
             <div style={{
             padding: 24,
             borderRadius: 16,
-            background: "rgba(0,229,255,0.03)",
-            border: "1px solid rgba(0,229,255,0.2)",
+            background: "rgba(34,211,238,0.03)",
+            border: "1px solid rgba(34,211,238,0.2)",
             marginBottom: 24
           }}>
               <div style={{
               fontSize: 13,
               fontWeight: 600,
-              color: "#00E5FF",
+              color: "#22D3EE",
               marginBottom: 8
             }}>{t("txt_1154")}</div>
               <p style={{ color: "#fff", fontSize: 14 }} dangerouslySetInnerHTML={{ __html: t("docs_install_step0") }} />
@@ -1229,13 +1229,13 @@ main();`} />
                 width: 32,
                 height: 32,
                 borderRadius: "50%",
-                background: "rgba(0,122,255,0.1)",
-                border: "1px solid rgba(0,122,255,0.2)",
+                background: "rgba(109,93,246,0.1)",
+                border: "1px solid rgba(109,93,246,0.2)",
                 display: "grid",
                 placeItems: "center",
                 fontSize: 11,
                 fontWeight: 700,
-                color: "#00E5FF",
+                color: "#22D3EE",
                 flexShrink: 0
               }}>{s.step}</div>
                   <div>
@@ -1275,7 +1275,7 @@ main();`} />
                 <h4 style={{
                 fontSize: 15,
                 fontWeight: 700,
-                color: "#00E5FF",
+                color: "#22D3EE",
                 marginBottom: 12
               }}>{t("txt_1168")}</h4>
                 <ol style={{
@@ -1370,10 +1370,10 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
                     margin: "6px 0 0"
                   }}>
                       <li><code style={{
-                        color: "#00E5FF"
+                        color: "#22D3EE"
                       }}>key</code>{t("txt_1176")}</li>
                       <li><code style={{
-                        color: "#00E5FF"
+                        color: "#22D3EE"
                       }}>mac_id</code>{t("txt_1177")}</li>
                     </ul>
                   </div>
@@ -1408,8 +1408,8 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
                     <span style={{
                     padding: "4px 8px",
                     borderRadius: 6,
-                    background: "rgba(0,122,255,0.15)",
-                    color: "#007AFF",
+                    background: "rgba(109,93,246,0.15)",
+                    color: "#6D5DF6",
                     fontWeight: 700,
                     fontSize: 11
                   }}>GET</span>
@@ -1465,13 +1465,13 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
               title: t("txt_1185"),
               desc: t("txt_1186"),
               tag: t("txt_1187"),
-              color: "#007AFF"
+              color: "#6D5DF6"
             }, {
               version: "v1.2.0",
               title: t("txt_1188"),
               desc: t("txt_1189"),
               tag: "Upcoming",
-              color: "#9D4CDD"
+              color: "#7C3AED"
             }].map((item, idx) => <div key={idx} style={{
               padding: "20px 24px",
               borderRadius: 14,
@@ -1553,7 +1553,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
                 {isEn ? "You can register or log in to your personal cabinet to manage your subscription, generate access tokens, and download the latest build of Atlas AI for macOS." : "Ви можете зареєструватися або увійти до особистого кабінету для керування підпискою, генерації токенів доступу та завантаження останньої версії Atlas AI для macOS."}
               </p>
               <div style={{ marginTop: 16 }}>
-                <a href={isEn ? "/en/login" : "/login"} style={{ color: "#00E5FF", textDecoration: "none", fontWeight: 500 }}>
+                <a href={isEn ? "/en/login" : "/login"} style={{ color: "#22D3EE", textDecoration: "none", fontWeight: 500 }}>
                   {isEn ? "Go to Login / Registration →" : "Перейти до Входу / Реєстрації →"}
                 </a>
               </div>
@@ -1602,7 +1602,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
           marginBottom: 80
         }}>
             <SectionTitle eyebrow={isEn ? "Social" : "Соціальні мережі"} title={isEn ? "Community & Telegram Channel" : "Спільнота та Telegram канал"} desc={isEn ? "Join our official Telegram community to ask questions, report bugs, and share custom skills." : "Приєднуйтесь до нашої офіційної спільноти в Telegram, щоб ставити запитання, повідомляти про помилки та ділитися власними навичками."} />
-            <div style={{ padding: 24, borderRadius: 16, background: "rgba(0, 122, 255, 0.05)", border: "1px solid rgba(0, 122, 255, 0.15)" }}>
+            <div style={{ padding: 24, borderRadius: 16, background: "rgba(109, 93, 246, 0.05)", border: "1px solid rgba(109, 93, 246, 0.15)" }}>
               <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.7)", lineHeight: 1.75, marginBottom: 16 }}>
                 {isEn ? "Our Telegram channel is divided into specific branches to help you find information easily:" : "Наш Telegram канал розділений на спеціальні гілки, щоб вам було легко знаходити потрібну інформацію:"}
               </p>
@@ -1615,7 +1615,7 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
                 <li><strong>Start Here</strong> — {isEn ? "Welcome guide for new members" : "Правила та інструкції для новачків"}</li>
               </ul>
               <div style={{ marginTop: 24 }}>
-                <a href="https://t.me/AtlasAICommunity" target="_blank" rel="noreferrer" style={{ display: "inline-flex", padding: "10px 20px", background: "#00E5FF", color: "#000", fontWeight: 600, borderRadius: 8, textDecoration: "none" }}>
+                <a href="https://t.me/AtlasAICommunity" target="_blank" rel="noreferrer" style={{ display: "inline-flex", padding: "10px 20px", background: "#22D3EE", color: "#000", fontWeight: 600, borderRadius: 8, textDecoration: "none" }}>
                   {isEn ? "Join Community" : "Приєднатися до спільноти"}
                 </a>
               </div>
@@ -1643,8 +1643,8 @@ fetch("https://api.atlas-ai.space/api/atlas/validate-key", {
           textAlign: "center",
           padding: "48px 32px",
           borderRadius: 24,
-          background: "linear-gradient(135deg, rgba(0,122,255,0.06), rgba(0,229,255,0.02))",
-          border: "1px solid rgba(0,122,255,0.15)",
+          background: "linear-gradient(135deg, rgba(109,93,246,0.06), rgba(34,211,238,0.02))",
+          border: "1px solid rgba(109,93,246,0.15)",
           marginTop: 80
         }}>
             <h3 style={{
@@ -1707,7 +1707,7 @@ function formatMarkdown(text) {
   });
 
   // Format inline code (`code`)
-  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #00E5FF;">$1</code>');
+  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #22D3EE;">$1</code>');
 
   // Format headers (### title, ## title, # title)
   html = html.replace(/^### (.*?)$/gm, '<h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 12px; color: #fff;">$1</h4>');
@@ -1722,7 +1722,7 @@ function formatMarkdown(text) {
 
   // Format links ([text](url)) with URL sanitization
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-    return `<a href="${sanitizeUrl(url)}" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">${text}</a>`;
+    return `<a href="${sanitizeUrl(url)}" target="_blank" rel="noreferrer" style="color: #22D3EE; text-decoration: underline;">${text}</a>`;
   });
   return html;
 }

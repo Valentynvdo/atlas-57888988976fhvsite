@@ -27,7 +27,7 @@ export default function FinalCTA({ onCta }) {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at 20% 0%, rgba(0,122,255,0.3), transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(157,76,221,0.3), transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(0,229,255,0.15), transparent 60%)",
+              "radial-gradient(ellipse at 20% 0%, rgba(109,93,246,0.3), transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.3), transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(34,211,238,0.15), transparent 60%)",
             pointerEvents: "none",
           }}
         />
@@ -50,7 +50,7 @@ export default function FinalCTA({ onCta }) {
               maxWidth: 900,
               margin: "16px auto 0",
               background:
-                "linear-gradient(120deg, #ffffff 0%, #d4dcff 50%, #00e5ff 100%)",
+                "linear-gradient(120deg, #ffffff 0%, #d8d2ff 50%, #22D3EE 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",

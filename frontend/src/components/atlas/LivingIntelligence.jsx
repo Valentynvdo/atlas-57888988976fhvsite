@@ -37,7 +37,7 @@ export default function LivingIntelligence() {
             <span
               style={{
                 background:
-                  "linear-gradient(120deg, #007AFF, #9D4CDD, #00E5FF)",
+                  "linear-gradient(120deg, #6D5DF6, #7C3AED, #22D3EE)",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 color: "transparent",
@@ -71,17 +71,17 @@ export default function LivingIntelligence() {
           >
             {[
               {
-                icon: <Brain size={20} color="#00E5FF" />,
+                icon: <Brain size={20} color="#22D3EE" />,
                 title: t("living_intel.f1_title"),
                 desc: t("living_intel.f1_desc"),
               },
               {
-                icon: <InfinityIcon size={20} color="#9D4CDD" />,
+                icon: <InfinityIcon size={20} color="#7C3AED" />,
                 title: t("living_intel.f2_title"),
                 desc: t("living_intel.f2_desc"),
               },
               {
-                icon: <Activity size={20} color="#007AFF" />,
+                icon: <Activity size={20} color="#6D5DF6" />,
                 title: t("living_intel.f3_title"),
                 desc: t("living_intel.f3_desc"),
               },
@@ -104,7 +104,7 @@ export default function LivingIntelligence() {
                     display: "grid",
                     placeItems: "center",
                     background:
-                      "linear-gradient(135deg, rgba(0,229,255,0.08), rgba(157,76,221,0.08))",
+                      "linear-gradient(135deg, rgba(34,211,238,0.08), rgba(124,58,237,0.08))",
                     border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 >
@@ -211,7 +211,7 @@ function NeuralWeb() {
           position: "absolute",
           inset: -40,
           background:
-            "radial-gradient(circle at 50% 50%, rgba(0,229,255,0.18), transparent 60%)",
+            "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.18), transparent 60%)",
           filter: "blur(20px)",
         }}
       />
@@ -227,14 +227,14 @@ function NeuralWeb() {
       >
         <defs>
           <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#007AFF" stopOpacity="0.7" />
-            <stop offset="50%" stopColor="#9D4CDD" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0.7" />
+            <stop offset="0%" stopColor="#6D5DF6" stopOpacity="0.7" />
+            <stop offset="50%" stopColor="#7C3AED" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.7" />
           </linearGradient>
           <radialGradient id="nodeGrad">
-            <stop offset="0%" stopColor="#00E5FF" stopOpacity="1" />
-            <stop offset="60%" stopColor="#9D4CDD" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#9D4CDD" stopOpacity="0" />
+            <stop offset="0%" stopColor="#22D3EE" stopOpacity="1" />
+            <stop offset="60%" stopColor="#7C3AED" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#7C3AED" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -291,8 +291,8 @@ function NeuralWeb() {
             width: 8,
             height: 8,
             borderRadius: "50%",
-            background: "#00E5FF",
-            boxShadow: "0 0 12px #00E5FF",
+            background: "#22D3EE",
+            boxShadow: "0 0 12px #22D3EE",
           }}
         />
         {t("living_intel.live_badge")}

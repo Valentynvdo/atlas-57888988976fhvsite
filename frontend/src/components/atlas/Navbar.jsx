@@ -29,24 +29,33 @@ export default function Navbar({ onCta }) {
           left: 0,
           right: 0,
           zIndex: 101,
-          transition: "all 0.4s ease",
-          padding: scrolled ? "12px 0" : "20px 0",
-          background: scrolled ? "rgba(0,0,0,0.55)" : "transparent",
-          backdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(18px) saturate(140%)" : "none",
-          borderBottom: scrolled
-            ? "1px solid rgba(255,255,255,0.06)"
-            : "1px solid transparent",
+          transition: "padding 0.4s ease",
+          padding: scrolled ? "10px 0" : "18px 0",
+          pointerEvents: "none",
         }}
       >
         <div
           style={{
-            maxWidth: "100%",
+            maxWidth: 1240,
             margin: "0 auto",
-            padding: "0 5%",
+            padding: scrolled ? "10px 22px" : "12px 26px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            borderRadius: 999,
+            background: scrolled ? "rgba(13,13,18,0.65)" : "rgba(13,13,18,0.25)",
+            backdropFilter: "blur(20px) saturate(150%)",
+            WebkitBackdropFilter: "blur(20px) saturate(150%)",
+            border: scrolled
+              ? "1px solid rgba(255,255,255,0.1)"
+              : "1px solid rgba(255,255,255,0.05)",
+            boxShadow: scrolled
+              ? "0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)"
+              : "none",
+            transition: "all 0.4s ease",
+            marginLeft: "4%",
+            marginRight: "4%",
+            pointerEvents: "auto",
           }}
         >
           <a
@@ -73,7 +82,7 @@ export default function Navbar({ onCta }) {
                 width: 32,
                 height: 32,
                 borderRadius: 8,
-                boxShadow: "0 0 24px rgba(0,229,255,0.35)",
+                boxShadow: "0 0 24px rgba(109,93,246,0.45)",
               }}
             />
             <span
@@ -128,10 +137,6 @@ export default function Navbar({ onCta }) {
                   newPath = `/en${currentPath === '/' ? '' : currentPath}`;
                 }
                 const searchAndHash = window.location.search + window.location.hash;
-                // Use standard window location change for language switch to ensure hard reload if needed or just standard react-router navigate 
-                // We use standard navigate but bypassing localized logic by manually formatting:
-                // Actually navigate(newPath) here would trigger the localized hook which might add/remove EN.
-                // So for the language switcher, it's better to force a hard redirect or use window.location
                 window.location.href = newPath + searchAndHash;
               }}
               style={{
@@ -144,13 +149,13 @@ export default function Navbar({ onCta }) {
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
-                transition: "color 0.2s ease",
+                transition: "color 0.2s ease, background 0.2s ease",
                 padding: "4px 8px",
-                borderRadius: "6px"
+                borderRadius: "8px"
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "#fff";
-                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                e.currentTarget.style.background = "rgba(255,255,255,0.06)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = "rgba(255,255,255,0.72)";
@@ -183,22 +188,27 @@ export default function Navbar({ onCta }) {
               }}
               style={{
                 textDecoration: "none",
-                background: "none",
-                border: "none",
-                color: "rgba(255,255,255,0.72)",
+                background: "linear-gradient(135deg, rgba(109,93,246,0.18), rgba(79,70,229,0.18))",
+                border: "1px solid rgba(109,93,246,0.4)",
+                color: "#fff",
                 fontSize: 14,
-                fontWeight: 500,
+                fontWeight: 600,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                transition: "color 0.3s ease",
-                padding: 0,
+                transition: "all 0.3s ease",
+                padding: "8px 18px",
+                borderRadius: 999,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(255,255,255,0.72)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "linear-gradient(135deg, rgba(109,93,246,0.35), rgba(79,70,229,0.35))";
+                e.currentTarget.style.boxShadow = "0 6px 24px rgba(109,93,246,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "linear-gradient(135deg, rgba(109,93,246,0.18), rgba(79,70,229,0.18))";
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
               {user ? t("navbar.cabinet") : t("navbar.login")}
               <span
@@ -206,8 +216,8 @@ export default function Navbar({ onCta }) {
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  background: "#00E5FF",
-                  boxShadow: "0 0 12px #00E5FF",
+                  background: "#22D3EE",
+                  boxShadow: "0 0 12px #22D3EE",
                 }}
               />
             </a>
@@ -239,9 +249,9 @@ export default function Navbar({ onCta }) {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0, 0, 0, 0.95)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
+            background: "rgba(9, 9, 11, 0.96)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
             zIndex: 100,
             display: "flex",
             flexDirection: "column",
@@ -336,7 +346,7 @@ export default function Navbar({ onCta }) {
               textDecoration: "none",
               background: "none",
               border: "none",
-              color: "#00E5FF",
+              color: "#22D3EE",
               fontSize: 20,
               fontWeight: 600,
               marginTop: 12,

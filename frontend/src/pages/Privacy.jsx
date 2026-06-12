@@ -9,7 +9,7 @@ export default function Privacy() {
   const navigate = useLocalizedNavigate();
   return <div style={{
     minHeight: "100vh",
-    background: "radial-gradient(800px 500px at 50% 0%, rgba(0,122,255,0.15), transparent 60%), #000",
+    background: "radial-gradient(800px 500px at 50% 0%, rgba(109,93,246,0.15), transparent 60%), #000",
     color: "#fff",
     padding: "80px 24px 60px",
     fontFamily: "Inter, sans-serif"
@@ -57,10 +57,10 @@ export default function Privacy() {
           width: 44,
           height: 44,
           borderRadius: 12,
-          background: "rgba(0,229,255,0.1)",
+          background: "rgba(34,211,238,0.1)",
           display: "grid",
           placeItems: "center",
-          color: "#00E5FF"
+          color: "#22D3EE"
         }}>
             <Shield size={22} />
           </div>
@@ -118,7 +118,7 @@ export default function Privacy() {
           border: "none"
         }}>
               <div style={{
-            color: "#00E5FF",
+            color: "#22D3EE",
             flexShrink: 0,
             marginTop: 2
           }}>{item.icon}</div>
@@ -181,7 +181,7 @@ export default function Privacy() {
         fontSize: 14,
         marginBottom: 16
       }}>{t("txt_1211")}<a href="https://t.me/ATLAS_Support_Hub_bot" target="_blank" rel="noreferrer" style={{
-          color: "#00E5FF"
+          color: "#22D3EE"
         }}>@ATLAS_Support_Hub_bot</a>{t("txt_1212")}</p>
       </div>
     </div>;

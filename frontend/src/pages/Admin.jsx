@@ -51,7 +51,7 @@ export default function Admin() {
       display: "grid",
       placeItems: "center"
     }}>
-        <Loader2 size={28} color="#00E5FF" className="spin" />
+        <Loader2 size={28} color="#22D3EE" className="spin" />
         <style>{`.spin{animation: spin 0.9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>;
   }
@@ -210,7 +210,7 @@ function AdminPanel({
       default:
         return {
           title: t("txt_1248"),
-          color: "#00E5FF"
+          color: "#22D3EE"
         };
     }
   }, [selectedMetric]);
@@ -269,12 +269,12 @@ function AdminPanel({
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+          background: "linear-gradient(135deg, #22D3EE, #7C3AED)",
           display: "grid",
           placeItems: "center",
           fontSize: 14,
           fontWeight: 700,
-          boxShadow: "0 0 15px rgba(0,229,255,0.3)"
+          boxShadow: "0 0 15px rgba(34,211,238,0.3)"
         }}>
             A
           </div>
@@ -333,10 +333,10 @@ function AdminPanel({
                   <StatCard icon={<ShieldCheck size={18} />} label={t("txt_1252")} value={stats.active_count} accent="#28C840" active={selectedMetric === "active"} onClick={() => {
               setSelectedMetric("active");
             }} />
-                  <StatCard icon={<Users size={18} />} label={t("txt_1253")} value={stats.total_users} accent="#00E5FF" active={selectedMetric === "users"} onClick={() => {
+                  <StatCard icon={<Users size={18} />} label={t("txt_1253")} value={stats.total_users} accent="#22D3EE" active={selectedMetric === "users"} onClick={() => {
               setSelectedMetric("users");
             }} />
-                  <StatCard icon={<TrendingUp size={18} />} label={t("txt_1254")} value={stats.users_today} accent="#9D4CDD" active={false} onClick={() => {}} />
+                  <StatCard icon={<TrendingUp size={18} />} label={t("txt_1254")} value={stats.users_today} accent="#7C3AED" active={false} onClick={() => {}} />
                   <StatCard icon={<AlertCircle size={18} />} label={t("txt_1255")} value={stats.churn_this_month} accent="#FF5F57" active={selectedMetric === "churn"} onClick={() => {
               setSelectedMetric("churn");
             }} />
@@ -412,7 +412,7 @@ function AdminPanel({
                 alignItems: "center",
                 gap: 8
               }}>
-                    <KeyRound size={18} color="#00E5FF" />{t("txt_1261")}</h3>
+                    <KeyRound size={18} color="#22D3EE" />{t("txt_1261")}</h3>
                   <ManualKeyGen onCreated={refresh} />
                 </section>
 
@@ -429,7 +429,7 @@ function AdminPanel({
                 alignItems: "center",
                 gap: 8
               }}>
-                    <Upload size={18} color="#9D4CDD" />{t("txt_1262")}</h3>
+                    <Upload size={18} color="#7C3AED" />{t("txt_1262")}</h3>
                   <div style={{
                 color: "rgba(255,255,255,0.5)",
                 fontSize: 12,
@@ -479,7 +479,7 @@ function AdminPanel({
                     
                     <p style={{ margin: "0 0 4px" }}><b>3. Запусти перезбірку проекту:</b><br />
                     Використовуй команду з прапорцем <code>--noconfirm</code>, щоб Xcode/PyInstaller не питав про видалення папки dist знову:</p>
-                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px", color: "#00E5FF" }}><code>python3 -m PyInstaller --clean --noconfirm atlas.spec</code></pre>
+                    <pre style={{ background: "rgba(0,0,0,0.5)", padding: 10, borderRadius: 8, margin: "0 0 12px", color: "#22D3EE" }}><code>python3 -m PyInstaller --clean --noconfirm atlas.spec</code></pre>
                     
                     <div style={{ background: "rgba(255,255,255,0.03)", padding: 12, borderRadius: 8, marginBottom: 16 }}>
                       <b style={{ color: "#fff" }}>Що робить команда:</b>
@@ -512,7 +512,7 @@ function AdminPanel({
                   <div className="glass" style={{
               padding: 24,
               borderRadius: 20,
-              borderLeft: "4px solid #00E5FF",
+              borderLeft: "4px solid #22D3EE",
               position: "relative",
               overflow: "hidden"
             }}>
@@ -526,7 +526,7 @@ function AdminPanel({
                 fontSize: 32,
                 fontWeight: 800,
                 marginTop: 8,
-                color: "#00E5FF"
+                color: "#22D3EE"
               }}>${detailedStats.stripe.amount}</div>
                     <div style={{
                 fontSize: 12,
@@ -537,7 +537,7 @@ function AdminPanel({
                 position: "absolute",
                 right: -15,
                 bottom: -15,
-                color: "rgba(0,229,255,0.03)"
+                color: "rgba(34,211,238,0.03)"
               }} />
                   </div>
                   <div className="glass" style={{
@@ -640,8 +640,8 @@ function AdminPanel({
                         fontSize: 10,
                         fontWeight: 700,
                         textTransform: "uppercase",
-                        background: tx.ton_tx_hash ? "rgba(254,188,46,0.12)" : "rgba(0,229,255,0.12)",
-                        color: tx.ton_tx_hash ? "#FEBC2E" : "#00E5FF"
+                        background: tx.ton_tx_hash ? "rgba(254,188,46,0.12)" : "rgba(34,211,238,0.12)",
+                        color: tx.ton_tx_hash ? "#FEBC2E" : "#22D3EE"
                       }}>
                               {tx.ton_tx_hash ? "TON" : "Stripe"}
                             </span>
@@ -738,7 +738,7 @@ function AdminPanel({
                   <div className="glass" style={{
                 padding: 18,
                 borderRadius: 16,
-                borderLeft: "4px solid #00E5FF",
+                borderLeft: "4px solid #22D3EE",
                 background: "rgba(255,255,255,0.01)"
               }}>
                     <div style={{
@@ -761,7 +761,7 @@ function AdminPanel({
                   <div className="glass" style={{
                 padding: 18,
                 borderRadius: 16,
-                borderLeft: "4px solid #9D4CDD",
+                borderLeft: "4px solid #7C3AED",
                 background: "rgba(255,255,255,0.01)"
               }}>
                     <div style={{
@@ -859,7 +859,7 @@ function AdminPanel({
                     margin: "0 0 14px",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#00E5FF",
+                    color: "#22D3EE",
                     display: "flex",
                     alignItems: "center",
                     gap: 6
@@ -896,7 +896,7 @@ function AdminPanel({
                               <div style={{
                           width: `${c.pct}%`,
                           height: "100%",
-                          background: "linear-gradient(90deg, #00E5FF, #9D4CDD)",
+                          background: "linear-gradient(90deg, #22D3EE, #7C3AED)",
                           borderRadius: 2
                         }} />
                             </div>
@@ -920,7 +920,7 @@ function AdminPanel({
                     margin: "0 0 14px",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#9D4CDD",
+                    color: "#7C3AED",
                     display: "flex",
                     alignItems: "center",
                     gap: 6
@@ -948,8 +948,8 @@ function AdminPanel({
                       }}>{r.name}</span>
                             <span style={{
                         fontWeight: 700,
-                        color: "#9D4CDD",
-                        background: "rgba(157,76,221,0.12)",
+                        color: "#7C3AED",
+                        background: "rgba(124,58,237,0.12)",
                         padding: "2px 8px",
                         borderRadius: 6,
                         fontSize: 11
@@ -1000,7 +1000,7 @@ function AdminPanel({
                 alignItems: "center",
                 gap: 8
               }}>
-                    <Activity size={18} color="#00E5FF" />{t("txt_1294")}</h4>
+                    <Activity size={18} color="#22D3EE" />{t("txt_1294")}</h4>
                   <div style={{
                 overflowX: "auto"
               }}>
@@ -1073,7 +1073,7 @@ function AdminPanel({
                             <td style={{
                         padding: 12,
                         fontFamily: "monospace",
-                        color: "rgba(0,229,255,0.85)"
+                        color: "rgba(34,211,238,0.85)"
                       }}>{spot.key_prefix.slice(0, 14)}...</td>
                             <td style={{
                         padding: 12
@@ -1109,9 +1109,9 @@ function AdminPanel({
                               <button onClick={() => focusOnMarker(spot.lat, spot.lon)} className="ghost-btn" style={{
                           padding: "4px 10px",
                           fontSize: 11,
-                          background: "rgba(0,229,255,0.06)",
-                          border: "1px solid rgba(0,229,255,0.15)",
-                          color: "#00E5FF"
+                          background: "rgba(34,211,238,0.06)",
+                          border: "1px solid rgba(34,211,238,0.15)",
+                          color: "#22D3EE"
                         }}>{t("txt_1306")}</button>
                             </td>
                           </tr>)}
@@ -1136,7 +1136,7 @@ function AdminPanel({
               <section className="glass" style={{ padding: 24, borderRadius: 20, border: "1px solid rgba(255,255,255,0.04)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                   <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                    <Activity size={20} color="#00E5FF" />
+                    <Activity size={20} color="#22D3EE" />
                     Відстеження дій (Кліки по кнопках)
                   </h3>
                   <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.05)", padding: "4px 10px", borderRadius: 12 }}>
@@ -1164,8 +1164,8 @@ function AdminPanel({
                             <span style={{
                               padding: "4px 10px",
                               borderRadius: 8,
-                              background: evt.event_name.includes("download") ? "rgba(0,229,255,0.1)" : "rgba(157,76,221,0.1)",
-                              color: evt.event_name.includes("download") ? "#00E5FF" : "#9D4CDD",
+                              background: evt.event_name.includes("download") ? "rgba(34,211,238,0.1)" : "rgba(124,58,237,0.1)",
+                              color: evt.event_name.includes("download") ? "#22D3EE" : "#7C3AED",
                               fontSize: 12
                             }}>
                               {evt.event_name}
@@ -1400,7 +1400,7 @@ function AdminPanel({
             }}>
                   <div style={{
                 fontSize: 10,
-                color: "#9D4CDD",
+                color: "#7C3AED",
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
                 fontWeight: 700
@@ -1413,7 +1413,7 @@ function AdminPanel({
                 alignItems: "center",
                 gap: 8
               }}>
-                    <Cpu size={20} color="#9D4CDD" />{t("txt_1328")}</h3>
+                    <Cpu size={20} color="#7C3AED" />{t("txt_1328")}</h3>
                 </div>
 
                 {healthMetrics && <div style={{
@@ -1437,12 +1437,12 @@ function AdminPanel({
                     fontSize: 12,
                     color: "rgba(255,255,255,0.4)"
                   }}>{t("txt_1329")}</span>
-                        <Cpu size={16} color="#00E5FF" />
+                        <Cpu size={16} color="#22D3EE" />
                       </div>
                       <div style={{
                   fontSize: 28,
                   fontWeight: 800,
-                  color: "#00E5FF"
+                  color: "#22D3EE"
                 }}>{healthMetrics.cpu_percent}%</div>
                       <div style={{
                   width: "100%",
@@ -1455,7 +1455,7 @@ function AdminPanel({
                         <div style={{
                     width: `${healthMetrics.cpu_percent}%`,
                     height: "100%",
-                    background: "#00E5FF",
+                    background: "#22D3EE",
                     borderRadius: 3
                   }} />
                       </div>
@@ -1477,12 +1477,12 @@ function AdminPanel({
                     fontSize: 12,
                     color: "rgba(255,255,255,0.4)"
                   }}>{t("txt_1330")}</span>
-                        <Database size={16} color="#9D4CDD" />
+                        <Database size={16} color="#7C3AED" />
                       </div>
                       <div style={{
                   fontSize: 28,
                   fontWeight: 800,
-                  color: "#9D4CDD"
+                  color: "#7C3AED"
                 }}>{healthMetrics.memory.used_mb} MB</div>
                       <div style={{
                   fontSize: 11,
@@ -1750,7 +1750,7 @@ function AdminPanel({
                       padding: 12,
                       fontFamily: "monospace",
                       fontSize: 12,
-                      color: "rgba(0,229,255,0.8)"
+                      color: "rgba(34,211,238,0.8)"
                     }}>
                             {JSON.stringify(log.details || {})}
                           </td>
@@ -1825,7 +1825,7 @@ function AdminPanel({
                     <div>
                       <div style={{
                     fontSize: 10,
-                    color: "#9D4CDD",
+                    color: "#7C3AED",
                     textTransform: "uppercase",
                     letterSpacing: "0.15em",
                     fontWeight: 700
@@ -1838,7 +1838,7 @@ function AdminPanel({
                     alignItems: "center",
                     gap: 8
                   }}>
-                        <BookOpen size={20} color="#9D4CDD" />{t("txt_1359")}</h3>
+                        <BookOpen size={20} color="#7C3AED" />{t("txt_1359")}</h3>
                     </div>
                     <button onClick={() => {
                   setEditingDoc({
@@ -1911,7 +1911,7 @@ function AdminPanel({
                             <td style={{
                         padding: 12,
                         fontFamily: "monospace",
-                        color: "#00E5FF"
+                        color: "#22D3EE"
                       }}>{doc.id}</td>
                             <td style={{
                         padding: 12
@@ -1923,7 +1923,7 @@ function AdminPanel({
                             <td style={{
                         padding: 12,
                         fontWeight: 700,
-                        color: "#9D4CDD"
+                        color: "#7C3AED"
                       }}>{doc.order}</td>
                             <td style={{
                         padding: 12,
@@ -2184,22 +2184,22 @@ function AdminPanel({
                               <button type="button" onClick={() => setActiveEditorTab("edit")} style={{
                           background: "none",
                           border: "none",
-                          color: activeEditorTab === "edit" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                          color: activeEditorTab === "edit" ? "#22D3EE" : "rgba(255,255,255,0.4)",
                           fontSize: 12,
                           fontWeight: 700,
                           cursor: "pointer",
                           paddingBottom: 4,
-                          borderBottom: activeEditorTab === "edit" ? "2px solid #00E5FF" : "none"
+                          borderBottom: activeEditorTab === "edit" ? "2px solid #22D3EE" : "none"
                         }}>{t("txt_1384")}</button>
                               <button type="button" onClick={() => setActiveEditorTab("preview")} style={{
                           background: "none",
                           border: "none",
-                          color: activeEditorTab === "preview" ? "#00E5FF" : "rgba(255,255,255,0.4)",
+                          color: activeEditorTab === "preview" ? "#22D3EE" : "rgba(255,255,255,0.4)",
                           fontSize: 12,
                           fontWeight: 700,
                           cursor: "pointer",
                           paddingBottom: 4,
-                          borderBottom: activeEditorTab === "preview" ? "2px solid #00E5FF" : "none"
+                          borderBottom: activeEditorTab === "preview" ? "2px solid #22D3EE" : "none"
                         }}>{t("txt_1385")}</button>
                             </div>
 
@@ -2389,7 +2389,7 @@ function AdminPanel({
               {waitlistData && (
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   {[
-                    { label: "Всього", value: waitlistData.total, color: "#00E5FF" },
+                    { label: "Всього", value: waitlistData.total, color: "#22D3EE" },
                     { label: "Очікують", value: waitlistData.pending, color: "#FEBC2E" },
                     { label: "Схвалено", value: waitlistData.approved, color: "#28C840" },
                     { label: "Відхилено", value: waitlistData.rejected, color: "#FF5F57" },
@@ -2465,8 +2465,8 @@ function AdminPanel({
                         <td style={{ padding: "14px 16px" }}>
                           <span style={{
                             padding: "4px 10px", borderRadius: 6,
-                            background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)",
-                            color: "#00E5FF", fontSize: 12, fontWeight: 600,
+                            background: "rgba(34,211,238,0.08)", border: "1px solid rgba(34,211,238,0.2)",
+                            color: "#22D3EE", fontSize: 12, fontWeight: 600,
                           }}>
                             {entry.plan === "early_access" ? "Ранній доступ" : (entry.plan === "atlas_monthly" ? "Місячний" : entry.plan === "atlas_quarterly" ? "Квартальний" : "Річний")}
                           </span>
@@ -2572,9 +2572,9 @@ function AdminPanel({
                         {new Date(c.created_at).toLocaleDateString()}
                       </td>
                       <td style={{ padding: "16px", fontWeight: 600 }}>{c.name}</td>
-                      <td style={{ padding: "16px", color: "#00E5FF" }}>{c.contact}</td>
+                      <td style={{ padding: "16px", color: "#22D3EE" }}>{c.contact}</td>
                       <td style={{ padding: "16px" }}>
-                        <a href={c.portfolio} target="_blank" rel="noreferrer" style={{ color: "#9D4CDD", textDecoration: "none", wordBreak: "break-all" }}>
+                        <a href={c.portfolio} target="_blank" rel="noreferrer" style={{ color: "#7C3AED", textDecoration: "none", wordBreak: "break-all" }}>
                           {c.portfolio}
                         </a>
                       </td>
@@ -2599,7 +2599,7 @@ function AdminPanel({
                           const displayVal = k === "availability" ? (availMapping[v] || v) : v;
                           return (
                             <div key={k} style={{ marginBottom: 10 }}>
-                              <div style={{ fontSize: 11, color: "#00E5FF", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{labels[k] || k}</div>
+                              <div style={{ fontSize: 11, color: "#22D3EE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{labels[k] || k}</div>
                               <div style={{ fontSize: 13, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>{displayVal}</div>
                             </div>
                           );
@@ -2712,13 +2712,13 @@ function SidebarButton({
     padding: "12px 16px",
     borderRadius: 12,
     border: "none",
-    background: active ? "linear-gradient(135deg, rgba(0,229,255,0.12) 0%, rgba(157,76,221,0.05) 100%)" : "transparent",
-    color: active ? "#00E5FF" : "rgba(255,255,255,0.65)",
+    background: active ? "linear-gradient(135deg, rgba(34,211,238,0.12) 0%, rgba(124,58,237,0.05) 100%)" : "transparent",
+    color: active ? "#22D3EE" : "rgba(255,255,255,0.65)",
     cursor: "pointer",
     fontWeight: active ? 700 : 500,
     fontSize: 13,
     textAlign: "left",
-    borderLeft: active ? "3px solid #00E5FF" : "3px solid transparent",
+    borderLeft: active ? "3px solid #22D3EE" : "3px solid transparent",
     transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
   }} onMouseEnter={e => {
     if (!active) {
@@ -2911,13 +2911,13 @@ function UserDetailsModal({
             width: 44,
             height: 44,
             borderRadius: "50%",
-            border: "2px solid #00E5FF"
+            border: "2px solid #22D3EE"
           }} /> : <div style={{
             width: 44,
             height: 44,
             borderRadius: "50%",
-            background: "linear-gradient(135deg,#00E5FF,#9D4CDD)",
-            boxShadow: "0 0 10px rgba(0,229,255,0.3)"
+            background: "linear-gradient(135deg,#22D3EE,#7C3AED)",
+            boxShadow: "0 0 10px rgba(34,211,238,0.3)"
           }} />}
             <div>
               <div style={{
@@ -3221,8 +3221,8 @@ function ManualKeyGen({
       {result && <div data-testid="gen-result" style={{
       marginTop: 16,
       padding: 16,
-      background: "linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(157,76,221,0.03) 100%)",
-      border: "1px solid rgba(0,229,255,0.2)",
+      background: "linear-gradient(135deg, rgba(34,211,238,0.06) 0%, rgba(124,58,237,0.03) 100%)",
+      border: "1px solid rgba(34,211,238,0.2)",
       borderRadius: 12,
       display: "flex",
       flexDirection: "column",
@@ -3256,13 +3256,13 @@ function ManualKeyGen({
         background: "rgba(0,0,0,0.4)",
         padding: "10px 14px",
         borderRadius: 10,
-        border: "1px dashed rgba(0,229,255,0.25)"
+        border: "1px dashed rgba(34,211,238,0.25)"
       }}>
             <div style={{
           fontFamily: "monospace",
           fontSize: 15,
           fontWeight: 700,
-          color: "#00E5FF",
+          color: "#22D3EE",
           letterSpacing: "0.05em"
         }}>
               {result.key}
@@ -3433,7 +3433,7 @@ function LeafletGlowMap({
       if (isNaN(lat) || isNaN(lon)) return;
       const isSuspicious = spot.suspicious;
       const isAdmin = spot.is_admin_marker;
-      let markerColor = "#00E5FF";
+      let markerColor = "#22D3EE";
       if (isSuspicious) markerColor = "#FF5F57";
       if (isAdmin) markerColor = "#FEBC2E"; // Gold for admins
       
@@ -3441,7 +3441,7 @@ function LeafletGlowMap({
         className: `custom-glow-marker ${isSuspicious ? "suspicious" : ""} ${isAdmin ? "admin" : ""}`,
         html: `
           <div class="marker-glow-ring" style="border-color: ${markerColor}"></div>
-          <div class="marker-glow-ring2" style="border-color: ${isSuspicious ? '#FF5F57' : (isAdmin ? '#FEBC2E' : '#9D4CDD')}"></div>
+          <div class="marker-glow-ring2" style="border-color: ${isSuspicious ? '#FF5F57' : (isAdmin ? '#FEBC2E' : '#7C3AED')}"></div>
           <div class="marker-glow-core" style="background-color: ${markerColor}; box-shadow: 0 0 8px ${markerColor}, 0 0 16px ${markerColor}"></div>
         `,
         iconSize: [24, 24],
@@ -3580,7 +3580,7 @@ function LeafletGlowMap({
         }
         .map-popup-body .mono {
           font-family: monospace;
-          color: #00E5FF;
+          color: #22D3EE;
         }
         .suspicious-alert {
           background: rgba(255, 95, 87, 0.12);
@@ -3611,7 +3611,7 @@ function formatMarkdownPreview(text) {
   });
 
   // Format inline code (`code`)
-  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #00E5FF;">$1</code>');
+  html = html.replace(/`([^`]+)`/g, '<code style="font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #22D3EE;">$1</code>');
 
   // Format headers (### title, ## title, # title)
   html = html.replace(/^### (.*?)$/gm, '<h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 12px; color: #fff;">$1</h4>');
@@ -3625,6 +3625,6 @@ function formatMarkdownPreview(text) {
   html = html.replace(/^\* (.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 6px; list-style-type: disc; color: rgba(255,255,255,0.75);">$1</li>');
 
   // Format links ([text](url))
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #00E5FF; text-decoration: underline;">$1</a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" style="color: #22D3EE; text-decoration: underline;">$1</a>');
   return html;
 }

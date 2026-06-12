@@ -94,7 +94,7 @@ export default function CanvasSequence() {
         context.fill();
         
         // Add a wireframe-like rotating ring
-        context.strokeStyle = "rgba(0, 229, 255, 0.3)";
+        context.strokeStyle = "rgba(34, 211, 238, 0.3)";
         context.lineWidth = 2;
         context.beginPath();
         context.ellipse(cx, cy + yOffset, radius * 1.2, radius * 0.3 * (1 - progress), progress * Math.PI, 0, Math.PI * 2);

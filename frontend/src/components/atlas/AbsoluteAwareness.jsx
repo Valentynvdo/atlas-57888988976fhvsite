@@ -73,8 +73,8 @@ export default function AbsoluteAwareness() {
               style={{
                 padding: "6px 10px",
                 borderRadius: 8,
-                background: "rgba(157, 76, 221, 0.1)",
-                border: "1px solid rgba(157, 76, 221, 0.2)",
+                background: "rgba(124, 58, 237, 0.1)",
+                border: "1px solid rgba(124, 58, 237, 0.2)",
                 fontSize: 10,
                 color: "#E5B3FF",
                 letterSpacing: "0.1em",
@@ -123,22 +123,22 @@ export default function AbsoluteAwareness() {
           >
             {[
               {
-                icon: <ScanFace size={24} color="#00E5FF" />,
+                icon: <ScanFace size={24} color="#22D3EE" />,
                 title: t("awareness_s1_title"),
                 value: t("awareness_s1_val"),
               },
               {
-                icon: <MapPin size={24} color="#007AFF" />,
+                icon: <MapPin size={24} color="#6D5DF6" />,
                 title: t("awareness_s2_title"),
                 value: t("awareness_s2_val"),
               },
               {
-                icon: <Users size={24} color="#9D4CDD" />,
+                icon: <Users size={24} color="#7C3AED" />,
                 title: t("awareness_s3_title"),
                 value: t("awareness_s3_val"),
               },
               {
-                icon: <Heart size={24} color="#FF6B9A" />,
+                icon: <Heart size={24} color="#F472B6" />,
                 title: t("awareness_s4_title"),
                 value: t("awareness_s4_val"),
               },
@@ -204,7 +204,7 @@ export default function AbsoluteAwareness() {
               transform: "translate(-50%, -50%)",
               width: "120%",
               height: "120%",
-              background: `radial-gradient(circle, rgba(157,76,221,0.15), transparent 60%)`,
+              background: `radial-gradient(circle, rgba(124,58,237,0.15), transparent 60%)`,
               filter: "blur(40px)",
               pointerEvents: "none",
               zIndex: 0
@@ -237,7 +237,7 @@ function FaceIDOrb({ t }) {
           background:
             "radial-gradient(circle at 35% 30%, #2a2a3a 0%, #0a0a14 60%, #050510 100%)",
           boxShadow:
-            "inset 0 0 80px rgba(0,229,255,0.12), 0 0 80px rgba(157,76,221,0.2)",
+            "inset 0 0 80px rgba(34,211,238,0.12), 0 0 80px rgba(124,58,237,0.2)",
         }}
       />
 
@@ -253,8 +253,8 @@ function FaceIDOrb({ t }) {
       >
         <defs>
           <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#9D4CDD" stopOpacity="0.6" />
+            <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.6" />
           </linearGradient>
         </defs>
 
@@ -337,8 +337,8 @@ function FaceIDOrb({ t }) {
             width: 12,
             height: 12,
             borderRadius: "50%",
-            background: "#9D4CDD",
-            boxShadow: "0 0 12px #9D4CDD",
+            background: "#7C3AED",
+            boxShadow: "0 0 12px #7C3AED",
           }}
         />
         <div

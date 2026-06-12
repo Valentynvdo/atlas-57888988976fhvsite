@@ -1,6 +1,6 @@
 .dashboard-wrapper {
   min-height: 100vh;
-  background: radial-gradient(circle at 50% -20%, #121020 0%, #000000 70%);
+  background: radial-gradient(circle at 50% -20%, #111118 0%, #000000 70%);
   color: #fff;
   font-family: "Inter", sans-serif;
 }
@@ -71,7 +71,7 @@
 }
 
 .dashboard-eyebrow {
-  color: #00E5FF;
+  color: #22D3EE;
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -137,14 +137,14 @@
 }
 
 .plan-card.popular {
-  background: linear-gradient(180deg, rgba(0, 122, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border-color: rgba(0, 122, 255, 0.4);
+  background: linear-gradient(180deg, rgba(109, 93, 246, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-color: rgba(109, 93, 246, 0.4);
 }
 .plan-card.popular:hover {
-  border-color: rgba(0, 229, 255, 0.6);
-  box-shadow: 0 20px 40px rgba(0, 122, 255, 0.2);
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 20px 40px rgba(109, 93, 246, 0.2);
 }
 
 .glow-text {
-  text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
 }

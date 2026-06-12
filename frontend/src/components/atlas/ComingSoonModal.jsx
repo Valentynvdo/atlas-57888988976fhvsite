@@ -63,7 +63,7 @@ export default function ComingSoonModal({ open, onClose }) {
             position: "absolute",
             inset: -40,
             background:
-              "radial-gradient(circle at 50% 0%, rgba(0,229,255,0.3), transparent 60%)",
+              "radial-gradient(circle at 50% 0%, rgba(34,211,238,0.3), transparent 60%)",
             pointerEvents: "none",
           }}
         />
@@ -101,8 +101,8 @@ export default function ComingSoonModal({ open, onClose }) {
               display: "grid",
               placeItems: "center",
               background:
-                "conic-gradient(from 180deg, #007AFF, #9D4CDD, #00E5FF, #007AFF)",
-              boxShadow: "0 0 40px rgba(0,229,255,0.4)",
+                "conic-gradient(from 180deg, #6D5DF6, #7C3AED, #22D3EE, #6D5DF6)",
+              boxShadow: "0 0 40px rgba(34,211,238,0.4)",
             }}
           >
             <div
@@ -115,7 +115,7 @@ export default function ComingSoonModal({ open, onClose }) {
                 placeItems: "center",
               }}
             >
-              <Sparkles size={26} color="#00E5FF" />
+              <Sparkles size={26} color="#22D3EE" />
             </div>
           </div>
 

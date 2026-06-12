@@ -93,7 +93,7 @@ export default function AtlasInteractions() {
               width: "80%",
               height: "80%",
               background:
-                "radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 60%)",
+                "radial-gradient(circle, rgba(34,211,238,0.15) 0%, transparent 60%)",
               filter: "blur(40px)",
               pointerEvents: "none",
             }}
@@ -122,14 +122,14 @@ export default function AtlasInteractions() {
                   width: 40,
                   height: 40,
                   borderRadius: 12,
-                  background: "rgba(0,229,255,0.1)",
-                  border: "1px solid rgba(0,229,255,0.2)",
+                  background: "rgba(34,211,238,0.1)",
+                  border: "1px solid rgba(34,211,238,0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <Mic color="#00E5FF" size={20} />
+                <Mic color="#22D3EE" size={20} />
               </div>
               <h3
                 style={{
@@ -194,7 +194,7 @@ export default function AtlasInteractions() {
               width: "80%",
               height: "80%",
               background:
-                "radial-gradient(circle, rgba(157,76,221,0.15) 0%, transparent 60%)",
+                "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 60%)",
               filter: "blur(40px)",
               pointerEvents: "none",
             }}
@@ -223,14 +223,14 @@ export default function AtlasInteractions() {
                   width: 40,
                   height: 40,
                   borderRadius: 12,
-                  background: "rgba(157,76,221,0.1)",
-                  border: "1px solid rgba(157,76,221,0.2)",
+                  background: "rgba(124,58,237,0.1)",
+                  border: "1px solid rgba(124,58,237,0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <MessageCircle color="#9D4CDD" size={20} />
+                <MessageCircle color="#7C3AED" size={20} />
               </div>
               <h3
                 style={{
@@ -294,8 +294,8 @@ function VoiceWaveform() {
             style={{
               width: 4,
               borderRadius: 2,
-              background: "linear-gradient(180deg, #00E5FF, #9D4CDD)",
-              boxShadow: "0 0 10px rgba(0,229,255,0.4)",
+              background: "linear-gradient(180deg, #22D3EE, #7C3AED)",
+              boxShadow: "0 0 10px rgba(34,211,238,0.4)",
               animation: `wave ${dur}s ease-in-out ${delay}s infinite alternate`,
             }}
           >
@@ -459,7 +459,7 @@ function TelegramMockup() {
             width: 36,
             height: 36,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+            background: "linear-gradient(135deg, #22D3EE, #7C3AED)",
             padding: 2,
           }}
         >
@@ -480,7 +480,7 @@ function TelegramMockup() {
           <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
             Atlas AI Hub
           </div>
-          <div style={{ fontSize: 12, color: "#00E5FF" }}>
+          <div style={{ fontSize: 12, color: "#22D3EE" }}>
             {isTyping ? "typing..." : t("atlas_v2.mockups.telegram_ui.bot")}
           </div>
         </div>
@@ -501,7 +501,7 @@ function TelegramMockup() {
             style={{
               alignSelf: m.sender === "user" ? "flex-end" : "flex-start",
               background:
-                m.sender === "user" ? "#007AFF" : "rgba(255,255,255,0.08)",
+                m.sender === "user" ? "#6D5DF6" : "rgba(255,255,255,0.08)",
               padding: "10px 14px",
               borderRadius: 18,
               borderBottomRightRadius: m.sender === "user" ? 4 : 18,
@@ -608,7 +608,7 @@ function TelegramMockup() {
             width: 36,
             height: 36,
             borderRadius: "50%",
-            background: "#007AFF",
+            background: "#6D5DF6",
             display: "grid",
             placeItems: "center",
           }}

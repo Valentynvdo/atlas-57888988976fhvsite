@@ -134,9 +134,9 @@ export default function EnergySphere() {
       uniforms: {
         uTime: { value: 0 },
         uAmp: { value: 1.0 },
-        uColorA: { value: new THREE.Color("#0a1a3a") }, // deep blue
-        uColorB: { value: new THREE.Color("#3a1a6a") }, // violet
-        uColorC: { value: new THREE.Color("#00e5ff") }, // cyan
+        uColorA: { value: new THREE.Color("#161233") }, // deep blue
+        uColorB: { value: new THREE.Color("#2a1b58") }, // violet
+        uColorC: { value: new THREE.Color("#22D3EE") }, // cyan
       },
       transparent: false,
     });
@@ -147,7 +147,7 @@ export default function EnergySphere() {
     // Wireframe halo layer
     const wireGeo = new THREE.IcosahedronGeometry(1.18, 3);
     const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x00e5ff,
+      color: 0x22d3ee,
       wireframe: true,
       transparent: true,
       opacity: 0.18,
@@ -161,7 +161,7 @@ export default function EnergySphere() {
       transparent: true,
       side: THREE.BackSide,
       uniforms: {
-        uColor: { value: new THREE.Color("#5a7bff") },
+        uColor: { value: new THREE.Color("#8b7cf8") },
       },
       vertexShader: `
         varying vec3 vNormal;
@@ -187,7 +187,7 @@ export default function EnergySphere() {
     const particleCount = 1500;
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
-    const baseColor = new THREE.Color("#ff2a5f"); // Premium glowing red/pink
+    const baseColor = new THREE.Color("#a855f7"); // Premium glowing red/pink
 
     for (let i = 0; i < particleCount; i++) {
       // Spread across the full width of the screen (X)

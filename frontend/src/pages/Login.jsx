@@ -90,7 +90,7 @@ export default function Login() {
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(800px 500px at 50% 0%, rgba(0,122,255,0.18), transparent 60%), radial-gradient(700px 500px at 50% 100%, rgba(157,76,221,0.14), transparent 60%), #000",
+          "radial-gradient(800px 500px at 50% 0%, rgba(109,93,246,0.18), transparent 60%), radial-gradient(700px 500px at 50% 100%, rgba(124,58,237,0.14), transparent 60%), #000",
         color: "#fff",
         display: "grid",
         placeItems: "center",
@@ -155,7 +155,7 @@ export default function Login() {
           style={{
             width: 64, height: 64, borderRadius: 16,
             margin: "0 auto 20px", display: "block",
-            boxShadow: "0 0 35px rgba(0,229,255,0.4)",
+            boxShadow: "0 0 35px rgba(34,211,238,0.4)",
           }}
         />
         <h1
@@ -393,7 +393,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => { setTab("forgot_password"); setError(""); setSuccess(""); }}
-                    style={{ background: "none", border: "none", color: "#007aff", fontSize: 13, cursor: "pointer", padding: 0 }}
+                    style={{ background: "none", border: "none", color: "#6D5DF6", fontSize: 13, cursor: "pointer", padding: 0 }}
                   >
                     {t("login.forgot_password")}
                   </button>

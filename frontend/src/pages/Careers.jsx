@@ -115,12 +115,12 @@ export default function Careers() {
     padding: "16px 20px",
     borderRadius: 16,
     background: focusedInput === name ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)",
-    border: `1px solid ${focusedInput === name ? "rgba(0,229,255,0.4)" : "rgba(255,255,255,0.1)"}`,
+    border: `1px solid ${focusedInput === name ? "rgba(34,211,238,0.4)" : "rgba(255,255,255,0.1)"}`,
     color: "#fff",
     outline: "none",
     fontSize: 16,
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    boxShadow: focusedInput === name ? "0 0 20px rgba(0,229,255,0.1) inset, 0 0 15px rgba(0,229,255,0.2)" : "none"
+    boxShadow: focusedInput === name ? "0 0 20px rgba(34,211,238,0.1) inset, 0 0 15px rgba(34,211,238,0.2)" : "none"
   });
 
   const labelStyle = {
@@ -157,12 +157,12 @@ export default function Careers() {
       {/* Background Effects */}
       <div style={{
         position: "fixed", top: "10%", left: "20%", width: 600, height: 600,
-        background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 60%)",
+        background: "radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 60%)",
         filter: "blur(60px)", pointerEvents: "none", zIndex: 0
       }} />
       <div style={{
         position: "fixed", bottom: "10%", right: "10%", width: 500, height: 500,
-        background: "radial-gradient(circle, rgba(157,76,221,0.05) 0%, transparent 60%)",
+        background: "radial-gradient(circle, rgba(124,58,237,0.05) 0%, transparent 60%)",
         filter: "blur(60px)", pointerEvents: "none", zIndex: 0
       }} />
       <div style={{
@@ -201,8 +201,8 @@ export default function Careers() {
           <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
             <div style={{ 
               display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", 
-              borderRadius: 100, background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.2)",
-              color: "#00E5FF", fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase"
+              borderRadius: 100, background: "rgba(34,211,238,0.1)", border: "1px solid rgba(34,211,238,0.2)",
+              color: "#22D3EE", fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase"
             }}>
               <Sparkles size={14} /> Join Atlas Core Team
             </div>
@@ -219,14 +219,14 @@ export default function Careers() {
           {/* Social Proof Stats */}
           <div style={{ display: "flex", gap: 32, marginBottom: 40, borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "24px 0" }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#00E5FF", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#22D3EE", marginBottom: 8 }}>
                 <Users size={20} />
                 <span style={{ fontSize: 24, fontWeight: 800 }}>{stats.applied}</span>
               </div>
               <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{t("atlas_v2.careers.stats.applied") || "людей подали заявку"}</div>
             </div>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#9D4CDD", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#7C3AED", marginBottom: 8 }}>
                 <Globe2 size={20} />
                 <span style={{ fontSize: 24, fontWeight: 800 }}>{stats.countries}</span>
               </div>
@@ -293,8 +293,8 @@ export default function Careers() {
                 {[1, 2, 3, 4].map(s => (
                   <div key={s} style={{
                     flex: 1, height: 4, borderRadius: 2,
-                    background: s <= step ? "#00E5FF" : "rgba(255,255,255,0.1)",
-                    boxShadow: s <= step ? "0 0 10px rgba(0,229,255,0.5)" : "none",
+                    background: s <= step ? "#22D3EE" : "rgba(255,255,255,0.1)",
+                    boxShadow: s <= step ? "0 0 10px rgba(34,211,238,0.5)" : "none",
                     transition: "all 0.3s"
                   }} />
                 ))}
@@ -408,10 +408,10 @@ export default function Careers() {
                   <button type="submit" disabled={submitting} style={{
                     flex: 1, padding: "16px", borderRadius: 16, display: "flex",
                     justifyContent: "center", alignItems: "center", gap: 10, border: "none",
-                    background: submitting ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #00E5FF, #9D4CDD)",
+                    background: submitting ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #22D3EE, #7C3AED)",
                     color: "#fff", fontWeight: 700, fontSize: 16, cursor: submitting ? "not-allowed" : "pointer",
                     transition: "all 0.3s",
-                    boxShadow: submitting ? "none" : "0 8px 20px rgba(0,229,255,0.3), inset 0 1px 1px rgba(255,255,255,0.4)"
+                    boxShadow: submitting ? "none" : "0 8px 20px rgba(34,211,238,0.3), inset 0 1px 1px rgba(255,255,255,0.4)"
                   }}>
                     {submitting ? <Loader2 size={20} className="spin" /> : 
                       step === totalSteps ? <><Send size={18} /> {t("atlas_v2.careers.form.submit")}</> : 

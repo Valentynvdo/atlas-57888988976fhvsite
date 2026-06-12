@@ -174,7 +174,7 @@ export default function AtlasComparison() {
           width: "600px",
           height: "600px",
           background:
-            "radial-gradient(circle, rgba(157,76,221,0.15) 0%, transparent 60%)",
+            "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 60%)",
           filter: "blur(80px)",
           mixBlendMode: "screen",
           pointerEvents: "none",
@@ -189,7 +189,7 @@ export default function AtlasComparison() {
           width: "500px",
           height: "500px",
           background:
-            "radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 60%)",
+            "radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 60%)",
           filter: "blur(80px)",
           mixBlendMode: "screen",
           pointerEvents: "none",
@@ -276,7 +276,7 @@ export default function AtlasComparison() {
                   boxShadow: isActive ? "0 4px 20px rgba(0,0,0,0.2)" : "none",
                 }}
               >
-                <div style={{ color: isActive ? "#00E5FF" : "inherit" }}>
+                <div style={{ color: isActive ? "#22D3EE" : "inherit" }}>
                   {tab.icon}
                 </div>
                 {tab.label}
@@ -404,7 +404,7 @@ export default function AtlasComparison() {
                 width: 300,
                 height: 300,
                 background:
-                  "radial-gradient(circle, rgba(0,229,255,0.2), transparent 70%)",
+                  "radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)",
                 filter: "blur(40px)",
               }}
             />
@@ -415,12 +415,12 @@ export default function AtlasComparison() {
                 alignItems: "center",
                 gap: 12,
                 marginBottom: 40,
-                color: "#00E5FF",
+                color: "#22D3EE",
                 position: "relative",
                 zIndex: 1,
               }}
             >
-              <Zap size={28} fill="#00E5FF" />
+              <Zap size={28} fill="#22D3EE" />
               <h3
                 style={{
                   fontSize: "1.5rem",
@@ -484,7 +484,7 @@ export default function AtlasComparison() {
                     bottom: 0,
                     width: "30%",
                     background:
-                      "linear-gradient(90deg, transparent, #00E5FF, transparent)",
+                      "linear-gradient(90deg, transparent, #22D3EE, transparent)",
                     animation: "sweep 2s infinite",
                   }}
                 />
@@ -492,7 +492,7 @@ export default function AtlasComparison() {
               <span
                 style={{
                   fontSize: 10,
-                  color: "#00E5FF",
+                  color: "#22D3EE",
                   fontWeight: 700,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -536,15 +536,15 @@ function CompItem({ icon, text, active, dim }) {
           flexShrink: 0,
           borderRadius: 12,
           background: active
-            ? "rgba(0, 229, 255, 0.05)"
+            ? "rgba(34, 211, 238, 0.05)"
             : "rgba(255, 255, 255, 0.02)",
           border: active
-            ? "1px solid rgba(0, 229, 255, 0.15)"
+            ? "1px solid rgba(34, 211, 238, 0.15)"
             : "1px solid rgba(255, 255, 255, 0.05)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: active ? "#00E5FF" : dim ? "rgba(255,255,255,0.3)" : "#fff",
+          color: active ? "#22D3EE" : dim ? "rgba(255,255,255,0.3)" : "#fff",
         }}
       >
         {icon}

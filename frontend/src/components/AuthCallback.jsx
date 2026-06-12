@@ -61,7 +61,7 @@ export default function AuthCallback() {
             height: 48,
             borderRadius: "50%",
             border: "2px solid rgba(255,255,255,0.1)",
-            borderTopColor: "#00E5FF",
+            borderTopColor: "#22D3EE",
             margin: "0 auto 16px",
             animation: "spin 0.9s linear infinite",
           }}

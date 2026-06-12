@@ -48,8 +48,8 @@ export default function AtlasLiveThought() {
           padding: "16px 24px",
           borderRadius: 999,
           background: "rgba(0, 0, 0, 0.4)",
-          border: "1px solid rgba(0, 229, 255, 0.15)",
-          boxShadow: "0 0 30px rgba(0, 229, 255, 0.1)",
+          border: "1px solid rgba(34, 211, 238, 0.15)",
+          boxShadow: "0 0 30px rgba(34, 211, 238, 0.1)",
           backdropFilter: "blur(12px)",
           maxWidth: "800px",
           width: "100%",
@@ -60,14 +60,14 @@ export default function AtlasLiveThought() {
             width: 36,
             height: 36,
             borderRadius: "50%",
-            background: "rgba(0, 229, 255, 0.1)",
+            background: "rgba(34, 211, 238, 0.1)",
             display: "grid",
             placeItems: "center",
             flexShrink: 0,
             animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
           }}
         >
-          <BrainCircuit size={18} color="#00E5FF" />
+          <BrainCircuit size={18} color="#22D3EE" />
           <style>{`
             @keyframes pulse {
               0%, 100% { opacity: 1; transform: scale(1); }

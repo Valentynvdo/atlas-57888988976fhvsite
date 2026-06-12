@@ -10,80 +10,80 @@ export default function SmartConcierge() {
     title: t("txt_1018"),
     label: "active_app_applescript_helper.py",
     desc: t("txt_1019"),
-    grad: "linear-gradient(135deg, #00E5FF, #007AFF)",
-    glow: "rgba(0,229,255,0.35)",
+    grad: "linear-gradient(135deg, #22D3EE, #6D5DF6)",
+    glow: "rgba(34,211,238,0.35)",
     status: "active"
   }, {
     icon: <Zap size={26} />,
     title: t("txt_1020"),
     label: "evolution.py · plan.md",
     desc: t("txt_1021"),
-    grad: "linear-gradient(135deg, #FF6B6B, #FF9A3C)",
-    glow: "rgba(255,107,107,0.3)",
+    grad: "linear-gradient(135deg, #F472B6, #A78BFA)",
+    glow: "rgba(244,114,182,0.3)",
     status: "active"
   }, {
     icon: <Brain size={26} />,
     title: t("txt_1022"),
     label: "semantic_memory.py",
     desc: t("txt_1023"),
-    grad: "linear-gradient(135deg, #9D4CDD, #007AFF)",
-    glow: "rgba(157,76,221,0.35)",
+    grad: "linear-gradient(135deg, #7C3AED, #6D5DF6)",
+    glow: "rgba(124,58,237,0.35)",
     status: "active"
   }, {
     icon: <Search size={26} />,
     title: t("txt_1024"),
     label: "autonomous_researcher.py",
     desc: t("txt_1025"),
-    grad: "linear-gradient(135deg, #00E5FF, #9D4CDD)",
-    glow: "rgba(0,229,255,0.3)",
+    grad: "linear-gradient(135deg, #22D3EE, #7C3AED)",
+    glow: "rgba(34,211,238,0.3)",
     status: "active"
   }, {
     icon: <FileText size={26} />,
     title: t("txt_1026"),
     label: "apple_notes_connector.py · contacts_connector.py",
     desc: t("txt_1027"),
-    grad: "linear-gradient(135deg, #FFD56B, #FF6B6B)",
-    glow: "rgba(255,213,107,0.3)",
+    grad: "linear-gradient(135deg, #67E8F9, #F472B6)",
+    glow: "rgba(103,232,249,0.3)",
     status: "active"
   }, {
     icon: <Eye size={26} />,
     title: t("txt_1028"),
     label: "proactive_watcher.py",
     desc: t("txt_1029"),
-    grad: "linear-gradient(135deg, #007AFF, #00E5FF)",
-    glow: "rgba(0,122,255,0.35)",
+    grad: "linear-gradient(135deg, #6D5DF6, #22D3EE)",
+    glow: "rgba(109,93,246,0.35)",
     status: "active"
   }, {
     icon: <Smile size={26} />,
     title: t("txt_1030"),
     label: "emotion_recognition.py · sarcasm_detector.py",
     desc: t("txt_1031"),
-    grad: "linear-gradient(135deg, #FF9A3C, #9D4CDD)",
-    glow: "rgba(255,154,60,0.3)",
+    grad: "linear-gradient(135deg, #A78BFA, #7C3AED)",
+    glow: "rgba(167,139,250,0.3)",
     status: "soon"
   }, {
     icon: <Heart size={26} />,
     title: t("txt_1032"),
     label: "eye_strain_reminder.py · sleep_advisor.py",
     desc: t("txt_1033"),
-    grad: "linear-gradient(135deg, #FF6B6B, #00E5FF)",
-    glow: "rgba(255,107,107,0.3)",
+    grad: "linear-gradient(135deg, #F472B6, #22D3EE)",
+    glow: "rgba(244,114,182,0.3)",
     status: "soon"
   }, {
     icon: <Camera size={26} />,
     title: t("txt_1034"),
     label: "vision_handler.py",
     desc: t("txt_1035"),
-    grad: "linear-gradient(135deg, #9D4CDD, #FF6B6B)",
-    glow: "rgba(157,76,221,0.3)",
+    grad: "linear-gradient(135deg, #7C3AED, #F472B6)",
+    glow: "rgba(124,58,237,0.3)",
     status: "active"
   }, {
     icon: <ShieldAlert size={26} />,
     title: t("txt_1036"),
     label: "privacy_guard.py · security_manager.py",
     desc: t("txt_1037"),
-    grad: "linear-gradient(135deg, #00E5FF, #FFD56B)",
-    glow: "rgba(0,229,255,0.3)",
+    grad: "linear-gradient(135deg, #22D3EE, #67E8F9)",
+    glow: "rgba(34,211,238,0.3)",
     status: "active"
   }];
   const gridRef = useRef(null);
@@ -113,7 +113,7 @@ export default function SmartConcierge() {
             <span className="gradient-text">{t("txt_1039")}</span>
             <br />
             <span style={{
-            background: "linear-gradient(120deg, #00E5FF, #9D4CDD)",
+            background: "linear-gradient(120deg, #22D3EE, #7C3AED)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",
@@ -214,8 +214,8 @@ export default function SmartConcierge() {
             width: 6,
             height: 6,
             borderRadius: "50%",
-            background: item.status === "active" ? "#00E676" : "#00E5FF",
-            boxShadow: item.status === "active" ? "0 0 10px #00E676" : "0 0 10px #00E5FF"
+            background: item.status === "active" ? "#00E676" : "#22D3EE",
+            boxShadow: item.status === "active" ? "0 0 10px #00E676" : "0 0 10px #22D3EE"
           }} />
               {item.status === "active" ? t("txt_1042") : t("txt_1043")}
             </div>

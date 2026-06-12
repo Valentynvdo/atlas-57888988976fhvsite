@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
             height: 36,
             borderRadius: "50%",
             border: "2px solid rgba(255,255,255,0.1)",
-            borderTopColor: "#00E5FF",
+            borderTopColor: "#22D3EE",
             animation: "spin 0.9s linear infinite",
           }}
         />

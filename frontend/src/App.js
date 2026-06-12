@@ -42,6 +42,7 @@ const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const DocsPost = lazy(() => import("./pages/DocsPost"));
 const InviteHandler = lazy(() => import("./pages/InviteHandler"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 
 
 
@@ -83,9 +84,9 @@ function Landing() {
 }
 
 const PageLoader = () => (
-  <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#030303", color: "#00E5FF", fontFamily: "sans-serif" }}>
+  <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#030303", color: "#22D3EE", fontFamily: "sans-serif" }}>
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-      <div style={{ width: 40, height: 40, borderRadius: "50%", border: "3px solid rgba(0, 229, 255, 0.1)", borderTopColor: "#00E5FF", animation: "spin 1s linear infinite" }}></div>
+      <div style={{ width: 40, height: 40, borderRadius: "50%", border: "3px solid rgba(34, 211, 238, 0.1)", borderTopColor: "#22D3EE", animation: "spin 1s linear infinite" }}></div>
       <span style={{ fontSize: 14, letterSpacing: "0.05em", opacity: 0.8 }}>Завантаження...</span>
       <style>{`
         @keyframes spin {
@@ -109,6 +110,7 @@ function AppRoutes() {
       <Route path="careers" element={<Careers />} />
       <Route path="investors" element={<Investors />} />
       <Route path="team" element={<Careers />} />
+      <Route path="pricing" element={<Pricing />} />
       <Route path="blog" element={<BlogList />} />
       <Route path="blog/:slug" element={<BlogPost />} />
       <Route path="invite/:code" element={<InviteHandler />} />

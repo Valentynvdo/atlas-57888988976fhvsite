@@ -13,17 +13,17 @@ export default function TechInfrastructure() {
     {
       name: "Spaceship",
       icon: <Cloud size={24} />,
-      color: "#00E5FF"
+      color: "#22D3EE"
     },
     {
       name: "OpenAI",
       icon: <Sparkles size={24} />,
-      color: "#9D4CDD"
+      color: "#7C3AED"
     },
     {
       name: "Neural Engine",
       icon: <Cpu size={24} />,
-      color: "#007AFF"
+      color: "#6D5DF6"
     }
   ];
 
@@ -84,8 +84,8 @@ export default function TechInfrastructure() {
 
       <div style={{ display: "flex", width: "100%", overflow: "hidden", position: "relative" }}>
         {/* Градієнти по краях екрану для плавного зникнення/появи тексту */}
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "15vw", background: "linear-gradient(to right, #05050A, transparent)", zIndex: 2 }} />
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "15vw", background: "linear-gradient(to left, #05050A, transparent)", zIndex: 2 }} />
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "15vw", background: "linear-gradient(to right, #09090B, transparent)", zIndex: 2 }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "15vw", background: "linear-gradient(to left, #09090B, transparent)", zIndex: 2 }} />
         
         <div className="marquee-container">
           {duplicatedStack.map((tech, idx) => (

@@ -16,8 +16,8 @@ const PLANS = [
     period_key: "waitlist.plan_monthly",
     per_key: "waitlist.per_month",
     features_key: "waitlist.features_monthly",
-    color: "rgba(0, 229, 255, 0.15)",
-    borderColor: "rgba(0, 229, 255, 0.3)",
+    color: "rgba(34, 211, 238, 0.15)",
+    borderColor: "rgba(34, 211, 238, 0.3)",
     popular: false,
   },
   {
@@ -27,8 +27,8 @@ const PLANS = [
     period_key: "waitlist.plan_quarterly",
     per_key: "waitlist.per_quarter",
     features_key: "waitlist.features_quarterly",
-    color: "rgba(0, 122, 255, 0.12)",
-    borderColor: "rgba(0, 122, 255, 0.45)",
+    color: "rgba(109, 93, 246, 0.12)",
+    borderColor: "rgba(109, 93, 246, 0.45)",
     popular: true,
   },
   {
@@ -38,8 +38,8 @@ const PLANS = [
     period_key: "waitlist.plan_yearly",
     per_key: "waitlist.per_year",
     features_key: "waitlist.features_yearly",
-    color: "rgba(157, 76, 221, 0.12)",
-    borderColor: "rgba(157, 76, 221, 0.4)",
+    color: "rgba(124, 58, 237, 0.12)",
+    borderColor: "rgba(124, 58, 237, 0.4)",
     popular: false,
     badge_key: "waitlist.save_badge",
   },
@@ -116,11 +116,11 @@ export default function WaitlistSection({ onCta }) {
             <div style={{ flex: "1 1 320px" }}>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
-                background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.25)",
+                background: "rgba(34,211,238,0.1)", border: "1px solid rgba(34,211,238,0.25)",
                 borderRadius: 999, padding: "6px 14px", marginBottom: 20,
               }}>
-                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#00E5FF", boxShadow: "0 0 8px #00E5FF", animation: "pulse-dot 2s infinite" }} />
-                <span style={{ color: "#00E5FF", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22D3EE", boxShadow: "0 0 8px #22D3EE", animation: "pulse-dot 2s infinite" }} />
+                <span style={{ color: "#22D3EE", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
                   {t("waitlist.launch_badge")}
                 </span>
               </div>
@@ -128,7 +128,7 @@ export default function WaitlistSection({ onCta }) {
               <h2 style={{
                 fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", fontWeight: 700,
                 letterSpacing: "-0.03em", lineHeight: 1.2,
-                background: "linear-gradient(120deg, #fff 0%, #c4d4ff 60%, #00E5FF 100%)",
+                background: "linear-gradient(120deg, #fff 0%, #cdc7ff 60%, #22D3EE 100%)",
                 WebkitBackgroundClip: "text", backgroundClip: "text",
                 color: "transparent", WebkitTextFillColor: "transparent",
                 margin: 0,
@@ -144,8 +144,8 @@ export default function WaitlistSection({ onCta }) {
             {/* Stats */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 16, flex: "0 0 auto" }}>
               {[
-                { icon: <Users size={20} color="#00E5FF" />, value: totalWaitlist !== null ? totalWaitlist : "...", label: t("waitlist.stat_registered") },
-                { icon: <Globe size={20} color="#9D4CDD" />, value: "12+", label: t("waitlist.stat_countries") },
+                { icon: <Users size={20} color="#22D3EE" />, value: totalWaitlist !== null ? totalWaitlist : "...", label: t("waitlist.stat_registered") },
+                { icon: <Globe size={20} color="#7C3AED" />, value: "12+", label: t("waitlist.stat_countries") },
                 { icon: <TrendingUp size={20} color="#28C840" />, value: "2026", label: t("waitlist.stat_launch") },
               ].map((stat, i) => (
                 <div key={i} style={{
@@ -214,7 +214,7 @@ export default function WaitlistSection({ onCta }) {
           <h2 style={{
             marginTop: 16, fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1.1,
-            background: "linear-gradient(120deg, #fff 0%, #c4d4ff 50%, #00E5FF 100%)",
+            background: "linear-gradient(120deg, #fff 0%, #cdc7ff 50%, #22D3EE 100%)",
             WebkitBackgroundClip: "text", backgroundClip: "text",
             color: "transparent", WebkitTextFillColor: "transparent",
           }}>
@@ -249,14 +249,14 @@ export default function WaitlistSection({ onCta }) {
             style={{
               display: "inline-flex", alignItems: "center", gap: 10,
               padding: "18px 44px", borderRadius: 18, fontSize: 17, fontWeight: 700,
-              background: "linear-gradient(135deg, #007AFF 0%, #00E5FF 100%)",
+              background: "linear-gradient(135deg, #6D5DF6 0%, #22D3EE 100%)",
               border: "none", color: "#fff", cursor: "pointer",
-              boxShadow: "0 0 40px rgba(0,122,255,0.35), 0 8px 32px rgba(0,229,255,0.2)",
+              boxShadow: "0 0 40px rgba(109,93,246,0.35), 0 8px 32px rgba(34,211,238,0.2)",
               transition: "all 0.3s ease", letterSpacing: "-0.02em",
               opacity: joinLoading ? 0.7 : 1,
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 0 60px rgba(0,122,255,0.5), 0 12px 40px rgba(0,229,255,0.3)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 0 40px rgba(0,122,255,0.35), 0 8px 32px rgba(0,229,255,0.2)"; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 0 60px rgba(109,93,246,0.5), 0 12px 40px rgba(34,211,238,0.3)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 0 40px rgba(109,93,246,0.35), 0 8px 32px rgba(34,211,238,0.2)"; }}
           >
             {joinLoading ? t("waitlist.joining") : t("waitlist.join_btn")}
             <ArrowRight size={18} />
@@ -279,7 +279,7 @@ export default function WaitlistSection({ onCta }) {
                 display: "flex", alignItems: "center", gap: 8,
                 color: "rgba(255,255,255,0.55)", fontSize: 13,
               }}>
-                <span style={{ color: "#00E5FF" }}>{b.icon}</span>
+                <span style={{ color: "#22D3EE" }}>{b.icon}</span>
                 {b.text}
               </div>
             ))}
@@ -324,7 +324,7 @@ export default function WaitlistSection({ onCta }) {
               {/* Yearly */}
               <div>
                 <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>
-                  {t("waitlist.plan_yearly", "Річний")} <span style={{ color: "#00E5FF", marginLeft: 6 }}>(-30%)</span>
+                  {t("waitlist.plan_yearly", "Річний")} <span style={{ color: "#22D3EE", marginLeft: 6 }}>(-30%)</span>
                 </div>
                 <div style={{ fontSize: 40, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6 }}>
                   $19.99 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 500, letterSpacing: "0" }}>{t("waitlist.per_month", "/ місяць")}</span>
@@ -333,7 +333,7 @@ export default function WaitlistSection({ onCta }) {
               </div>
             </div>
 
-            <div style={{ marginTop: 24, fontSize: 14, color: "#00E5FF", fontWeight: 500 }}>
+            <div style={{ marginTop: 24, fontSize: 14, color: "#22D3EE", fontWeight: 500 }}>
               {t("waitlist.discount_notice", "Учасники черги отримають пожиттєву знижку")}
             </div>
           </div>
@@ -343,8 +343,8 @@ export default function WaitlistSection({ onCta }) {
 
       <style>{`
         @keyframes pulse-dot {
-          0%, 100% { opacity: 1; box-shadow: 0 0 8px #00E5FF; }
-          50% { opacity: 0.5; box-shadow: 0 0 4px #00E5FF; }
+          0%, 100% { opacity: 1; box-shadow: 0 0 8px #22D3EE; }
+          50% { opacity: 0.5; box-shadow: 0 0 4px #22D3EE; }
         }
         @media (min-width: 768px) {
           .pricing-divider {

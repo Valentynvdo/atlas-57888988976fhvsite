@@ -61,7 +61,7 @@ export default function Investors() {
       className="dashboard-wrapper" 
       style={{ 
         minHeight: "100vh", 
-        background: "#05050A",
+        background: "#09090B",
         color: "#fff",
         fontFamily: "var(--sf-text)",
         position: "relative",
@@ -76,8 +76,8 @@ export default function Investors() {
 
       {/* Background Gradients */}
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 0 }}>
-        <div style={{ position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)", width: "80vw", height: "80vh", background: "radial-gradient(ellipse at center, rgba(157, 76, 221, 0.05) 0%, transparent 60%)", filter: "blur(60px)" }} />
-        <div style={{ position: "absolute", bottom: "-10%", left: "-10%", width: "50vw", height: "50vh", background: "radial-gradient(circle, rgba(0, 229, 255, 0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div style={{ position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)", width: "80vw", height: "80vh", background: "radial-gradient(ellipse at center, rgba(124, 58, 237, 0.05) 0%, transparent 60%)", filter: "blur(60px)" }} />
+        <div style={{ position: "absolute", bottom: "-10%", left: "-10%", width: "50vw", height: "50vh", background: "radial-gradient(circle, rgba(34, 211, 238, 0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
       </div>
 
       {/* Header */}
@@ -124,9 +124,9 @@ export default function Investors() {
         {/* HERO SECTION (H1) */}
         <div className="hero-reveal" style={{ textAlign: "center", maxWidth: 1000, margin: "0 auto 80px" }}>
           <div style={{ display: "inline-flex", gap: 16, marginBottom: 32, flexWrap: "wrap", justifyContent: "center" }}>
-            <span style={{ color: "#00E5FF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><ServerOff size={14} />{t("investors_page.hero_tag_1")}</span>
+            <span style={{ color: "#22D3EE", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><ServerOff size={14} />{t("investors_page.hero_tag_1")}</span>
             <span style={{ color: "#E5B3FF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Shield size={14} />{t("investors_page.hero_tag_2")}</span>
-            <span style={{ color: "#007AFF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Cpu size={14} />{t("investors_page.hero_tag_3")}</span>
+            <span style={{ color: "#6D5DF6", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Cpu size={14} />{t("investors_page.hero_tag_3")}</span>
           </div>
           <h1 style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 32, background: "linear-gradient(180deg, #FFFFFF 0%, #A5B4FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             {t("investors_page.h1_title")}
@@ -144,7 +144,7 @@ export default function Investors() {
           <p style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", color: "rgba(255,255,255,0.8)", lineHeight: 1.6, maxWidth: 800, margin: "0 auto" }}>
             {t("investors_page.h2_desc")}
           </p>
-          <a href="mailto:ceo@atlas-assistant.online" style={{ display: "inline-block", marginTop: 40, padding: "16px 36px", fontSize: 18, fontWeight: 600, background: "linear-gradient(135deg, #00E5FF 0%, #007AFF 100%)", color: "#fff", borderRadius: 12, cursor: "pointer", textDecoration: "none", transition: "opacity 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"} onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}>
+          <a href="mailto:ceo@atlas-assistant.online" style={{ display: "inline-block", marginTop: 40, padding: "16px 36px", fontSize: 18, fontWeight: 600, background: "linear-gradient(135deg, #22D3EE 0%, #6D5DF6 100%)", color: "#fff", borderRadius: 12, cursor: "pointer", textDecoration: "none", transition: "opacity 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"} onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}>
             {t("investors_page.get_pitch_deck")}
           </a>
         </div>
@@ -170,9 +170,9 @@ export default function Investors() {
 
             {/* The Solution */}
             <div style={{ padding: "0 24px", position: "relative" }}>
-              <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0 }} />
+              <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0 }} />
               
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, color: "#00E5FF", position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, color: "#22D3EE", position: "relative", zIndex: 1 }}>
                 <CheckCircle2 size={32} />
                 <h3 style={{ fontSize: 28, fontWeight: 600, color: "#fff" }}>{t("investors_page.solution_title")}</h3>
               </div>
@@ -183,7 +183,7 @@ export default function Investors() {
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 24, position: "relative", zIndex: 1 }}>
                 {[1, 2, 3, 4].map((num) => (
                   <li key={num} style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 18, color: "rgba(255,255,255,0.8)" }}>
-                    <Zap size={20} color="#00E5FF" />
+                    <Zap size={20} color="#22D3EE" />
                     {t(`investors_page.solution_${num}`)}
                   </li>
                 ))}
@@ -200,12 +200,12 @@ export default function Investors() {
           <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, marginBottom: 64, textAlign: "center" }}>{t("investors_page.tech_title")}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 64 }}>
             <div style={{ padding: "0 24px" }}>
-              <Terminal size={40} color="#007AFF" style={{ marginBottom: 32 }} />
+              <Terminal size={40} color="#6D5DF6" style={{ marginBottom: 32 }} />
               <h3 style={{ fontSize: 26, fontWeight: 600, marginBottom: 20 }}>{t("investors_page.tech_evolution")}</h3>
               <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>{t("investors_page.tech_evolution_desc")}</p>
             </div>
             <div style={{ padding: "0 24px" }}>
-              <EyeOff size={40} color="#9D4CDD" style={{ marginBottom: 32 }} />
+              <EyeOff size={40} color="#7C3AED" style={{ marginBottom: 32 }} />
               <h3 style={{ fontSize: 26, fontWeight: 600, marginBottom: 20 }}>{t("investors_page.tech_vision")}</h3>
               <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>{t("investors_page.tech_vision_desc")}</p>
             </div>
@@ -228,11 +228,11 @@ export default function Investors() {
                   <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 18 }}>{t("investors_page.market_tam_desc")}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, color: "#00E5FF", marginBottom: 12, letterSpacing: "-0.03em", textShadow: "0 0 40px rgba(0,229,255,0.3)" }}>{t("investors_page.market_sam")}</div>
+                  <div style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, color: "#22D3EE", marginBottom: 12, letterSpacing: "-0.03em", textShadow: "0 0 40px rgba(34,211,238,0.3)" }}>{t("investors_page.market_sam")}</div>
                   <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 18 }}>{t("investors_page.market_sam_desc")}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, color: "#9D4CDD", marginBottom: 12, letterSpacing: "-0.03em", textShadow: "0 0 40px rgba(157,76,221,0.3)" }}>{t("investors_page.market_som")}</div>
+                  <div style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, color: "#7C3AED", marginBottom: 12, letterSpacing: "-0.03em", textShadow: "0 0 40px rgba(124,58,237,0.3)" }}>{t("investors_page.market_som")}</div>
                   <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 18 }}>{t("investors_page.market_som_desc")}</div>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function Investors() {
                     <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 12, fontSize: 18 }}>{t("investors_page.traction_waitlist_desc")}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 48, fontWeight: 700, color: "#00E5FF", lineHeight: 1 }}>{t("investors_page.traction_revenue")}</div>
+                    <div style={{ fontSize: 48, fontWeight: 700, color: "#22D3EE", lineHeight: 1 }}>{t("investors_page.traction_revenue")}</div>
                     <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 12, fontSize: 18 }}>{t("investors_page.traction_revenue_desc")}</div>
                   </div>
                 </div>
@@ -257,10 +257,10 @@ export default function Investors() {
 
               {/* Unit Economics */}
               <div>
-                <LineChart size={36} color="#00E5FF" style={{ marginBottom: 32 }} />
+                <LineChart size={36} color="#22D3EE" style={{ marginBottom: 32 }} />
                 <h3 style={{ fontSize: 26, fontWeight: 600, marginBottom: 32 }}>{t("investors_page.economics_title")}</h3>
                 <div style={{ display: "flex", gap: 24, marginBottom: 32, flexWrap: "wrap" }}>
-                  <div style={{ color: "#00E5FF", fontWeight: 600, fontSize: 24 }}>{t("investors_page.economics_ltv")}</div>
+                  <div style={{ color: "#22D3EE", fontWeight: 600, fontSize: 24 }}>{t("investors_page.economics_ltv")}</div>
                   <div style={{ color: "#E5B3FF", fontWeight: 600, fontSize: 24 }}>{t("investors_page.economics_margin")}</div>
                 </div>
                 <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>{t("investors_page.economics_desc")}</p>
@@ -277,10 +277,10 @@ export default function Investors() {
         <div className="investor-reveal" style={{ marginBottom: 120, padding: "0 24px" }}>
           <h3 style={{ fontSize: 28, fontWeight: 600, marginBottom: 48, color: "rgba(255,255,255,0.5)" }}>{t("investors_page.team_title")}</h3>
           <div style={{ display: "flex", gap: 48, alignItems: "center", flexWrap: "wrap" }}>
-            <div style={{ width: 140, height: 140, borderRadius: "50%", background: "linear-gradient(135deg, #007AFF, #9D4CDD)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, fontWeight: 700 }}>VV</div>
+            <div style={{ width: 140, height: 140, borderRadius: "50%", background: "linear-gradient(135deg, #6D5DF6, #7C3AED)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, fontWeight: 700 }}>VV</div>
             <div style={{ flex: 1, minWidth: 300 }}>
               <h4 style={{ fontSize: 32, fontWeight: 600, margin: "0 0 12px 0" }}>{t("investors_page.team_name")}</h4>
-              <div style={{ color: "#00E5FF", fontWeight: 500, marginBottom: 24, fontSize: 18 }}>{t("investors_page.team_role")}</div>
+              <div style={{ color: "#22D3EE", fontWeight: 500, marginBottom: 24, fontSize: 18 }}>{t("investors_page.team_role")}</div>
               <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, margin: 0, maxWidth: 800 }}>
                 {t("investors_page.team_desc")}
               </p>
@@ -297,7 +297,7 @@ export default function Investors() {
             
             {/* Goal Card */}
             <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 32, padding: "48px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 70%)", filter: "blur(40px)" }} />
+              <div style={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(34,211,238,0.15) 0%, transparent 70%)", filter: "blur(40px)" }} />
               
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
                 <div>
@@ -306,7 +306,7 @@ export default function Investors() {
                     {t("investors_page.goal_amount")}
                   </div>
                 </div>
-                <Target size={48} color="#00E5FF" opacity={0.5} />
+                <Target size={48} color="#22D3EE" opacity={0.5} />
               </div>
 
               <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 24 }}>
@@ -321,10 +321,10 @@ export default function Investors() {
               <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 16, padding: "24px", border: "1px solid rgba(255,255,255,0.05)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
                   <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 15 }}>{t("investors_page.progress_label")}</span>
-                  <span style={{ color: "#00E5FF", fontSize: 15, fontWeight: 600 }}>{t("investors_page.progress_status")}</span>
+                  <span style={{ color: "#22D3EE", fontSize: 15, fontWeight: 600 }}>{t("investors_page.progress_status")}</span>
                 </div>
                 <div style={{ height: 8, background: "rgba(255,255,255,0.1)", borderRadius: 4, overflow: "hidden", marginBottom: 12 }}>
-                  <div className="progress-fill" style={{ width: "0%", height: "100%", background: "linear-gradient(90deg, #007AFF, #00E5FF)", borderRadius: 4 }} />
+                  <div className="progress-fill" style={{ width: "0%", height: "100%", background: "linear-gradient(90deg, #6D5DF6, #22D3EE)", borderRadius: 4 }} />
                 </div>
                 <div style={{ textAlign: "right", fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
                   {t("investors_page.fomo_filled")}
@@ -337,9 +337,9 @@ export default function Investors() {
               
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 32, padding: "40px", position: "relative", overflow: "hidden" }}>
                 <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Valuation Tranches</h3>
-                <div style={{ background: "rgba(0, 229, 255, 0.05)", border: "1px solid rgba(0, 229, 255, 0.2)", borderRadius: 20, padding: "24px", marginBottom: 16 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0, 229, 255, 0.1)", color: "#00E5FF", padding: "4px 12px", borderRadius: 999, fontSize: 12, fontWeight: 600, textTransform: "uppercase", marginBottom: 12 }}>
-                    <span style={{ display: "block", width: 6, height: 6, borderRadius: "50%", background: "#00E5FF", boxShadow: "0 0 8px #00E5FF" }} />
+                <div style={{ background: "rgba(34, 211, 238, 0.05)", border: "1px solid rgba(34, 211, 238, 0.2)", borderRadius: 20, padding: "24px", marginBottom: 16 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(34, 211, 238, 0.1)", color: "#22D3EE", padding: "4px 12px", borderRadius: 999, fontSize: 12, fontWeight: 600, textTransform: "uppercase", marginBottom: 12 }}>
+                    <span style={{ display: "block", width: 6, height: 6, borderRadius: "50%", background: "#22D3EE", boxShadow: "0 0 8px #22D3EE" }} />
                     Active Now
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 4 }}>{t("investors_page.fomo_tranche_1")}</div>
@@ -355,9 +355,9 @@ export default function Investors() {
                 <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Capital Allocation</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {[
-                    { label: t("investors_page.alloc_dev"), color: "#00E5FF" },
-                    { label: t("investors_page.alloc_mkt"), color: "#9D4CDD" },
-                    { label: t("investors_page.alloc_infra"), color: "#007AFF" },
+                    { label: t("investors_page.alloc_dev"), color: "#22D3EE" },
+                    { label: t("investors_page.alloc_mkt"), color: "#7C3AED" },
+                    { label: t("investors_page.alloc_infra"), color: "#6D5DF6" },
                   ].map((item, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <div style={{ width: 12, height: 12, borderRadius: 3, background: item.color }} />
@@ -381,7 +381,7 @@ export default function Investors() {
             overflow: "hidden"
           }}
         >
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 60%)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "radial-gradient(ellipse at center, rgba(34,211,238,0.05) 0%, transparent 60%)" }} />
           <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 48, position: "relative", zIndex: 1 }}>
             Ready to secure your allocation?
           </h2>

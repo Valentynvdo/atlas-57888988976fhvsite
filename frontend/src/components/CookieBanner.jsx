@@ -56,7 +56,7 @@ export default function CookieBanner() {
           </button>
           <button 
             onClick={() => handleConsent('agree')}
-            style={{ padding: '10px 20px', background: '#00E5FF', border: 'none', color: '#000', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}
+            style={{ padding: '10px 20px', background: '#22D3EE', border: 'none', color: '#000', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}
           >
             Agree & Proceed
           </button>

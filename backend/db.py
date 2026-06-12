@@ -31,7 +31,8 @@ async def init_pool() -> None:
     if not DATABASE_URL:
         logger.error("DATABASE_URL is not set — DB will not work")
         return
-    _pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10, ssl="require")
+    _is_local = "localhost" in DATABASE_URL or "127.0.0.1" in DATABASE_URL
+    _pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10, ssl=None if _is_local else "require")
     await _create_tables()
     await _seed_defaults()
     logger.info("PostgreSQL pool ready")
