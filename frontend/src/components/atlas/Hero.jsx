@@ -28,6 +28,26 @@ export default function Hero({ onCta }) {
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-fade-bottom" aria-hidden="true" />
 
+        {/* Floating chat bubbles around the title — "ask Atlas → response → thinking" */}
+        <div className="hero-chat-bubbles" aria-hidden="true">
+          <div className="hb hb-left hb-ask">
+            <span className="hb-label">Ви</span>
+            Підсумуй сьогоднішні листи.
+          </div>
+          <div className="hb hb-right hb-reply">
+            <span className="hb-label">Atlas</span>
+            7 нових. 3 важливі — готую відповідь.
+          </div>
+          <div className="hb hb-bottom-left hb-ask">
+            <span className="hb-label">Ви</span>
+            Заплануй дзвінок завтра.
+          </div>
+          <div className="hb hb-bottom-right hb-thinking">
+            <span className="hb-label">Atlas думає</span>
+            <span className="hb-dots"><i /><i /><i /></span>
+          </div>
+        </div>
+
         <div className="hero-card-inner">
           <p className="apple-eyebrow" data-testid="hero-eyebrow" style={{ position: "relative", zIndex: 2 }}>
             Atlas AI · macOS

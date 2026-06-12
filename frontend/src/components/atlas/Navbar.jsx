@@ -34,7 +34,7 @@ export default function Navbar({ onCta }) {
     { id: "features", label: tx("navbar.nav_features", isEn ? "Features" : "Можливості") },
     { id: "how-it-works", label: tx("navbar.nav_how", isEn ? "How it works" : "Як це працює") },
     { id: "comparison", label: tx("navbar.nav_compare", isEn ? "Compare" : "Порівняння") },
-    { id: "pricing", label: isEn ? "Pricing" : "Ціни" }
+    { id: "pricing", label: isEn ? "Pricing" : "Ціни", to: "/pricing" }
   ];
 
   const switchLang = () => {
@@ -83,7 +83,16 @@ export default function Navbar({ onCta }) {
             {navLinks.map((link) => (
               <a
                 key={link.id}
-                href={isHomePage ? `#${link.id}` : `${isEn ? "/en" : ""}/#${link.id}`}
+                href={
+                  link.to
+                    ? (isEn ? `/en${link.to}` : link.to)
+                    : (isHomePage ? `#${link.id}` : `${isEn ? "/en" : ""}/#${link.id}`)
+                }
+                onClick={
+                  link.to
+                    ? (e) => { e.preventDefault(); navigate(link.to); }
+                    : undefined
+                }
                 data-testid={`nav-link-${link.id}`}
               >
                 {link.label}
@@ -179,8 +188,20 @@ export default function Navbar({ onCta }) {
           {navLinks.map((link) => (
             <a
               key={link.id}
-              href={isHomePage ? `#${link.id}` : `${isEn ? "/en" : ""}/#${link.id}`}
-              onClick={() => setIsMobileMenuOpen(false)}
+              href={
+                link.to
+                  ? (isEn ? `/en${link.to}` : link.to)
+                  : (isHomePage ? `#${link.id}` : `${isEn ? "/en" : ""}/#${link.id}`)
+              }
+              onClick={(e) => {
+                if (link.to) {
+                  e.preventDefault();
+                  setIsMobileMenuOpen(false);
+                  navigate(link.to);
+                } else {
+                  setIsMobileMenuOpen(false);
+                }
+              }}
               style={{
                 color: "#f5f5f7",
                 fontSize: 22,
