@@ -1,114 +1,133 @@
-import { ArrowRight, Mail, FileText, Calendar, FolderOpen, MessageSquare, Settings } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 /**
- * Hero — Apple Dark style.
- * No sphere, no neon. Animated CSS-only Mac window conversation preview.
+ * Hero — Apple Dark with soft animated aurora behind the title.
+ * Top: rounded container with title + CTA + animated aurora.
+ * Bottom: rounded container showcasing the product image.
  */
 export default function Hero({ onCta }) {
-  const { t, i18n } = useTranslation();
-  const isEn = i18n.language === "en";
-
-  const conversation = isEn
-    ? [
-        { who: "user", text: "Summarise today's emails and reply to Anna about the Q1 brief." },
-        { who: "assistant", text: "7 new emails. 3 marked important. Drafting your reply to Anna now." },
-        { who: "user", text: "Schedule a 30-min call with the design team tomorrow morning." },
-        { who: "assistant", text: "Found a slot at 10:30 AM. Invite sent to 4 attendees." }
-      ]
-    : [
-        { who: "user", text: "Підсумуй сьогоднішні листи й дай відповідь Анні щодо брифу Q1." },
-        { who: "assistant", text: "7 нових листів. 3 важливі. Готую відповідь Анні." },
-        { who: "user", text: "Заплануй 30-хв дзвінок із дизайн-командою на завтра зранку." },
-        { who: "assistant", text: "Знайшов слот о 10:30. Запрошення надіслано 4 учасникам." }
-      ];
-
-  const sidebar = isEn
-    ? { workspaces: "Workspaces", system: "System", conv: "Conversations", mail: "Mail", cal: "Calendar", notes: "Notes", files: "Files", prefs: "Preferences" }
-    : { workspaces: "Робочі простори", system: "Система", conv: "Розмови", mail: "Пошта", cal: "Календар", notes: "Нотатки", files: "Файли", prefs: "Налаштування" };
+  const { t } = useTranslation();
+  const [imgOk, setImgOk] = useState(true);
 
   return (
     <section
       id="hero"
       data-testid="hero-section"
-      className="apple-hero"
+      style={{
+        position: "relative",
+        padding: "110px 16px 24px",
+      }}
     >
-      <p className="apple-eyebrow" data-testid="hero-eyebrow">
-        Atlas AI · macOS
-      </p>
+      {/* ── TOP rounded hero card ───────────────────────────── */}
+      <div
+        className="hero-card"
+        data-testid="hero-card"
+        style={{
+          position: "relative",
+          maxWidth: 1280,
+          margin: "0 auto",
+          borderRadius: 32,
+          background: "linear-gradient(180deg, #0e0e10 0%, #050505 100%)",
+          border: "1px solid rgba(255,255,255,0.06)",
+          overflow: "hidden",
+          padding: "120px 5% 110px",
+          textAlign: "center",
+          isolation: "isolate"
+        }}
+      >
+        {/* Animated aurora blob — pure CSS, behind the title */}
+        <div className="hero-aurora" aria-hidden="true" />
+        <div className="hero-grid" aria-hidden="true" />
 
-      <h1 className="apple-h1" data-testid="hero-title">
-        Atlas AI.
-        <span style={{ display: "block", color: "#a1a1a6", fontWeight: 500 }}>
-          {t("hero.title_span")}
-        </span>
-      </h1>
+        <p className="apple-eyebrow" data-testid="hero-eyebrow" style={{ position: "relative", zIndex: 2 }}>
+          Atlas AI · macOS
+        </p>
 
-      <p className="apple-sub" data-testid="hero-subtitle">
-        {t("hero.subtitle")}
-      </p>
+        <h1 className="apple-h1 hero-title-anim" data-testid="hero-title" style={{ position: "relative", zIndex: 2, marginInline: "auto" }}>
+          Atlas AI.
+          <span style={{ display: "block", color: "#a1a1a6", fontWeight: 500 }}>
+            {t("hero.title_span")}
+          </span>
+        </h1>
 
-      <div className="apple-cta-row">
-        <button
-          data-testid="hero-cta-btn"
-          onClick={onCta}
-          className="cta-btn"
-        >
-          {t("hero.btn_meet")}
-          <ArrowRight size={16} />
-        </button>
-        <a href="#features" className="apple-link" data-testid="hero-learn-more">
-          {t("hero.btn_learn")} ›
-        </a>
+        <p className="apple-sub" data-testid="hero-subtitle" style={{ position: "relative", zIndex: 2 }}>
+          {t("hero.subtitle")}
+        </p>
+
+        <div className="apple-cta-row" style={{ position: "relative", zIndex: 2 }}>
+          <button
+            data-testid="hero-cta-btn"
+            onClick={onCta}
+            className="cta-btn"
+          >
+            {t("hero.btn_meet")}
+            <ArrowRight size={16} />
+          </button>
+          <a href="#features" className="apple-link" data-testid="hero-learn-more">
+            {t("hero.btn_learn")} ›
+          </a>
+        </div>
       </div>
 
-      {/* Mac window with live conversation animation */}
-      <div className="mac-preview" data-testid="hero-mockup">
-        <div className="mac-titlebar">
-          <span className="dots">
-            <span /><span /><span />
-          </span>
-          <span className="addr">Atlas AI · Assistant</span>
-        </div>
+      {/* ── BOTTOM rounded showcase card ────────────────────── */}
+      {imgOk && (
+        <div
+          className="hero-showcase"
+          data-testid="hero-showcase"
+          style={{
+            position: "relative",
+            maxWidth: 1280,
+            margin: "24px auto 0",
+            borderRadius: 32,
+            background: "linear-gradient(180deg, #161617 0%, #0a0a0b 100%)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            overflow: "hidden",
+            padding: "56px 5% 0",
+            textAlign: "center"
+          }}
+        >
+          <p className="apple-eyebrow" style={{ margin: 0 }}>
+            {t("hero.proof_1")}
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",
+              fontSize: "clamp(28px, 3.6vw, 44px)",
+              fontWeight: 600,
+              letterSpacing: "-0.02em",
+              color: "#f5f5f7",
+              margin: "10px auto 0",
+              maxWidth: 720,
+              lineHeight: 1.1
+            }}
+          >
+            {t("hero.proof_2")}
+          </h2>
+          <p
+            style={{
+              color: "rgba(245,245,247,0.6)",
+              fontSize: 17,
+              lineHeight: 1.5,
+              margin: "16px auto 0",
+              maxWidth: 560
+            }}
+          >
+            {t("hero.proof_3")}
+          </p>
 
-        <div className="mac-body">
-          <aside className="mac-sidebar">
-            <span className="mac-sidebar-label">{sidebar.workspaces}</span>
-            <div className="mac-sidebar-item active">
-              <MessageSquare size={14} />
-              {sidebar.conv}
-            </div>
-            <div className="mac-sidebar-item">
-              <Mail size={14} />
-              {sidebar.mail}
-            </div>
-            <div className="mac-sidebar-item">
-              <Calendar size={14} />
-              {sidebar.cal}
-            </div>
-            <div className="mac-sidebar-item">
-              <FileText size={14} />
-              {sidebar.notes}
-            </div>
-            <div className="mac-sidebar-item">
-              <FolderOpen size={14} />
-              {sidebar.files}
-            </div>
-            <span className="mac-sidebar-label">{sidebar.system}</span>
-            <div className="mac-sidebar-item">
-              <Settings size={14} />
-              {sidebar.prefs}
-            </div>
-          </aside>
-
-          <div className="mac-conversation" aria-hidden="true">
-            {conversation.map((m, i) => (
-              <div key={i} className={`bubble ${m.who}`}>{m.text}</div>
-            ))}
-            <div className="typing-row"><span /><span /><span /></div>
+          <div className="hero-showcase-img-wrap">
+            <img
+              src="/images/hero-atlas-app.png"
+              alt="Atlas AI macOS application interface"
+              loading="lazy"
+              onError={() => setImgOk(false)}
+              className="hero-showcase-img"
+            />
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

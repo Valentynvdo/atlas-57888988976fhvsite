@@ -1,73 +1,57 @@
 # Atlas AI — Product Requirements & Changelog
 
 ## Original Problem Statement
-Complete UI/UX redesign of "Atlas AI" website to achieve a modern Apple/Mac premium aesthetic.
+Complete UI/UX redesign of "Atlas AI" website to achieve a modern Apple/Mac premium aesthetic. SEO content (H1/H2/meta) MUST be preserved in DOM.
 
-## Active Mandate (Feb 2026)
-User requested (Ukrainian):
-- Прибрати неонові ефекти
-- Прибрати сферу (3D EnergySphere)
-- Сучасний Apple/Mac дизайн (Dark variant)
-- Hero секція що продає (animated product preview)
-- Прибрати дублюючи елементи (11 sections → 5–6)
-- Красивий дизайн для всіх секцій
-- Pricing teaser на лендінгу + окрема сторінка
-- Мінімальні анімації, лише плавний fade-in
+## Active Mandate (Feb 2026 — iter 2)
+User requested:
+- ✅ Прибрати неонові ефекти
+- ✅ Прибрати сферу (3D EnergySphere)
+- ✅ Прибрати Mac preview window з Hero
+- ✅ Hero: верхній і нижній **заокруглені контейнери** з красивою анімацією за заголовком (м'який aurora blob)
+- ✅ Hero showcase: нижній заокруглений контейнер із product image (`/images/hero-atlas-app.png`)
+- ✅ Видалити PricingTeaser секцію з лендінгу (натомість nav‑link `Ціни` веде на `/pricing`)
+- ✅ BentoFeatures cards — **клікабельні з demo modal анімацією** (Apple‑style fade‑in + terminal typing demo)
+- ✅ FinalCTA — Apple Mac modern, заокруглений контейнер з aurora animation
+- ⏳ Передизайн `/docs`, `/blog`, `/login`, `/dashboard`, `/admin` (defer — backlog)
 
-## Design System (current)
-- Palette: pure black `#000` background, graphite cards `#1d1d1f`, hairline `rgba(255,255,255,0.06)`
+## Design System
+- Background: `#000` solid, no gradients
+- Surfaces: `#161617` / `#1d1d1f` graphite cards
+- Hairlines: `rgba(255,255,255,0.06)`
 - Text: primary `#f5f5f7`, secondary `#a1a1a6`
-- Accent: Apple blue `#0071e3` / `#2997ff` (links, "popular" highlights, user chat bubbles)
-- Typography: SF Pro Display / SF Pro Text, letter-spacing -0.025em on headings
-- Buttons: white pill (primary), translucent ghost (secondary), Apple-style chevron link
-- No neon glow, no rainbow gradients, no 3D sphere
-- Subtle CSS animations only (fade-in, typing dots, bubble appear)
+- Accent: Apple blue `#0071e3` / `#2997ff` for links and highlights
+- Typography: SF Pro Display / SF Pro Text, letter‑spacing -0.025em
+- Buttons: white pill (primary), translucent ghost (secondary)
+- Animations: subtle aurora drift (18s), title shine (8s), demo terminal typing
+- No neon, no rainbow gradients, no 3D sphere
 
-## Landing Structure (5 main + SEO + Footer)
-1. Hero — Apple title + animated Mac window chat preview
-2. BentoFeatures — `#features` graphite card grid (10 capabilities)
-3. HowItWorks — `#how-it-works` 3 numbered cards
-4. AtlasComparison — `#comparison` VS layout (Normal AI vs Atlas)
-5. PricingTeaser — `#pricing` horizontal card → /pricing
-6. FinalCTA — closing graphite plate
-7. AtlasSEOContent — kept in DOM (collapsed tabs) for SEO
-8. Footer — multi-column Apple-style
+## Landing Structure (final)
+1. Hero — rounded card with aurora animation + Apple title + CTA
+2. Hero Showcase — rounded card with proof eyebrow + heading + product image
+3. BentoFeatures — `#features` clickable graphite cards → demo modal
+4. HowItWorks — `#how-it-works` 3 numbered cards
+5. AtlasComparison — `#comparison`
+6. FinalCTA — rounded card with aurora animation
+7. AtlasSEOContent — preserved in DOM for indexing
+8. Footer — Apple multi‑column
 
-Removed components from landing: AtlasLiveThought, TechInfrastructure, LivingIntelligence,
-MacOSControl, SmartConcierge, AbsoluteAwareness, AtlasInteractions, WaitlistSection,
-EnergySphere. Files preserved on disk; only landing imports were removed.
-
-## Pages Status (Apple Dark redesign)
-- ✅ / (Landing) — full redesign
-- ✅ /pricing — rewritten Apple Dark
-- ⏳ /docs, /docs/:slug — uses legacy styles, inherits dark palette but cards still need polish
-- ⏳ /blog, /blog/:slug — previously rewritten with glass but accent colors changed via CSS vars
-- ⏳ /login — not touched yet
-- ⏳ /dashboard, /x7k9m-admin — not touched yet
-- ⏳ /privacy, /terms, /contacts, /careers, /investors — inherit Apple Dark vars, may need polish
-
-## Files Modified (this session)
-- `frontend/src/index.css` — palette switched to Apple Dark, removed neon CSS,
-  added `.apple-hero`, `.mac-preview`, `.apple-section`, `.steps-grid`,
-  `.pricing-teaser-card`, `.apple-nav`
-- `frontend/src/App.js` — slim Landing to 5 visual sections + SEO + Footer; removed grain overlay
-- `frontend/src/components/atlas/Hero.jsx` — full rewrite, animated Mac chat preview, EnergySphere removed
-- `frontend/src/components/atlas/Navbar.jsx` — Apple translucent top bar with fallback labels
-- `frontend/src/components/atlas/Footer.jsx` — Apple multi-column footer
-- `frontend/src/components/atlas/FinalCTA.jsx` — graphite card, no gradient text
-- `frontend/src/components/atlas/BentoFeatures.jsx` — neutralized rainbow accents, fixed JSX bug (`</div>` → `</article>`)
-- `frontend/src/components/atlas/AtlasComparison.jsx` — removed neon glows
-- `frontend/src/pages/Pricing.jsx` — full Apple Dark rewrite
+## Files Modified (this iteration)
+- `frontend/src/index.css` — added `.hero-aurora`, `.hero-grid`, `.hero-title-anim`, `.hero-showcase`, `.feature-card-btn`, `.demo-line`, modal animations
+- `frontend/src/App.js` — removed PricingTeaser import + usage
+- `frontend/src/components/atlas/Hero.jsx` — rewritten: top rounded card with aurora animation, bottom rounded card with image showcase, no Mac preview, no sphere
+- `frontend/src/components/atlas/FinalCTA.jsx` — rounded card with aurora, shine title animation
+- `frontend/src/components/atlas/BentoFeatures.jsx` — cards converted to `<button>`, FeatureDemoModal added with terminal typing demo
+- `frontend/src/components/atlas/Navbar.jsx`, `Footer.jsx`, `AtlasComparison.jsx`, `pages/Pricing.jsx` — Apple Dark style
 
 ## Files Created
 - `frontend/src/components/atlas/HowItWorks.jsx`
-- `frontend/src/components/atlas/PricingTeaser.jsx`
+- `frontend/src/components/atlas/PricingTeaser.jsx` (created but no longer imported — kept for future use)
 
 ## Backlog (P1)
-- Audit and restyle /docs, /blog, /login, /dashboard, /admin to Apple Dark
-- Localize hero `t("hero.title_span")` to a punchier short phrase (currently 3-line wrap on desktop)
-- Optional: remove unused legacy section components (TechInfrastructure, EnergySphere etc.)
-- Add subtle scroll-triggered fade-in to Mac preview entrance
+- Apple Dark redesign for `/docs`, `/blog`, `/login`, `/dashboard`, `/x7k9m-admin`
+- Replace static `hero-atlas-app.png` with a new generated image that matches new Apple Dark aesthetic (current one shows old purple sphere)
+- Add scroll-triggered fade‑in to Hero showcase image entrance
 
 ## Test Credentials
 - Admin: `admin@atlas.com` / `srv-d84mtqjtqb8s73fgcjog`

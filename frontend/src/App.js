@@ -13,7 +13,6 @@ import Hero from "./components/atlas/Hero";
 import BentoFeatures from "./components/atlas/BentoFeatures";
 import HowItWorks from "./components/atlas/HowItWorks";
 import AtlasComparison from "./components/atlas/AtlasComparison";
-import PricingTeaser from "./components/atlas/PricingTeaser";
 import FinalCTA from "./components/atlas/FinalCTA";
 import Footer from "./components/atlas/Footer";
 import AtlasSEOContent from "./components/atlas/AtlasSEOContent";
@@ -65,7 +64,6 @@ function Landing() {
       <BentoFeatures />
       <HowItWorks />
       <AtlasComparison />
-      <PricingTeaser />
       <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
       {/* SEO content preserved in DOM (collapsed tabs) for indexing */}
       <AtlasSEOContent />
