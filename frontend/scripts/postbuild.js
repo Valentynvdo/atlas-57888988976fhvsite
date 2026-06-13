@@ -118,6 +118,44 @@ for (const [page, translations] of Object.entries(pages)) {
   console.log(`Created build/en/${page}/index.html with scripts`);
 }
 
+// Build specific pages for each blog post
+const blogsPath = path.join(__dirname, '..', 'src', 'data', 'blogs.js');
+if (fs.existsSync(blogsPath)) {
+  const content = fs.readFileSync(blogsPath, 'utf8');
+  const regex = /slug:\s*["']([^"']+)["'].*?en:\s*\{(.*?)\}.*?uk:\s*\{(.*?)\}/gs;
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    const slug = match[1];
+    const enBlock = match[2];
+    const ukBlock = match[3];
+
+    const extract = (block, key) => {
+      const reg = new RegExp(`${key}:\\s*["'](.*?)["']`);
+      const m = block.match(reg);
+      return m ? m[1] : null;
+    };
+
+    const enTitle = extract(enBlock, 'seoTitle') || extract(enBlock, 'title');
+    const enDesc = extract(enBlock, 'seoDescription') || extract(enBlock, 'excerpt');
+    const ukTitle = extract(ukBlock, 'seoTitle') || extract(ukBlock, 'title');
+    const ukDesc = extract(ukBlock, 'seoDescription') || extract(ukBlock, 'excerpt');
+
+    if (ukTitle && ukDesc) {
+      const ukBlogDir = path.join(buildDir, 'blog', slug);
+      if (!fs.existsSync(ukBlogDir)) fs.mkdirSync(ukBlogDir, { recursive: true });
+      fs.writeFileSync(path.join(ukBlogDir, 'index.html'), generateHtml(baseHtmlUk, { title: ukTitle, description: ukDesc }, `/blog/${slug}`));
+      console.log(`Created build/blog/${slug}/index.html`);
+    }
+
+    if (enTitle && enDesc) {
+      const enBlogDir = path.join(buildDir, 'en', 'blog', slug);
+      if (!fs.existsSync(enBlogDir)) fs.mkdirSync(enBlogDir, { recursive: true });
+      fs.writeFileSync(path.join(enBlogDir, 'index.html'), generateHtml(baseHtmlEn, { title: enTitle, description: enDesc }, `/en/blog/${slug}`));
+      console.log(`Created build/en/blog/${slug}/index.html`);
+    }
+  }
+}
+
 // Update build/en/index.html to have scripts too!
 const enBaseDir = path.join(buildDir, 'en');
 if (!fs.existsSync(enBaseDir)) fs.mkdirSync(enBaseDir, { recursive: true });
