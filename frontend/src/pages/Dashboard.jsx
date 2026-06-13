@@ -206,6 +206,27 @@ export default function Dashboard() {
       <main style={{ width: "100%", padding: "80px 5%" }}>
         
         {!hasAccess ? (
+          license?.key ? (
+            /* EXPIRED SUBSCRIPTION EXPERIENCE */
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ textAlign: "center", paddingTop: 40, maxWidth: 1200, margin: "0 auto" }}>
+              <div style={{ maxWidth: 500, margin: "0 auto" }}>
+                <div style={{ fontSize: 48, fontWeight: 300, marginBottom: 20 }}>Subscription Expired</div>
+                <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 30 }}>
+                  Your access to Atlas AI has expired. To continue using the autonomous assistant for macOS, please renew your subscription.
+                </p>
+                
+                <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 32, marginBottom: 30 }}>
+                  <div style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.1em", color: "#FF5F57", marginBottom: 12 }}>Status</div>
+                  <div style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>License Inactive</div>
+                  {license?.expires_at && <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Expired on: {new Date(license.expires_at).toLocaleDateString()}</div>}
+                </div>
+
+                <button onClick={() => navigate("/pricing")} style={{ width: "100%", padding: 16, background: "#2997ff", color: "#000", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
+                  Renew Subscription
+                </button>
+              </div>
+            </motion.div>
+          ) : (
           /* FOMO WAITLIST EXPERIENCE */
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ textAlign: "center", paddingTop: 40, maxWidth: 1200, margin: "0 auto" }}>
             
@@ -242,7 +263,7 @@ export default function Dashboard() {
             </div>
 
           </motion.div>
-
+          )
         ) : (
 
           /* COMMAND CENTER FOR ACTIVE USERS */
