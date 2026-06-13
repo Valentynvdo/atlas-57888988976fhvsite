@@ -211,6 +211,12 @@ SEO_META = {
         "description": "Шукаємо Python-розробників, Swift-інженерів та ML-спеціалістів до команди Atlas AI. Дистанційна робота, стартап зі штучного інтелекту для macOS. Подай заявку зараз.",
         "url": "https://atlas-assistant.online/careers",
     },
+    "/pricing": {
+        "lang": "uk",
+        "title": "Ціни — Atlas AI для macOS",
+        "description": "Тарифні плани Atlas AI для macOS. Оберіть місячний, квартальний або річний доступ до автономного ШІ-асистента.",
+        "url": "https://atlas-assistant.online/pricing",
+    },
     "/investors": {
         "lang": "uk",
         "title": "Інвестиції в Atlas AI — ШІ-стартап для macOS | Deck та Контакти",
@@ -241,6 +247,12 @@ SEO_META = {
         "title": "Jobs at Atlas AI — Python, Swift & ML Engineer Roles | Remote",
         "description": "We're hiring Python developers, Swift engineers and ML specialists at Atlas AI. Remote-friendly AI startup building the future of autonomous macOS agents. Apply now.",
         "url": "https://atlas-assistant.online/en/careers",
+    },
+    "/en/pricing": {
+        "lang": "en",
+        "title": "Pricing — Atlas AI for macOS",
+        "description": "Atlas AI pricing plans for macOS. Choose monthly, quarterly or yearly access to your autonomous AI assistant.",
+        "url": "https://atlas-assistant.online/en/pricing",
     },
     "/en/investors": {
         "lang": "en",
