@@ -338,7 +338,7 @@ def build_seo_html(path: str) -> str | None:
         # Inject <title> right after <head>
         html = html.replace('<head>', f'<head><title data-rh="true">{meta["title"]}</title>', 1)
 
-    # Replace og: / twitter: tags
+    # Replace og: / twitter: / standard tags
     replacements = {
         'og:title':            meta["title"],
         'og:description':      meta["description"],
@@ -346,6 +346,7 @@ def build_seo_html(path: str) -> str | None:
         'twitter:title':       meta["title"],
         'twitter:description': meta["description"],
         'twitter:url':         meta["url"],
+        'description':         meta["description"],
     }
     for prop, value in replacements.items():
         if prop.startswith("og:"):
