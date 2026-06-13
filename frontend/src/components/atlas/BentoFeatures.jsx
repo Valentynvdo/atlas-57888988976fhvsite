@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { Terminal, Code, Cpu, Search, Contact, Eye, Heart, Lock, Zap, BrainCircuit, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BentoFeatures() {
   const sectionRef = useRef(null);
   const [activeDemo, setActiveDemo] = useState(null);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -48,13 +50,150 @@ export default function BentoFeatures() {
     return () => ctx.revert();
   }, []);
 
-  const scripts = [
+  const scripts = i18n.language === 'en' ? [
+    {
+      file: "active_app_applescript_helper.py",
+      title: "Control & AppleScript",
+      desc: "Direct macOS control: interact with active windows (Finder, Safari, Xcode, Terminal) and automate tasks via AppleScript.",
+      status: "Works locally",
+      icon: <Terminal size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "run active_app_applescript_helper.py" },
+        { type: "info", text: "# connecting to Apple Events..." },
+        { type: "success", text: "✓ Gained access to Finder and Safari" },
+        { type: "cmd", text: "open new browser window" }
+      ]
+    },
+    {
+      file: "evolution.py · plan.md",
+      title: "Autonomous Self-Evolution",
+      desc: "Unique self-improvement cycle: the assistant analyzes its mistakes, writes new skills, runs tests, and updates its own code.",
+      status: "Works locally",
+      icon: <Code size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "analyzing errors in logs..." },
+        { type: "info", text: "# detected suboptimal search loop" },
+        { type: "success", text: "✓ Written and tested new algorithm" },
+        { type: "cmd", text: "applied patch v1.0.42" }
+      ]
+    },
+    {
+      file: "semantic_memory.py",
+      title: "Associative Memory",
+      desc: "Stores conversation context, important user facts, and builds long-term semantic memory in a local JSON.",
+      status: "Works locally",
+      icon: <BrainCircuit size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "search mentions: 'favorite framework'" },
+        { type: "info", text: "# scanning semantic graph..." },
+        { type: "success", text: "✓ Found: React (saved 2 months ago)" },
+        { type: "cmd", text: "generating response based on React" }
+      ]
+    },
+    {
+      file: "autonomous_researcher.py",
+      title: "Autonomous Researcher",
+      desc: "Independently searches information on the web, aggregates sources, verifies facts (fact_checker.py), and prepares analytical reports.",
+      status: "Works locally",
+      icon: <Search size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "research 'Apple Intelligence API'" },
+        { type: "info", text: "# analyzing 14 reliable sources..." },
+        { type: "success", text: "✓ Facts verified by fact_checker.py" },
+        { type: "cmd", text: "exporting report to report.md" }
+      ]
+    },
+    {
+      file: "apple_notes_connector.py · contacts_connector.py",
+      title: "Notes and Contacts",
+      desc: "Deep integration with macOS contacts base, reading and writing to Apple Notes, and analyzing call history.",
+      status: "Works locally",
+      icon: <Contact size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "find note 'Atlas Ideas'" },
+        { type: "info", text: "# connecting to local SQLite database..." },
+        { type: "success", text: "✓ Found 3 matches, exporting text" },
+        { type: "cmd", text: "received contact 'Max'" }
+      ]
+    },
+    {
+      file: "proactive_watcher.py",
+      title: "Proactive Watcher",
+      desc: "Monitors the file system, new files, and on-screen events to promptly suggest automation for routine tasks.",
+      status: "Works locally",
+      icon: <Eye size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "monitoring ~/Downloads" },
+        { type: "info", text: "# detected 5 new .csv files" },
+        { type: "success", text: "✓ Suggestion: 'Merge into general report?'" },
+        { type: "cmd", text: "awaiting confirmation..." }
+      ]
+    },
+    {
+      file: "emotion_recognition.py · sarcasm_detector.py",
+      title: "Emotional Intelligence",
+      desc: "Detects the user's mood, analyzes stress levels, recognizes sarcasm, and adjusts the response style accordingly.",
+      status: "Coming soon",
+      icon: <Heart size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "analyzing text sentiment..." },
+        { type: "info", text: "# detected pattern 'sarcasm' (92%)" },
+        { type: "success", text: "✓ Adjusting response style (humorous)" },
+        { type: "cmd", text: "generating empathetic feedback" }
+      ]
+    },
+    {
+      file: "eye_strain_reminder.py · sleep_advisor.py",
+      title: "Health Care",
+      desc: "Monitors continuous work time, reminds about eye breaks, and analyzes sleep schedule based on activity.",
+      status: "Coming soon",
+      icon: <Heart size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "activity check: 2 hours without breaks" },
+        { type: "info", text: "# calculating eye strain..." },
+        { type: "success", text: "✓ Showing notification: 'Time for a stretch'" },
+        { type: "cmd", text: "reducing screen brightness by 20%" }
+      ]
+    },
+    {
+      file: "vision_handler.py",
+      title: "Visual Perception",
+      desc: "Analyzes user interface and screen content, recognizes active areas, and understands visual workflow context.",
+      status: "Works locally",
+      icon: <Eye size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "request screenshot: current window" },
+        { type: "info", text: "# analyzing interface structure..." },
+        { type: "success", text: "✓ Recognized 'Submit Form' button" },
+        { type: "cmd", text: "passing coordinates to AppleScript" }
+      ]
+    },
+    {
+      file: "privacy_guard.py · security_manager.py",
+      title: "Privacy & Security",
+      desc: "Protects sensitive data, blocks dangerous commands, filters token and password leaks, and encrypts conversation logs.",
+      status: "Works locally",
+      icon: <Lock size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "filtering output data..." },
+        { type: "info", text: "# detected API key in text (sk-***)" },
+        { type: "success", text: "✓ Key successfully masked" },
+        { type: "cmd", text: "log encrypted locally" }
+      ]
+    }
+  ] : [
     {
       file: "active_app_applescript_helper.py",
       title: "Керування та AppleScript",
       desc: "Пряме керування macOS: взаємодія з активними вікнами (Finder, Safari, Xcode, Terminal) та автоматизація дій через AppleScript.",
       status: "Працює локально",
       icon: <Terminal size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "запустити active_app_applescript_helper.py" },
+        { type: "info", text: "# підключення до Apple Events..." },
+        { type: "success", text: "✓ Отримано доступ до Finder та Safari" },
+        { type: "cmd", text: "відкрити нове вікно браузера" }
+      ]
     },
     {
       file: "evolution.py · plan.md",
@@ -62,6 +201,12 @@ export default function BentoFeatures() {
       desc: "Унікальний цикл самовдосконалення: асистент аналізує свої помилки, пише нові скіли, проводить тестування та оновлює свій код.",
       status: "Працює локально",
       icon: <Code size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "аналіз помилок у логах..." },
+        { type: "info", text: "# виявлено неоптимальний цикл у пошуку" },
+        { type: "success", text: "✓ Написано та протестовано новий алгоритм" },
+        { type: "cmd", text: "застосовано патч v1.0.42" }
+      ]
     },
     {
       file: "semantic_memory.py",
@@ -69,6 +214,12 @@ export default function BentoFeatures() {
       desc: "Зберігає контекст розмов, важливі факти про користувача та вибудовує довготривалу семантичну пам'ять у локальному JSON.",
       status: "Працює локально",
       icon: <BrainCircuit size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "пошук згадок: 'улюблений фреймворк'" },
+        { type: "info", text: "# сканування семантичного графа..." },
+        { type: "success", text: "✓ Знайдено: React (збережено 2 міс. тому)" },
+        { type: "cmd", text: "генерую відповідь на основі React" }
+      ]
     },
     {
       file: "autonomous_researcher.py",
@@ -76,6 +227,12 @@ export default function BentoFeatures() {
       desc: "Самостійно шукає інформацію в мережі, агрегує джерела, перевіряє факти (fact_checker.py) та готує аналітичні звіти.",
       status: "Працює локально",
       icon: <Search size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "дослідити 'Apple Intelligence API'" },
+        { type: "info", text: "# аналіз 14 надійних джерел..." },
+        { type: "success", text: "✓ Факти перевірено fact_checker.py" },
+        { type: "cmd", text: "експорт звіту в report.md" }
+      ]
     },
     {
       file: "apple_notes_connector.py · contacts_connector.py",
@@ -83,6 +240,12 @@ export default function BentoFeatures() {
       desc: "Глибока інтеграція з базою контактів macOS, читання та запис у Apple Notes, а також аналіз історії викликів.",
       status: "Працює локально",
       icon: <Contact size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "знайти нотатку 'Ідеї для Atlas'" },
+        { type: "info", text: "# підключення до локальної бази SQLite..." },
+        { type: "success", text: "✓ Знайдено 3 збіги, експорт тексту" },
+        { type: "cmd", text: "отримано контакт 'Максим'" }
+      ]
     },
     {
       file: "proactive_watcher.py",
@@ -90,6 +253,12 @@ export default function BentoFeatures() {
       desc: "Стежить за файловою системою, новими файлами та подіями на екрані, щоб вчасно пропонувати автоматизацію рутинних завдань.",
       status: "Працює локально",
       icon: <Eye size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "моніторинг ~/Downloads" },
+        { type: "info", text: "# виявлено 5 нових .csv файлів" },
+        { type: "success", text: "✓ Пропоную: 'Звести у загальний звіт?'" },
+        { type: "cmd", text: "очікую підтвердження..." }
+      ]
     },
     {
       file: "emotion_recognition.py · sarcasm_detector.py",
@@ -97,6 +266,12 @@ export default function BentoFeatures() {
       desc: "Визначає настрій користувача, аналізує рівень стресу, розпізнає сарказм та підлаштовує стиль відповідей.",
       status: "Незабаром",
       icon: <Heart size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "аналіз тональності тексту..." },
+        { type: "info", text: "# виявлено патерн 'сарказм' (92%)" },
+        { type: "success", text: "✓ Адаптую стиль відповіді (жартівливий)" },
+        { type: "cmd", text: "генерую емпатичний відгук" }
+      ]
     },
     {
       file: "eye_strain_reminder.py · sleep_advisor.py",
@@ -104,6 +279,12 @@ export default function BentoFeatures() {
       desc: "Стежить за часом безперервної роботи, нагадує про перерви для очей та аналізує графік сну відповідно до активності.",
       status: "Незабаром",
       icon: <Heart size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "перевірка активності: 2 год без перерв" },
+        { type: "info", text: "# розрахунок навантаження на очі..." },
+        { type: "success", text: "✓ Вивід сповіщення: 'Час зробити розминку'" },
+        { type: "cmd", text: "зниження яскравості екрана на 20%" }
+      ]
     },
     {
       file: "vision_handler.py",
@@ -111,6 +292,12 @@ export default function BentoFeatures() {
       desc: "Аналізує інтерфейс та вміст екрана користувача, розпізнає активні області та розуміє візуальний контекст роботи.",
       status: "Працює локально",
       icon: <Eye size={22} color="#f5f5f7" />,
+      demoLines: [
+        { type: "cmd", text: "запит скріншоту: поточне вікно" },
+        { type: "info", text: "# аналіз структури інтерфейсу..." },
+        { type: "success", text: "✓ Розпізнано кнопку 'Submit Form'" },
+        { type: "cmd", text: "передача координат до AppleScript" }
+      ]
     },
     {
       file: "privacy_guard.py · security_manager.py",
@@ -118,7 +305,13 @@ export default function BentoFeatures() {
       desc: "Захищає конфіденційні дані, блокує небезпечні команди, фільтрує витік токенів та паролів, шифрує логи розмов.",
       status: "Працює локально",
       icon: <Lock size={22} color="#f5f5f7" />,
-    },
+      demoLines: [
+        { type: "cmd", text: "фільтрація вихідних даних..." },
+        { type: "info", text: "# виявлено API ключ у тексті (sk-***)" },
+        { type: "success", text: "✓ Ключ успішно замасковано" },
+        { type: "cmd", text: "запис зашифровано локально" }
+      ]
+    }
   ];
 
   return (
@@ -129,9 +322,9 @@ export default function BentoFeatures() {
       style={{ padding: "100px 5%", position: "relative", maxWidth: 1200, margin: "0 auto" }}
     >
       {/* Section heading */}
-      <div style={{ textAlign: "center", marginBottom: 64 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 64 }}>
         <p className="section-eyebrow apple-eyebrow" style={{ margin: "0 0 14px" }}>
-          Автоматизація macOS
+          {i18n.language === 'en' ? "macOS Automation" : "Автоматизація macOS"}
         </p>
         <h2
           className="bento-heading"
@@ -144,10 +337,9 @@ export default function BentoFeatures() {
             color: "#f5f5f7",
             margin: 0,
             maxWidth: 820,
-            marginInline: "auto"
           }}
         >
-          Реальні дії у реальному світі.
+          {i18n.language === 'en' ? "Real actions in the real world." : "Реальні дії у реальному світі."}
         </h2>
         <p
           style={{
@@ -157,11 +349,10 @@ export default function BentoFeatures() {
             lineHeight: 1.5,
             color: "rgba(245,245,247,0.6)",
             maxWidth: 640,
-            margin: "20px auto 0",
             fontFamily: "var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif)",
           }}
         >
-          Атлас автоматизує вашу роботу на Mac. Він взаємодіє з операційною системою, керує даними та програмами, забезпечуючи максимальну продуктивність.
+          {i18n.language === 'en' ? "Atlas automates your work on Mac. It interacts with the operating system, manages data and applications, ensuring maximum productivity." : "Атлас автоматизує вашу роботу на Mac. Він взаємодіє з операційною системою, керує даними та програмами, забезпечуючи максимальну продуктивність."}
         </p>
       </div>
 
@@ -169,8 +360,9 @@ export default function BentoFeatures() {
       <div
         className="script-container"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
           gap: 16,
         }}
       >
@@ -195,6 +387,8 @@ export default function BentoFeatures() {
               cursor: "pointer",
               color: "inherit",
               font: "inherit",
+              flex: "1 1 300px",
+              maxWidth: "380px",
               width: "100%",
             }}
           >
@@ -422,18 +616,24 @@ function FeatureDemoModal({ script, onClose }) {
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
           </div>
-          <div className="demo-line demo-line-1">
-            <span style={{ color: "#2997ff" }}>atlas &gt;</span> запустити {script.file.split(" ")[0]}
-          </div>
-          <div className="demo-line demo-line-2">
-            <span style={{ color: "rgba(245,245,247,0.45)" }}># </span>ініціалізація модуля...
-          </div>
-          <div className="demo-line demo-line-3">
-            <span style={{ color: "#28c840" }}>✓</span> готовий до роботи
-          </div>
-          <div className="demo-line demo-line-4">
-            <span style={{ color: "#2997ff" }}>atlas &gt;</span> <span className="demo-cursor">▎</span>
-          </div>
+          {script.demoLines?.map((line, idx) => (
+            <div key={idx} className={`demo-line demo-line-${idx + 1}`}>
+              {line.type === "cmd" && (
+                <>
+                  <span style={{ color: "#2997ff" }}>atlas &gt;</span> {line.text}
+                  {idx === script.demoLines.length - 1 && <span className="demo-cursor">▎</span>}
+                </>
+              )}
+              {line.type === "info" && (
+                <span style={{ color: "rgba(245,245,247,0.45)" }}>{line.text}</span>
+              )}
+              {line.type === "success" && (
+                <>
+                  <span style={{ color: "#28c840" }}>{line.text.split(" ")[0]}</span> {line.text.substring(line.text.indexOf(" ") + 1)}
+                </>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
@@ -117,7 +118,7 @@ export default function Login() {
           background: "transparent",
           border: "none",
           padding: "10px 0",
-          color: "rgba(255, 255, 255, 0.6)",
+          color: "#2997ff",
           cursor: "pointer",
           fontSize: 14,
           fontWeight: 500,
@@ -129,11 +130,11 @@ export default function Login() {
           e.currentTarget.style.transform = "translateX(-4px)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)";
+          e.currentTarget.style.color = "#2997ff";
           e.currentTarget.style.transform = "none";
         }}
       >
-        <span style={{ fontSize: 14 }}>←</span> {t("login.back_home").replace("← ", "")}
+        <ChevronLeft size={16} /> {t("login.back_home").replace("← ", "")}
       </button>
 
       <div

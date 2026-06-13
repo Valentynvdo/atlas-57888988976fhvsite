@@ -122,7 +122,7 @@ export default function SmartConcierge() {
           </h2>
           <p style={{
           marginTop: 20,
-          color: "rgba(255,255,255,0.65)",
+          color: "rgba(0, 0, 0,0.65)",
           fontSize: "clamp(1rem, 1.3vw, 1.125rem)",
           lineHeight: 1.6,
           maxWidth: 560
@@ -141,9 +141,9 @@ export default function SmartConcierge() {
             position: "relative",
             padding: "40px 32px",
             borderRadius: 32,
-            background: "radial-gradient(140% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%)",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+            background: "radial-gradient(140% 100% at 50% 0%, rgba(0, 0, 0,0.03) 0%, transparent 100%)",
+            borderTop: "1px solid rgba(0, 0, 0,0.05)",
+            boxShadow: "inset 0 1px 0 rgba(0, 0, 0,0.02)",
             transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
           }}>
             {/* Top ambient glow */}
@@ -166,7 +166,7 @@ export default function SmartConcierge() {
           background: `linear-gradient(135deg, ${item.glow}22, ${item.glow}05)`,
           border: `1px solid ${item.glow}33`,
           marginBottom: 24,
-          color: "#fff",
+          color: "#1d1d1f",
           position: "relative",
           zIndex: 1
         }}>
@@ -178,7 +178,7 @@ export default function SmartConcierge() {
           fontSize: 11,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: "rgba(255,255,255,0.5)",
+          color: "rgba(0, 0, 0,0.5)",
           fontWeight: 600
         }}>
               {item.label}
@@ -194,7 +194,7 @@ export default function SmartConcierge() {
             <p className="concierge-card-desc" style={{
           marginTop: 12,
           fontSize: isLarge ? 16 : 14,
-          color: "rgba(255,255,255,0.65)",
+          color: "rgba(0, 0, 0,0.65)",
           lineHeight: 1.6,
           flex: 1
         }}>
@@ -207,7 +207,7 @@ export default function SmartConcierge() {
           alignItems: "center",
           gap: 8,
           fontSize: 13,
-          color: item.status === "active" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.65)",
+          color: item.status === "active" ? "rgba(0, 0, 0,0.95)" : "rgba(0, 0, 0,0.65)",
           fontWeight: 500
         }}>
               <span style={{

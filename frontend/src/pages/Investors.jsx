@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { 
-  ArrowLeft, Target, TrendingUp, Mail, Shield, Terminal, Cpu, CheckCircle2, EyeOff, Activity, LineChart, ServerOff, Zap
+  ArrowLeft, ChevronLeft, Target, TrendingUp, Mail, Shield, Terminal, Cpu, CheckCircle2, EyeOff, Activity, LineChart, ServerOff, Zap
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
@@ -103,15 +103,15 @@ export default function Investors() {
             gap: 8,
             background: "transparent",
             border: "none",
-            color: "rgba(255,255,255,0.7)",
+            color: "#2997ff",
             cursor: "pointer",
             fontSize: 15,
             fontWeight: 500
           }}
           className="hover:text-white transition-colors"
         >
-          <ArrowLeft size={18} />
-          Back to Atlas
+          <ChevronLeft size={18} />
+          На головну
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <img src="/atlas-icon.png" alt="Atlas" style={{ width: 24, height: 24, borderRadius: 6 }} />
@@ -128,7 +128,7 @@ export default function Investors() {
             <span style={{ color: "#E5B3FF", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Shield size={14} />{t("investors_page.hero_tag_2")}</span>
             <span style={{ color: "#f5f5f7", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}><Cpu size={14} />{t("investors_page.hero_tag_3")}</span>
           </div>
-          <h1 style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 32, color: "#f5f5f7", background: "none", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <h1 style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 32, color: "#f5f5f7", background: "none" }}>
             {t("investors_page.h1_title")}
           </h1>
           <p style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.8rem)", color: "rgba(255,255,255,0.7)", lineHeight: 1.4, maxWidth: 800, margin: "0 auto" }}>
@@ -172,7 +172,7 @@ export default function Investors() {
             <div style={{ padding: "0 24px", position: "relative" }}>
               <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(255,255,255,0.060) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0 }} />
               
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, color: "#2997ff", position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, color: "rgba(255,255,255,0.7)", position: "relative", zIndex: 1 }}>
                 <CheckCircle2 size={32} />
                 <h3 style={{ fontSize: 28, fontWeight: 600, color: "#fff" }}>{t("investors_page.solution_title")}</h3>
               </div>
@@ -302,7 +302,7 @@ export default function Investors() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
                 <div>
                   <h3 style={{ fontSize: 24, fontWeight: 600, marginBottom: 16 }}>Seed Target</h3>
-                  <div style={{ fontSize: "clamp(3rem, 6vw, 4.5rem)", fontWeight: 700, letterSpacing: "-0.04em", color: "#f5f5f7", background: "none", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1 }}>
+                  <div style={{ fontSize: "clamp(3rem, 6vw, 4.5rem)", fontWeight: 700, letterSpacing: "-0.04em", color: "#f5f5f7", background: "none", lineHeight: 1 }}>
                     {t("investors_page.goal_amount")}
                   </div>
                 </div>
@@ -338,7 +338,7 @@ export default function Investors() {
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 32, padding: "40px", position: "relative", overflow: "hidden" }}>
                 <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Valuation Tranches</h3>
                 <div style={{ background: "rgba(255,255,255,0.030)", border: "1px solid rgba(255,255,255,0.120)", borderRadius: 20, padding: "24px", marginBottom: 16 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.060)", color: "#2997ff", padding: "4px 12px", borderRadius: 999, fontSize: 12, fontWeight: 600, textTransform: "uppercase", marginBottom: 12 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.060)", color: "rgba(255,255,255,0.7)", padding: "4px 12px", borderRadius: 999, fontSize: 12, fontWeight: 600, textTransform: "uppercase", marginBottom: 12 }}>
                     <span style={{ display: "block", width: 6, height: 6, borderRadius: "50%", background: "#2997ff", boxShadow: "0 0 8px #2997ff" }} />
                     Active Now
                   </div>

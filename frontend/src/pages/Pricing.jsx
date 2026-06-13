@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, ChevronLeft } from "lucide-react";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
-import Navbar from "../components/atlas/Navbar";
 import Footer from "../components/atlas/Footer";
 
 /**
@@ -75,14 +74,54 @@ export default function Pricing() {
             ? "Atlas AI pricing plans for macOS. Choose monthly, quarterly or yearly access to your autonomous AI assistant."
             : "Тарифні плани Atlas AI для macOS. Оберіть місячний, квартальний або річний доступ до автономного ШІ-асистента."}
         />
+        
+        {/* Open Graph / Social Media */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={isEn ? "https://atlas-assistant.online/en/pricing" : "https://atlas-assistant.online/pricing"} />
+        <meta property="og:title" content={isEn ? "Pricing — Atlas AI for macOS" : "Ціни — Atlas AI для macOS"} />
+        <meta property="og:description" content={isEn ? "Atlas AI pricing plans for macOS. Choose monthly, quarterly or yearly access." : "Тарифні плани Atlas AI для macOS. Оберіть місячний, квартальний або річний доступ."} />
+        <meta property="og:image" content="https://atlas-assistant.online/og-image.jpg" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={isEn ? "https://atlas-assistant.online/en/pricing" : "https://atlas-assistant.online/pricing"} />
+        <meta property="twitter:title" content={isEn ? "Pricing — Atlas AI for macOS" : "Ціни — Atlas AI для macOS"} />
+        <meta property="twitter:description" content={isEn ? "Atlas AI pricing plans for macOS. Choose monthly, quarterly or yearly access." : "Тарифні плани Atlas AI для macOS. Оберіть місячний, квартальний або річний доступ."} />
+        <meta property="twitter:image" content="https://atlas-assistant.online/og-image.jpg" />
+
         <link rel="canonical" href={isEn ? "https://atlas-assistant.online/en/pricing" : "https://atlas-assistant.online/pricing"} />
       </Helmet>
 
-      <Navbar onCta={() => navigate("/login")} />
-
       <main style={{ position: "relative", padding: "140px 5% 80px", maxWidth: 1180, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <p className="apple-eyebrow" style={{ margin: "0 0 14px" }}>{L("Тарифи", "Pricing")}</p>
+          <button 
+              onClick={() => navigate("/")}
+              style={{
+                position: "absolute",
+                top: 28,
+                left: 28,
+                background: "transparent",
+                border: "none",
+                color: "#2997ff",
+                fontSize: 15,
+                fontWeight: 500,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "var(--sf-text, sans-serif)",
+                transition: "opacity 0.2s",
+                zIndex: 100
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = 0.7}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = 1}
+            >
+              <ChevronLeft size={16} />
+              {L("На головну", "Back to Home")}
+            </button>
+          
+          <br/>
+          <p className="apple-eyebrow" style={{ margin: "0 0 14px", display: "inline-block" }}>{L("Тарифи", "Pricing")}</p>
           <h1
             style={{
               fontFamily: "var(--sf-display, -apple-system, BlinkMacSystemFont, sans-serif)",

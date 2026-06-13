@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { 
-  Loader2, ArrowLeft, Send, Sparkles, Code2, BrainCircuit, 
+  Loader2, ArrowLeft, ChevronLeft, Send, Sparkles, Code2, BrainCircuit, 
   CheckCircle2, Users, Globe2, ChevronRight, Github 
 } from "lucide-react";
 import api from "../lib/api";
@@ -174,14 +174,14 @@ export default function Careers() {
       {/* Back Button */}
       <Link to={isEn ? "/en" : "/"} style={{ 
         position: "absolute", top: 40, left: 40,
-        display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.6)", 
-        textDecoration: "none", fontSize: 14, fontWeight: 600,
+        display: "flex", alignItems: "center", gap: 10, color: "#2997ff", 
+        textDecoration: "none", fontSize: 14, fontWeight: 500,
         padding: "10px 0", background: "transparent",
         border: "none", transition: "all 0.2s", zIndex: 10
       }}
       onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}>
-        <ArrowLeft size={16} />
+      onMouseLeave={(e) => { e.currentTarget.style.color = "#2997ff"; }}>
+        <ChevronLeft size={16} />
         {t("atlas_v2.careers.back_home") || "Повернутися"}
       </Link>
 

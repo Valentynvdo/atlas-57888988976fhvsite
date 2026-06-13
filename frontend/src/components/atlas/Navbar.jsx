@@ -32,6 +32,7 @@ export default function Navbar({ onCta }) {
 
   const navLinks = [
     { id: "features", label: tx("navbar.nav_features", isEn ? "Features" : "Можливості") },
+    { id: "use-cases", label: tx("navbar.nav_usecases", isEn ? "Use Cases" : "Кейси Використання") },
     { id: "how-it-works", label: tx("navbar.nav_how", isEn ? "How it works" : "Як це працює") },
     { id: "comparison", label: tx("navbar.nav_compare", isEn ? "Compare" : "Порівняння") },
     { id: "pricing", label: isEn ? "Pricing" : "Ціни", to: "/pricing" }

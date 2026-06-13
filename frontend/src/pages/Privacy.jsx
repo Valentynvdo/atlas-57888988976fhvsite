@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
-import { ArrowLeft, Shield, Lock, Eye, Key } from "lucide-react";
+import {ArrowLeft, Shield, Lock, Eye, Key, ChevronLeft} from "lucide-react";
 export default function Privacy() {
   const {
     t
@@ -20,9 +20,10 @@ export default function Privacy() {
       left: 28,
       background: "transparent",
       border: "none",
-      color: "rgba(255,255,255,0.6)",
+      color: "#2997ff",
       padding: "10px 0",
       fontSize: 14,
+      fontWeight: 500,
       cursor: "pointer",
       display: "inline-flex",
       alignItems: "center",
@@ -35,10 +36,10 @@ export default function Privacy() {
       e.currentTarget.style.transform = "translateX(-4px)";
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.color = "rgba(255, 255, 255, 0.6)";
+      e.currentTarget.style.color = "#2997ff";
       e.currentTarget.style.transform = "none";
     }}>
-        <span style={{ fontSize: 14 }}>←</span> {t("txt_1195").replace("← ", "")}</button>
+        <ChevronLeft size={16} /> {t("txt_1195").replace("← ", "")}</button>
 
       <div style={{
       maxWidth: "100%",

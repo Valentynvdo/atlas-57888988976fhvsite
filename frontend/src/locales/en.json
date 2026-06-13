@@ -15,7 +15,25 @@
     "btn_learn": "Learn more",
     "proof_1": "Built for macOS",
     "proof_2": "Real actions. Real world.",
-    "proof_3": "Privacy by default"
+    "proof_3": "Privacy by default",
+    "slides": {
+      "1": {
+        "title": "Complete Overview",
+        "desc": "Experience all the powerful capabilities Atlas AI has to offer in one unified platform."
+      },
+      "2": {
+        "title": "Seamless Integration",
+        "desc": "Easily connect with your existing tools and workflows without any hassle."
+      },
+      "3": {
+        "title": "Advanced Analytics",
+        "desc": "Gain deep insights with our state-of-the-art data processing and visualization."
+      },
+      "4": {
+        "title": "Intelligent Automation",
+        "desc": "Let AI handle the repetitive tasks so you can focus on what truly matters."
+      }
+    }
   },
   "login": {
     "success_reset": "📩 Reset instructions and code sent to your email.",

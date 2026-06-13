@@ -61,9 +61,9 @@ function Landing() {
     <div className="App" ref={rootRef} data-testid="atlas-landing">
       <Navbar onCta={() => handleCtaClick("download_macos_navbar_click")} />
       <Hero onCta={() => handleCtaClick("download_macos_hero_click")} />
+      <AtlasComparison />
       <BentoFeatures />
       <HowItWorks />
-      <AtlasComparison />
       <FinalCTA onCta={() => handleCtaClick("download_macos_finalcta_click")} />
       {/* SEO content preserved in DOM (collapsed tabs) for indexing */}
       <AtlasSEOContent />

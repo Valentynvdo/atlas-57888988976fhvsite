@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ChevronLeft } from 'lucide-react';
 import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { blogs } from '../data/blogs';
@@ -29,7 +30,7 @@ export default function BlogPost() {
     <div style={{
       minHeight: "100vh",
       color: "#fff",
-      fontFamily: "var(--sf-text, 'Inter', sans-serif)",
+      fontFamily: "var(--sf-text, var(--sf-text, -apple-system, BlinkMacSystemFont, sans-serif))",
       padding: "110px 24px 80px 24px",
       position: "relative",
       overflow: "hidden",
@@ -50,9 +51,7 @@ export default function BlogPost() {
         filter: "blur(40px)", pointerEvents: "none",
       }} />
 
-      <div style={{ maxWidth: 820, margin: "0 auto", position: "relative" }}>
-
-        <div style={{ display: "flex", gap: 12, marginBottom: 40 }}>
+        <div style={{ position: "absolute", top: 28, left: 28, display: "flex", gap: 24, zIndex: 10 }}>
           {[
             { to: lang === 'en' ? "/en/" : "/", label: lang === 'uk' ? 'На головну' : lang === 'ru' ? 'На главную' : 'Home' },
             { to: lang === 'en' ? "/en/blog" : "/blog", label: lang === 'uk' ? 'Блог' : lang === 'ru' ? 'Блог' : 'Blog' },
@@ -61,31 +60,30 @@ export default function BlogPost() {
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
-              fontSize: "0.9rem",
+              fontSize: 14,
               fontWeight: 500,
-              color: "rgba(255,255,255,0.6)",
+              color: "#2997ff",
               textDecoration: "none",
-              padding: "8px 16px",
-              borderRadius: 999,
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(12px)",
-              transition: "color 0.2s ease, border-color 0.2s ease"
+              background: "transparent",
+              border: "none",
+              transition: "color 0.2s ease"
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.180)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#2997ff"; }}
             >
-              ← {l.label}
+              <ChevronLeft size={16} /> {l.label}
             </Link>
           ))}
         </div>
+
+      <div style={{ maxWidth: 820, margin: "0 auto", position: "relative" }}>
 
         {/* AI-generated cover */}
         <div style={{
           borderRadius: 24,
           overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 30px 80px rgba(0,0,0,0.5), 0 0 70px rgba(255,255,255,0.060)",
+          boxShadow: "none",
           marginBottom: 40,
         }}>
           <img

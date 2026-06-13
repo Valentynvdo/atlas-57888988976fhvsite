@@ -54,7 +54,7 @@ export default function AdminPin({
   return <div data-testid="admin-pin-page" style={{
     minHeight: "100vh",
     background: "#000",
-    color: "#fff",
+    color: "#1d1d1f",
     display: "grid",
     placeItems: "center",
     padding: 24,
@@ -84,7 +84,7 @@ export default function AdminPin({
         margin: 0
       }}>{t("txt_1438")}</h2>
         <p style={{
-        color: "rgba(255,255,255,0.6)",
+        color: "rgba(0, 0, 0,0.6)",
         fontSize: 13,
         margin: "8px 0 24px"
       }}>{t("txt_1439")}</p>
@@ -92,9 +92,9 @@ export default function AdminPin({
         width: "100%",
         padding: "16px 18px",
         background: "rgba(0,0,0,0.5)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid rgba(0, 0, 0,0.1)",
         borderRadius: 14,
-        color: "#fff",
+        color: "#1d1d1f",
         fontSize: 22,
         textAlign: "center",
         letterSpacing: "0.4em",

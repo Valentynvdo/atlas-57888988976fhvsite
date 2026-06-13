@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import useLocalizedNavigate from '../hooks/useLocalizedNavigate';
 import { blogs } from '../data/blogs';
 import { getBlogCover } from '../data/blogCovers';
-import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ArrowRight, Clock } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export default function BlogList() {
@@ -44,24 +44,19 @@ export default function BlogList() {
           position: "absolute",
           top: 28,
           left: 28,
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 999,
-          color: "rgba(255,255,255,0.6)",
-          padding: "10px 18px",
+          color: "#2997ff",
           fontSize: 14,
           cursor: "pointer",
           display: "inline-flex",
           alignItems: "center",
           gap: 6,
           zIndex: 10,
-          backdropFilter: "blur(12px)",
           transition: "all 0.2s ease"
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.180)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = "#2997ff";  }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = "#2997ff";  }}
       >
-        <ArrowLeft size={16} />
+        <ChevronLeft size={16} />
         {lang === 'uk' ? 'На головну' : lang === 'ru' ? 'На главную' : 'Back to Home'}
       </button>
 
@@ -73,9 +68,7 @@ export default function BlogList() {
           letterSpacing: "-0.04em",
           marginBottom: 16,
           marginTop: 0,
-          color: "#f5f5f7", background: "none",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent"
+          color: "#f5f5f7", background: "none"
         }}>
           {t('blog_page.h1', { defaultValue: t('blog_page.h1_fallback') })}
         </h1>

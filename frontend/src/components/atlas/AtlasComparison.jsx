@@ -2,524 +2,303 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import {
-  Bot,
-  Zap,
-  Cpu,
-  Server,
-  Fingerprint,
-  BrainCircuit,
-  ScanFace,
-  Activity,
-} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const getComparisonData = (t) => [
-  {
-    id: "intelligence",
-    label: t("atlas_v2.comparison.tabs.intelligence"),
-    icon: <BrainCircuit size={16} />,
-    normal: [
-      { i: <Cpu />, t: t("atlas_v2.comparison.items.intelligence_n1") },
-      {
-        i: <BrainCircuit />,
-        t: t("atlas_v2.comparison.items.intelligence_n2"),
-      },
-      { i: <Bot />, t: t("atlas_v2.comparison.items.intelligence_n3") },
-    ],
-    atlas: [
-      { i: <Cpu />, t: t("atlas_v2.comparison.items.intelligence_a1") },
-      { i: <Fingerprint />, t: t("atlas_v2.comparison.items.intelligence_a2") },
-      { i: <Zap />, t: t("atlas_v2.comparison.items.intelligence_a3") },
-    ],
-  },
-  {
-    id: "vision",
-    label: t("atlas_v2.comparison.tabs.vision"),
-    icon: <ScanFace size={16} />,
-    normal: [
-      { i: <Server />, t: t("atlas_v2.comparison.items.vision_n1") },
-      { i: <ScanFace />, t: t("atlas_v2.comparison.items.vision_n2") },
-      { i: <BrainCircuit />, t: t("atlas_v2.comparison.items.vision_n3") },
-    ],
-    atlas: [
-      { i: <Server />, t: t("atlas_v2.comparison.items.vision_a1") },
-      { i: <ScanFace />, t: t("atlas_v2.comparison.items.vision_a2") },
-      { i: <BrainCircuit />, t: t("atlas_v2.comparison.items.vision_a3") },
-    ],
-  },
-  {
-    id: "infrastructure",
-    label: t("atlas_v2.comparison.tabs.infrastructure"),
-    icon: <Activity size={16} />,
-    normal: [
-      {
-        i: <Fingerprint />,
-        t: t("atlas_v2.comparison.items.infrastructure_n1"),
-      },
-      { i: <Activity />, t: t("atlas_v2.comparison.items.infrastructure_n2") },
-      { i: <Server />, t: t("atlas_v2.comparison.items.infrastructure_n3") },
-    ],
-    atlas: [
-      {
-        i: <Fingerprint />,
-        t: t("atlas_v2.comparison.items.infrastructure_a1"),
-      },
-      { i: <Activity />, t: t("atlas_v2.comparison.items.infrastructure_a2") },
-      { i: <Server />, t: t("atlas_v2.comparison.items.infrastructure_a3") },
-    ],
-  },
-];
+// Typewriter effect component - optimized to start immediately
+const Typewriter = ({ text, delay = 0, speed = 10 }) => {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    let i = 0;
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setDisplayedText((prev) => prev + text.charAt(i));
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [text, delay, speed]);
+
+  return <span>{displayedText}</span>;
+};
 
 export default function AtlasComparison() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const sectionRef = useRef(null);
-  const contentRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  
+  // Key used to force remount of animations so they loop indefinitely
+  const [loopKey, setLoopKey] = useState(0);
 
-  // Initial reveal animation
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".vs-divider",
-        { height: 0, opacity: 0 },
-        {
-          height: "100%",
-          opacity: 1,
-          duration: 1.5,
-          ease: "power3.inOut",
-          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
-        },
-      );
-
-      gsap.fromTo(
-        ".comp-card-left",
-        { x: -50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
-        },
-      );
-
-      gsap.fromTo(
-        ".comp-card-right",
-        { x: 50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: ".vs-container", start: "top 75%" },
-        },
-      );
-    }, sectionRef);
-    return () => ctx.revert();
+    const interval = setInterval(() => {
+      setLoopKey(prev => prev + 1);
+    }, 4000); // Repeat every 4 seconds
+    return () => clearInterval(interval);
   }, []);
 
-  // Card replacement effect
-  const handleTabChange = (index) => {
-    if (index === activeIndex) return;
+  const isEn = i18n.language === 'en';
 
-    // Animate out
-    gsap.to(".comp-list-item", {
-      y: -20,
-      opacity: 0,
-      stagger: 0.05,
-      duration: 0.3,
-      ease: "power2.in",
-      onComplete: () => {
-        setActiveIndex(index);
-        // Animate in
-        gsap.fromTo(
-          ".comp-list-item",
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.08,
-            duration: 0.5,
-            ease: "power3.out",
-          },
-        );
-      },
-    });
-  };
+  const sequence = [
+    { type: "normal", text: isEn ? "Every chat is a blank slate." : "Кожен чат — чистий аркуш." },
+    { 
+      type: "atlas", 
+      text: isEn ? "Builds deep semantic memory." : "Формує глибоку семантичну пам'ять.",
+      animation: (
+        <div key={`mem-${loopKey}`} style={{ fontFamily: "monospace", color: "#28c840", fontSize: "clamp(12px, 1.5vw, 16px)", marginTop: "24px", opacity: 0.8, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+          <div><span style={{ color: "rgba(255,255,255,0.3)" }}>&gt;</span> <Typewriter text="[INDEXING MEMORY_BANK_04]" delay={0} /></div>
+          <div><span style={{ color: "rgba(255,255,255,0.3)" }}>&gt;</span> <Typewriter text="Saving context map... [OK]" delay={300} /></div>
+          <div><span style={{ color: "rgba(255,255,255,0.3)" }}>&gt;</span> <Typewriter text="Semantic graph updated." delay={600} /></div>
+        </div>
+      )
+    },
+    
+    { type: "normal", text: isEn ? "Limited by hardcoded skills." : "Обмежений зашитими навичками." },
+    { 
+      type: "atlas", 
+      text: isEn ? "Writes code to improve itself." : "Самостійно пише код для розвитку.",
+      animation: (
+        <div key={`code-${loopKey}`} style={{ fontFamily: "monospace", color: "#2997ff", fontSize: "clamp(12px, 1.5vw, 16px)", marginTop: "24px", textAlign: "left", background: "rgba(255,255,255,0.02)", padding: "16px", borderRadius: "8px", borderLeft: "2px solid #2997ff", display: "inline-block" }}>
+          <Typewriter text="def optimize_subsystem():" delay={0} speed={10} /><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<Typewriter text="model.compile(loss='auto')" delay={200} speed={10} /><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<Typewriter text="return 'Execution enhanced'" delay={400} speed={10} />
+          <span className="cursor-blink" style={{ marginLeft: "4px" }}>█</span>
+        </div>
+      )
+    },
+    
+    { type: "normal", text: isEn ? "Always waits for your command." : "Завжди чекає на вашу команду." },
+    { 
+      type: "atlas", 
+      text: isEn ? "Acts autonomously without prompts." : "Діє автономно без очікування команд.",
+      animation: (
+        <div style={{ fontFamily: "monospace", color: "#ff9f0a", fontSize: "clamp(14px, 2vw, 20px)", marginTop: "24px", display: "flex", justifyContent: "center", alignItems: "center", gap: "12px", textTransform: "uppercase", letterSpacing: "2px" }}>
+          <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ff9f0a", boxShadow: "0 0 10px #ff9f0a" }} />
+          SYSTEM ACTIVE <span className="cursor-blink">_</span>
+        </div>
+      )
+    },
+    
+    { type: "normal", text: isEn ? "Blind to your environment." : "Не бачить вашого екрану." },
+    { 
+      type: "atlas", 
+      text: isEn ? "Analyzes screen and controls macOS." : "Аналізує екран та керує macOS.",
+      animation: (
+        <div style={{ position: "relative", width: "100%", maxWidth: "300px", height: "100px", marginTop: "32px", border: "1px solid rgba(40, 200, 64, 0.3)", display: "flex", justifyContent: "center", alignItems: "center", margin: "32px auto 0 auto" }}>
+          <div style={{ position: "absolute", top: -5, left: -5, width: 10, height: 10, borderTop: "2px solid #28c840", borderLeft: "2px solid #28c840" }} />
+          <div style={{ position: "absolute", top: -5, right: -5, width: 10, height: 10, borderTop: "2px solid #28c840", borderRight: "2px solid #28c840" }} />
+          <div style={{ position: "absolute", bottom: -5, left: -5, width: 10, height: 10, borderBottom: "2px solid #28c840", borderLeft: "2px solid #28c840" }} />
+          <div style={{ position: "absolute", bottom: -5, right: -5, width: 10, height: 10, borderBottom: "2px solid #28c840", borderRight: "2px solid #28c840" }} />
+          <div style={{ color: "#28c840", fontFamily: "monospace", fontSize: "12px", letterSpacing: "1px" }}>
+            [ TARGET ACQUIRED ]
+          </div>
+          <div className="scanner-line" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "2px", background: "#28c840", boxShadow: "0 0 10px #28c840" }} />
+        </div>
+      )
+    }
+  ];
 
-  const comparisonData = getComparisonData(t);
-  const activeData = comparisonData[activeIndex];
+  useEffect(() => {
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=800%", 
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1
+        }
+      });
+
+      // Initially setup text blocks
+      gsap.set(".comp-text", { opacity: 0, y: 100, filter: "blur(20px)" });
+      gsap.set(".text-0", { opacity: 1, y: 0, filter: "blur(0px)" });
+
+      for (let i = 0; i < sequence.length - 1; i++) {
+        const stepTime = i * 2;
+        
+        // Fade out current
+        tl.to(`.text-${i}`, {
+          opacity: 0,
+          y: -100,
+          filter: "blur(20px)",
+          duration: 1.5,
+          ease: "power2.inOut"
+        }, stepTime);
+
+        // Fade in next
+        tl.to(`.text-${i+1}`, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.5,
+          ease: "power2.out"
+        }, stepTime + 1.0); // Smooth overlap
+      }
+
+      tl.to({}, { duration: 1 });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [sequence.length]);
 
   return (
-    <section
+    <section 
       id="comparison"
-      className="section-container"
-      style={{
-        position: "relative",
+      ref={sectionRef} 
+      style={{ 
+        width: "100%", 
+        height: "100vh", 
+        background: "#000", 
+        position: "relative", 
         overflow: "hidden",
-        minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
       }}
-      ref={sectionRef}
     >
-      {/* Background ambient — removed (Apple Dark, no neon) */}
-
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 1200,
-          margin: "0 auto",
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        {/* Large Statement */}
-        <div
-          className="reveal"
-          style={{ textAlign: "center", marginBottom: 60 }}
-        >
-          <h2
-            style={{
-              fontSize: "clamp(32px, 4.8vw, 56px)",
-              fontWeight: 600,
-              letterSpacing: "-0.025em",
-              fontFamily: "var(--sf-display, -apple-system, sans-serif)",
-              color: "#f5f5f7",
-              margin: 0,
-              lineHeight: 1.08,
-            }}
-          >
-            {t("atlas_v2.comparison.title")}
-          </h2>
-          <p
-            style={{
-              fontSize: "clamp(18px, 1.6vw, 22px)",
-              fontWeight: 400,
-              marginTop: 16,
-              fontFamily: "var(--sf-text, -apple-system, sans-serif)",
-              letterSpacing: "-0.01em",
-              color: "rgba(245,245,247,0.6)",
-              maxWidth: 640,
-              marginInline: "auto"
-            }}
-          >
-            {t("atlas_v2.comparison.subtitle")}
-          </p>
-        </div>
-
-        {/* Premium Tabs */}
-        <div
-          className="reveal delay-1"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 12,
-            marginBottom: 40,
-            flexWrap: "wrap",
-          }}
-        >
-          {comparisonData.map((tab, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(idx)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 24px",
-                  borderRadius: 30,
-                  background: isActive
-                    ? "rgba(255,255,255,0.1)"
-                    : "rgba(255,255,255,0.03)",
-                  border: isActive
-                    ? "1px solid rgba(255,255,255,0.2)"
-                    : "1px solid rgba(255,255,255,0.05)",
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  fontFamily: "var(--sf-text, sans-serif)",
-                  fontWeight: 600,
-                  fontSize: 15,
-                  boxShadow: isActive ? "0 4px 20px rgba(0,0,0,0.2)" : "none",
-                }}
-              >
-                <div style={{ color: isActive ? "#f5f5f7" : "inherit" }}>
-                  {tab.icon}
-                </div>
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* The Beautiful Visual Comparison */}
-        <div
-          className="vs-container"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr auto 1fr",
-            gap: "clamp(20px, 4vw, 40px)",
-            alignItems: "stretch",
-            position: "relative",
-          }}
-        >
-          {/* LEFT: Normal AI */}
-          <div
-            className="comp-card-left bento-card"
-            style={{
-              padding: "clamp(30px, 4vw, 50px)",
-              display: "flex",
-              flexDirection: "column",
-              background: "transparent",
-              border: "none",
-              filter: "grayscale(30%) opacity(0.8)",
-              transition: "all 0.5s ease",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: 40,
-                color: "rgba(255,255,255,0.4)",
-              }}
-            >
-              <Bot size={28} />
-              <h3
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: 600,
-                  margin: 0,
-                  letterSpacing: "-0.02em",
-                  fontFamily: "var(--sf-display, sans-serif)",
-                }}
-              >
-                {t("atlas_v2.comparison.normal_ai")}
-              </h3>
-            </div>
-
-            <div
-              className="comp-list"
-              style={{ display: "flex", flexDirection: "column", gap: 32 }}
-            >
-              {activeData.normal.map((item, i) => (
-                <CompItem
-                  key={`norm-${activeIndex}-${i}`}
-                  icon={item.i}
-                  text={item.t}
-                  dim
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* CENTER DIVIDER */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <div
-              className="vs-divider"
-              style={{
-                width: 1,
-                background:
-                  "linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent)",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "#000",
-                border: "1px solid rgba(255,255,255,0.1)",
-                padding: "10px 16px",
-                borderRadius: 20,
-                fontSize: 12,
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.5)",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
-            >
-              VS
-            </div>
-          </div>
-
-          {/* RIGHT: ATLAS */}
-          <div
-            className="comp-card-right bento-card"
-            style={{
-              padding: "clamp(30px, 4vw, 50px)",
-              display: "flex",
-              flexDirection: "column",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Inner glow removed (Apple Dark) */}
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: 40,
-                color: "#f5f5f7",
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
-              <Zap size={28} fill="#f5f5f7" />
-              <h3
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: 700,
-                  margin: 0,
-                  letterSpacing: "-0.02em",
-                  fontFamily: "var(--sf-display, sans-serif)",
-                }}
-              >
-                ATLAS
-              </h3>
-            </div>
-
-            <div
-              className="comp-list"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 32,
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
-              {activeData.atlas.map((item, i) => (
-                <CompItem
-                  key={`atlas-${activeIndex}-${i}`}
-                  icon={item.i}
-                  text={item.t}
-                  active
-                />
-              ))}
-            </div>
-
-            {/* Micro visual at the bottom */}
-            <div
-              style={{
-                marginTop: "auto",
-                paddingTop: 50,
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  height: 2,
-                  background: "rgba(255,255,255,0.05)",
-                  borderRadius: 2,
-                  overflow: "hidden",
-                  position: "relative",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: "30%",
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
-                    animation: "sweep 2s infinite",
-                  }}
-                />
-              </div>
-              <span
-                style={{
-                  fontSize: 10,
-                  color: "rgba(245,245,247,0.65)",
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {t("atlas_v2.comparison.system_active")}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
       <style>{`
-        @keyframes sweep {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(400%); }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
         }
-        @media (max-width: 900px) {
-          .vs-container {
-            grid-template-columns: 1fr !important;
-            gap: 20px !important;
+        .cursor-blink {
+          animation: blink 1s step-end infinite;
+        }
+        @keyframes scan {
+          0% { top: 0; }
+          50% { top: 100%; }
+          100% { top: 0; }
+        }
+        .scanner-line {
+          animation: scan 3s linear infinite;
+        }
+        @media (max-width: 768px) {
+          .responsive-text {
+            white-space: normal !important;
           }
-          .vs-divider {
-            display: none;
+          .responsive-text-container > div:first-child {
+            white-space: normal !important;
+            word-break: break-word;
+          }
+          .responsive-code {
+            white-space: pre-wrap !important;
+            word-break: break-word;
           }
         }
       `}</style>
-    </section>
-  );
-}
 
-function CompItem({ icon, text, active, dim }) {
-  return (
-    <div
-      className="comp-list-item"
-      style={{ display: "flex", alignItems: "center", gap: 16 }}
-    >
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          flexShrink: 0,
-          borderRadius: 12,
-          background: active
-            ? "rgba(255, 255, 255, 0.06)"
-            : "rgba(255, 255, 255, 0.02)",
-          border: active
-            ? "1px solid rgba(255, 255, 255, 0.15)"
-            : "1px solid rgba(255, 255, 255, 0.05)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: active ? "#f5f5f7" : dim ? "rgba(255,255,255,0.3)" : "#f5f5f7",
-        }}
-      >
-        {icon}
+      {/* Deep Space Background */}
+      <div 
+        style={{ 
+          position: "absolute", 
+          inset: 0, 
+          background: "radial-gradient(circle at center, rgba(30,30,35,0.4) 0%, #000 70%)", 
+          zIndex: 0
+        }} 
+      />
+
+      {/* Main Title - Static at top */}
+      <div style={{ position: "absolute", top: 80, zIndex: 1, width: "100%", textAlign: "center", display: "flex", flexDirection: "column", gap: 12 }}>
+        <h2 className="responsive-text" style={{ fontSize: "clamp(24px, 4vw, 48px)", color: "rgba(255,255,255,0.3)", margin: 0, fontWeight: 500, letterSpacing: "-0.02em", fontFamily: "var(--sf-display, sans-serif)", whiteSpace: "nowrap" }}>
+          {isEn ? "Not just a chatbot." : "Це не просто чат-бот."}
+        </h2>
       </div>
-      <div
-        style={{
-          fontSize: "1.05rem",
-          fontWeight: active ? 600 : 500,
-          color: dim ? "rgba(255,255,255,0.4)" : "#fff",
-          fontFamily: "var(--sf-text, sans-serif)",
-          lineHeight: 1.4,
-        }}
-      >
-        {text}
+
+      {/* The Central Stage for Typography */}
+      <div style={{ position: "relative", width: "100%", maxWidth: 1200, height: "100%", zIndex: 2, display: "flex", justifyContent: "center", alignItems: "center" }}>
+        
+        {sequence.map((item, idx) => {
+          const isAtlas = item.type === "atlas";
+          
+          return (
+            <div 
+              key={idx}
+              className={`comp-text text-${idx} responsive-text-container`}
+              style={{
+                position: "absolute",
+                width: "100%",
+                padding: "0 20px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", // Everything centered now
+                textAlign: "center",
+              }}
+            >
+              {/* Label indicating Standard AI vs ATLAS */}
+              <div style={{
+                marginBottom: 16,
+                fontSize: 14,
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                fontFamily: "var(--mono, monospace)",
+                color: isAtlas ? "#2997ff" : "rgba(255,255,255,0.4)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: isAtlas ? "rgba(41, 151, 255, 0.1)" : "rgba(255,255,255,0.05)",
+                padding: "6px 14px",
+                borderRadius: 20,
+                border: isAtlas ? "1px solid rgba(41, 151, 255, 0.2)" : "1px solid rgba(255,255,255,0.1)"
+              }}>
+                {isAtlas ? (
+                  <>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2997ff", boxShadow: "0 0 8px #2997ff" }} />
+                    ATLAS
+                  </>
+                ) : (
+                  <>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
+                    {isEn ? "Standard AI" : "Звичайний ШІ"}
+                  </>
+                )}
+              </div>
+              <div style={{ 
+                color: isAtlas ? "#fff" : "rgba(255,255,255,0.3)", 
+                fontSize: isAtlas ? "clamp(40px, 6vw, 84px)" : "clamp(24px, 4vw, 64px)", 
+                fontWeight: isAtlas ? 700 : 400, 
+                lineHeight: 1.1,
+                letterSpacing: "-0.03em",
+                fontFamily: "var(--sf-display, sans-serif)",
+                textShadow: isAtlas ? "0 10px 40px rgba(255,255,255,0.1)" : "none",
+                whiteSpace: "nowrap" // Never wrap to next line
+              }}>
+                {item.text}
+              </div>
+
+              {/* Render dynamic animations unconditionally so they show up immediately */}
+              {isAtlas && (
+                <div style={{ width: "100%", maxWidth: 600, display: "flex", justifyContent: "center" }}>
+                  {item.animation}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
       </div>
-    </div>
+
+      {/* Progress Indicator */}
+      <div style={{ position: "absolute", bottom: 60, zIndex: 1, display: "flex", gap: 12 }}>
+        {sequence.map((_, i) => (
+          <div key={i} className={`dot-${i}`} style={{ width: 40, height: 2, background: "rgba(255,255,255,0.1)" }} />
+        ))}
+      </div>
+      <style>{`
+        ${sequence.map((_, i) => `
+          .text-${i} ~ .dot-${i} {
+            background: #fff !important;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+          }
+        `).join('')}
+      `}</style>
+
+    </section>
   );
 }

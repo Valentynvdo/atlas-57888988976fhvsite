@@ -5,7 +5,7 @@ import useLocalizedNavigate from "../hooks/useLocalizedNavigate";
 import { useAuth } from "../lib/auth";
 import { toast, Toaster } from "sonner";
 import api from "../lib/api";
-import { ArrowLeft, Copy, Check, ChevronDown, Terminal, Package, Zap, Shield, Cpu, Download, ExternalLink, Code, BookOpen, Activity, Layers, Sparkles, Key, Globe, Settings, HelpCircle, Play, CheckCircle } from "lucide-react";
+import {ArrowLeft, Copy, Check, ChevronDown, Terminal, Package, Zap, Shield, Cpu, Download, ExternalLink, Code, BookOpen, Activity, Layers, Sparkles, Key, Globe, Settings, HelpCircle, Play, CheckCircle, ChevronLeft} from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 // --- Custom Code Block with Copy Button ---
@@ -130,9 +130,7 @@ function SectionTitle({
       fontWeight: 700,
       margin: "0 0 12px",
       letterSpacing: "-0.03em",
-      color: "#f5f5f7", background: "none",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent"
+      color: "#f5f5f7", background: "none"
     }}>{title}</h2>
       {desc && <p style={{
       color: "rgba(255,255,255,0.6)",
@@ -355,7 +353,7 @@ export default function Docs() {
           <button onClick={() => navigate("/")} style={{
           background: "none",
           border: "none",
-          color: "rgba(255,255,255,0.72)",
+          color: "#2997ff",
           fontSize: 14,
           fontWeight: 500,
           cursor: "pointer",
@@ -364,8 +362,8 @@ export default function Docs() {
           gap: 6,
           transition: "color 0.3s ease",
           padding: 0
-        }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.72)"}>
-            <ArrowLeft size={14} />{t("txt_1101")}</button>
+        }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "#2997ff"}>
+            <ChevronLeft size={16} />{t("txt_1101")}</button>
           <span className="docs-divider" style={{
           color: "rgba(255,255,255,0.3)"
         }}>|</span>

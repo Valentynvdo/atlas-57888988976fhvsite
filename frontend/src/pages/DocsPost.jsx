@@ -19,8 +19,8 @@ export default function DocsPost() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#030303",
-        color: "#fff",
+        background: "#09090b",
+        color: "#ffffff",
         fontFamily: "Inter, system-ui, sans-serif",
         padding: "40px 5%",
       }}
@@ -47,7 +47,7 @@ export default function DocsPost() {
         <h1 style={{ fontSize: "2rem", marginBottom: 20 }}>
           {isEn ? doc.title.en : doc.title.uk}
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>
+        <p style={{ color: "rgba(255, 255, 255,0.7)", lineHeight: 1.6 }}>
           {isEn ? doc.content.en : doc.content.uk}
         </p>
       </div>
