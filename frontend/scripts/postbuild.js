@@ -32,6 +32,17 @@ const pages = {
       description: "Latest news, articles, and technical insights from the Atlas AI team. Read about the development of autonomous AI agents, local LLMs, and the future of the Apple ecosystem."
     }
   },
+
+  pricing: {
+    uk: {
+      title: "Ціни — Atlas AI для macOS",
+      description: "Тарифні плани Atlas AI для macOS. Оберіть місячний, квартальний або річний доступ до автономного ШІ-асистента."
+    },
+    en: {
+      title: "Pricing — Atlas AI for macOS",
+      description: "Atlas AI pricing plans for macOS. Choose monthly, quarterly or yearly access to your autonomous AI assistant."
+    }
+  },
   docs: {
     uk: {
       title: "Документація Atlas AI — Інструкції з налаштування локального ШІ",
