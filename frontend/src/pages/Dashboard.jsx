@@ -163,7 +163,7 @@ export default function Dashboard() {
     );
   }
 
-  const hasAccess = license?.status === "active";
+  const hasAccess = license?.status === "active" || license?.status === "expiring_soon";
 
   return (
     <div style={{
