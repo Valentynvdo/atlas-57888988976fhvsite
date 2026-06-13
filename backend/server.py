@@ -262,6 +262,41 @@ SEO_META = {
     },
 }
 
+import re
+def _load_blog_seo():
+    blogs_path = ROOT_DIR.parent / "frontend" / "src" / "data" / "blogs.js"
+    if not blogs_path.exists():
+        return
+    try:
+        with open(blogs_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        blocks = re.findall(r'slug:\s*["\']([^"\']+)["\'].*?en:\s*\{(.*?)\}.*?uk:\s*\{(.*?)\}', content, re.DOTALL)
+        for slug, en_block, uk_block in blocks:
+            # EN
+            en_title = re.search(r'seoTitle:\s*["\'](.*?)["\']', en_block) or re.search(r'title:\s*["\'](.*?)["\']', en_block)
+            en_desc = re.search(r'seoDescription:\s*["\'](.*?)["\']', en_block) or re.search(r'excerpt:\s*["\'](.*?)["\']', en_block)
+            if en_title and en_desc:
+                SEO_META[f"/en/blog/{slug}"] = {
+                    "lang": "en",
+                    "title": en_title.group(1).replace("\\'", "'").replace('\\"', '"'),
+                    "description": en_desc.group(1).replace("\\'", "'").replace('\\"', '"'),
+                    "url": f"https://atlas-assistant.online/en/blog/{slug}",
+                }
+            # UK
+            uk_title = re.search(r'seoTitle:\s*["\'](.*?)["\']', uk_block) or re.search(r'title:\s*["\'](.*?)["\']', uk_block)
+            uk_desc = re.search(r'seoDescription:\s*["\'](.*?)["\']', uk_block) or re.search(r'excerpt:\s*["\'](.*?)["\']', uk_block)
+            if uk_title and uk_desc:
+                SEO_META[f"/blog/{slug}"] = {
+                    "lang": "uk",
+                    "title": uk_title.group(1).replace("\\'", "'").replace('\\"', '"'),
+                    "description": uk_desc.group(1).replace("\\'", "'").replace('\\"', '"'),
+                    "url": f"https://atlas-assistant.online/blog/{slug}",
+                }
+    except Exception as e:
+        print("Failed to load dynamic blog SEO:", e)
+
+_load_blog_seo()
+
 OG_IMAGE = "https://atlas-assistant.online/og-image.jpg"
 
 
