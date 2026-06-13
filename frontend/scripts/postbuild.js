@@ -89,10 +89,10 @@ function generateHtml(baseHtml, meta, urlPath) {
   html = html.replace(/<meta[^>]*?property="og:url"[^>]*?>/g, `<meta data-rh="true" property="og:url" content="https://atlas-assistant.online${urlPath}" />`);
   html = html.replace(/<meta[^>]*?name="twitter:url"[^>]*?>/g, `<meta data-rh="true" name="twitter:url" content="https://atlas-assistant.online${urlPath}" />`);
   
-  if (html.includes('<title>')) {
-    html = html.replace(/<title>.*<\/title>/, `<title>${meta.title}</title>`);
+  if (/<title[^>]*>/.test(html)) {
+    html = html.replace(/<title[^>]*>.*?<\/title>/g, `<title data-rh="true">${meta.title}</title>`);
   } else {
-    html = html.replace('<!-- SEO Meta Tags -->', `<!-- SEO Meta Tags -->\n        <title>${meta.title}</title>`);
+    html = html.replace('<!-- SEO Meta Tags -->', `<!-- SEO Meta Tags -->\n        <title data-rh="true">${meta.title}</title>`);
   }
 
   // Ensure scripts and css are injected
