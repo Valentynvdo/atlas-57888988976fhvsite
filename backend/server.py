@@ -90,6 +90,33 @@ def is_allowed_origin(origin: str) -> bool:
 
 # ── CORS middleware ─────────────────────────────────────────────────────────
 @app.middleware("http")
+async def enforce_domain_middleware(request: Request, call_next):
+    host = request.headers.get("host", "")
+    proto = request.headers.get("x-forwarded-proto", request.url.scheme)
+
+    redirect_needed = False
+    new_host = host
+    new_proto = proto
+
+    if host.startswith("www."):
+        new_host = host[4:]
+        redirect_needed = True
+
+    if proto == "http" and "localhost" not in host and "127.0.0.1" not in host and not host.endswith(".local"):
+        new_proto = "https"
+        redirect_needed = True
+
+    if redirect_needed and "localhost" not in host and "127.0.0.1" not in host:
+        from fastapi.responses import RedirectResponse
+        new_url = f"{new_proto}://{new_host}{request.url.path}"
+        if request.url.query:
+            new_url += f"?{request.url.query}"
+        return RedirectResponse(url=new_url, status_code=301)
+
+    return await call_next(request)
+
+
+@app.middleware("http")
 async def cors_middleware(request: Request, call_next):
     origin = request.headers.get("origin", "")
     allowed = is_allowed_origin(origin)
@@ -367,6 +394,42 @@ def build_seo_html(path: str) -> str | None:
     html = re.sub(
         r'<meta[^>]*?name="description"[^>]*?>',
         f'<meta data-rh="true" name="description" content="{meta["description"]}" />',
+        html, count=1
+    )
+
+    # Replace canonical link
+    html = re.sub(
+        r'<link[^>]*?rel="canonical"[^>]*?>',
+        f'<link data-rh="true" rel="canonical" href="{meta["url"]}" />',
+        html, count=1
+    )
+
+    # Determine paths for alternate links
+    url_path = meta["url"].replace("https://atlas-assistant.online", "")
+    if url_path.startswith("/en"):
+        uk_path = url_path[3:] or "/"
+        en_path = url_path
+    else:
+        uk_path = url_path or "/"
+        en_path = "/en" + (url_path if url_path != "/" else "")
+
+    uk_url = "https://atlas-assistant.online" + (uk_path if uk_path != "/" else "/")
+    en_url = "https://atlas-assistant.online" + en_path
+
+    # Replace alternate links
+    html = re.sub(
+        r'<link[^>]*?hreflang="uk"[^>]*?>',
+        f'<link data-rh="true" rel="alternate" hreflang="uk" href="{uk_url}" />',
+        html, count=1
+    )
+    html = re.sub(
+        r'<link[^>]*?hreflang="en"[^>]*?>',
+        f'<link data-rh="true" rel="alternate" hreflang="en" href="{en_url}" />',
+        html, count=1
+    )
+    html = re.sub(
+        r'<link[^>]*?hreflang="x-default"[^>]*?>',
+        f'<link data-rh="true" rel="alternate" hreflang="x-default" href="{uk_url}" />',
         html, count=1
     )
 
